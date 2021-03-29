@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Facade;
  */
 class DocuWareFacade extends Facade
 {
-    protected static function getFacadeAccessor()
+    protected static function getFacadeAccessor(): string
     {
         return 'laravel-docuware';
     }

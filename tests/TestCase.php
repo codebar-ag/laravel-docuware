@@ -2,9 +2,9 @@
 
 namespace codebar\DocuWare\Tests;
 
+use codebar\DocuWare\DocuWareServiceProvider;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Orchestra\Testbench\TestCase as Orchestra;
-use codebar\DocuWare\DocuWareServiceProvider;
 
 class TestCase extends Orchestra
 {

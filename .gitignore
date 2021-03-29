@@ -11,3 +11,4 @@ psalm.xml
 testbench.yaml
 vendor
 .DS_STORE
+.env

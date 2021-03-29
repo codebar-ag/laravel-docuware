@@ -17,9 +17,6 @@ class DocuWareServiceProvider extends PackageServiceProvider
          */
         $package
             ->name('laravel-docuware')
-            ->hasConfigFile()
-            ->hasViews()
-            ->hasMigration('create_laravel_docuware_table')
-            ->hasCommand(DocuWareCommand::class);
+            ->hasConfigFile();
     }
 }

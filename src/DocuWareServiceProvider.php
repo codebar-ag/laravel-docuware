@@ -2,7 +2,6 @@
 
 namespace codebar\DocuWare;
 
-use codebar\DocuWare\Commands\DocuWareCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 

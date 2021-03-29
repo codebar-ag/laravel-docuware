@@ -1,16 +1,18 @@
 <?php
 
-namespace codebar\DocuWare;
+namespace codebar\DocuWare\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
 /**
  * @see \codebar\DocuWare\DocuWare
+ *
+ * @method static string hello()
  */
-class DocuWareFacade extends Facade
+class DocuWare extends Facade
 {
     protected static function getFacadeAccessor(): string
     {
-        return 'laravel-docuware';
+        return \codebar\DocuWare\DocuWare::class;
     }
 }

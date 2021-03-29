@@ -53,7 +53,7 @@
                 "codebar\\DocuWare\\DocuWareServiceProvider"
             ],
             "aliases": {
-                "DocuWare": "codebar\\DocuWare\\DocuWareFacade"
+                "DocuWare": "codebar\\DocuWare\\Facades\\DocuWare"
             }
         }
     },

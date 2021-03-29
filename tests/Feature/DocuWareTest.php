@@ -10,6 +10,6 @@ class DocuWareTest extends TestCase
     public function test_config_values()
     {
         $this->assertSame(config('docuware.foo'), 'bar');                 // ✅ Working
-        $this->assertSame(config('docuware.url'), 'https://domain.test'); // ❌ Not working
+        $this->assertSame(config('docuware.url'), 'https://domain.test'); // 💥 Not working
     }
 }

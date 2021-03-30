@@ -43,7 +43,6 @@ jobs:
       - name: Execute tests
         run: vendor/bin/phpunit
         env:
-          CI: true
           DOCUWARE_URL: ${{ secrets.DOCUWARE_URL }}
           DOCUWARE_USER: ${{ secrets.DOCUWARE_USER }}
           DOCUWARE_PASSWORD: ${{ secrets.DOCUWARE_PASSWORD }}

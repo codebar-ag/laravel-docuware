@@ -67,4 +67,15 @@ class DocuWareTest extends TestCase
         $this->assertInstanceOf(Collection::class, $fields);
         $this->assertNotCount(0, $fields);
     }
+
+    /** @test */
+    public function it_does_list_dialogs_for_a_file_cabinet()
+    {
+        $fileCabinetId = 'f95f2093-e790-495b-af04-7d198a296c5e';
+
+        $dialogs = (new DocuWare())->getDialogs($fileCabinetId);
+
+        $this->assertInstanceOf(Collection::class, $dialogs);
+        $this->assertNotCount(0, $dialogs);
+    }
 }

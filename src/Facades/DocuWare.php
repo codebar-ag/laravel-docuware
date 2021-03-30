@@ -2,6 +2,7 @@
 
 namespace codebar\DocuWare\Facades;
 
+use codebar\DocuWare\DTO\Dialog;
 use codebar\DocuWare\DTO\Field;
 use codebar\DocuWare\DTO\FileCabinet;
 use Illuminate\Support\Collection;
@@ -14,6 +15,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static void logout()
  * @method static Collection|FileCabinet[] getFileCabinets()
  * @method static Collection|Field[] getFields(string $fileCabinetId)
+ * @method static Collection|Dialog[] getDialogs(string $fileCabinetId)
  */
 class DocuWare extends Facade
 {

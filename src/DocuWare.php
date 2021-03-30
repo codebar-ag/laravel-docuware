@@ -2,6 +2,7 @@
 
 namespace codebar\DocuWare;
 
+use codebar\DocuWare\DTO\Dialog;
 use codebar\DocuWare\DTO\Field;
 use codebar\DocuWare\DTO\FileCabinet;
 use Illuminate\Support\Collection;
@@ -99,5 +100,23 @@ class DocuWare
             ->json('Fields');
 
         return collect($fields)->map(fn (array $field) => Field::fromJson($field));
+    }
+
+    /** @return Collection|Dialog[] */
+    public function getDialogs(string $fileCabinetId): Collection
+    {
+        $url = sprintf(
+            '%s/docuware/platform/FileCabinets/%s/Dialogs',
+            config('docuware.url'),
+            $fileCabinetId,
+        );
+
+        $dialogs = Http::acceptJson()
+            ->withCookies(Cache::get('docuware.cookies'), $this->domain)
+            ->get($url)
+            ->throw()
+            ->json('Dialog');
+
+        return collect($dialogs)->map(fn (array $dialog) => Dialog::fromJson($dialog));
     }
 }

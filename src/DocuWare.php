@@ -20,7 +20,8 @@ class DocuWare
     {
         $this->domain = Str::of(config('docuware.url'))
             ->after('//')
-            ->beforeLast('/');
+            ->beforeLast('/')
+            ->__toString();
     }
 
     public function login(): string
@@ -67,7 +68,6 @@ class DocuWare
         Http::withCookies($cookie, $this->domain)->get($url);
     }
 
-    /** @return Collection|FileCabinet[] */
     public function getFileCabinets(): Collection
     {
         $url = sprintf(
@@ -84,7 +84,6 @@ class DocuWare
         return collect($cabinets)->map(fn (array $cabinet) => FileCabinet::fromJson($cabinet));
     }
 
-    /** @return Collection|Field[] */
     public function getFields(string $fileCabinetId): Collection
     {
         $url = sprintf(
@@ -102,7 +101,6 @@ class DocuWare
         return collect($fields)->map(fn (array $field) => Field::fromJson($field));
     }
 
-    /** @return Collection|Dialog[] */
     public function getDialogs(string $fileCabinetId): Collection
     {
         $url = sprintf(

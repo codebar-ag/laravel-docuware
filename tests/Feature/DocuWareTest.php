@@ -4,6 +4,7 @@ namespace codebar\DocuWare\Tests\Feature;
 
 use Cache;
 use codebar\DocuWare\DocuWare;
+use codebar\DocuWare\DTO\Document;
 use codebar\DocuWare\Tests\TestCase;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
@@ -93,5 +94,21 @@ class DocuWareTest extends TestCase
         );
 
         $this->assertSame(['Auftrag', 'Offerte', 'Rechnung'], $types);
+    }
+
+    /** @test */
+    public function it_does_show_document()
+    {
+        $fileCabinetId = 'f95f2093-e790-495b-af04-7d198a296c5e';
+        $documentId = 1;
+
+        $document = (new DocuWare())->getDocument(
+            $fileCabinetId,
+            $documentId,
+        );
+
+        $this->assertInstanceOf(Document::class, $document);
+        $this->assertSame($documentId, $document->id);
+        $this->assertSame($fileCabinetId, $document->file_cabinet_id);
     }
 }

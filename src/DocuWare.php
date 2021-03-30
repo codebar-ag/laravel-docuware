@@ -3,6 +3,7 @@
 namespace codebar\DocuWare;
 
 use codebar\DocuWare\DTO\Dialog;
+use codebar\DocuWare\DTO\Document;
 use codebar\DocuWare\DTO\Field;
 use codebar\DocuWare\DTO\FileCabinet;
 use Illuminate\Support\Collection;
@@ -136,5 +137,23 @@ class DocuWare
             ->get($url)
             ->throw()
             ->json('Value');
+    }
+
+    public function getDocument(string $fileCabinetId, int $documentId): Document
+    {
+        $url = sprintf(
+            '%s/docuware/platform/FileCabinets/%s/Documents/%s',
+            config('docuware.url'),
+            $fileCabinetId,
+            $documentId,
+        );
+
+        $response = Http::acceptJson()
+            ->withCookies(Cache::get('docuware.cookies'), $this->domain)
+            ->get($url)
+            ->throw()
+            ->json();
+
+        return Document::fromJson($response);
     }
 }

@@ -6,6 +6,7 @@ use codebar\DocuWare\DTO\Dialog;
 use codebar\DocuWare\DTO\Document;
 use codebar\DocuWare\DTO\Field;
 use codebar\DocuWare\DTO\FileCabinet;
+use codebar\DocuWare\Exceptions\UnableToDownloadDocuments;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
@@ -184,6 +185,32 @@ class DocuWare
             config('docuware.url'),
             $fileCabinetId,
             $documentId
+        );
+
+        return Http::withCookies(Cache::get('docuware.cookies'), $this->domain)
+            ->get($url)
+            ->throw()
+            ->body();
+    }
+
+    public function downloadDocuments(
+        string $fileCabinetId,
+        array $documentIds,
+    ): string {
+        throw_if(
+            count($documentIds) < 2,
+            UnableToDownloadDocuments::selectAtLeastTwoDocuments(),
+        );
+
+        $firstDocumentId = $documentIds[0];
+        $additionalDocumentIds = implode(',', array_slice($documentIds, 1));
+
+        $url = sprintf(
+            '%s/docuware/platform/FileCabinets/%s/Documents/%s/FileDownload?&keepAnnotations=false&downloadFile=true&autoPrint=false&append=%s',
+            config('docuware.url'),
+            $fileCabinetId,
+            $firstDocumentId,
+            $additionalDocumentIds,
         );
 
         return Http::withCookies(Cache::get('docuware.cookies'), $this->domain)

@@ -1,9 +1,10 @@
 # DocuWare integration with Laravel
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/codebar/laravel-docuware.svg?style=flat-square)](https://packagist.org/packages/codebar/laravel-docuware)
-[![GitHub Tests Action Status](https://img.shields.io/github/workflow/status/codebar/laravel-docuware/run-tests?label=tests)](https://github.com/codebar/laravel-docuware/actions?query=workflow%3ATests+branch%3Amaster)
-[![GitHub Code Style Action Status](https://img.shields.io/github/workflow/status/codebar/laravel-docuware/Check%20&%20fix%20styling?label=code%20style)](https://github.com/codebar/laravel-docuware/actions?query=workflow%3A"Check+%26+fix+styling"+branch%3Amaster)
 [![Total Downloads](https://img.shields.io/packagist/dt/codebar/laravel-docuware.svg?style=flat-square)](https://packagist.org/packages/codebar/laravel-docuware)
+[![run-tests](https://github.com/codebar-ag/laravel-docuware/actions/workflows/run-tests.yml/badge.svg)](https://github.com/codebar-ag/laravel-docuware/actions/workflows/run-tests.yml)
+[![Check & fix styling](https://github.com/codebar-ag/laravel-docuware/actions/workflows/php-cs-fixer.yml/badge.svg)](https://github.com/codebar-ag/laravel-docuware/actions/workflows/php-cs-fixer.yml)
+[![Psalm](https://github.com/codebar-ag/laravel-docuware/actions/workflows/psalm.yml/badge.svg)](https://github.com/codebar-ag/laravel-docuware/actions/workflows/psalm.yml)
 
 
 This is where your description should go. Limit it to a paragraph or two. Consider adding a small example.

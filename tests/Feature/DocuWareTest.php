@@ -50,7 +50,7 @@ class DocuWareTest extends TestCase
     }
 
     /** @test */
-    public function it_does_list_file_cabinets()
+    public function it_can_list_file_cabinets()
     {
         $fileCabinets = (new DocuWare())->getFileCabinets();
 
@@ -59,7 +59,7 @@ class DocuWareTest extends TestCase
     }
 
     /** @test */
-    public function it_does_list_fields_for_a_file_cabinet()
+    public function it_can_list_fields_for_a_file_cabinet()
     {
         $fileCabinetId = 'f95f2093-e790-495b-af04-7d198a296c5e';
 
@@ -70,7 +70,7 @@ class DocuWareTest extends TestCase
     }
 
     /** @test */
-    public function it_does_list_dialogs_for_a_file_cabinet()
+    public function it_can_list_dialogs_for_a_file_cabinet()
     {
         $fileCabinetId = 'f95f2093-e790-495b-af04-7d198a296c5e';
 
@@ -81,7 +81,7 @@ class DocuWareTest extends TestCase
     }
 
     /** @test */
-    public function it_does_list_values_of_a_select_list()
+    public function it_can_list_values_for_a_select_list()
     {
         $fileCabinetId = 'f95f2093-e790-495b-af04-7d198a296c5e';
         $dialogId = '6a84f3da-7514-4116-86df-42b56acd19a7';
@@ -97,7 +97,7 @@ class DocuWareTest extends TestCase
     }
 
     /** @test */
-    public function it_does_show_single_document()
+    public function it_can_show_a_document()
     {
         $fileCabinetId = 'f95f2093-e790-495b-af04-7d198a296c5e';
         $documentId = 1;
@@ -113,7 +113,7 @@ class DocuWareTest extends TestCase
     }
 
     /** @test */
-    public function it_does_preview_single_document_image()
+    public function it_can_preview_a_document_image()
     {
         $fileCabinetId = 'f95f2093-e790-495b-af04-7d198a296c5e';
         $documentId = 1;
@@ -127,7 +127,7 @@ class DocuWareTest extends TestCase
     }
 
     /** @test */
-    public function it_does_download_single_document()
+    public function it_can_download_a_document()
     {
         $fileCabinetId = 'f95f2093-e790-495b-af04-7d198a296c5e';
         $documentId = 1;
@@ -141,7 +141,7 @@ class DocuWareTest extends TestCase
     }
 
     /** @test */
-    public function it_does_download_multiple_documents()
+    public function it_can_download_multiple_documents()
     {
         $fileCabinetId = 'f95f2093-e790-495b-af04-7d198a296c5e';
         $documentIds = [1, 2];
@@ -155,7 +155,7 @@ class DocuWareTest extends TestCase
     }
 
     /** @test */
-    public function it_does_update_index_value_from_a_document()
+    public function it_can_update_a_document_value()
     {
         $fileCabinetId = 'f95f2093-e790-495b-af04-7d198a296c5e';
         $documentId = 6;
@@ -172,7 +172,23 @@ class DocuWareTest extends TestCase
         $this->assertSame('Der neue Inhalt!', $response);
     }
 
-    // upload + delete file
+    /** @test */
+    public function it_can_upload_and_delete_a_document()
+    {
+        $fileCabinetId = 'f95f2093-e790-495b-af04-7d198a296c5e';
+        $fileContent = '::fake-file-content::';
+        $fileName = 'example.txt';
+
+        $document = (new DocuWare())->uploadDocument(
+            $fileCabinetId,
+            $fileContent,
+            $fileName,
+        );
+        (new DocuWare())->deleteDocument($fileCabinetId, $document->id);
+
+        $this->assertInstanceOf(Document::class, $document);
+        $this->assertSame('example', $document->title);
+    }
 
     // search in single cabinet
 

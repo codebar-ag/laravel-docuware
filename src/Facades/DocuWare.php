@@ -23,6 +23,8 @@ use Illuminate\Support\Facades\Facade;
  * @method static string downloadDocument(string $fileCabinetId, int $documentId)
  * @method static string downloadDocuments(string $fileCabinetId, array $documentIds)
  * @method static string updateDocumentValue(string $fileCabinetId, int $documentId, string $fieldName, string $newValue)
+ * @method static string uploadDocument(string $fileCabinetId, string $fileContent, string $fileName)
+ * @method static string deleteDocument(string $fileCabinetId, int $documentId)
  */
 class DocuWare extends Facade
 {

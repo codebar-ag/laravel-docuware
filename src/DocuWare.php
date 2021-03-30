@@ -251,4 +251,42 @@ class DocuWare
 
         return ParseValue::field($field);
     }
+
+    public function uploadDocument(
+        string $fileCabinetId,
+        string $fileContent,
+        string $fileName,
+    ): Document {
+        $url = sprintf(
+            '%s/docuware/platform/FileCabinets/%s/Documents',
+            config('docuware.url'),
+            $fileCabinetId,
+        );
+
+        $response = Http::acceptJson()
+            ->withCookies(Cache::get('docuware.cookies'), $this->domain)
+            ->attach('file', $fileContent, $fileName)
+            ->post($url)
+            ->throw()
+            ->json();
+
+        return Document::fromJson($response);
+    }
+
+    public function deleteDocument(
+        string $fileCabinetId,
+        int $documentId,
+    ): void {
+        $url = sprintf(
+            '%s/docuware/platform/FileCabinets/%s/Documents/%s',
+            config('docuware.url'),
+            $fileCabinetId,
+            $documentId,
+        );
+
+        Http::acceptJson()
+            ->withCookies(Cache::get('docuware.cookies'), $this->domain)
+            ->delete($url)
+            ->throw();
+    }
 }

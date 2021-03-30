@@ -125,4 +125,28 @@ class DocuWareTest extends TestCase
 
         $this->assertSame(11509, strlen($image));
     }
+
+    /** @test */
+    public function it_does_download_single_document()
+    {
+        $fileCabinetId = 'f95f2093-e790-495b-af04-7d198a296c5e';
+        $documentId = 1;
+
+        $contents = (new DocuWare())->downloadDocument(
+            $fileCabinetId,
+            $documentId,
+        );
+
+        $this->assertSame(37604, strlen($contents));
+    }
+
+    // download multiple documents
+
+    // update index value of document
+
+    // upload + delete file
+
+    // search in single cabinet
+
+    // search in all cabinets
 }

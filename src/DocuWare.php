@@ -174,4 +174,21 @@ class DocuWare
             ->throw()
             ->body();
     }
+
+    public function downloadDocument(
+        string $fileCabinetId,
+        int $documentId,
+    ): string {
+        $url = sprintf(
+            '%s/docuware/platform/FileCabinets/%s/Documents/%s/FileDownload?targetFileType=Auto&keepAnnotations=false',
+            config('docuware.url'),
+            $fileCabinetId,
+            $documentId
+        );
+
+        return Http::withCookies(Cache::get('docuware.cookies'), $this->domain)
+            ->get($url)
+            ->throw()
+            ->body();
+    }
 }

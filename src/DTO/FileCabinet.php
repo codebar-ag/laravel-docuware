@@ -2,7 +2,7 @@
 
 namespace codebar\DocuWare\DTO;
 
-use Arr;
+use Illuminate\Support\Arr;
 
 class FileCabinet
 {

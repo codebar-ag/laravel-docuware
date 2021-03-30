@@ -22,6 +22,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static string getDocumentPreview(string $fileCabinetId, int $documentId)
  * @method static string downloadDocument(string $fileCabinetId, int $documentId)
  * @method static string downloadDocuments(string $fileCabinetId, array $documentIds)
+ * @method static string updateDocumentValue(string $fileCabinetId, int $documentId, string $fieldName, string $newValue)
  */
 class DocuWare extends Facade
 {

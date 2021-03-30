@@ -154,7 +154,23 @@ class DocuWareTest extends TestCase
         $this->assertSame(67332, strlen($contents));
     }
 
-    // update index value of document
+    /** @test */
+    public function it_does_update_index_value_from_a_document()
+    {
+        $fileCabinetId = 'f95f2093-e790-495b-af04-7d198a296c5e';
+        $documentId = 6;
+        $fieldName = 'DOCUMENT_TEXT';
+        $newValue = 'Der neue Inhalt!';
+
+        $response = (new DocuWare())->updateDocumentValue(
+            $fileCabinetId,
+            $documentId,
+            $fieldName,
+            $newValue,
+        );
+
+        $this->assertSame('Der neue Inhalt!', $response);
+    }
 
     // upload + delete file
 

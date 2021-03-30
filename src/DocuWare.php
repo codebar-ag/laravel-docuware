@@ -2,11 +2,13 @@
 
 namespace codebar\DocuWare;
 
+use Carbon\Carbon;
 use codebar\DocuWare\DTO\Dialog;
 use codebar\DocuWare\DTO\Document;
 use codebar\DocuWare\DTO\Field;
 use codebar\DocuWare\DTO\FileCabinet;
 use codebar\DocuWare\Exceptions\UnableToDownloadDocuments;
+use codebar\DocuWare\Support\ParseValue;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
@@ -217,5 +219,36 @@ class DocuWare
             ->get($url)
             ->throw()
             ->body();
+    }
+
+    public function updateDocumentValue(
+        string $fileCabinetId,
+        int $documentId,
+        string $fieldName,
+        string $newValue,
+    ): null | int | float | Carbon | string {
+        $url = sprintf(
+            '%s/docuware/platform/FileCabinets/%s/Documents/%s/Fields',
+            config('docuware.url'),
+            $fileCabinetId,
+            $documentId,
+        );
+
+        $fields = Http::acceptJson()
+            ->withCookies(Cache::get('docuware.cookies'), $this->domain)
+            ->put($url, [
+                'Field' => [
+                    [
+                        'FieldName' => $fieldName,
+                        'Item' => $newValue,
+                    ],
+                ],
+            ])
+            ->throw()
+            ->json('Field');
+
+        $field = collect($fields)->firstWhere('FieldName', $fieldName);
+
+        return ParseValue::field($field);
     }
 }

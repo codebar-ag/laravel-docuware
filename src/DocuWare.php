@@ -117,4 +117,24 @@ class DocuWare
 
         return collect($dialogs)->map(fn (array $dialog) => Dialog::fromJson($dialog));
     }
+
+    public function getSelectList(
+        string $fileCabinetId,
+        string $dialogId,
+        string $fieldName,
+    ): array {
+        $url = sprintf(
+            '%s/docuware/platform/FileCabinets/%s/Query/SelectListExpression?dialogId=%s&fieldName=%s',
+            config('docuware.url'),
+            $fileCabinetId,
+            $dialogId,
+            $fieldName,
+        );
+
+        return Http::acceptJson()
+            ->withCookies(Cache::get('docuware.cookies'), $this->domain)
+            ->get($url)
+            ->throw()
+            ->json('Value');
+    }
 }

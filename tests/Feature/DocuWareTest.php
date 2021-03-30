@@ -78,4 +78,20 @@ class DocuWareTest extends TestCase
         $this->assertInstanceOf(Collection::class, $dialogs);
         $this->assertNotCount(0, $dialogs);
     }
+
+    /** @test */
+    public function it_does_list_values_of_a_select_list()
+    {
+        $fileCabinetId = 'f95f2093-e790-495b-af04-7d198a296c5e';
+        $dialogId = '6a84f3da-7514-4116-86df-42b56acd19a7';
+        $fieldName = 'DOKUMENTENTYP';
+
+        $types = (new DocuWare())->getSelectList(
+            $fileCabinetId,
+            $dialogId,
+            $fieldName,
+        );
+
+        $this->assertSame(['Auftrag', 'Offerte', 'Rechnung'], $types);
+    }
 }

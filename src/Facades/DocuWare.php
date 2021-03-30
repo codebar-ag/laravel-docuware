@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static Collection|FileCabinet[] getFileCabinets()
  * @method static Collection|Field[] getFields(string $fileCabinetId)
  * @method static Collection|Dialog[] getDialogs(string $fileCabinetId)
+ * @method static array getSelectList(string $fileCabinetId, string $dialogId, string $fieldName)
  */
 class DocuWare extends Facade
 {

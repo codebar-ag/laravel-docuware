@@ -8,6 +8,7 @@ class DocuWare
     {
         info('hello');
         dump('hello');
+
         return 'hello';
     }
 }

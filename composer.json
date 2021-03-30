@@ -3,6 +3,7 @@
     "description": "DocuWare integration with Laravel",
     "keywords": [
         "codebar",
+        "docuware",
         "laravel-docuware"
     ],
     "homepage": "https://github.com/codebar/laravel-docuware",
@@ -30,8 +31,7 @@
     },
     "autoload": {
         "psr-4": {
-            "codebar\\DocuWare\\": "src",
-            "codebar\\DocuWare\\Database\\Factories\\": "database/factories"
+            "codebar\\DocuWare\\": "src"
         }
     },
     "autoload-dev": {

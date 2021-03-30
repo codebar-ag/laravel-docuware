@@ -97,7 +97,7 @@ class DocuWareTest extends TestCase
     }
 
     /** @test */
-    public function it_does_show_document()
+    public function it_does_show_single_document()
     {
         $fileCabinetId = 'f95f2093-e790-495b-af04-7d198a296c5e';
         $documentId = 1;
@@ -110,5 +110,19 @@ class DocuWareTest extends TestCase
         $this->assertInstanceOf(Document::class, $document);
         $this->assertSame($documentId, $document->id);
         $this->assertSame($fileCabinetId, $document->file_cabinet_id);
+    }
+
+    /** @test */
+    public function it_does_preview_single_document_image()
+    {
+        $fileCabinetId = 'f95f2093-e790-495b-af04-7d198a296c5e';
+        $documentId = 1;
+
+        $image = (new DocuWare())->getDocumentPreview(
+            $fileCabinetId,
+            $documentId,
+        );
+
+        $this->assertSame(11509, strlen($image));
     }
 }

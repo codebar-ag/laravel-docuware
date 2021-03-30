@@ -156,4 +156,22 @@ class DocuWare
 
         return Document::fromJson($response);
     }
+
+    public function getDocumentPreview(
+        string $fileCabinetId,
+        int $documentId,
+    ): string {
+        $url = sprintf(
+            '%s/docuware/platform/FileCabinets/%s/Documents/%s/Image',
+            config('docuware.url'),
+            $fileCabinetId,
+            $documentId,
+        );
+
+        return Http::acceptJson()
+            ->withCookies(Cache::get('docuware.cookies'), $this->domain)
+            ->get($url)
+            ->throw()
+            ->body();
+    }
 }

@@ -1,10 +1,6 @@
 <?php
 
 return [
-    'foo' => 'bar',
-    'url' => env('PACKAGE_URL'),
-];
-
 
     /*
     |--------------------------------------------------------------------------
@@ -15,8 +11,7 @@ return [
     |
     */
 
-//    'url' => env('DOCUWARE_URL'),
-//    'user' => env('DOCUWARE_USER'),
-//    'password' => env('DOCUWARE_PASSWORD'),
-
-
+    'url' => env('DOCUWARE_URL'),
+    'user' => env('DOCUWARE_USER'),
+    'password' => env('DOCUWARE_PASSWORD'),
+];

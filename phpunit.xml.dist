@@ -36,4 +36,9 @@
     <logging>
         <junit outputFile="build/report.junit.xml"/>
     </logging>
+    <php>
+        <env name="DOCUWARE_URL" value="https://domain.docuware.cloud"/>
+        <env name="DOCUWARE_USER" value="user@domain.test"/>
+        <env name="DOCUWARE_PASSWORD" value="password"/>
+    </php>
 </phpunit>

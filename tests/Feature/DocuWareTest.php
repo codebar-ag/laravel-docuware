@@ -57,7 +57,7 @@ class DocuWareTest extends TestCase
         $this->assertNotCount(0, $fileCabinets);
     }
 
-    /** test */
+    /** @test */
     public function it_does_list_fields_for_a_file_cabinet()
     {
         $fileCabinetId = 'f95f2093-e790-495b-af04-7d198a296c5e';

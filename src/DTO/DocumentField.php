@@ -20,7 +20,7 @@ class DocumentField
     public function __construct(
         public string $name,
         public string $label,
-        public null|int|float|Carbon|string $value,
+        public null | int | float | Carbon | string $value,
         public string $type,
     ) {
     }

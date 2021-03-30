@@ -19,9 +19,9 @@ class ParseValue
 
     public static function field(
         ?array $field,
-        null|int|float|Carbon|string $default = null,
-    ): null|int|float|Carbon|string {
-        if (!$field) {
+        null | int | float | Carbon | string $default = null,
+    ): null | int | float | Carbon | string {
+        if (! $field) {
             return $default;
         }
 

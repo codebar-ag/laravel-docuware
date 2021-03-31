@@ -7,7 +7,11 @@
 [![Psalm](https://github.com/codebar-ag/laravel-docuware/actions/workflows/psalm.yml/badge.svg)](https://github.com/codebar-ag/laravel-docuware/actions/workflows/psalm.yml)
 
 
-This is where your description should go. Limit it to a paragraph or two. Consider adding a small example.
+A simple way to integrate the DocuWare REST API with your Laravel application.
+
+⚠️ This package is not designed to cover all endpoints. See the official 
+[DocuWare REST API](https://developer.docuware.com/rest/index.html) 
+documentation if you need further functionality.
 
 ## Local package testing
 

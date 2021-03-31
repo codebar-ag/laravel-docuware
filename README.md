@@ -9,27 +9,8 @@
 
 ⚠️ This package is not designed to cover all endpoints. See the official 
 [DocuWare REST API](https://developer.docuware.com/rest/index.html) 
-documentation if you need further functionality.
+documentation if you need further functionality. ⚠️
 
-## Local package testing
-
-Copy your own phpunit.xml-file.
-```bash
-cp phpunit.xml.dist phpunit.xml
-```
-
-Modify environment variables in the phpunit.xml-file:
-```xml
-<env name="DOCUWARE_URL" value="https://domain.docuware.cloud"/>
-<env name="DOCUWARE_USER" value="user@domain.test"/>
-<env name="DOCUWARE_PASSWORD" value="password"/>
-```
-
-Run the tests
-```bash
-./vendor/bin/phpunit
-```
-   
 ## Installation
 
 You can install the package via composer:
@@ -74,6 +55,19 @@ $cabinets = DocuWare::getFileCabinets();
 
 ## Testing
 
+Copy your own phpunit.xml-file.
+```bash
+cp phpunit.xml.dist phpunit.xml
+```
+
+Modify environment variables in the phpunit.xml-file:
+```xml
+<env name="DOCUWARE_URL" value="https://domain.docuware.cloud"/>
+<env name="DOCUWARE_USER" value="user@domain.test"/>
+<env name="DOCUWARE_PASSWORD" value="password"/>
+```
+
+Run the tests:
 ```bash
 composer test
 ```

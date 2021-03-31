@@ -54,12 +54,13 @@ return [
 use CodebarAg\DocuWare\Facades\DocuWare;
 
 /**
- * Login with your credentials.
+ * Login with your credentials. Your cookie is stored in the cache 
+ * `docuware.cookies` and is used for further requests.
  */
-$cookie = DocuWare::login();
+DocuWare::login();
 
 /**
- * Logout.
+ * Logout. Removes the stored cookie in the cache.
  */
 DocuWare::logout();
 

@@ -107,7 +107,6 @@ class DocuWareSearch
         return $this;
     }
 
-
     public function get(): DocumentPaginator
     {
         // Exception werfen wenn fileCabinetId null ist

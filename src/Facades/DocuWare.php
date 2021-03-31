@@ -24,7 +24,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static string getDocumentPreview(string $fileCabinetId, int $documentId)
  * @method static string downloadDocument(string $fileCabinetId, int $documentId)
  * @method static string downloadDocuments(string $fileCabinetId, array $documentIds)
- * @method static null | int | float | Carbon | string updateDocumentValue(string $fileCabinetId, int $documentId, string $fieldName, string $newValue)
+ * @method static null|int|float|Carbon|string updateDocumentValue(string $fileCabinetId, int $documentId, string $fieldName, string $newValue)
  * @method static Document uploadDocument(string $fileCabinetId, string $fileContent, string $fileName)
  * @method static void deleteDocument(string $fileCabinetId, int $documentId)
  * @method static DocuWareSearch search()

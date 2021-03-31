@@ -55,8 +55,9 @@ return [
 ## Usage
 
 ```php
-$laravel-docuware = new codebar\DocuWare();
-echo $laravel-docuware->echoPhrase('Hello, codebar!');
+use codebar\DocuWare\Facades\DocuWare;
+
+$cabinets = DocuWare::getFileCabinets();
 ```
 
 ## Testing

@@ -2,6 +2,7 @@
 
 namespace codebar\DocuWare\Facades;
 
+use codebar\DocuWare\DocuWareSearch;
 use codebar\DocuWare\DTO\Dialog;
 use codebar\DocuWare\DTO\Document;
 use codebar\DocuWare\DTO\Field;
@@ -25,6 +26,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static string updateDocumentValue(string $fileCabinetId, int $documentId, string $fieldName, string $newValue)
  * @method static string uploadDocument(string $fileCabinetId, string $fileContent, string $fileName)
  * @method static string deleteDocument(string $fileCabinetId, int $documentId)
+ * @method static DocuWareSearch search()
  */
 class DocuWare extends Facade
 {

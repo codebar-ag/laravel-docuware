@@ -22,10 +22,7 @@ class DocuWare
 
     public function __construct()
     {
-        $this->domain = Str::of(config('docuware.url'))
-            ->after('//')
-            ->beforeLast('/')
-            ->__toString();
+        $this->domain = ParseValue::domain();
     }
 
     public function login(): string
@@ -288,5 +285,10 @@ class DocuWare
             ->withCookies(Cache::get('docuware.cookies'), $this->domain)
             ->delete($url)
             ->throw();
+    }
+
+    public function search(): DocuWareSearch
+    {
+        return (new DocuWareSearch());
     }
 }

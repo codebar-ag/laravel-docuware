@@ -37,4 +37,12 @@ class ParseValue
             default => (string) $field['Item'],
         };
     }
+
+    public static function domain(): string
+    {
+        return Str::of(config('docuware.url'))
+            ->after('//')
+            ->beforeLast('/')
+            ->__toString();
+    }
 }

@@ -3,8 +3,10 @@
 namespace codebar\DocuWare\Tests\Feature;
 
 use Cache;
+use Carbon\Carbon;
 use codebar\DocuWare\DocuWare;
 use codebar\DocuWare\DTO\Document;
+use codebar\DocuWare\DTO\DocumentPaginator;
 use codebar\DocuWare\Tests\TestCase;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
@@ -190,7 +192,27 @@ class DocuWareTest extends TestCase
         $this->assertSame('example', $document->title);
     }
 
-    // search in single cabinet
+    /** @test */
+    public function it_can_search_documents()
+    {
+        $fileCabinetId = 'f95f2093-e790-495b-af04-7d198a296c5e';
+        $dialogId = '6a84f3da-7514-4116-86df-42b56acd19a7';
+        $additionalFileCabinets = ['986ee421-9d6b-4a4b-837d-b3e61ea2e681'];
 
-    // search in all cabinets
+        $paginator = (new DocuWare())
+            ->search()
+            ->fileCabinet($fileCabinetId)
+            ->dialog($dialogId)
+            ->additionalFileCabinets($additionalFileCabinets)
+            ->page(2)
+            ->perPage(5)
+            ->fulltext('test')
+            ->dateFrom(Carbon::create(2021, 3))
+            ->dateUntil(Carbon::create(2021, 3, 7))
+            ->orderBy('DWSTOREDATETIME', 'desc')
+            ->filter('DOKUMENTENTYP', 'Auftrag')
+            ->get();
+
+        $this->assertInstanceOf(DocumentPaginator::class, $paginator);
+    }
 }

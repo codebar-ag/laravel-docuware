@@ -7,8 +7,6 @@
 [![Psalm](https://github.com/codebar-ag/laravel-docuware/actions/workflows/psalm.yml/badge.svg)](https://github.com/codebar-ag/laravel-docuware/actions/workflows/psalm.yml)
 
 
-An opinionated way to integrate the DocuWare REST API with your Laravel application.
-
 ⚠️ This package is not designed to cover all endpoints. See the official 
 [DocuWare REST API](https://developer.docuware.com/rest/index.html) 
 documentation if you need further functionality.

@@ -1,12 +1,12 @@
 {
-    "name": "codebar/laravel-docuware",
+    "name": "codebar-ag/laravel-docuware",
     "description": "DocuWare integration with Laravel",
     "keywords": [
-        "codebar",
         "docuware",
+        "codebar-ag",
         "laravel-docuware"
     ],
-    "homepage": "https://github.com/codebar/laravel-docuware",
+    "homepage": "https://github.com/CodebarAg/laravel-docuware",
     "license": "MIT",
     "authors": [
         {
@@ -32,12 +32,12 @@
     },
     "autoload": {
         "psr-4": {
-            "codebar\\DocuWare\\": "src"
+            "CodebarAg\\DocuWare\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "codebar\\DocuWare\\Tests\\": "tests"
+            "CodebarAg\\DocuWare\\Tests\\": "tests"
         }
     },
     "scripts": {
@@ -52,10 +52,10 @@
     "extra": {
         "laravel": {
             "providers": [
-                "codebar\\DocuWare\\DocuWareServiceProvider"
+                "CodebarAg\\DocuWare\\DocuWareServiceProvider"
             ],
             "aliases": {
-                "DocuWare": "codebar\\DocuWare\\Facades\\DocuWare"
+                "DocuWare": "CodebarAg\\DocuWare\\Facades\\DocuWare"
             }
         }
     },

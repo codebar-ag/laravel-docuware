@@ -1,14 +1,14 @@
 <?php
 
-namespace codebar\DocuWare;
+namespace CodebarAg\DocuWare;
 
 use Carbon\Carbon;
-use codebar\DocuWare\DTO\Dialog;
-use codebar\DocuWare\DTO\Document;
-use codebar\DocuWare\DTO\Field;
-use codebar\DocuWare\DTO\FileCabinet;
-use codebar\DocuWare\Exceptions\UnableToDownloadDocuments;
-use codebar\DocuWare\Support\ParseValue;
+use CodebarAg\DocuWare\DTO\Dialog;
+use CodebarAg\DocuWare\DTO\Document;
+use CodebarAg\DocuWare\DTO\Field;
+use CodebarAg\DocuWare\DTO\FileCabinet;
+use CodebarAg\DocuWare\Exceptions\UnableToDownloadDocuments;
+use CodebarAg\DocuWare\Support\ParseValue;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;

@@ -1,6 +1,6 @@
 <?php
 
-namespace codebar\DocuWare\DTO;
+namespace CodebarAg\DocuWare\DTO;
 
 class Field
 {

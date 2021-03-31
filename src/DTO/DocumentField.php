@@ -1,9 +1,9 @@
 <?php
 
-namespace codebar\DocuWare\DTO;
+namespace CodebarAg\DocuWare\DTO;
 
 use Carbon\Carbon;
-use codebar\DocuWare\Support\ParseValue;
+use CodebarAg\DocuWare\Support\ParseValue;
 
 class DocumentField
 {

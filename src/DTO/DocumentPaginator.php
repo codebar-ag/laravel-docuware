@@ -1,6 +1,6 @@
 <?php
 
-namespace codebar\DocuWare\DTO;
+namespace CodebarAg\DocuWare\DTO;
 
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;

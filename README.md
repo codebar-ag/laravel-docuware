@@ -1,7 +1,7 @@
-<img src="https://banners.beyondco.de/Laravel%20DocuWare.png?theme=light&packageManager=composer+require&packageName=codebar%2Flaravel-docuware&pattern=circuitBoard&style=style_1&description=An+opinionated+way+to+integrate+DocuWare+with+your+Laravel+application.&md=1&showWatermark=0&fontSize=175px&images=document-report">
+<img src="https://banners.beyondco.de/Laravel%20DocuWare.png?theme=light&packageManager=composer+require&packageName=codebar-ag%2Flaravel-docuware&pattern=circuitBoard&style=style_1&description=An+opinionated+way+to+integrate+DocuWare+with+Laravel&md=1&showWatermark=0&fontSize=175px&images=document-report">
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/codebar/laravel-docuware.svg?style=flat-square)](https://packagist.org/packages/codebar/laravel-docuware)
-[![Total Downloads](https://img.shields.io/packagist/dt/codebar/laravel-docuware.svg?style=flat-square)](https://packagist.org/packages/codebar/laravel-docuware)
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/codebar-ag/laravel-docuware.svg?style=flat-square)](https://packagist.org/packages/codebar-ag/laravel-docuware)
+[![Total Downloads](https://img.shields.io/packagist/dt/codebar-ag/laravel-docuware.svg?style=flat-square)](https://packagist.org/packages/codebar-ag/laravel-docuware)
 [![run-tests](https://github.com/codebar-ag/laravel-docuware/actions/workflows/run-tests.yml/badge.svg)](https://github.com/codebar-ag/laravel-docuware/actions/workflows/run-tests.yml)
 [![Check & fix styling](https://github.com/codebar-ag/laravel-docuware/actions/workflows/php-cs-fixer.yml/badge.svg)](https://github.com/codebar-ag/laravel-docuware/actions/workflows/php-cs-fixer.yml)
 [![Psalm](https://github.com/codebar-ag/laravel-docuware/actions/workflows/psalm.yml/badge.svg)](https://github.com/codebar-ag/laravel-docuware/actions/workflows/psalm.yml)
@@ -16,12 +16,12 @@ documentation if you need further functionality. ⚠️
 You can install the package via composer:
 
 ```bash
-composer require codebar/laravel-docuware
+composer require codebar-ag/laravel-docuware
 ```
 
 You can publish the config file with:
 ```bash
-php artisan vendor:publish --provider="codebar\DocuWare\DocuWareServiceProvider" --tag="docuware-config"
+php artisan vendor:publish --provider="CodebarAg\DocuWare\DocuWareServiceProvider" --tag="docuware-config"
 ```
 
 This is the contents of the published config file:
@@ -48,7 +48,7 @@ return [
 ## Usage
 
 ```php
-use codebar\DocuWare\Facades\DocuWare;
+use CodebarAg\DocuWare\Facades\DocuWare;
 
 $cabinets = DocuWare::getFileCabinets();
 ```

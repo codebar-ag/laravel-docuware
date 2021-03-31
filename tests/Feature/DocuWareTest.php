@@ -1,13 +1,13 @@
 <?php
 
-namespace codebar\DocuWare\Tests\Feature;
+namespace CodebarAg\DocuWare\Tests\Feature;
 
 use Cache;
 use Carbon\Carbon;
-use codebar\DocuWare\DocuWare;
-use codebar\DocuWare\DTO\Document;
-use codebar\DocuWare\DTO\DocumentPaginator;
-use codebar\DocuWare\Tests\TestCase;
+use CodebarAg\DocuWare\DocuWare;
+use CodebarAg\DocuWare\DTO\Document;
+use CodebarAg\DocuWare\DTO\DocumentPaginator;
+use CodebarAg\DocuWare\Tests\TestCase;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;

@@ -1,6 +1,6 @@
 <?php
 
-namespace codebar\DocuWare;
+namespace CodebarAg\DocuWare;
 
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;

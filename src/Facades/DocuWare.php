@@ -1,17 +1,17 @@
 <?php
 
-namespace codebar\DocuWare\Facades;
+namespace CodebarAg\DocuWare\Facades;
 
-use codebar\DocuWare\DocuWareSearch;
-use codebar\DocuWare\DTO\Dialog;
-use codebar\DocuWare\DTO\Document;
-use codebar\DocuWare\DTO\Field;
-use codebar\DocuWare\DTO\FileCabinet;
+use CodebarAg\DocuWare\DocuWareSearch;
+use CodebarAg\DocuWare\DTO\Dialog;
+use CodebarAg\DocuWare\DTO\Document;
+use CodebarAg\DocuWare\DTO\Field;
+use CodebarAg\DocuWare\DTO\FileCabinet;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Facade;
 
 /**
- * @see \codebar\DocuWare\DocuWare
+ * @see \CodebarAg\DocuWare\DocuWare
  *
  * @method static string login()
  * @method static void logout()
@@ -32,6 +32,6 @@ class DocuWare extends Facade
 {
     protected static function getFacadeAccessor(): string
     {
-        return \codebar\DocuWare\DocuWare::class;
+        return \CodebarAg\DocuWare\DocuWare::class;
     }
 }

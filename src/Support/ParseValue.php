@@ -1,6 +1,6 @@
 <?php
 
-namespace codebar\DocuWare\Support;
+namespace CodebarAg\DocuWare\Support;
 
 use Carbon\Carbon;
 use Illuminate\Support\Str;

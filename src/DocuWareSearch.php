@@ -1,11 +1,11 @@
 <?php
 
-namespace codebar\DocuWare;
+namespace CodebarAg\DocuWare;
 
 use Carbon\Carbon;
-use codebar\DocuWare\DTO\DocumentPaginator;
-use codebar\DocuWare\Exceptions\UnableToSearchDocuments;
-use codebar\DocuWare\Support\ParseValue;
+use CodebarAg\DocuWare\DTO\DocumentPaginator;
+use CodebarAg\DocuWare\Exceptions\UnableToSearchDocuments;
+use CodebarAg\DocuWare\Support\ParseValue;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;

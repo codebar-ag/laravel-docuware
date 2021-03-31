@@ -148,16 +148,16 @@ class DocuWareSearch
         $response = Http::acceptJson()
             ->withCookies(Cache::get('docuware.cookies'), $this->domain)
             ->post($url, [
+                'Count' => $this->perPage,
+                'Start' => ($this->page - 1) * $this->perPage,
                 'Condition' => $condition,
+                'AdditionalCabinets' => $this->additionalFileCabinetIds,
                 'SortOrder' => [
                     [
-                        'Direction' => $this->orderDirection,
                         'Field' => $this->orderField,
+                        'Direction' => $this->orderDirection,
                     ],
                 ],
-                'Start' => ($this->page - 1) * $this->perPage,
-                'Count' => $this->perPage,
-                'AdditionalCabinets' => $this->additionalFileCabinetIds,
                 'Operation' => 'And',
                 'ForceRefresh' => true,
                 'IncludeSuggestions' => false,

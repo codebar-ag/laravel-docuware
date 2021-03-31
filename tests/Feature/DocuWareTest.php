@@ -204,7 +204,7 @@ class DocuWareTest extends TestCase
             ->fileCabinet($fileCabinetId)
             ->dialog($dialogId)
             ->additionalFileCabinets($additionalFileCabinets)
-            ->page(2)
+            ->page(1)
             ->perPage(5)
             ->fulltext('test')
             ->dateFrom(Carbon::create(2021, 3))

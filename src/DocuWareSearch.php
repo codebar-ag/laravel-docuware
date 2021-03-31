@@ -4,6 +4,7 @@ namespace codebar\DocuWare;
 
 use Carbon\Carbon;
 use codebar\DocuWare\DTO\DocumentPaginator;
+use codebar\DocuWare\Exceptions\UnableToSearchDocuments;
 use codebar\DocuWare\Support\ParseValue;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Cache;
@@ -109,8 +110,8 @@ class DocuWareSearch
 
     public function get(): DocumentPaginator
     {
-        // Exception werfen wenn fileCabinetId null ist
-        // Exception werfen wenn dialogId null ist
+        $this->guard();
+
         $url = sprintf(
             '%s/docuware/platform/FileCabinets/%s/Query/DialogExpression?dialogId=%s',
             config('docuware.url'),
@@ -169,6 +170,19 @@ class DocuWareSearch
             $response,
             $this->page,
             $this->perPage,
+        );
+    }
+
+    protected function guard(): void
+    {
+        throw_if(
+            is_null($this->fileCabinetId),
+            UnableToSearchDocuments::cabinetNotSet(),
+        );
+
+        throw_if(
+            is_null($this->dialogId),
+            UnableToSearchDocuments::dialogNotSet(),
         );
     }
 }

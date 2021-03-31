@@ -7,9 +7,12 @@
 [![Psalm](https://github.com/codebar-ag/laravel-docuware/actions/workflows/psalm.yml/badge.svg)](https://github.com/codebar-ag/laravel-docuware/actions/workflows/psalm.yml)
 
 
-⚠️ This package is not designed to cover all endpoints. See the official 
-[DocuWare REST API](https://developer.docuware.com/rest/index.html) 
-documentation if you need further functionality. ⚠️
+This package was developed to give you a quick start to communicate with the DocuWare
+REST API. It is used to query the most common endpoints.
+
+⚠️ This package is not designed as a replacement of the official 
+[DocuWare REST API](https://developer.docuware.com/rest/index.html).
+See the documentation if you need further functionality. ⚠️
 
 ## Installation
 
@@ -50,8 +53,81 @@ return [
 ```php
 use CodebarAg\DocuWare\Facades\DocuWare;
 
+/**
+ * Login with your credentials.
+ */
+$cookie = DocuWare::login();
+
+/**
+ * Logout.
+ */
+DocuWare::logout();
+
+/**
+ * Return all file cabinets.
+ */
 $cabinets = DocuWare::getFileCabinets();
+
+/**
+ * Return all fields of a file cabinet.
+ */
+$fields = DocuWare::getFields($fileCabinetId);
+
+/**
+ * Return all dialogs of a file cabinet.
+ */
+$dialogs = DocuWare::getDialogs($fileCabinetId);
+
+/**
+ * Return all used values for a specific field.
+ */
+$values = DocuWare::getSelectList($fileCabinetId, $dialogId, $fieldName);
+
+/**
+ * Return a document.
+ */
+$document = DocuWare::getDocument($fileCabinetId, $documentId);
+
+/**
+ * Return image preview of a document.
+ */
+$content = DocuWare::getDocumentPreview($fileCabinetId, $documentId);
+
+/**
+ * Download single document.
+ */
+$content = DocuWare::downloadDocument($fileCabinetId, $documentId);
+
+/**
+ * Download multiple documents.
+ */
+$content = DocuWare::downloadDocuments($fileCabinetId, $documentIds);
+
+/**
+ * Update value of a indexed field.
+ */
+$value = DocuWare::updateDocumentValue($fileCabinetId, $documentId, $fieldName, $newValue);
+
+/**
+ * Upload new document.
+ */
+$document = DocuWare::uploadDocument($fileCabinetId, $fileContent, $fileName);
+
+/**
+ * Delete document.
+ */
+DocuWare::deleteDocument($fileCabinetId, $documentId);
+
+/**
+ * Most basic example to search for documents.
+ */
+$paginator = DocuWare::search()
+    ->fileCabinet($fileCabinetId)
+    ->dialog($dialogId)
+    ->get();
 ```
+
+Please see [Tests](tests/Feature/DocuWareTest.php) for more details.
 
 ## Testing
 

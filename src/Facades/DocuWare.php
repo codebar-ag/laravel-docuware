@@ -2,6 +2,7 @@
 
 namespace CodebarAg\DocuWare\Facades;
 
+use Carbon\Carbon;
 use CodebarAg\DocuWare\DocuWareSearch;
 use CodebarAg\DocuWare\DTO\Dialog;
 use CodebarAg\DocuWare\DTO\Document;
@@ -23,9 +24,9 @@ use Illuminate\Support\Facades\Facade;
  * @method static string getDocumentPreview(string $fileCabinetId, int $documentId)
  * @method static string downloadDocument(string $fileCabinetId, int $documentId)
  * @method static string downloadDocuments(string $fileCabinetId, array $documentIds)
- * @method static string updateDocumentValue(string $fileCabinetId, int $documentId, string $fieldName, string $newValue)
- * @method static string uploadDocument(string $fileCabinetId, string $fileContent, string $fileName)
- * @method static string deleteDocument(string $fileCabinetId, int $documentId)
+ * @method static null | int | float | Carbon | string updateDocumentValue(string $fileCabinetId, int $documentId, string $fieldName, string $newValue)
+ * @method static Document uploadDocument(string $fileCabinetId, string $fileContent, string $fileName)
+ * @method static void deleteDocument(string $fileCabinetId, int $documentId)
  * @method static DocuWareSearch search()
  */
 class DocuWare extends Facade

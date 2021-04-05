@@ -9,8 +9,8 @@ use CodebarAg\DocuWare\DTO\Field;
 use CodebarAg\DocuWare\DTO\FileCabinet;
 use CodebarAg\DocuWare\Events\DocuWareResponseLog;
 use CodebarAg\DocuWare\Exceptions\UnableToDownloadDocuments;
-use CodebarAg\DocuWare\Exceptions\UnableToFindCredentials;
 use CodebarAg\DocuWare\Exceptions\UnableToLogin;
+use CodebarAg\DocuWare\Support\EnsureValidCredentials;
 use CodebarAg\DocuWare\Support\EnsureValidResponse;
 use CodebarAg\DocuWare\Support\ParseValue;
 use Illuminate\Support\Collection;
@@ -26,9 +26,7 @@ class DocuWare
 
     public function __construct()
     {
-        throw_if(empty(config('docuware.url')), UnableToFindCredentials::url());
-        throw_if(empty(config('docuware.user')), UnableToFindCredentials::user());
-        throw_if(empty(config('docuware.password')), UnableToFindCredentials::password());
+        EnsureValidCredentials::check();
 
         $this->domain = ParseValue::domain();
     }

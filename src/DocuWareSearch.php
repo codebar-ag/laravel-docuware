@@ -5,14 +5,13 @@ namespace CodebarAg\DocuWare;
 use Carbon\Carbon;
 use CodebarAg\DocuWare\DTO\DocumentPaginator;
 use CodebarAg\DocuWare\Events\DocuWareResponseLog;
-use CodebarAg\DocuWare\Exceptions\UnableToMakeRequest;
 use CodebarAg\DocuWare\Exceptions\UnableToSearchDocuments;
+use CodebarAg\DocuWare\Support\EnsureValidResponse;
 use CodebarAg\DocuWare\Support\ParseValue;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
-use Symfony\Component\HttpFoundation\Response;
 
 class DocuWareSearch
 {
@@ -169,10 +168,7 @@ class DocuWareSearch
 
         event(new DocuWareResponseLog($response));
 
-        throw_if(
-            $response->status() === Response::HTTP_UNAUTHORIZED,
-            UnableToMakeRequest::create(),
-        );
+        EnsureValidResponse::from($response);
 
         $data = $response->throw()->json();
 

@@ -11,7 +11,7 @@ use CodebarAg\DocuWare\Events\DocuWareResponseLog;
 use CodebarAg\DocuWare\Exceptions\UnableToDownloadDocuments;
 use CodebarAg\DocuWare\Exceptions\UnableToFindCredentials;
 use CodebarAg\DocuWare\Exceptions\UnableToLogin;
-use CodebarAg\DocuWare\Exceptions\UnableToMakeRequest;
+use CodebarAg\DocuWare\Support\EnsureValidResponse;
 use CodebarAg\DocuWare\Support\ParseValue;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
@@ -103,10 +103,7 @@ class DocuWare
 
         event(new DocuWareResponseLog($response));
 
-        throw_if(
-            $response->status() === Response::HTTP_UNAUTHORIZED,
-            UnableToMakeRequest::create(),
-        );
+        EnsureValidResponse::from($response);
 
         $cabinets = $response->throw()->json('FileCabinet');
 
@@ -127,10 +124,7 @@ class DocuWare
 
         event(new DocuWareResponseLog($response));
 
-        throw_if(
-            $response->status() === Response::HTTP_UNAUTHORIZED,
-            UnableToMakeRequest::create(),
-        );
+        EnsureValidResponse::from($response);
 
         $fields = $response->throw()->json('Fields');
 
@@ -151,10 +145,7 @@ class DocuWare
 
         event(new DocuWareResponseLog($response));
 
-        throw_if(
-            $response->status() === Response::HTTP_UNAUTHORIZED,
-            UnableToMakeRequest::create(),
-        );
+        EnsureValidResponse::from($response);
 
         $dialogs = $response->throw()->json('Dialog');
 
@@ -180,10 +171,7 @@ class DocuWare
 
         event(new DocuWareResponseLog($response));
 
-        throw_if(
-            $response->status() === Response::HTTP_UNAUTHORIZED,
-            UnableToMakeRequest::create(),
-        );
+        EnsureValidResponse::from($response);
 
         return $response->throw()->json('Value');
     }
@@ -203,10 +191,7 @@ class DocuWare
 
         event(new DocuWareResponseLog($response));
 
-        throw_if(
-            $response->status() === Response::HTTP_UNAUTHORIZED,
-            UnableToMakeRequest::create(),
-        );
+        EnsureValidResponse::from($response);
 
         $data = $response->throw()->json();
 
@@ -230,10 +215,7 @@ class DocuWare
 
         event(new DocuWareResponseLog($response));
 
-        throw_if(
-            $response->status() === Response::HTTP_UNAUTHORIZED,
-            UnableToMakeRequest::create(),
-        );
+        EnsureValidResponse::from($response);
 
         return $response->throw()->body();
     }
@@ -254,10 +236,7 @@ class DocuWare
 
         event(new DocuWareResponseLog($response));
 
-        throw_if(
-            $response->status() === Response::HTTP_UNAUTHORIZED,
-            UnableToMakeRequest::create(),
-        );
+        EnsureValidResponse::from($response);
 
         return $response->throw()->body();
     }
@@ -287,10 +266,7 @@ class DocuWare
 
         event(new DocuWareResponseLog($response));
 
-        throw_if(
-            $response->status() === Response::HTTP_UNAUTHORIZED,
-            UnableToMakeRequest::create(),
-        );
+        EnsureValidResponse::from($response);
 
         return $response->throw()->body();
     }
@@ -321,10 +297,7 @@ class DocuWare
 
         event(new DocuWareResponseLog($response));
 
-        throw_if(
-            $response->status() === Response::HTTP_UNAUTHORIZED,
-            UnableToMakeRequest::create(),
-        );
+        EnsureValidResponse::from($response);
 
         $fields = $response->throw()->json('Field');
 
@@ -351,10 +324,7 @@ class DocuWare
 
         event(new DocuWareResponseLog($response));
 
-        throw_if(
-            $response->status() === Response::HTTP_UNAUTHORIZED,
-            UnableToMakeRequest::create(),
-        );
+        EnsureValidResponse::from($response);
 
         $data = $response->throw()->json();
 
@@ -378,10 +348,7 @@ class DocuWare
 
         event(new DocuWareResponseLog($response));
 
-        throw_if(
-            $response->status() === Response::HTTP_UNAUTHORIZED,
-            UnableToMakeRequest::create(),
-        );
+        EnsureValidResponse::from($response);
 
         $response->throw();
     }

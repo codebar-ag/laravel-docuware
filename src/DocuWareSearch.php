@@ -4,6 +4,7 @@ namespace CodebarAg\DocuWare;
 
 use Carbon\Carbon;
 use CodebarAg\DocuWare\DTO\DocumentPaginator;
+use CodebarAg\DocuWare\Events\DocuWareResponseLog;
 use CodebarAg\DocuWare\Exceptions\UnableToSearchDocuments;
 use CodebarAg\DocuWare\Support\ParseValue;
 use Illuminate\Support\Arr;
@@ -162,12 +163,14 @@ class DocuWareSearch
                 'ForceRefresh' => true,
                 'IncludeSuggestions' => false,
                 'AdditionalResultFields' => [],
-            ])
-            ->throw()
-            ->json();
+            ]);
+
+        event(new DocuWareResponseLog($response));
+
+        $data = $response->throw()->json();
 
         return DocumentPaginator::fromJson(
-            $response,
+            $data,
             $this->page,
             $this->perPage,
         );

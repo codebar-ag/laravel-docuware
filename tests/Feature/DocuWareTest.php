@@ -2,13 +2,15 @@
 
 namespace CodebarAg\DocuWare\Tests\Feature;
 
-use Cache;
 use Carbon\Carbon;
 use CodebarAg\DocuWare\DocuWare;
 use CodebarAg\DocuWare\DTO\Document;
 use CodebarAg\DocuWare\DTO\DocumentPaginator;
+use CodebarAg\DocuWare\Events\DocuWareResponseLog;
 use CodebarAg\DocuWare\Tests\TestCase;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 
@@ -17,6 +19,8 @@ class DocuWareTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
+
+        Event::fake();
 
         $cookiePath = storage_path('app/.dwplatformauth');
 
@@ -58,6 +62,7 @@ class DocuWareTest extends TestCase
 
         $this->assertInstanceOf(Collection::class, $fileCabinets);
         $this->assertNotCount(0, $fileCabinets);
+        Event::assertDispatched(DocuWareResponseLog::class);
     }
 
     /** @test */
@@ -69,6 +74,7 @@ class DocuWareTest extends TestCase
 
         $this->assertInstanceOf(Collection::class, $fields);
         $this->assertNotCount(0, $fields);
+        Event::assertDispatched(DocuWareResponseLog::class);
     }
 
     /** @test */
@@ -80,6 +86,7 @@ class DocuWareTest extends TestCase
 
         $this->assertInstanceOf(Collection::class, $dialogs);
         $this->assertNotCount(0, $dialogs);
+        Event::assertDispatched(DocuWareResponseLog::class);
     }
 
     /** @test */
@@ -96,6 +103,7 @@ class DocuWareTest extends TestCase
         );
 
         $this->assertSame(['Auftrag', 'Offerte', 'Rechnung'], $types);
+        Event::assertDispatched(DocuWareResponseLog::class);
     }
 
     /** @test */
@@ -112,6 +120,7 @@ class DocuWareTest extends TestCase
         $this->assertInstanceOf(Document::class, $document);
         $this->assertSame($documentId, $document->id);
         $this->assertSame($fileCabinetId, $document->file_cabinet_id);
+        Event::assertDispatched(DocuWareResponseLog::class);
     }
 
     /** @test */
@@ -126,6 +135,7 @@ class DocuWareTest extends TestCase
         );
 
         $this->assertSame(11509, strlen($image));
+        Event::assertDispatched(DocuWareResponseLog::class);
     }
 
     /** @test */
@@ -140,6 +150,7 @@ class DocuWareTest extends TestCase
         );
 
         $this->assertSame(37604, strlen($contents));
+        Event::assertDispatched(DocuWareResponseLog::class);
     }
 
     /** @test */
@@ -154,6 +165,7 @@ class DocuWareTest extends TestCase
         );
 
         $this->assertSame(67332, strlen($contents));
+        Event::assertDispatched(DocuWareResponseLog::class);
     }
 
     /** @test */
@@ -172,6 +184,7 @@ class DocuWareTest extends TestCase
         );
 
         $this->assertSame('Der neue Inhalt!', $response);
+        Event::assertDispatched(DocuWareResponseLog::class);
     }
 
     /** @test */
@@ -190,6 +203,7 @@ class DocuWareTest extends TestCase
 
         $this->assertInstanceOf(Document::class, $document);
         $this->assertSame('example', $document->title);
+        Event::assertDispatched(DocuWareResponseLog::class);
     }
 
     /** @test */
@@ -214,5 +228,6 @@ class DocuWareTest extends TestCase
             ->get();
 
         $this->assertInstanceOf(DocumentPaginator::class, $paginator);
+        Event::assertDispatched(DocuWareResponseLog::class);
     }
 }

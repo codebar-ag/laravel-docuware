@@ -2,7 +2,6 @@
 
 namespace CodebarAg\DocuWare;
 
-use Illuminate\Http\Client\Response;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
@@ -18,10 +17,5 @@ class DocuWareServiceProvider extends PackageServiceProvider
         $package
             ->name('laravel-docuware')
             ->hasConfigFile();
-    }
-
-    public static function logResponse(Response $response): void
-    {
-        // ray($response->effectiveUri()->__toString());
     }
 }

@@ -149,6 +149,19 @@ Run the tests:
 composer test
 ```
 
+## Events
+
+Following events are fired:
+
+```php 
+use CodebarAg\DocuWare\Events\DocuWareResponseLog;
+
+// Log each response from the DocuWare REST API.
+DocuWareResponseLog::class => [
+    //
+],
+```
+
 ## Changelog
 
 Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed recently.

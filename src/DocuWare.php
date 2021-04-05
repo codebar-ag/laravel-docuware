@@ -9,6 +9,7 @@ use CodebarAg\DocuWare\DTO\Field;
 use CodebarAg\DocuWare\DTO\FileCabinet;
 use CodebarAg\DocuWare\Events\DocuWareResponseLog;
 use CodebarAg\DocuWare\Exceptions\UnableToDownloadDocuments;
+use CodebarAg\DocuWare\Exceptions\UnableToFindCredentials;
 use CodebarAg\DocuWare\Support\ParseValue;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
@@ -22,13 +23,17 @@ class DocuWare
 
     public function __construct()
     {
+        throw_if(empty(config('docuware.url')), UnableToFindCredentials::url());
+        throw_if(empty(config('docuware.user')), UnableToFindCredentials::user());
+        throw_if(empty(config('docuware.password')), UnableToFindCredentials::password());
+
         $this->domain = ParseValue::domain();
     }
 
     public function login(): string
     {
         if (Cache::has('docuware.cookies')) {
-            return Cache::get('docuware.cookies');
+            return Cache::get('docuware.cookies')[self::COOKIE_NAME];
         }
 
         $url = sprintf(

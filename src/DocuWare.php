@@ -10,10 +10,12 @@ use CodebarAg\DocuWare\DTO\FileCabinet;
 use CodebarAg\DocuWare\Events\DocuWareResponseLog;
 use CodebarAg\DocuWare\Exceptions\UnableToDownloadDocuments;
 use CodebarAg\DocuWare\Exceptions\UnableToFindCredentials;
+use CodebarAg\DocuWare\Exceptions\UnableToLogin;
 use CodebarAg\DocuWare\Support\ParseValue;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
+use Symfony\Component\HttpFoundation\Response;
 
 class DocuWare
 {
@@ -50,9 +52,17 @@ class DocuWare
 
         event(new DocuWareResponseLog($response));
 
-        $response->throw();
+        throw_if(
+            $response->status() === Response::HTTP_UNAUTHORIZED,
+            UnableToLogin::create(),
+        );
 
-        $cookie = collect($response->cookies()->toArray())
+        $cookies = $response
+            ->throw()
+            ->cookies()
+            ->toArray();
+
+        $cookie = collect($cookies)
             ->reject(fn (array $cookie) => $cookie['Value'] === '')
             ->firstWhere('Name', self::COOKIE_NAME);
 

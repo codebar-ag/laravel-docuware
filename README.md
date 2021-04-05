@@ -22,30 +22,12 @@ You can install the package via composer:
 composer require codebar-ag/laravel-docuware
 ```
 
-You can publish the config file with:
+Add the following environment variables in your `.env` file:
+
 ```bash
-php artisan vendor:publish --provider="CodebarAg\DocuWare\DocuWareServiceProvider" --tag="docuware-config"
-```
-
-This is the contents of the published config file:
-
-```php
-return [
-
-    /*
-    |--------------------------------------------------------------------------
-    | DocuWare credentials
-    |--------------------------------------------------------------------------
-    |
-    | These values are used to connect your application with DocuWare.
-    |
-    */
-
-    'url' => env('DOCUWARE_URL'),
-    'user' => env('DOCUWARE_USER'),
-    'password' => env('DOCUWARE_PASSWORD'),
-
-];
+DOCUWARE_URL=https://domain.docuware.cloud
+DOCUWARE_USER=user@domain.test
+DOCUWARE_PASSWORD=password
 ```
 
 ## Usage
@@ -130,6 +112,47 @@ $paginator = DocuWare::search()
 
 Please see [Tests](tests/Feature/DocuWareTest.php) for more details.
 
+## Events
+
+Following events are fired:
+
+```php 
+use CodebarAg\DocuWare\Events\DocuWareResponseLog;
+
+// Log each response from the DocuWare REST API.
+DocuWareResponseLog::class => [
+    //
+],
+```
+
+## Configuration file
+
+You can publish the config file with:
+```bash
+php artisan vendor:publish --provider="CodebarAg\DocuWare\DocuWareServiceProvider" --tag="docuware-config"
+```
+
+This is the contents of the published config file:
+
+```php
+return [
+
+    /*
+    |--------------------------------------------------------------------------
+    | DocuWare credentials
+    |--------------------------------------------------------------------------
+    |
+    | These values are used to connect your application with DocuWare.
+    |
+    */
+
+    'url' => env('DOCUWARE_URL'),
+    'user' => env('DOCUWARE_USER'),
+    'password' => env('DOCUWARE_PASSWORD'),
+
+];
+```
+
 ## Testing
 
 Copy your own phpunit.xml-file.
@@ -147,19 +170,6 @@ Modify environment variables in the phpunit.xml-file:
 Run the tests:
 ```bash
 composer test
-```
-
-## Events
-
-Following events are fired:
-
-```php 
-use CodebarAg\DocuWare\Events\DocuWareResponseLog;
-
-// Log each response from the DocuWare REST API.
-DocuWareResponseLog::class => [
-    //
-],
 ```
 
 ## Changelog

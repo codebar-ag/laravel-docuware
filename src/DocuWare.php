@@ -9,6 +9,7 @@ use CodebarAg\DocuWare\DTO\Field;
 use CodebarAg\DocuWare\DTO\FileCabinet;
 use CodebarAg\DocuWare\Exceptions\UnableToDownloadDocuments;
 use CodebarAg\DocuWare\Support\ParseValue;
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
@@ -22,6 +23,11 @@ class DocuWare
     public function __construct()
     {
         $this->domain = ParseValue::domain();
+    }
+
+    protected function log(Response $response): void
+    {
+        DocuWareServiceProvider::logResponse($response);
     }
 
     public function login(): string
@@ -40,8 +46,11 @@ class DocuWare
             ->post($url, [
                 'UserName' => config('docuware.user'),
                 'Password' => config('docuware.password'),
-            ])
-            ->throw();
+            ]);
+
+        $this->log($response);
+
+        $response->throw();
 
         $cookie = collect($response->cookies()->toArray())
             ->reject(fn (array $cookie) => $cookie['Value'] === '')
@@ -65,7 +74,9 @@ class DocuWare
             config('docuware.url'),
         );
 
-        Http::withCookies($cookie, $this->domain)->get($url);
+        $response = Http::withCookies($cookie, $this->domain)->get($url);
+
+        $this->log($response);
     }
 
     public function getFileCabinets(): Collection
@@ -75,11 +86,13 @@ class DocuWare
             config('docuware.url'),
         );
 
-        $cabinets = Http::acceptJson()
+        $response = Http::acceptJson()
             ->withCookies(Cache::get('docuware.cookies'), $this->domain)
-            ->get($url)
-            ->throw()
-            ->json('FileCabinet');
+            ->get($url);
+
+        $this->log($response);
+
+        $cabinets = $response->throw()->json('FileCabinet');
 
         return collect($cabinets)->map(fn (array $cabinet) => FileCabinet::fromJson($cabinet));
     }
@@ -92,11 +105,13 @@ class DocuWare
             $fileCabinetId,
         );
 
-        $fields = Http::acceptJson()
+        $response = Http::acceptJson()
             ->withCookies(Cache::get('docuware.cookies'), $this->domain)
-            ->get($url)
-            ->throw()
-            ->json('Fields');
+            ->get($url);
+
+        $this->log($response);
+
+        $fields = $response->throw()->json('Fields');
 
         return collect($fields)->map(fn (array $field) => Field::fromJson($field));
     }
@@ -109,11 +124,13 @@ class DocuWare
             $fileCabinetId,
         );
 
-        $dialogs = Http::acceptJson()
+        $response = Http::acceptJson()
             ->withCookies(Cache::get('docuware.cookies'), $this->domain)
-            ->get($url)
-            ->throw()
-            ->json('Dialog');
+            ->get($url);
+
+        $this->log($response);
+
+        $dialogs = $response->throw()->json('Dialog');
 
         return collect($dialogs)->map(fn (array $dialog) => Dialog::fromJson($dialog));
     }
@@ -131,11 +148,13 @@ class DocuWare
             $fieldName,
         );
 
-        return Http::acceptJson()
+        $response = Http::acceptJson()
             ->withCookies(Cache::get('docuware.cookies'), $this->domain)
-            ->get($url)
-            ->throw()
-            ->json('Value');
+            ->get($url);
+
+        $this->log($response);
+
+        return $response->throw()->json('Value');
     }
 
     public function getDocument(string $fileCabinetId, int $documentId): Document
@@ -149,11 +168,13 @@ class DocuWare
 
         $response = Http::acceptJson()
             ->withCookies(Cache::get('docuware.cookies'), $this->domain)
-            ->get($url)
-            ->throw()
-            ->json();
+            ->get($url);
 
-        return Document::fromJson($response);
+        $this->log($response);
+
+        $document = $response->throw()->json();
+
+        return Document::fromJson($document);
     }
 
     public function getDocumentPreview(
@@ -167,11 +188,13 @@ class DocuWare
             $documentId,
         );
 
-        return Http::acceptJson()
+        $response = Http::acceptJson()
             ->withCookies(Cache::get('docuware.cookies'), $this->domain)
-            ->get($url)
-            ->throw()
-            ->body();
+            ->get($url);
+
+        $this->log($response);
+
+        return $response->throw()->body();
     }
 
     public function downloadDocument(
@@ -185,10 +208,12 @@ class DocuWare
             $documentId
         );
 
-        return Http::withCookies(Cache::get('docuware.cookies'), $this->domain)
-            ->get($url)
-            ->throw()
-            ->body();
+        $response = Http::withCookies(Cache::get('docuware.cookies'), $this->domain)
+            ->get($url);
+
+        $this->log($response);
+
+        return $response->throw()->body();
     }
 
     public function downloadDocuments(
@@ -211,10 +236,12 @@ class DocuWare
             $additionalDocumentIds,
         );
 
-        return Http::withCookies(Cache::get('docuware.cookies'), $this->domain)
-            ->get($url)
-            ->throw()
-            ->body();
+        $response = Http::withCookies(Cache::get('docuware.cookies'), $this->domain)
+            ->get($url);
+
+        $this->log($response);
+
+        return $response->throw()->body();
     }
 
     public function updateDocumentValue(
@@ -230,7 +257,7 @@ class DocuWare
             $documentId,
         );
 
-        $fields = Http::acceptJson()
+        $response = Http::acceptJson()
             ->withCookies(Cache::get('docuware.cookies'), $this->domain)
             ->put($url, [
                 'Field' => [
@@ -239,9 +266,11 @@ class DocuWare
                         'Item' => $newValue,
                     ],
                 ],
-            ])
-            ->throw()
-            ->json('Field');
+            ]);
+
+        $this->log($response);
+
+        $fields = $response->throw()->json('Field');
 
         $field = collect($fields)->firstWhere('FieldName', $fieldName);
 
@@ -262,11 +291,13 @@ class DocuWare
         $response = Http::acceptJson()
             ->withCookies(Cache::get('docuware.cookies'), $this->domain)
             ->attach('file', $fileContent, $fileName)
-            ->post($url)
-            ->throw()
-            ->json();
+            ->post($url);
 
-        return Document::fromJson($response);
+        $this->log($response);
+
+        $document = $response->throw()->json();
+
+        return Document::fromJson($document);
     }
 
     public function deleteDocument(
@@ -280,10 +311,13 @@ class DocuWare
             $documentId,
         );
 
-        Http::acceptJson()
+        $response = Http::acceptJson()
             ->withCookies(Cache::get('docuware.cookies'), $this->domain)
-            ->delete($url)
-            ->throw();
+            ->delete($url);
+
+        $this->log($response);
+
+        $response->throw();
     }
 
     public function search(): DocuWareSearch

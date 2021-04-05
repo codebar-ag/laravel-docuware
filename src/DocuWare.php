@@ -11,6 +11,7 @@ use CodebarAg\DocuWare\Events\DocuWareResponseLog;
 use CodebarAg\DocuWare\Exceptions\UnableToDownloadDocuments;
 use CodebarAg\DocuWare\Exceptions\UnableToFindCredentials;
 use CodebarAg\DocuWare\Exceptions\UnableToLogin;
+use CodebarAg\DocuWare\Exceptions\UnableToMakeRequest;
 use CodebarAg\DocuWare\Support\ParseValue;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
@@ -102,6 +103,11 @@ class DocuWare
 
         event(new DocuWareResponseLog($response));
 
+        throw_if(
+            $response->status() === Response::HTTP_UNAUTHORIZED,
+            UnableToMakeRequest::create(),
+        );
+
         $cabinets = $response->throw()->json('FileCabinet');
 
         return collect($cabinets)->map(fn (array $cabinet) => FileCabinet::fromJson($cabinet));
@@ -121,6 +127,11 @@ class DocuWare
 
         event(new DocuWareResponseLog($response));
 
+        throw_if(
+            $response->status() === Response::HTTP_UNAUTHORIZED,
+            UnableToMakeRequest::create(),
+        );
+
         $fields = $response->throw()->json('Fields');
 
         return collect($fields)->map(fn (array $field) => Field::fromJson($field));
@@ -139,6 +150,11 @@ class DocuWare
             ->get($url);
 
         event(new DocuWareResponseLog($response));
+
+        throw_if(
+            $response->status() === Response::HTTP_UNAUTHORIZED,
+            UnableToMakeRequest::create(),
+        );
 
         $dialogs = $response->throw()->json('Dialog');
 
@@ -164,6 +180,11 @@ class DocuWare
 
         event(new DocuWareResponseLog($response));
 
+        throw_if(
+            $response->status() === Response::HTTP_UNAUTHORIZED,
+            UnableToMakeRequest::create(),
+        );
+
         return $response->throw()->json('Value');
     }
 
@@ -181,6 +202,11 @@ class DocuWare
             ->get($url);
 
         event(new DocuWareResponseLog($response));
+
+        throw_if(
+            $response->status() === Response::HTTP_UNAUTHORIZED,
+            UnableToMakeRequest::create(),
+        );
 
         $data = $response->throw()->json();
 
@@ -204,6 +230,11 @@ class DocuWare
 
         event(new DocuWareResponseLog($response));
 
+        throw_if(
+            $response->status() === Response::HTTP_UNAUTHORIZED,
+            UnableToMakeRequest::create(),
+        );
+
         return $response->throw()->body();
     }
 
@@ -222,6 +253,11 @@ class DocuWare
             ->get($url);
 
         event(new DocuWareResponseLog($response));
+
+        throw_if(
+            $response->status() === Response::HTTP_UNAUTHORIZED,
+            UnableToMakeRequest::create(),
+        );
 
         return $response->throw()->body();
     }
@@ -250,6 +286,11 @@ class DocuWare
             ->get($url);
 
         event(new DocuWareResponseLog($response));
+
+        throw_if(
+            $response->status() === Response::HTTP_UNAUTHORIZED,
+            UnableToMakeRequest::create(),
+        );
 
         return $response->throw()->body();
     }
@@ -280,6 +321,11 @@ class DocuWare
 
         event(new DocuWareResponseLog($response));
 
+        throw_if(
+            $response->status() === Response::HTTP_UNAUTHORIZED,
+            UnableToMakeRequest::create(),
+        );
+
         $fields = $response->throw()->json('Field');
 
         $field = collect($fields)->firstWhere('FieldName', $fieldName);
@@ -305,6 +351,11 @@ class DocuWare
 
         event(new DocuWareResponseLog($response));
 
+        throw_if(
+            $response->status() === Response::HTTP_UNAUTHORIZED,
+            UnableToMakeRequest::create(),
+        );
+
         $data = $response->throw()->json();
 
         return Document::fromJson($data);
@@ -326,6 +377,11 @@ class DocuWare
             ->delete($url);
 
         event(new DocuWareResponseLog($response));
+
+        throw_if(
+            $response->status() === Response::HTTP_UNAUTHORIZED,
+            UnableToMakeRequest::create(),
+        );
 
         $response->throw();
     }

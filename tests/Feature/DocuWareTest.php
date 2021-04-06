@@ -223,8 +223,8 @@ class DocuWareTest extends TestCase
             ->fulltext('test')
             ->dateFrom(Carbon::create(2021, 3))
             ->dateUntil(Carbon::create(2021, 3, 7))
-            ->orderBy('DWSTOREDATETIME', 'desc')
             ->filter('DOKUMENTENTYP', 'Auftrag')
+            ->orderBy('DWSTOREDATETIME', 'desc')
             ->get();
 
         $this->assertInstanceOf(DocumentPaginator::class, $paginator);

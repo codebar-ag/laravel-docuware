@@ -200,7 +200,7 @@ $paginator = DocuWare::search()
 $paginator = DocuWare::search()
     ->fileCabinet($fileCabinetId)
     ->dialog($dialogId)
-    ->filter('DOCUMENT_TYPE', 'Order')
+    ->filter('TYPE', 'Order')
     ->filter('OTHER_FIELD', 'other')
     ->get();
     
@@ -216,9 +216,9 @@ $paginator = DocuWare::search()
     ->fulltext('My secret document')
     ->dateFrom(Carbon::create(2021, 3, 1))
     ->dateUntil(Carbon::create(2021, 4, 1))
-    ->orderBy('DWSTOREDATETIME', 'desc')
-    ->filter('DOCUMENT_TYPE', 'Order')
+    ->filter('TYPE', 'Order')
     ->filter('OTHER_FIELD', 'other')
+    ->orderBy('DWSTOREDATETIME', 'desc')
     ->get();
 ```
 

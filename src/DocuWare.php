@@ -83,7 +83,9 @@ class DocuWare
             config('docuware.url'),
         );
 
-        $response = Http::withCookies($cookie, $this->domain)->get($url);
+        $response = Http::withCookies($cookie, $this->domain)
+            ->get($url)
+            ->throw();
 
         event(new DocuWareResponseLog($response));
     }

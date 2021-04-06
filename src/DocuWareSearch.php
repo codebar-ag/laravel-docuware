@@ -5,7 +5,7 @@ namespace CodebarAg\DocuWare;
 use Carbon\Carbon;
 use CodebarAg\DocuWare\DTO\DocumentPaginator;
 use CodebarAg\DocuWare\Events\DocuWareResponseLog;
-use CodebarAg\DocuWare\Exceptions\UnableToSearchDocuments;
+use CodebarAg\DocuWare\Exceptions\UnableToSearch;
 use CodebarAg\DocuWare\Support\EnsureValidResponse;
 use CodebarAg\DocuWare\Support\ParseValue;
 use Illuminate\Support\Arr;
@@ -183,12 +183,22 @@ class DocuWareSearch
     {
         throw_if(
             is_null($this->fileCabinetId),
-            UnableToSearchDocuments::cabinetNotSet(),
+            UnableToSearch::cabinetNotSet(),
         );
 
         throw_if(
             is_null($this->dialogId),
-            UnableToSearchDocuments::dialogNotSet(),
+            UnableToSearch::dialogNotSet(),
+        );
+
+        throw_if(
+            $this->page <= 0,
+            UnableToSearch::invalidPageNumber($this->page),
+        );
+
+        throw_if(
+            $this->perPage <= 0,
+            UnableToSearch::invalidPerPageNumber($this->perPage),
         );
     }
 }

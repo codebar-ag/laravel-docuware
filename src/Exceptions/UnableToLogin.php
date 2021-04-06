@@ -8,6 +8,6 @@ class UnableToLogin extends RuntimeException
 {
     public static function create(): self
     {
-        return new static('Ensure your credentials are correct');
+        return new static('Ensure your credentials are correct.');
     }
 }

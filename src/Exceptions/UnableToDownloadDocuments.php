@@ -8,8 +8,6 @@ class UnableToDownloadDocuments extends RuntimeException
 {
     public static function selectAtLeastTwoDocuments(): self
     {
-        return new static(
-            'You have to select at least two documents to download multiple documents at once.',
-        );
+        return new static('Ensure to select at least two documents.');
     }
 }

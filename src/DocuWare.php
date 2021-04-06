@@ -231,7 +231,8 @@ class DocuWare
             $documentId
         );
 
-        $response = Http::withCookies(Cache::get('docuware.cookies'), $this->domain)
+        $response = Http::acceptJson()
+            ->withCookies(Cache::get('docuware.cookies'), $this->domain)
             ->get($url);
 
         event(new DocuWareResponseLog($response));
@@ -254,14 +255,15 @@ class DocuWare
         $additionalDocumentIds = implode(',', array_slice($documentIds, 1));
 
         $url = sprintf(
-            '%s/docuware/platform/FileCabinets/%s/Documents/%s/FileDownload?&keepAnnotations=false&downloadFile=true&autoPrint=false&append=%s',
+            '%s/docuware/platform/FileCabinets/%s/Documents/%s/FileDownload?&keepAnnotations=false&append=%s',
             config('docuware.url'),
             $fileCabinetId,
             $firstDocumentId,
             $additionalDocumentIds,
         );
 
-        $response = Http::withCookies(Cache::get('docuware.cookies'), $this->domain)
+        $response = Http::acceptJson()
+            ->withCookies(Cache::get('docuware.cookies'), $this->domain)
             ->get($url);
 
         event(new DocuWareResponseLog($response));

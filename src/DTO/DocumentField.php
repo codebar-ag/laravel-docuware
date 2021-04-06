@@ -32,7 +32,7 @@ class DocumentField
         null | int | float | Carbon | string $value = null,
         ?string $type = null,
     ): self {
-        $fakeType =  Arr::random(['Int', 'Decimal', 'Text', 'DateTime']);
+        $fakeType = Arr::random(['Int', 'Decimal', 'Text', 'DateTime']);
 
         $fakeValue = match($fakeType) {
             'Int' => random_int(1, 9999),

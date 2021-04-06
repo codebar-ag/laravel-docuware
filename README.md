@@ -34,7 +34,7 @@ You can install the package via composer:
 composer require codebar-ag/laravel-docuware
 ```
 
-Add the following environment variables in your `.env` file:
+Add the following environment variables to your `.env` file:
 
 ```bash
 DOCUWARE_URL=https://domain.docuware.cloud
@@ -113,8 +113,12 @@ $document = DocuWare::uploadDocument($fileCabinetId, $fileContent, $fileName);
  * Delete document.
  */
 DocuWare::deleteDocument($fileCabinetId, $documentId);
+```
 
 ## 🔍 Search usage
+
+```php
+use CodebarAg\DocuWare\Facades\DocuWare;
 
 /**
  * Most basic example to search for documents.

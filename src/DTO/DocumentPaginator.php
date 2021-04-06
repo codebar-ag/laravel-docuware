@@ -55,4 +55,24 @@ class DocumentPaginator
     {
         return $this->current_page < $this->last_page;
     }
+
+    public static function fake(
+        ?int $total = null,
+        ?int $per_page = null,
+        ?int $current_page = null,
+        ?int $last_page = null,
+        ?int $from = null,
+        ?int $to = null,
+        ?Collection $items = null,
+    ): self {
+        return new self(
+            total: $total ?? random_int(10, 100),
+            per_page: $per_page ?? 10,
+            current_page: $current_page ?? random_int(1, 10),
+            last_page: $last_page ?? random_int(10, 20),
+            from: $from ?? 1,
+            to: $to ?? 10,
+            items: $items ?? collect(range(1, 10))->map(fn () => Document::fake()),
+        );
+    }
 }

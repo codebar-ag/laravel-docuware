@@ -2,6 +2,9 @@
 
 namespace CodebarAg\DocuWare\DTO;
 
+use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
+
 class Dialog
 {
     public static function fromJson(array $data): self
@@ -27,5 +30,21 @@ class Dialog
     public function isSearch(): bool
     {
         return $this->type === 'Search';
+    }
+
+    public static function fake(
+        ?string $id = null,
+        ?string $type = null,
+        ?string $label = null,
+        ?bool $isDefault = null,
+        ?string $fileCabinetId = null,
+    ): self {
+        return new static(
+            id: $id ?? Str::uuid(),
+            type: $type ?? Arr::random(['Search', 'Store', 'ResultList', 'InfoDialog']),
+            label: $label ?? 'Fake Dialog',
+            isDefault: $isDefault ?? Arr::random([true, false]),
+            fileCabinetId: $fileCabinetId ?? Str::uuid(),
+        );
     }
 }

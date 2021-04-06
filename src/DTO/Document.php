@@ -85,4 +85,33 @@ class Document
 
         return "{$name}{$this->extension}";
     }
+
+    public static function fake(
+        ?int $id = null,
+        ?int $file_size = null,
+        ?int $total_pages = null,
+        ?string $title = null,
+        ?string $extension = null,
+        ?string $content_type = null,
+        ?string $file_cabinet_id = null,
+        ?Carbon $created_at = null,
+        ?Carbon $updated_at = null,
+        ?Collection $fields = null,
+    ): self {
+        return new static(
+            id: $id ?? random_int(1, 999999),
+            file_size: $file_size ?? random_int(1000, 999999),
+            total_pages: $total_pages ?? random_int(1, 100),
+            title: $title ?? 'Fake Title',
+            extension: $extension ?? '.pdf',
+            content_type: $content_type ?? 'application/pdf',
+            file_cabinet_id: $file_cabinet_id ?? Str::uuid(),
+            created_at: $created_at ?? now()->subDay(),
+            updated_at: $updated_at ?? now(),
+            fields: $fields ?? collect([
+                DocumentField::fake(),
+                DocumentField::fake(),
+            ]),
+        );
+    }
 }

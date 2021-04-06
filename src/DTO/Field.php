@@ -2,6 +2,8 @@
 
 namespace CodebarAg\DocuWare\DTO;
 
+use Illuminate\Support\Arr;
+
 class Field
 {
     public static function fromJson(array $data): self
@@ -30,5 +32,19 @@ class Field
     public function isUser(): bool
     {
         return $this->scope === 'User';
+    }
+
+    public static function fake(
+        ?string $name = null,
+        ?string $label = null,
+        ?string $type = null,
+        ?string $scope = null,
+    ): self {
+        return new static(
+            name: $name ?? 'FAKE_FIELD',
+            label: $label ?? 'Fake Field',
+            type: Arr::random(['Text', 'Memo', 'Numeric', 'Decimal', 'Date', 'DateTime', 'Keyword', ]),
+            scope: $scope ?? Arr::random(['System', 'User']),
+        );
     }
 }

@@ -2,6 +2,7 @@
     "name": "codebar-ag/laravel-docuware",
     "description": "DocuWare integration with Laravel",
     "keywords": [
+        "laravel",
         "docuware",
         "codebar-ag",
         "laravel-docuware"

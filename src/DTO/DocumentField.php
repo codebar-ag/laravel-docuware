@@ -37,8 +37,8 @@ class DocumentField
         $fakeValue = match($fakeType) {
             'Int' => random_int(1, 9999),
             'Decimal' => mt_rand() / mt_getrandmax(),
-            'Text' => 'FakeText',
             'DateTime' => now(),
+            default => 'FakeText',
         };
 
         return new self(

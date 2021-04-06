@@ -35,7 +35,7 @@ class FileCabinet
         ?string $assignedCabinet = null,
     ): self {
         return new static(
-            id: $id ?? Str::uuid(),
+            id: $id ?? (string) Str::uuid(),
             name: $name ?? 'Fake File Cabinet',
             color: $color ?? Arr::random(['Red', 'Blue', 'Black', 'Green', 'Yellow']),
             isBasket: $isBasket ?? Arr::random([true, false]),

@@ -105,7 +105,7 @@ class Document
             title: $title ?? 'Fake Title',
             extension: $extension ?? '.pdf',
             content_type: $content_type ?? 'application/pdf',
-            file_cabinet_id: $file_cabinet_id ?? Str::uuid(),
+            file_cabinet_id: $file_cabinet_id ?? (string) Str::uuid(),
             created_at: $created_at ?? now()->subDay(),
             updated_at: $updated_at ?? now(),
             fields: $fields ?? collect([

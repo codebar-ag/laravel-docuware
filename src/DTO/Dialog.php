@@ -40,11 +40,11 @@ class Dialog
         ?string $fileCabinetId = null,
     ): self {
         return new static(
-            id: $id ?? Str::uuid(),
+            id: $id ?? (string) Str::uuid(),
             type: $type ?? Arr::random(['Search', 'Store', 'ResultList', 'InfoDialog']),
             label: $label ?? 'Fake Dialog',
             isDefault: $isDefault ?? Arr::random([true, false]),
-            fileCabinetId: $fileCabinetId ?? Str::uuid(),
+            fileCabinetId: $fileCabinetId ?? (string) Str::uuid(),
         );
     }
 }

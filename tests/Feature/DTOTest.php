@@ -56,7 +56,7 @@ class DTOTest extends TestCase
     public function it_does_create_a_fake_document_paginator()
     {
         $fake = DocumentPaginator::fake();
-        ray($fake);
+
         $this->assertInstanceOf(DocumentPaginator::class, $fake);
     }
 }

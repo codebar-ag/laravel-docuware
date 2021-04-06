@@ -93,7 +93,7 @@ class DocuWare
     public function getFileCabinets(): Collection
     {
         $url = sprintf(
-            '%s/docuware/platform/FileCabinets?orgid=1',
+            '%s/docuware/platform/FileCabinets',
             config('docuware.url'),
         );
 

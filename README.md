@@ -114,12 +114,107 @@ $document = DocuWare::uploadDocument($fileCabinetId, $fileContent, $fileName);
  */
 DocuWare::deleteDocument($fileCabinetId, $documentId);
 
+## 🔍 Search usage
+
 /**
  * Most basic example to search for documents.
  */
 $paginator = DocuWare::search()
     ->fileCabinet($fileCabinetId)
     ->dialog($dialogId)
+    ->get();
+
+/**
+ * Search in multiple file cabinets.
+ */
+$paginator = DocuWare::search()
+    ->fileCabinet($fileCabinetId)
+    ->dialog($dialogId)
+    ->additionalFileCabinets($additionalFileCabinets)
+    ->get();
+
+/**
+ * Find results on the next page. 
+ * Default: 1
+ */
+$paginator = DocuWare::search()
+    ->fileCabinet($fileCabinetId)
+    ->dialog($dialogId)
+    ->page(2)
+    ->get();
+    
+/**
+ * Define the number of results which should be shown per page. 
+ * Default: 50
+ */
+$paginator = DocuWare::search()
+    ->fileCabinet($fileCabinetId)
+    ->dialog($dialogId)
+    ->perPage(30)
+    ->get();
+
+/**
+ * Use the full-text search. You have to activate full-text search in your file
+ * cabinet before you can use this feature.
+ */
+$paginator = DocuWare::search()
+    ->fileCabinet($fileCabinetId)
+    ->dialog($dialogId)
+    ->fulltext('My secret document')
+    ->get();
+
+/**
+ * Search documents which are created from the first of march.
+ */
+$paginator = DocuWare::search()
+    ->fileCabinet($fileCabinetId)
+    ->dialog($dialogId)
+    ->dateFrom(Carbon::create(2021, 3, 1))
+    ->get();
+
+/**
+ * Search documents which are created until the first of april.
+ */
+$paginator = DocuWare::search()
+    ->fileCabinet($fileCabinetId)
+    ->dialog($dialogId)
+    ->dateUntil(Carbon::create(2021, 4, 1))
+    ->get();
+
+/**
+ * Order the results by field name. Possibly values: 'desc' or 'asc'
+ */
+$paginator = DocuWare::search()
+    ->fileCabinet($fileCabinetId)
+    ->dialog($dialogId)
+    ->orderBy('DWSTOREDATETIME', 'desc')
+    ->get();
+
+/**
+ * Search documents filtered to the value. You can specify multiple filters.
+ */
+$paginator = DocuWare::search()
+    ->fileCabinet($fileCabinetId)
+    ->dialog($dialogId)
+    ->filter('DOCUMENT_TYPE', 'Order')
+    ->filter('OTHER_FIELD', 'other')
+    ->get();
+    
+/**
+ * Or combine all together.
+ */
+$paginator = DocuWare::search()
+    ->fileCabinet($fileCabinetId)
+    ->dialog($dialogId)
+    ->additionalFileCabinets($additionalFileCabinets)
+    ->page(2)
+    ->perPage(30)
+    ->fulltext('My secret document')
+    ->dateFrom(Carbon::create(2021, 3, 1))
+    ->dateUntil(Carbon::create(2021, 4, 1))
+    ->orderBy('DWSTOREDATETIME', 'desc')
+    ->filter('DOCUMENT_TYPE', 'Order')
+    ->filter('OTHER_FIELD', 'other')
     ->get();
 ```
 

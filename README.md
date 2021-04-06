@@ -36,13 +36,14 @@ DOCUWARE_PASSWORD=password
 use CodebarAg\DocuWare\Facades\DocuWare;
 
 /**
- * Login with your credentials. Your cookie is stored in the cache 
- * `docuware.cookies` and is used for further requests.
+ * Login with your credentials. You only need to login once. Afterwards the
+ * authentication cookie is stored in the cache `docuware.cookies` and is
+ * used for all further requests.
  */
 DocuWare::login();
 
 /**
- * Logout. Removes the stored cookie in the cache.
+ * Logout your current session. Removes the authentication cookie in the cache.
  */
 DocuWare::logout();
 

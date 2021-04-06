@@ -7,14 +7,26 @@
 [![Psalm](https://github.com/codebar-ag/laravel-docuware/actions/workflows/psalm.yml/badge.svg)](https://github.com/codebar-ag/laravel-docuware/actions/workflows/psalm.yml)
 
 
-This package was developed to give you a quick start to communicate with the DocuWare
-REST API. It is used to query the most common endpoints.
+This package was developed to give you a quick start to communicate with the
+DocuWare REST API. It is used to query the most common endpoints.
 
 ⚠️ This package is not designed as a replacement of the official 
 [DocuWare REST API](https://developer.docuware.com/rest/index.html).
 See the documentation if you need further functionality. ⚠️
 
-## Installation
+## 💡 What is DocuWare?
+
+DocuWare provides cloud document management and workflow automation software
+that enables you to digitize, secure and work with business documents,
+then optimize the processes that power the core of your business.
+
+## 🛠 Requirements
+
+- PHP: `^8.0`
+- Laravel: `^8.12`
+- DocuWare Cloud Access
+
+## ⚙️ Installation
 
 You can install the package via composer:
 
@@ -30,7 +42,7 @@ DOCUWARE_USER=user@domain.test
 DOCUWARE_PASSWORD=password
 ```
 
-## Usage
+## 🏗 Usage
 
 ```php
 use CodebarAg\DocuWare\Facades\DocuWare;
@@ -113,7 +125,7 @@ $paginator = DocuWare::search()
 
 Please see [Tests](tests/Feature/DocuWareTest.php) for more details.
 
-## Events
+## ✨ Events
 
 Following events are fired:
 
@@ -126,7 +138,7 @@ DocuWareResponseLog::class => [
 ],
 ```
 
-## Configuration file
+## 🔧 Configuration file
 
 You can publish the config file with:
 ```bash
@@ -154,7 +166,7 @@ return [
 ];
 ```
 
-## Testing
+## 🚧 Testing
 
 Copy your own phpunit.xml-file.
 ```bash
@@ -173,23 +185,25 @@ Run the tests:
 composer test
 ```
 
-## Changelog
+## 📝 Changelog
 
 Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed recently.
 
-## Contributing
+## ✏️ Contributing
 
 Please see [CONTRIBUTING](.github/CONTRIBUTING.md) for details.
 
-## Security Vulnerabilities
+## 🧑‍💻 Security Vulnerabilities
 
 Please review [our security policy](.github/SECURITY.md) on how to report security vulnerabilities.
 
-## Credits
+## 🙏 Credits
 
 - [Ruslan Steiger](https://github.com/SuddenlyRust)
 - [All Contributors](../../contributors)
+- [Skeleton Repository from Spatie](https://github.com/spatie/package-skeleton-laravel)
+- [Laravel Package Training from Spatie](https://spatie.be/videos/laravel-package-training)
 
-## License
+## 🎭 License
 
 The MIT License (MIT). Please see [License File](LICENSE.md) for more information.

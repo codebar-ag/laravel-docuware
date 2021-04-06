@@ -224,6 +224,26 @@ $paginator = DocuWare::search()
 
 Please see [Tests](tests/Feature/DocuWareTest.php) for more details.
 
+## 💥 Exceptions explained
+
+### `CodebarAg\DocuWare\Exceptions\UnableToMakeRequest`
+
+This is thrown if you are not authorized to make the request.
+
+### `CodebarAg\DocuWare\Exceptions\UnableToProcessRequest`
+
+This is thrown if you passed wrong attributes. For example a file cabinet ID
+which does not exist.
+
+### `CodebarAg\DocuWare\Exceptions\UnableToLogin`
+
+This exception can only be thrown during the login if the credentials did not
+match.
+
+### `Illuminate\Http\Client\RequestException`
+
+All other cases if the response is not successfully.
+
 ## ✨ Events
 
 Following events are fired:

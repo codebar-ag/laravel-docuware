@@ -122,7 +122,7 @@ $paginator = DocuWare::search()
 $paginator = DocuWare::search()
     ->fileCabinet($fileCabinetId)
     ->dialog($dialogId)
-    ->additionalFileCabinets($additionalFileCabinets)
+    ->additionalFileCabinets($additionalFileCabinetIds)
     ->get();
 
 /**
@@ -198,7 +198,7 @@ $paginator = DocuWare::search()
 $paginator = DocuWare::search()
     ->fileCabinet($fileCabinetId)
     ->dialog($dialogId)
-    ->additionalFileCabinets($additionalFileCabinets)
+    ->additionalFileCabinets($additionalFileCabinetIds)
     ->page(2)
     ->perPage(30)
     ->fulltext('My secret document')

@@ -212,6 +212,82 @@ $paginator = DocuWare::search()
 
 Please see [Tests](tests/Feature/DocuWareTest.php) for more details.
 
+## 🏋️ DTO's
+
+```php
+CodebarAg\DocuWare\DTO\FileCabinet {
+  +id: "2f071481-095d-4363-abd9-29ef845a8b05"              // string
+  +name: "Fake File Cabinet"                               // string
+  +color: "Yellow"                                         // string
+  +isBasket: true                                          // bool
+  +assignedCabinet: "889c13cc-c636-4759-a704-1e6500d2d70f" // string
+}
+```
+
+```php
+CodebarAg\DocuWare\DTO\Dialog {
+  +id: "fae3b667-53e9-48dd-9004-34647a26112e"            // string
+  +type: "ResultList"                                    // string
+  +label: "Fake Dialog"                                  // string
+  +isDefault: true                                       // boolean
+  +fileCabinetId: "1334c006-f095-4ae7-892b-fe59282c8bed" // string
+}
+```
+
+```php
+CodebarAg\DocuWare\DTO\Field {
+  +name: "FAKE_FIELD"  // string
+  +label: "Fake Field" // string
+  +type: "Memo"        // string
+  +scope: "User"       // string
+```
+
+```php
+CodebarAg\DocuWare\DTO\DocumentField {
+  +name: "FAKE_DOCUMENT_FIELD"  // string
+  +label: "Fake Document Field" // string
+  +value: 7680                  // integer
+  +type: "Int"                  // string
+}
+```
+
+```php
+CodebarAg\DocuWare\DTO\Document {
+  +id: 659732                                              // integer
+  +file_size: 765336                                       // integer
+  +total_pages: 100                                        // integer
+  +title: "Fake Title"                                     // string
+  +extension: ".pdf"                                       // string
+  +content_type: "application/pdf"                         // string
+  +file_cabinet_id: "a233b03d-dc63-42dd-b774-25b3ff77548f" // string
+  +created_at: Illuminate\Support\Carbon                   // Carbon
+  +updated_at: Illuminate\Support\Carbon                   // Carbon
+  +fields: Illuminate\Support\Collection {                 // Collection|DocumentField[]
+    #items: array:2 [
+      0 => CodebarAg\DocuWare\DTO\DocumentField            // DocumentField
+      1 => CodebarAg\DocuWare\DTO\DocumentField            // DocumentField
+    ]
+  }
+}
+```
+
+```php
+CodebarAg\DocuWare\DTO\DocumentPaginator
+  +total: 39                               // integer
+  +per_page: 10                            // integer
+  +current_page: 9                         // integer
+  +last_page: 15                           // integer
+  +from: 1                                 // integer
+  +to: 10                                  // integer
+  +items: Illuminate\Support\Collection {  // Collection|Document[]
+    #items: array:2 [
+      0 => CodebarAg\DocuWare\DTO\Document // Document
+      1 => CodebarAg\DocuWare\DTO\Document // Document
+    ]
+  }
+}
+```
+
 ## 🔐 Authentication
 
 You only need to provide correct credentials. Everything else is automatically

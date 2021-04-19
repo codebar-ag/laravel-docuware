@@ -5,6 +5,9 @@ namespace CodebarAg\DocuWare\DTO;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 
+/**
+ * @property Collection|Document[] $items
+ */
 class DocumentPaginator
 {
     public static function fromJson(

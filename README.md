@@ -48,18 +48,6 @@ DOCUWARE_PASSWORD=password
 use CodebarAg\DocuWare\Facades\DocuWare;
 
 /**
- * Login with your credentials. You only need to login once. Afterwards the
- * authentication cookie is stored in the cache `docuware.cookies` and is
- * used for all further requests.
- */
-DocuWare::login();
-
-/**
- * Logout your current session. Removes the authentication cookie in the cache.
- */
-DocuWare::logout();
-
-/**
  * Return all file cabinets.
  */
 $cabinets = DocuWare::getFileCabinets();
@@ -224,23 +212,54 @@ $paginator = DocuWare::search()
 
 Please see [Tests](tests/Feature/DocuWareTest.php) for more details.
 
+## 🔐 Authentication
+
+You only need to provide correct credentials. Everything else is automatically
+handled from the package. Under the hood we are storing the authentication
+cookie in the cache named *docuware.cookies*.
+
+But if you need further control you can use the following methods to login and
+logout with DocuWare:
+
+```php
+use CodebarAg\DocuWare\Facades\DocuWare;
+
+/**
+ * Login with your credentials. You only need to login once. Afterwards the
+ * authentication cookie is stored in the cache `docuware.cookies` and is
+ * used for all further requests.
+ */
+DocuWare::login();
+
+/**
+ * Logout your current session. Removes the authentication cookie in the cache.
+ */
+DocuWare::logout();
+```
+
 ## 💥 Exceptions explained
 
-### `CodebarAg\DocuWare\Exceptions\UnableToMakeRequest`
+- `CodebarAg\DocuWare\Exceptions\UnableToMakeRequest`
 
 This is thrown if you are not authorized to make the request.
 
-### `CodebarAg\DocuWare\Exceptions\UnableToProcessRequest`
+---
+
+- `CodebarAg\DocuWare\Exceptions\UnableToProcessRequest`
 
 This is thrown if you passed wrong attributes. For example a file cabinet ID
 which does not exist.
 
-### `CodebarAg\DocuWare\Exceptions\UnableToLogin`
+---
+
+- `CodebarAg\DocuWare\Exceptions\UnableToLogin`
 
 This exception can only be thrown during the login if the credentials did not
 match.
 
-### `Illuminate\Http\Client\RequestException`
+---
+
+- `Illuminate\Http\Client\RequestException`
 
 All other cases if the response is not successfully.
 
@@ -267,20 +286,38 @@ php artisan vendor:publish --provider="CodebarAg\DocuWare\DocuWareServiceProvide
 This is the contents of the published config file:
 
 ```php
+<?php
+
 return [
 
     /*
     |--------------------------------------------------------------------------
-    | DocuWare credentials
+    | DocuWare Credentials
     |--------------------------------------------------------------------------
     |
-    | These values are used to connect your application with DocuWare.
+    | This configuration option defines your credentials
+    | to authenticate with the DocuWare REST-API.
     |
     */
 
-    'url' => env('DOCUWARE_URL'),
-    'user' => env('DOCUWARE_USER'),
-    'password' => env('DOCUWARE_PASSWORD'),
+    'credentials' => [
+        'url' => env('DOCUWARE_URL'),
+        'user' => env('DOCUWARE_USER'),
+        'password' => env('DOCUWARE_PASSWORD'),
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Authentication Cookie Lifetime
+    |--------------------------------------------------------------------------
+    |
+    | Here you may define the amount of minutes after the cookie lifetime
+    | times out and it is required to refresh a new one. By default,
+    | the lifetime lasts for 1 month (43 800 minutes).
+    |
+    */
+
+    'cookie_lifetime' => (int) env('DOCUWARE_COOKIE_LIFETIME', 43800),
 
 ];
 ```

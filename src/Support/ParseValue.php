@@ -3,7 +3,6 @@
 namespace CodebarAg\DocuWare\Support;
 
 use Carbon\Carbon;
-use CodebarAg\DocuWare\Exceptions\UnableToFindUrlCredential;
 use Illuminate\Support\Str;
 
 class ParseValue
@@ -37,18 +36,5 @@ class ParseValue
             'Keywords' => implode(', ', $field['Item']['Keyword']),
             default => (string) $field['Item'],
         };
-    }
-
-    public static function domain(): string
-    {
-        throw_if(
-            empty(config('docuware.credentials.url')),
-            UnableToFindUrlCredential::create(),
-        );
-
-        return Str::of(config('docuware.credentials.url'))
-            ->after('//')
-            ->beforeLast('/')
-            ->__toString();
     }
 }

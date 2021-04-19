@@ -3,13 +3,12 @@
 namespace CodebarAg\DocuWare\Support;
 
 use CodebarAg\DocuWare\DocuWare;
-use Illuminate\Support\Facades\Cache;
 
 class EnsureValidCookie
 {
     public static function check(): void
     {
-        if (Cache::has('docuware.cookies')) {
+        if (Auth::check()) {
             return;
         }
 

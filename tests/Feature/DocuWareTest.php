@@ -32,7 +32,7 @@ class DocuWareTest extends TestCase
                 ->trim();
 
             Cache::put(
-                'docuware.cookies',
+                Auth::CACHE_KEY,
                 [Auth::COOKIE_NAME => (string) $cookie],
                 now()->addDay(),
             );

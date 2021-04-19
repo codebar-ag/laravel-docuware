@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use CodebarAg\DocuWare\DTO\DocumentPaginator;
 use CodebarAg\DocuWare\Events\DocuWareResponseLog;
 use CodebarAg\DocuWare\Exceptions\UnableToSearch;
+use CodebarAg\DocuWare\Support\Auth;
 use CodebarAg\DocuWare\Support\EnsureValidCookie;
 use CodebarAg\DocuWare\Support\EnsureValidResponse;
 use CodebarAg\DocuWare\Support\ParseValue;
@@ -27,13 +28,6 @@ class DocuWareSearch
     protected string $orderField = 'DWSTOREDATETIME';
     protected string $orderDirection = 'asc';
     protected array $filters = [];
-
-    protected string $domain;
-
-    public function __construct()
-    {
-        $this->domain = ParseValue::domain();
-    }
 
     public function fileCabinet(string $fileCabinetId): self
     {
@@ -149,7 +143,7 @@ class DocuWareSearch
         }
 
         $response = Http::acceptJson()
-            ->withCookies(Cache::get('docuware.cookies'), $this->domain)
+            ->withCookies(Auth::cookies(), Auth::domain())
             ->post($url, [
                 'Count' => $this->perPage,
                 'Start' => ($this->page - 1) * $this->perPage,

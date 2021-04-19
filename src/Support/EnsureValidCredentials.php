@@ -16,12 +16,12 @@ class EnsureValidCredentials
         );
 
         throw_if(
-            empty(config('docuware.credentialsuser')),
+            empty(config('docuware.credentials.user')),
             UnableToFindUserCredential::create(),
         );
 
         throw_if(
-            empty(config('docuware.credentialspassword')),
+            empty(config('docuware.credentials.password')),
             UnableToFindPasswordCredential::create(),
         );
     }

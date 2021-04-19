@@ -10,43 +10,31 @@ use CodebarAg\DocuWare\DTO\FileCabinet;
 use CodebarAg\DocuWare\Events\DocuWareResponseLog;
 use CodebarAg\DocuWare\Exceptions\UnableToDownloadDocuments;
 use CodebarAg\DocuWare\Exceptions\UnableToLogin;
+use CodebarAg\DocuWare\Support\Auth;
+use CodebarAg\DocuWare\Support\EnsureValidCookie;
 use CodebarAg\DocuWare\Support\EnsureValidCredentials;
 use CodebarAg\DocuWare\Support\EnsureValidResponse;
 use CodebarAg\DocuWare\Support\ParseValue;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Symfony\Component\HttpFoundation\Response;
 
 class DocuWare
 {
-    const COOKIE_NAME = '.DWPLATFORMAUTH';
-
-    protected string $domain;
-
-    public function __construct()
+    public function login(): void
     {
         EnsureValidCredentials::check();
 
-        $this->domain = ParseValue::domain();
-    }
-
-    public function login(): string
-    {
-        if (Cache::has('docuware.cookies')) {
-            return Cache::get('docuware.cookies')[self::COOKIE_NAME];
-        }
-
         $url = sprintf(
             '%s/docuware/platform/Account/Logon',
-            config('docuware.url'),
+            config('docuware.credentials.url'),
         );
 
         $response = Http::asForm()
             ->acceptJson()
             ->post($url, [
-                'UserName' => config('docuware.user'),
-                'Password' => config('docuware.password'),
+                'UserName' => config('docuware.credentials.user'),
+                'Password' => config('docuware.credentials.password'),
             ]);
 
         event(new DocuWareResponseLog($response));
@@ -56,49 +44,40 @@ class DocuWare
             UnableToLogin::create(),
         );
 
-        $cookies = $response
-            ->throw()
-            ->cookies()
-            ->toArray();
+        $cookies = $response->throw()->cookies();
 
-        $cookie = collect($cookies)
-            ->reject(fn (array $cookie) => $cookie['Value'] === '')
-            ->firstWhere('Name', self::COOKIE_NAME);
-
-        Cache::put(
-            'docuware.cookies',
-            [self::COOKIE_NAME => $cookie['Value']],
-            now()->addDay(),
-        );
-
-        return $cookie['Value'];
+        Auth::store($cookies);
     }
 
     public function logout(): void
     {
-        $cookie = Cache::pull('docuware.cookies');
+        EnsureValidCookie::check();
 
         $url = sprintf(
             '%s/docuware/platform/Account/Logoff',
-            config('docuware.url'),
+            config('docuware.credentials.url'),
         );
 
-        $response = Http::withCookies($cookie, $this->domain)
-            ->get($url)
-            ->throw();
+        $response = Http::withCookies(Auth::cookies(), Auth::domain())->get($url);
 
         event(new DocuWareResponseLog($response));
+
+        Auth::forget();
+
+        $response->throw();
     }
 
     public function getFileCabinets(): Collection
     {
+        EnsureValidCookie::check();
+
         $url = sprintf(
             '%s/docuware/platform/FileCabinets',
-            config('docuware.url'),
+            config('docuware.credentials.url'),
         );
 
         $response = Http::acceptJson()
-            ->withCookies(Cache::get('docuware.cookies'), $this->domain)
+            ->withCookies(Auth::cookies(), Auth::domain())
             ->get($url);
 
         event(new DocuWareResponseLog($response));
@@ -112,14 +91,16 @@ class DocuWare
 
     public function getFields(string $fileCabinetId): Collection
     {
+        EnsureValidCookie::check();
+
         $url = sprintf(
             '%s/docuware/platform/FileCabinets/%s',
-            config('docuware.url'),
+            config('docuware.credentials.url'),
             $fileCabinetId,
         );
 
         $response = Http::acceptJson()
-            ->withCookies(Cache::get('docuware.cookies'), $this->domain)
+            ->withCookies(Auth::cookies(), Auth::domain())
             ->get($url);
 
         event(new DocuWareResponseLog($response));
@@ -133,14 +114,16 @@ class DocuWare
 
     public function getDialogs(string $fileCabinetId): Collection
     {
+        EnsureValidCookie::check();
+
         $url = sprintf(
             '%s/docuware/platform/FileCabinets/%s/Dialogs',
-            config('docuware.url'),
+            config('docuware.credentials.url'),
             $fileCabinetId,
         );
 
         $response = Http::acceptJson()
-            ->withCookies(Cache::get('docuware.cookies'), $this->domain)
+            ->withCookies(Auth::cookies(), Auth::domain())
             ->get($url);
 
         event(new DocuWareResponseLog($response));
@@ -157,16 +140,18 @@ class DocuWare
         string $dialogId,
         string $fieldName,
     ): array {
+        EnsureValidCookie::check();
+
         $url = sprintf(
             '%s/docuware/platform/FileCabinets/%s/Query/SelectListExpression?dialogId=%s&fieldName=%s',
-            config('docuware.url'),
+            config('docuware.credentials.url'),
             $fileCabinetId,
             $dialogId,
             $fieldName,
         );
 
         $response = Http::acceptJson()
-            ->withCookies(Cache::get('docuware.cookies'), $this->domain)
+            ->withCookies(Auth::cookies(), Auth::domain())
             ->get($url);
 
         event(new DocuWareResponseLog($response));
@@ -178,15 +163,17 @@ class DocuWare
 
     public function getDocument(string $fileCabinetId, int $documentId): Document
     {
+        EnsureValidCookie::check();
+
         $url = sprintf(
             '%s/docuware/platform/FileCabinets/%s/Documents/%s',
-            config('docuware.url'),
+            config('docuware.credentials.url'),
             $fileCabinetId,
             $documentId,
         );
 
         $response = Http::acceptJson()
-            ->withCookies(Cache::get('docuware.cookies'), $this->domain)
+            ->withCookies(Auth::cookies(), Auth::domain())
             ->get($url);
 
         event(new DocuWareResponseLog($response));
@@ -202,15 +189,17 @@ class DocuWare
         string $fileCabinetId,
         int $documentId,
     ): string {
+        EnsureValidCookie::check();
+
         $url = sprintf(
             '%s/docuware/platform/FileCabinets/%s/Documents/%s/Image',
-            config('docuware.url'),
+            config('docuware.credentials.url'),
             $fileCabinetId,
             $documentId,
         );
 
         $response = Http::acceptJson()
-            ->withCookies(Cache::get('docuware.cookies'), $this->domain)
+            ->withCookies(Auth::cookies(), Auth::domain())
             ->get($url);
 
         event(new DocuWareResponseLog($response));
@@ -224,15 +213,17 @@ class DocuWare
         string $fileCabinetId,
         int $documentId,
     ): string {
+        EnsureValidCookie::check();
+
         $url = sprintf(
             '%s/docuware/platform/FileCabinets/%s/Documents/%s/FileDownload?targetFileType=Auto&keepAnnotations=false',
-            config('docuware.url'),
+            config('docuware.credentials.url'),
             $fileCabinetId,
             $documentId
         );
 
         $response = Http::acceptJson()
-            ->withCookies(Cache::get('docuware.cookies'), $this->domain)
+            ->withCookies(Auth::cookies(), Auth::domain())
             ->get($url);
 
         event(new DocuWareResponseLog($response));
@@ -246,6 +237,8 @@ class DocuWare
         string $fileCabinetId,
         array $documentIds,
     ): string {
+        EnsureValidCookie::check();
+
         throw_if(
             count($documentIds) < 2,
             UnableToDownloadDocuments::selectAtLeastTwoDocuments(),
@@ -256,14 +249,14 @@ class DocuWare
 
         $url = sprintf(
             '%s/docuware/platform/FileCabinets/%s/Documents/%s/FileDownload?&keepAnnotations=false&append=%s',
-            config('docuware.url'),
+            config('docuware.credentials.url'),
             $fileCabinetId,
             $firstDocumentId,
             $additionalDocumentIds,
         );
 
         $response = Http::acceptJson()
-            ->withCookies(Cache::get('docuware.cookies'), $this->domain)
+            ->withCookies(Auth::cookies(), Auth::domain())
             ->get($url);
 
         event(new DocuWareResponseLog($response));
@@ -279,15 +272,17 @@ class DocuWare
         string $fieldName,
         string $newValue,
     ): null | int | float | Carbon | string {
+        EnsureValidCookie::check();
+
         $url = sprintf(
             '%s/docuware/platform/FileCabinets/%s/Documents/%s/Fields',
-            config('docuware.url'),
+            config('docuware.credentials.url'),
             $fileCabinetId,
             $documentId,
         );
 
         $response = Http::acceptJson()
-            ->withCookies(Cache::get('docuware.cookies'), $this->domain)
+            ->withCookies(Auth::cookies(), Auth::domain())
             ->put($url, [
                 'Field' => [
                     [
@@ -313,14 +308,16 @@ class DocuWare
         string $fileContent,
         string $fileName,
     ): Document {
+        EnsureValidCookie::check();
+
         $url = sprintf(
             '%s/docuware/platform/FileCabinets/%s/Documents',
-            config('docuware.url'),
+            config('docuware.credentials.url'),
             $fileCabinetId,
         );
 
         $response = Http::acceptJson()
-            ->withCookies(Cache::get('docuware.cookies'), $this->domain)
+            ->withCookies(Auth::cookies(), Auth::domain())
             ->attach('file', $fileContent, $fileName)
             ->post($url);
 
@@ -337,15 +334,17 @@ class DocuWare
         string $fileCabinetId,
         int $documentId,
     ): void {
+        EnsureValidCookie::check();
+
         $url = sprintf(
             '%s/docuware/platform/FileCabinets/%s/Documents/%s',
-            config('docuware.url'),
+            config('docuware.credentials.url'),
             $fileCabinetId,
             $documentId,
         );
 
         $response = Http::acceptJson()
-            ->withCookies(Cache::get('docuware.cookies'), $this->domain)
+            ->withCookies(Auth::cookies(), Auth::domain())
             ->delete($url);
 
         event(new DocuWareResponseLog($response));

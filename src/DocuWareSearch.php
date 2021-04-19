@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use CodebarAg\DocuWare\DTO\DocumentPaginator;
 use CodebarAg\DocuWare\Events\DocuWareResponseLog;
 use CodebarAg\DocuWare\Exceptions\UnableToSearch;
+use CodebarAg\DocuWare\Support\EnsureValidCookie;
 use CodebarAg\DocuWare\Support\EnsureValidResponse;
 use CodebarAg\DocuWare\Support\ParseValue;
 use Illuminate\Support\Arr;
@@ -116,7 +117,7 @@ class DocuWareSearch
 
         $url = sprintf(
             '%s/docuware/platform/FileCabinets/%s/Query/DialogExpression?dialogId=%s',
-            config('docuware.url'),
+            config('docuware.credentials.url'),
             $this->fileCabinetId,
             $this->dialogId,
         );
@@ -181,6 +182,8 @@ class DocuWareSearch
 
     protected function guard(): void
     {
+        EnsureValidCookie::check();
+
         throw_if(
             is_null($this->fileCabinetId),
             UnableToSearch::cabinetNotSet(),

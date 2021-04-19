@@ -11,17 +11,17 @@ class EnsureValidCredentials
     public static function check(): void
     {
         throw_if(
-            empty(config('docuware.url')),
+            empty(config('docuware.credentials.url')),
             UnableToFindUrlCredential::create(),
         );
 
         throw_if(
-            empty(config('docuware.user')),
+            empty(config('docuware.credentialsuser')),
             UnableToFindUserCredential::create(),
         );
 
         throw_if(
-            empty(config('docuware.password')),
+            empty(config('docuware.credentialspassword')),
             UnableToFindPasswordCredential::create(),
         );
     }

@@ -7,6 +7,7 @@ use CodebarAg\DocuWare\DocuWare;
 use CodebarAg\DocuWare\DTO\Document;
 use CodebarAg\DocuWare\DTO\DocumentPaginator;
 use CodebarAg\DocuWare\Events\DocuWareResponseLog;
+use CodebarAg\DocuWare\Support\Auth;
 use CodebarAg\DocuWare\Tests\TestCase;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
@@ -32,16 +33,16 @@ class DocuWareTest extends TestCase
 
             Cache::put(
                 'docuware.cookies',
-                [DocuWare::COOKIE_NAME => (string) $cookie],
+                [Auth::COOKIE_NAME => (string) $cookie],
                 now()->addDay(),
             );
 
             return;
         }
 
-        $cookie = (new DocuWare())->login();
+        (new DocuWare())->login();
 
-        File::put($cookiePath, $cookie);
+        File::put($cookiePath, Auth::cookies()[Auth::COOKIE_NAME]);
     }
 
     protected function tearDown(): void

@@ -17,7 +17,7 @@ class UnableToFindUserCredential extends RuntimeException implements ProvidesSol
     public function getSolution(): Solution
     {
         return BaseSolution::create('Try to add following in your .env-file:')
-            ->setSolutionDescription('DOCUWARE_USER=user@domain.test')
+            ->setSolutionDescription('DOCUWARE_USERNAME=user@domain.test')
             ->setDocumentationLinks([
                 'GitHub' => 'https://github.com/codebar-ag/laravel-docuware#installation',
             ]);

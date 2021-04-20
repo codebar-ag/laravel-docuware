@@ -33,7 +33,7 @@ class DocuWare
         $response = Http::asForm()
             ->acceptJson()
             ->post($url, [
-                'UserName' => config('docuware.credentials.user'),
+                'UserName' => config('docuware.credentials.username'),
                 'Password' => config('docuware.credentials.password'),
             ]);
 

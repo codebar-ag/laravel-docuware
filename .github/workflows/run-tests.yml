@@ -44,5 +44,5 @@ jobs:
         run: vendor/bin/phpunit
         env:
           DOCUWARE_URL: ${{ secrets.DOCUWARE_URL }}
-          DOCUWARE_USER: ${{ secrets.DOCUWARE_USER }}
+          DOCUWARE_USERNAME: ${{ secrets.DOCUWARE_USERNAME }}
           DOCUWARE_PASSWORD: ${{ secrets.DOCUWARE_PASSWORD }}

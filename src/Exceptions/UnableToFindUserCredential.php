@@ -11,7 +11,7 @@ class UnableToFindUserCredential extends RuntimeException implements ProvidesSol
 {
     public static function create(): self
     {
-        return new static('The DocuWare-User is not found.');
+        return new static('The DocuWare-Username is not found.');
     }
 
     public function getSolution(): Solution

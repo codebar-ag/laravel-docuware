@@ -8,7 +8,9 @@ All notable changes to `laravel-docuware` will be documented in this file.
 
 - **[Breaking Change]** Changed DOCUWARE_USER environment to DOCUWARE_USERNAME
   for a clear labelling
-
+- **[Breaking Change]** Changed DocumentPaginator property *items* to *documents*
+  for a clear labelling
+  
 ## 0.2.0 - 2021-04-19
 
 - Authentication is completely handled by the package now. No need to login

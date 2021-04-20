@@ -6,7 +6,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 
 /**
- * @property Collection|Document[] $items
+ * @property Collection|Document[] $documents
  */
 class DocumentPaginator
 {
@@ -23,7 +23,7 @@ class DocumentPaginator
 
         $to = $page === $lastPage ? $total : $page * $perPage;
 
-        $items = collect($data['Items'])->map(function (array $document) {
+        $documents = collect($data['Items'])->map(function (array $document) {
             return Document::fromJson($document);
         });
 
@@ -34,7 +34,7 @@ class DocumentPaginator
             last_page: $lastPage,
             from: $from,
             to: $to,
-            items: $items,
+            documents: $documents,
         );
     }
 
@@ -45,7 +45,7 @@ class DocumentPaginator
         public int $last_page,
         public int $from,
         public int $to,
-        public Collection $items,
+        public Collection $documents,
     ) {
     }
 
@@ -75,7 +75,7 @@ class DocumentPaginator
             last_page: $last_page ?? random_int(10, 20),
             from: $from ?? 1,
             to: $to ?? 10,
-            items: $items ?? collect(range(1, 10))->map(fn () => Document::fake()),
+            documents: $items ?? collect(range(1, 10))->map(fn () => Document::fake()),
         );
     }
 }

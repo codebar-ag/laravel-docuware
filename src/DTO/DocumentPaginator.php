@@ -66,7 +66,7 @@ class DocumentPaginator
         ?int $last_page = null,
         ?int $from = null,
         ?int $to = null,
-        ?Collection $items = null,
+        ?Collection $documents = null,
     ): self {
         return new self(
             total: $total ?? random_int(10, 100),
@@ -75,7 +75,7 @@ class DocumentPaginator
             last_page: $last_page ?? random_int(10, 20),
             from: $from ?? 1,
             to: $to ?? 10,
-            documents: $items ?? collect(range(1, 10))->map(fn () => Document::fake()),
+            documents: $documents ?? collect(range(1, 10))->map(fn () => Document::fake()),
         );
     }
 }

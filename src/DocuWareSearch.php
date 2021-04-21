@@ -41,9 +41,9 @@ class DocuWareSearch
         return $this;
     }
 
-    public function additionalFileCabinets(array $additionalCabinets): self
+    public function additionalFileCabinets(array $ids): self
     {
-        $this->additionalFileCabinetIds = $additionalCabinets;
+        $this->additionalFileCabinetIds = $ids;
 
         return $this;
     }
@@ -85,9 +85,9 @@ class DocuWareSearch
 
     public function orderBy(string $field, string $direction = 'asc'): self
     {
-        $this->orderField = "\"{$field}\"";
+        $this->orderField = $field;
 
-        $this->orderDirection = $direction; // 'asc' || 'desc'
+        $this->orderDirection = $direction; // Supported values: 'asc', 'desc'
 
         return $this;
     }
@@ -108,11 +108,14 @@ class DocuWareSearch
         $this->guard();
 
         $url = sprintf(
-            '%s/DocuWare/Platform/FileCabinets/%s/Query/DialogExpression?dialogId=%s',
+            '%s/DocuWare/Platform/FileCabinets/%s/Query/DialogExpression',
             config('docuware.credentials.url'),
             $this->fileCabinetId,
-            $this->dialogId,
         );
+
+        if ($this->dialogId) {
+            $url .= "?dialogId={$this->dialogId}";
+        }
 
         $condition = [];
 
@@ -179,11 +182,6 @@ class DocuWareSearch
         throw_if(
             is_null($this->fileCabinetId),
             UnableToSearch::cabinetNotSet(),
-        );
-
-        throw_if(
-            is_null($this->dialogId),
-            UnableToSearch::dialogNotSet(),
         );
 
         throw_if(

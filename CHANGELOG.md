@@ -3,7 +3,11 @@
 All notable changes to `laravel-docuware` will be documented in this file.
 
 ## Not released
-  
+
+## 0.3.1 - 2021-04-21
+
+- It is no longer required to set the dialog to search documents.
+
 ## 0.3.0 - 2021-04-20
 
 ⚠️ This release introduces breaking changes. Update with caution ⚠️

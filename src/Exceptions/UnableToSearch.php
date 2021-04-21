@@ -14,14 +14,6 @@ class UnableToSearch extends RuntimeException
         );
     }
 
-    public static function dialogNotSet(): self
-    {
-        return new static(
-            'You need to specify the dialog id. ' .
-                'Try to chain: "->dialog($id)"',
-        );
-    }
-
     public static function invalidPageNumber(int $page): self
     {
         return new static(

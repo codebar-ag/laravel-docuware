@@ -109,39 +109,46 @@ DocuWare::deleteDocument($fileCabinetId, $documentId);
 use CodebarAg\DocuWare\Facades\DocuWare;
 
 /**
- * Most basic example to search for documents.
+ * Most basic example to search for documents. You only need to provide a valid
+ * file cabinet id.
  */
+$id = '87356f8d-e50c-450b-909c-4eaccd318fbf';
+
 $paginator = DocuWare::search()
-    ->fileCabinet($fileCabinetId)
-    ->dialog($dialogId)
+    ->fileCabinet($id)
     ->get();
 
 /**
- * Search in multiple file cabinets.
+ * Search in multiple file cabinets. Provide an array of additional
+ * file cabinet ids.
  */
+$ids = [
+    '0ee72de3-4258-4353-8020-6a3ff6dd650f',
+    '3f9cb4ff-82f2-44dc-b439-dd648269064f',
+];
+
 $paginator = DocuWare::search()
-    ->fileCabinet($fileCabinetId)
-    ->dialog($dialogId)
-    ->additionalFileCabinets($additionalFileCabinetIds)
+    ->fileCabinet($id)
+    ->additionalFileCabinets($ids)
     ->get();
 
 /**
  * Find results on the next page. 
+ * 
  * Default: 1
  */
 $paginator = DocuWare::search()
-    ->fileCabinet($fileCabinetId)
-    ->dialog($dialogId)
+    ->fileCabinet($id)
     ->page(2)
     ->get();
     
 /**
- * Define the number of results which should be shown per page. 
+ * Define the number of results which should be shown per page.
+ * 
  * Default: 50
  */
 $paginator = DocuWare::search()
-    ->fileCabinet($fileCabinetId)
-    ->dialog($dialogId)
+    ->fileCabinet($id)
     ->perPage(30)
     ->get();
 
@@ -150,8 +157,7 @@ $paginator = DocuWare::search()
  * cabinet before you can use this feature.
  */
 $paginator = DocuWare::search()
-    ->fileCabinet($fileCabinetId)
-    ->dialog($dialogId)
+    ->fileCabinet($id)
     ->fulltext('My secret document')
     ->get();
 
@@ -159,8 +165,7 @@ $paginator = DocuWare::search()
  * Search documents which are created from the first of march.
  */
 $paginator = DocuWare::search()
-    ->fileCabinet($fileCabinetId)
-    ->dialog($dialogId)
+    ->fileCabinet($id)
     ->dateFrom(Carbon::create(2021, 3, 1))
     ->get();
 
@@ -168,17 +173,15 @@ $paginator = DocuWare::search()
  * Search documents which are created until the first of april.
  */
 $paginator = DocuWare::search()
-    ->fileCabinet($fileCabinetId)
-    ->dialog($dialogId)
+    ->fileCabinet($id)
     ->dateUntil(Carbon::create(2021, 4, 1))
     ->get();
 
 /**
- * Order the results by field name. Possibly values: 'desc' or 'asc'
+ * Order the results by field name. Supported values: 'asc', 'desc'
  */
 $paginator = DocuWare::search()
-    ->fileCabinet($fileCabinetId)
-    ->dialog($dialogId)
+    ->fileCabinet($id)
     ->orderBy('DWSTOREDATETIME', 'desc')
     ->get();
 
@@ -186,19 +189,27 @@ $paginator = DocuWare::search()
  * Search documents filtered to the value. You can specify multiple filters.
  */
 $paginator = DocuWare::search()
-    ->fileCabinet($fileCabinetId)
-    ->dialog($dialogId)
+    ->fileCabinet($id)
     ->filter('TYPE', 'Order')
     ->filter('OTHER_FIELD', 'other')
     ->get();
     
 /**
- * Or combine all together.
+ * You can specify the dialog which should be used.
+ */
+$dialogId = 'bb42c30a-89fc-4b81-9091-d7e326caba62';
+
+$paginator = DocuWare::search()
+    ->fileCabinet($id)
+    ->dialog($dialogId)
+    ->get();
+    
+/**
+ * You can also combine everything.
  */
 $paginator = DocuWare::search()
-    ->fileCabinet($fileCabinetId)
-    ->dialog($dialogId)
-    ->additionalFileCabinets($additionalFileCabinetIds)
+    ->fileCabinet($id)
+    ->additionalFileCabinets($ids)
     ->page(2)
     ->perPage(30)
     ->fulltext('My secret document')
@@ -207,12 +218,13 @@ $paginator = DocuWare::search()
     ->filter('TYPE', 'Order')
     ->filter('OTHER_FIELD', 'other')
     ->orderBy('DWSTOREDATETIME', 'desc')
+    ->dialog($dialogId)
     ->get();
 ```
 
 Please see [Tests](tests/Feature/DocuWareTest.php) for more details.
 
-## 🏋️ DTO's
+## 🏋️ DTO showcase
 
 ```php
 CodebarAg\DocuWare\DTO\FileCabinet {

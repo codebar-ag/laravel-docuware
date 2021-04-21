@@ -108,7 +108,7 @@ class DocuWareSearch
         $this->guard();
 
         $url = sprintf(
-            '%s/docuware/platform/FileCabinets/%s/Query/DialogExpression?dialogId=%s',
+            '%s/DocuWare/Platform/FileCabinets/%s/Query/DialogExpression?dialogId=%s',
             config('docuware.credentials.url'),
             $this->fileCabinetId,
             $this->dialogId,

@@ -26,7 +26,7 @@ class DocuWare
         EnsureValidCredentials::check();
 
         $url = sprintf(
-            '%s/docuware/platform/Account/Logon',
+            '%s/DocuWare/Platform/Account/Logon',
             config('docuware.credentials.url'),
         );
 
@@ -54,7 +54,7 @@ class DocuWare
         EnsureValidCookie::check();
 
         $url = sprintf(
-            '%s/docuware/platform/Account/Logoff',
+            '%s/DocuWare/Platform/Account/Logoff',
             config('docuware.credentials.url'),
         );
 
@@ -72,7 +72,7 @@ class DocuWare
         EnsureValidCookie::check();
 
         $url = sprintf(
-            '%s/docuware/platform/FileCabinets',
+            '%s/DocuWare/Platform/FileCabinets',
             config('docuware.credentials.url'),
         );
 
@@ -94,7 +94,7 @@ class DocuWare
         EnsureValidCookie::check();
 
         $url = sprintf(
-            '%s/docuware/platform/FileCabinets/%s',
+            '%s/DocuWare/Platform/FileCabinets/%s',
             config('docuware.credentials.url'),
             $fileCabinetId,
         );
@@ -117,7 +117,7 @@ class DocuWare
         EnsureValidCookie::check();
 
         $url = sprintf(
-            '%s/docuware/platform/FileCabinets/%s/Dialogs',
+            '%s/DocuWare/Platform/FileCabinets/%s/Dialogs',
             config('docuware.credentials.url'),
             $fileCabinetId,
         );
@@ -143,7 +143,7 @@ class DocuWare
         EnsureValidCookie::check();
 
         $url = sprintf(
-            '%s/docuware/platform/FileCabinets/%s/Query/SelectListExpression?dialogId=%s&fieldName=%s',
+            '%s/DocuWare/Platform/FileCabinets/%s/Query/SelectListExpression?dialogId=%s&fieldName=%s',
             config('docuware.credentials.url'),
             $fileCabinetId,
             $dialogId,
@@ -166,7 +166,7 @@ class DocuWare
         EnsureValidCookie::check();
 
         $url = sprintf(
-            '%s/docuware/platform/FileCabinets/%s/Documents/%s',
+            '%s/DocuWare/Platform/FileCabinets/%s/Documents/%s',
             config('docuware.credentials.url'),
             $fileCabinetId,
             $documentId,
@@ -192,7 +192,7 @@ class DocuWare
         EnsureValidCookie::check();
 
         $url = sprintf(
-            '%s/docuware/platform/FileCabinets/%s/Documents/%s/Image',
+            '%s/DocuWare/Platform/FileCabinets/%s/Documents/%s/Image',
             config('docuware.credentials.url'),
             $fileCabinetId,
             $documentId,
@@ -216,7 +216,7 @@ class DocuWare
         EnsureValidCookie::check();
 
         $url = sprintf(
-            '%s/docuware/platform/FileCabinets/%s/Documents/%s/FileDownload?targetFileType=Auto&keepAnnotations=false',
+            '%s/DocuWare/Platform/FileCabinets/%s/Documents/%s/FileDownload?targetFileType=Auto&keepAnnotations=false',
             config('docuware.credentials.url'),
             $fileCabinetId,
             $documentId
@@ -248,7 +248,7 @@ class DocuWare
         $additionalDocumentIds = implode(',', array_slice($documentIds, 1));
 
         $url = sprintf(
-            '%s/docuware/platform/FileCabinets/%s/Documents/%s/FileDownload?&keepAnnotations=false&append=%s',
+            '%s/DocuWare/Platform/FileCabinets/%s/Documents/%s/FileDownload?&keepAnnotations=false&append=%s',
             config('docuware.credentials.url'),
             $fileCabinetId,
             $firstDocumentId,
@@ -275,7 +275,7 @@ class DocuWare
         EnsureValidCookie::check();
 
         $url = sprintf(
-            '%s/docuware/platform/FileCabinets/%s/Documents/%s/Fields',
+            '%s/DocuWare/Platform/FileCabinets/%s/Documents/%s/Fields',
             config('docuware.credentials.url'),
             $fileCabinetId,
             $documentId,
@@ -311,7 +311,7 @@ class DocuWare
         EnsureValidCookie::check();
 
         $url = sprintf(
-            '%s/docuware/platform/FileCabinets/%s/Documents',
+            '%s/DocuWare/Platform/FileCabinets/%s/Documents',
             config('docuware.credentials.url'),
             $fileCabinetId,
         );
@@ -337,7 +337,7 @@ class DocuWare
         EnsureValidCookie::check();
 
         $url = sprintf(
-            '%s/docuware/platform/FileCabinets/%s/Documents/%s',
+            '%s/DocuWare/Platform/FileCabinets/%s/Documents/%s',
             config('docuware.credentials.url'),
             $fileCabinetId,
             $documentId,

@@ -26,10 +26,10 @@ return [
     |
     | Here you may define the amount of minutes the authentication cookie is
     | valid. Afterwards it will be removed from the cache and you need to
-    | provide a fresh one. By default the lifetime lasts for one month.
+    | provide a fresh one. By default, the lifetime lasts for one year.
     |
     */
 
-    'cookie_lifetime' => (int) env('DOCUWARE_COOKIE_LIFETIME', 43800),
+    'cookie_lifetime' => (int) env('DOCUWARE_COOKIE_LIFETIME', 525600),
 
 ];

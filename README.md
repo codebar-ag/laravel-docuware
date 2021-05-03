@@ -285,16 +285,16 @@ CodebarAg\DocuWare\DTO\Document {
 
 ```php
 CodebarAg\DocuWare\DTO\DocumentPaginator
-  +total: 39                               // integer
-  +per_page: 10                            // integer
-  +current_page: 9                         // integer
-  +last_page: 15                           // integer
-  +from: 1                                 // integer
-  +to: 10                                  // integer
-  +items: Illuminate\Support\Collection {  // Collection|Document[]
+  +total: 39                                  // integer
+  +per_page: 10                               // integer
+  +current_page: 9                            // integer
+  +last_page: 15                              // integer
+  +from: 1                                    // integer
+  +to: 10                                     // integer
+  +documents: Illuminate\Support\Collection { // Collection|Document[]
     #items: array:2 [
-      0 => CodebarAg\DocuWare\DTO\Document // Document
-      1 => CodebarAg\DocuWare\DTO\Document // Document
+      0 => CodebarAg\DocuWare\DTO\Document    // Document
+      1 => CodebarAg\DocuWare\DTO\Document    // Document
     ]
   }
 }

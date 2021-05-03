@@ -34,7 +34,7 @@ class DocumentField
     ): self {
         $fakeType = Arr::random(['Int', 'Decimal', 'Text', 'DateTime']);
 
-        $fakeValue = match($fakeType) {
+        $fakeValue = match ($fakeType) {
             'Int' => random_int(1, 9999),
             'Decimal' => mt_rand() / mt_getrandmax(),
             'DateTime' => now(),

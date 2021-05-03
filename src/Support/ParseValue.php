@@ -29,7 +29,7 @@ class ParseValue
             return $default;
         }
 
-        return match($field['ItemElementName']) {
+        return match ($field['ItemElementName']) {
             'Int' => (int) $field['Item'],
             'Decimal' => (float) $field['Item'],
             'Date','DateTime' => self::date($field['Item']),

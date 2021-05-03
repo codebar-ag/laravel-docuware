@@ -4,6 +4,8 @@ All notable changes to `laravel-docuware` will be documented in this file.
 
 ## Not released
 
+- The default cookie lifetime changed to 1 year
+
 ## 0.3.1 - 2021-04-21
 
 - It is no longer required to set the dialog to search documents.

@@ -2,9 +2,10 @@
 
 All notable changes to `laravel-docuware` will be documented in this file.
 
-## Not released
+## 0.4.0 - 2021-05-17
 
-- The default cookie lifetime changed to 1 year
+- The default cookie lifetime changed to 1 year.
+- Added nullable fields for the search.
 
 ## 0.3.1 - 2021-04-21
 

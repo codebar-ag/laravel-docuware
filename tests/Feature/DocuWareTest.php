@@ -231,4 +231,25 @@ class DocuWareTest extends TestCase
         $this->assertInstanceOf(DocumentPaginator::class, $paginator);
         Event::assertDispatched(DocuWareResponseLog::class);
     }
+
+    /** @test */
+    public function it_can_search_documents_with_null_values()
+    {
+        $fileCabinetId = 'f95f2093-e790-495b-af04-7d198a296c5e';
+
+        $paginator = (new DocuWare())
+            ->search()
+            ->fileCabinet($fileCabinetId)
+            ->page(null)
+            ->perPage(null)
+            ->fulltext(null)
+            ->dateFrom(null)
+            ->dateUntil(null)
+            ->filter('DOKUMENTENTYP', null)
+            ->orderBy('DWSTOREDATETIME', null)
+            ->get();
+
+        $this->assertInstanceOf(DocumentPaginator::class, $paginator);
+        Event::assertDispatched(DocuWareResponseLog::class);
+    }
 }

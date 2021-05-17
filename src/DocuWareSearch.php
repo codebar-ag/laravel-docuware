@@ -48,46 +48,58 @@ class DocuWareSearch
         return $this;
     }
 
-    public function page(int $page): self
+    public function page(?int $page): self
     {
-        $this->page = $page;
+        if (is_null($page)) {
+            $this->page = 1;
+        } else {
+            $this->page = $page;
+        }
 
         return $this;
     }
 
-    public function perPage(int $perPage): self
+    public function perPage(?int $perPage): self
     {
-        $this->perPage = $perPage;
+        if (is_null($perPage)) {
+            $this->perPage = 50;
+        } else {
+            $this->perPage = $perPage;
+        }
 
         return $this;
     }
 
-    public function fulltext(string $searchTerm): self
+    public function fulltext(?string $searchTerm): self
     {
         $this->searchTerm = $searchTerm;
 
         return $this;
     }
 
-    public function dateFrom(Carbon $dateFrom): self
+    public function dateFrom(?Carbon $dateFrom): self
     {
         $this->dateFrom = $dateFrom;
 
         return $this;
     }
 
-    public function dateUntil(Carbon $dateUntil): self
+    public function dateUntil(?Carbon $dateUntil): self
     {
         $this->dateUntil = $dateUntil;
 
         return $this;
     }
 
-    public function orderBy(string $field, string $direction = 'asc'): self
+    public function orderBy(string $field, ?string $direction = 'asc'): self
     {
         $this->orderField = $field;
 
-        $this->orderDirection = $direction; // Supported values: 'asc', 'desc'
+        if (is_null($direction)) {
+            $this->orderDirection = 'asc';
+        } else {
+            $this->orderDirection = $direction; // Supported values: 'asc', 'desc'
+        }
 
         return $this;
     }
@@ -137,6 +149,10 @@ class DocuWareSearch
         }
 
         foreach ($this->filters as [$name, $value]) {
+            if (empty($value)) {
+                continue;
+            }
+
             $condition[] = [
                 'DBName' => $name,
                 'Value' => $value,

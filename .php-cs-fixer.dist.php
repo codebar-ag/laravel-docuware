@@ -10,6 +10,7 @@ $rules = [
     'blank_line_before_statement' => [
         'statements' => ['break', 'continue', 'declare', 'return', 'throw', 'try'],
     ],
+    'cast_spaces' => true,
     'concat_space' => ['spacing' => 'one'],
     'method_argument_space' => [
         'on_multiline' => 'ensure_fully_multiline',

@@ -114,7 +114,6 @@ $document = DocuWare::uploadDocument(
     $indexes,
 );
 
-
 /**
  * Delete document.
  */

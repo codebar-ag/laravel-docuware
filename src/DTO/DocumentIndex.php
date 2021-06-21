@@ -21,11 +21,6 @@ class DocumentIndex
         return new self($name, $value);
     }
 
-    #[ArrayShape([
-        'FieldName' => 'string',
-        'Item' => 'int|string',
-        'ItemElementName' => 'string',
-    ])]
     public function values(): array
     {
         return [

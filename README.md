@@ -98,6 +98,24 @@ $value = DocuWare::updateDocumentValue($fileCabinetId, $documentId, $fieldName, 
 $document = DocuWare::uploadDocument($fileCabinetId, $fileContent, $fileName);
 
 /**
+ * Upload new document with index values.
+ */
+use CodebarAg\DocuWare\DTO\DocumentIndex;
+ 
+$indexes = collect([
+    DocumentIndex::make('DOCUMENT_TEXT', 'Indexed Text'),
+    DocumentIndex::make('DOCUMENT_NUMBER', 42),
+]);
+
+$document = DocuWare::uploadDocument(
+    $fileCabinetId,
+    $fileContent,
+    $fileName,
+    $indexes,
+);
+
+
+/**
  * Delete document.
  */
 DocuWare::deleteDocument($fileCabinetId, $documentId);

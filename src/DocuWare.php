@@ -5,6 +5,7 @@ namespace CodebarAg\DocuWare;
 use Carbon\Carbon;
 use CodebarAg\DocuWare\DTO\Dialog;
 use CodebarAg\DocuWare\DTO\Document;
+use CodebarAg\DocuWare\DTO\DocumentIndex;
 use CodebarAg\DocuWare\DTO\Field;
 use CodebarAg\DocuWare\DTO\FileCabinet;
 use CodebarAg\DocuWare\Events\DocuWareResponseLog;
@@ -307,6 +308,7 @@ class DocuWare
         string $fileCabinetId,
         string $fileContent,
         string $fileName,
+        ?Collection $indexes = null,
     ): Document {
         EnsureValidCookie::check();
 
@@ -316,9 +318,16 @@ class DocuWare
             $fileCabinetId,
         );
 
-        $response = Http::acceptJson()
+        $request = Http::acceptJson();
+
+        if ($indexes) {
+            $indexContent = DocumentIndex::makeContent($indexes);
+
+            $request->attach('document', $indexContent, 'index.json');
+        }
+
+        $response = $request->attach('file', $fileContent, $fileName)
             ->withCookies(Auth::cookies(), Auth::domain())
-            ->attach('file', $fileContent, $fileName)
             ->post($url);
 
         event(new DocuWareResponseLog($response));

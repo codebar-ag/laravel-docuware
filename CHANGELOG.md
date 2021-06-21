@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-docuware` will be documented in this file.
 
+## 0.5.0 - 2021-06-21
+
+- Added feature to upload document with index values.
+
 ## 0.4.0 - 2021-05-17
 
 - The default cookie lifetime changed to 1 year.

@@ -5,6 +5,8 @@ namespace CodebarAg\DocuWare\Tests\Feature;
 use Carbon\Carbon;
 use CodebarAg\DocuWare\DocuWare;
 use CodebarAg\DocuWare\DTO\Document;
+use CodebarAg\DocuWare\DTO\DocumentField;
+use CodebarAg\DocuWare\DTO\DocumentIndex;
 use CodebarAg\DocuWare\DTO\DocumentPaginator;
 use CodebarAg\DocuWare\Events\DocuWareResponseLog;
 use CodebarAg\DocuWare\Support\Auth;
@@ -189,7 +191,7 @@ class DocuWareTest extends TestCase
     }
 
     /** @test */
-    public function it_can_upload_and_delete_a_document()
+    public function it_can_upload_document_with_index_values_and_delete_it()
     {
         $fileCabinetId = 'f95f2093-e790-495b-af04-7d198a296c5e';
         $fileContent = '::fake-file-content::';
@@ -199,11 +201,25 @@ class DocuWareTest extends TestCase
             $fileCabinetId,
             $fileContent,
             $fileName,
+            collect([
+                DocumentIndex::make('DOCUMENT_TEXT', '::text::'),
+                DocumentIndex::make('DOCUMENT_NUMERIC', 42),
+            ]),
         );
         (new DocuWare())->deleteDocument($fileCabinetId, $document->id);
 
         $this->assertInstanceOf(Document::class, $document);
         $this->assertSame('example', $document->title);
+        tap($document->fields['DOCUMENT_TEXT'], function (DocumentField $field) {
+            $this->assertSame($field->name, 'DOCUMENT_TEXT');
+            $this->assertSame($field->type, 'String');
+            $this->assertSame($field->value, '::text::');
+        });
+        tap($document->fields['DOCUMENT_NUMERIC'], function (DocumentField $field) {
+            $this->assertSame($field->name, 'DOCUMENT_NUMERIC');
+            $this->assertSame($field->type, 'Int');
+            $this->assertSame($field->value, 42);
+        });
         Event::assertDispatched(DocuWareResponseLog::class);
     }
 

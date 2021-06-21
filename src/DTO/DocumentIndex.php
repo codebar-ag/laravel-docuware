@@ -21,7 +21,7 @@ class DocumentIndex
         return new self($name, $value);
     }
 
-    public function values(): array
+    public function valuess(): array
     {
         return [
             'FieldName' => $this->name,

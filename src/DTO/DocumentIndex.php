@@ -3,7 +3,6 @@
 namespace CodebarAg\DocuWare\DTO;
 
 use Illuminate\Support\Collection;
-use JetBrains\PhpStorm\ArrayShape;
 
 class DocumentIndex
 {

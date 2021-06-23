@@ -22,7 +22,8 @@ class URL
             ->replace('+', '-')
             ->replace('/', '_')
             ->replace('=', '')
-            ->append($padding);
+            ->append($padding)
+            ->__toString();
     }
 
     public static function formatWithBase64(string $string): string

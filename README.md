@@ -40,6 +40,19 @@ Add the following environment variables to your `.env` file:
 DOCUWARE_URL=https://domain.docuware.cloud
 DOCUWARE_USERNAME=user@domain.test
 DOCUWARE_PASSWORD=password
+DOCUWARE_PASSPHRASE="passphrase"
+```
+
+With the passphrase we are able to encrypt the URLs. 
+
+⚠️ You need to escape backslashes in your passphrase with another backslash:
+
+```bash 
+# ❌ Passphrase contains a backslash and is not escaped:
+DOCUWARE_PASSPHRASE="a#bcd>2~C1'abc\#"
+
+# ✅ We need to escape the backslash with another backslash:
+DOCUWARE_PASSPHRASE="a#bcd>2~C1'abc\\#"
 ```
 
 ## 🏗 Usage
@@ -239,6 +252,33 @@ $paginator = DocuWare::search()
     ->get();
 ```
 
+## 🖼 Make encrypted URL
+
+```php
+use CodebarAg\DocuWare\Facades\DocuWare;
+
+/**
+ * Make encrypted URL for a document in a file cabinet.
+ */
+$fileCabinetId = '87356f8d-e50c-450b-909c-4eaccd318fbf';
+$documentId = 42;
+
+$url = DocuWare::url()
+    ->fileCabinet($fileCabinetId)
+    ->document($documentId)
+    ->make();
+
+/**
+ * Make encrypted URL for a document in a basket.
+ */
+$basketId = '87356f8d-e50c-450b-909c-4eaccd318fbf';
+
+$url = DocuWare::url()
+    ->basket($basketId)
+    ->document($documentId)
+    ->make();
+```
+
 Please see [Tests](tests/Feature/DocuWareTest.php) for more details.
 
 ## 🏋️ DTO showcase
@@ -364,13 +404,26 @@ match.
 
 ---
 
+- `CodebarAg\DocuWare\Exceptions\UnableToFindPassphrase`
+
+This exception can only be thrown during the url making if the passphrase
+could not be found.
+
+---
+
+- `CodebarAg\DocuWare\Exceptions\UnableToMakeUrl`
+
+Something is wrong during the URL making.
+
+---
+
 - `Illuminate\Http\Client\RequestException`
 
 All other cases if the response is not successfully.
 
 ## ✨ Events
 
-Following events are fired:
+Following events will be fired:
 
 ```php 
 use CodebarAg\DocuWare\Events\DocuWareResponseLog;
@@ -414,16 +467,29 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Passphrase
+    |--------------------------------------------------------------------------
+    |
+    | In order to create encrypted URLs we need a passphrase. This enables a
+    | secure exchange of DocuWare URLs without anyone being able to modify
+    | your query strings. You can find it in the organization settings.
+    |
+    */
+
+    'passphrase' => env('DOCUWARE_PASSPHRASE'),
+
+    /*
+    |--------------------------------------------------------------------------
     | Authentication Cookie Lifetime
     |--------------------------------------------------------------------------
     |
     | Here you may define the amount of minutes the authentication cookie is
     | valid. Afterwards it will be removed from the cache and you need to
-    | provide a fresh one. By default the lifetime lasts for one month.
+    | provide a fresh one. By default, the lifetime lasts for one year.
     |
     */
 
-    'cookie_lifetime' => (int) env('DOCUWARE_COOKIE_LIFETIME', 43800),
+    'cookie_lifetime' => (int) env('DOCUWARE_COOKIE_LIFETIME', 525600),
 
 ];
 ```

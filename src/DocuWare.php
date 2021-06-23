@@ -365,6 +365,11 @@ class DocuWare
 
     public function search(): DocuWareSearch
     {
-        return (new DocuWareSearch());
+        return new DocuWareSearch();
+    }
+
+    public function url(): DocuWareUrl
+    {
+        return new DocuWareUrl();
     }
 }

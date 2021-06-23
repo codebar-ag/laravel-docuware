@@ -7,17 +7,17 @@ use Facade\IgnitionContracts\ProvidesSolution;
 use Facade\IgnitionContracts\Solution;
 use RuntimeException;
 
-class UnableToFindUserCredential extends RuntimeException implements ProvidesSolution
+class UnableToFindPassphrase extends RuntimeException implements ProvidesSolution
 {
     public static function create(): self
     {
-        return new static('Your username is not found.');
+        return new static('Your passphrase is not found.');
     }
 
     public function getSolution(): Solution
     {
         return BaseSolution::create('Try to add following in your .env-file:')
-            ->setSolutionDescription('DOCUWARE_USERNAME=user@domain.test')
+            ->setSolutionDescription('DOCUWARE_PASSPHRASE=passphrase')
             ->setDocumentationLinks([
                 'GitHub' => 'https://github.com/codebar-ag/laravel-docuware#installation',
             ]);

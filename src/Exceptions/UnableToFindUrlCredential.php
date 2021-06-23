@@ -11,7 +11,7 @@ class UnableToFindUrlCredential extends RuntimeException implements ProvidesSolu
 {
     public static function create(): self
     {
-        return new static('The DocuWare-URL is not found.');
+        return new static('Your URL is not found.');
     }
 
     public function getSolution(): Solution

@@ -268,4 +268,42 @@ class DocuWareTest extends TestCase
         $this->assertInstanceOf(DocumentPaginator::class, $paginator);
         Event::assertDispatched(DocuWareResponseLog::class);
     }
+
+    /** @test */
+    public function it_can_create_encrypted_url_for_a_document_in_a_file_cabinet()
+    {
+        $fileCabinetId = 'f95f2093-e790-495b-af04-7d198a296c5e';
+        $documentId = 5;
+
+        $url = (new DocuWare())
+            ->url()
+            ->fileCabinet($fileCabinetId)
+            ->document($documentId)
+            ->make();
+
+        $this->assertStringStartsWith(
+            'https://codebar.docuware.cloud/DocuWare/Platform/WebClient/Integration?ep=',
+            $url,
+        );
+        Event::assertNotDispatched(DocuWareResponseLog::class);
+    }
+
+    /** @test */
+    public function it_can_create_encrypted_url_for_a_document_in_a_basket()
+    {
+        $basketId = 'b_4add6bbb-ba69-4859-80f8-359dd58bf66b';
+        $documentId = 5;
+
+        $url = (new DocuWare())
+            ->url()
+            ->basket($basketId)
+            ->document($documentId)
+            ->make();
+
+        $this->assertStringStartsWith(
+            'https://codebar.docuware.cloud/DocuWare/Platform/WebClient/Integration?ep=',
+            $url,
+        );
+        Event::assertNotDispatched(DocuWareResponseLog::class);
+    }
 }

@@ -4,6 +4,7 @@ namespace CodebarAg\DocuWare\Facades;
 
 use Carbon\Carbon;
 use CodebarAg\DocuWare\DocuWareSearch;
+use CodebarAg\DocuWare\DocuWareUrl;
 use CodebarAg\DocuWare\DTO\Dialog;
 use CodebarAg\DocuWare\DTO\Document;
 use CodebarAg\DocuWare\DTO\Field;
@@ -28,6 +29,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static Document uploadDocument(string $fileCabinetId, string $fileContent, string $fileName, ?Collection $indexes = null)
  * @method static void deleteDocument(string $fileCabinetId, int $documentId)
  * @method static DocuWareSearch search()
+ * @method static DocuWareUrl url()
  */
 class DocuWare extends Facade
 {

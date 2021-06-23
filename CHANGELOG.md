@@ -2,6 +2,11 @@
 
 All notable changes to `laravel-docuware` will be documented in this file.
 
+## 0.6.0 - 2021-06-23
+
+- Added feature to create encrypted URL.
+- Added new environment variable for the passphrase `DOCUWARE_PASSPHRASE`.
+
 ## 0.5.0 - 2021-06-21
 
 - Added feature to upload document with index values.

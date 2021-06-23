@@ -21,6 +21,19 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Passphrase
+    |--------------------------------------------------------------------------
+    |
+    | In order to create encrypted URLs we need a passphrase. This enables a
+    | secure exchange of DocuWare URLs without anyone being able to modify
+    | your query strings. You can find it in the organization settings.
+    |
+    */
+
+    'passphrase' => env('DOCUWARE_PASSPHRASE'),
+
+    /*
+    |--------------------------------------------------------------------------
     | Authentication Cookie Lifetime
     |--------------------------------------------------------------------------
     |

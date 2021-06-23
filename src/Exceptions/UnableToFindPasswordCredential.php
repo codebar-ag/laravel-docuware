@@ -11,7 +11,7 @@ class UnableToFindPasswordCredential extends RuntimeException implements Provide
 {
     public static function create(): self
     {
-        return new static('The DocuWare-Password is not found.');
+        return new static('Your password is not found.');
     }
 
     public function getSolution(): Solution

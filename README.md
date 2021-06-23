@@ -506,6 +506,7 @@ Modify environment variables in the phpunit.xml-file:
 <env name="DOCUWARE_URL" value="https://domain.docuware.cloud"/>
 <env name="DOCUWARE_USERNAME" value="user@domain.test"/>
 <env name="DOCUWARE_PASSWORD" value="password"/>
+<env name="DOCUWARE_PASSPHRASE" value="passphrase"/>
 ```
 
 Run the tests:

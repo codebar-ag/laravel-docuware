@@ -16,15 +16,25 @@ use Illuminate\Support\Str;
 class DocuWareSearch
 {
     protected ?string $fileCabinetId = null;
+
     protected ?string $dialogId = null;
+
     protected array $additionalFileCabinetIds = [];
+
     protected int $page = 1;
+
     protected int $perPage = 50;
+
     protected ?string $searchTerm = null;
+
     protected ?Carbon $dateFrom = null;
+
     protected ?Carbon $dateUntil = null;
+
     protected string $orderField = 'DWSTOREDATETIME';
+
     protected string $orderDirection = 'asc';
+
     protected array $filters = [];
 
     public function fileCabinet(string $fileCabinetId): self

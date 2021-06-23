@@ -271,7 +271,7 @@ $url = DocuWare::url()
 /**
  * Make encrypted URL for a document in a basket.
  */
-$basketId = '87356f8d-e50c-450b-909c-4eaccd318fbf';
+$basketId = 'b_87356f8d-e50c-450b-909c-4eaccd318fbf';
 
 $url = DocuWare::url()
     ->basket($basketId)

@@ -286,7 +286,6 @@ class DocuWareTest extends TestCase
             'https://codebar.docuware.cloud/DocuWare/Platform/WebClient/Integration?ep=',
             $url,
         );
-        Event::assertNotDispatched(DocuWareResponseLog::class);
     }
 
     /** @test */
@@ -299,12 +298,12 @@ class DocuWareTest extends TestCase
             ->url()
             ->basket($basketId)
             ->document($documentId)
+            ->validUntil(now()->addMinute())
             ->make();
 
         $this->assertStringStartsWith(
             'https://codebar.docuware.cloud/DocuWare/Platform/WebClient/Integration?ep=',
             $url,
         );
-        Event::assertNotDispatched(DocuWareResponseLog::class);
     }
 }

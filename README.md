@@ -277,6 +277,16 @@ $url = DocuWare::url()
     ->basket($basketId)
     ->document($documentId)
     ->make();
+
+/**
+ * Make encrypted URL valid for a specific amount of time. In the example below
+ * the URL is valid for one week. Afterwards the URL is no longer working.
+ */
+$url = DocuWare::url()
+    ->fileCabinet($fileCabinetId)
+    ->document($documentId)
+    ->validUntil(now()->addWeek())
+    ->make();
 ```
 
 Please see [Tests](tests/Feature/DocuWareTest.php) for more details.

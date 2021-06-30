@@ -279,6 +279,7 @@ class DocuWareTest extends TestCase
             ->url()
             ->fileCabinet($fileCabinetId)
             ->document($documentId)
+            ->validUntil(now()->addMinute())
             ->make();
 
         $this->assertStringStartsWith(

@@ -2,6 +2,7 @@
 
 namespace CodebarAg\DocuWare;
 
+use Carbon\Carbon;
 use CodebarAg\DocuWare\Exceptions\UnableToMakeUrl;
 use CodebarAg\DocuWare\Support\EnsureValidCredentials;
 use CodebarAg\DocuWare\Support\EnsureValidPassphrase;
@@ -14,6 +15,8 @@ class DocuWareUrl
     protected ?string $basketId = null;
 
     protected ?int $documentId = null;
+
+    protected ?Carbon $validUntil = null;
 
     public function fileCabinet(string $fileCabinetId): self
     {
@@ -32,6 +35,13 @@ class DocuWareUrl
     public function document(int $documentId): self
     {
         $this->documentId = $documentId;
+
+        return $this;
+    }
+
+    public function validUntil(Carbon $date): self
+    {
+        $this->validUntil = $date;
 
         return $this;
     }
@@ -60,6 +70,13 @@ class DocuWareUrl
             "did={$this->documentId}",
             $source,
         ]);
+
+        if ($this->validUntil) {
+            $data = implode('&', [
+                $data,
+                'vu=' . $this->validUntil->format('Y-m-d\TH:i:s\Z'),
+            ]);
+        }
 
         // Source: https://support.docuware.com/en-US/forums/help-with-technical-problems/ea9618df-c491-e911-80e7-0003ff59a7c6
         $key = utf8_encode(config('docuware.passphrase'));

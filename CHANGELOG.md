@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-docuware` will be documented in this file.
 
+## 0.7.0 - 2021-06-30
+
+- Added valid until date for the encrypted URL.
+
 ## 0.6.0 - 2021-06-23
 
 - Added feature to create encrypted URL.

@@ -53,7 +53,7 @@ class DocuWareUrl
         $credentials = sprintf(
             'User=%s\nPwd=%s',
             config('docuware.credentials.username'),
-            config('docuware.credentials.password')
+            config('docuware.credentials.password'),
         );
 
         $lc = URL::formatWithBase64($credentials);

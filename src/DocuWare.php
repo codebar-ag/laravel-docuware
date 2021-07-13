@@ -220,7 +220,7 @@ class DocuWare
             '%s/DocuWare/Platform/FileCabinets/%s/Documents/%s/FileDownload?targetFileType=Auto&keepAnnotations=false',
             config('docuware.credentials.url'),
             $fileCabinetId,
-            $documentId
+            $documentId,
         );
 
         $response = Http::acceptJson()

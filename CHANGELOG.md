@@ -2,6 +2,29 @@
 
 All notable changes to `laravel-docuware` will be documented in this file.
 
+## Unreleased
+
+⚠️ This release introduces breaking changes. Update with caution ⚠️
+
+- **[Breaking Change]**: Searching in multiple file cabinets have been changed.
+  The search no longer supports `additionalFileCabinets()`.  Please use
+  `fileCabinets()` instead. Example:
+
+```php
+$paginator = DocuWare::search()
+    ->fileCabinet('id-first')
+    ->additionalFileCabinets(['id-second'])
+    ->get();
+```
+
+Changed to:
+
+```php
+$paginator = DocuWare::search()
+    ->fileCabinets(['id-first', 'id-second'])
+    ->get();
+```
+
 ## 0.7.0 - 2021-06-30
 
 - Added valid until date for the encrypted URL.

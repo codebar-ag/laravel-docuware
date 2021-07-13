@@ -44,16 +44,18 @@ class DocuWareSearch
         return $this;
     }
 
-    public function dialog(string $dialogId): self
+    public function fileCabinets(array $fileCabinetIds): self
     {
-        $this->dialogId = $dialogId;
+        $this->fileCabinetId = $fileCabinetIds[0] ?? null;
+
+        $this->additionalFileCabinetIds = array_slice($fileCabinetIds, 1);
 
         return $this;
     }
 
-    public function additionalFileCabinets(array $ids): self
+    public function dialog(string $dialogId): self
     {
-        $this->additionalFileCabinetIds = $ids;
+        $this->dialogId = $dialogId;
 
         return $this;
     }

@@ -227,13 +227,11 @@ class DocuWareTest extends TestCase
     public function it_can_search_documents()
     {
         $fileCabinetId = 'f95f2093-e790-495b-af04-7d198a296c5e';
-        $additionalFileCabinetIds = ['986ee421-9d6b-4a4b-837d-b3e61ea2e681'];
         $dialogId = '6a84f3da-7514-4116-86df-42b56acd19a7';
 
         $paginator = (new DocuWare())
             ->search()
             ->fileCabinet($fileCabinetId)
-            ->additionalFileCabinets($additionalFileCabinetIds)
             ->dialog($dialogId)
             ->page(1)
             ->perPage(5)
@@ -251,11 +249,14 @@ class DocuWareTest extends TestCase
     /** @test */
     public function it_can_search_documents_with_null_values()
     {
-        $fileCabinetId = 'f95f2093-e790-495b-af04-7d198a296c5e';
+        $fileCabinetIds = [
+            'f95f2093-e790-495b-af04-7d198a296c5e',
+            '986ee421-9d6b-4a4b-837d-b3e61ea2e681',
+        ];
 
         $paginator = (new DocuWare())
             ->search()
-            ->fileCabinet($fileCabinetId)
+            ->fileCabinets($fileCabinetIds)
             ->page(null)
             ->perPage(null)
             ->fulltext(null)

@@ -149,17 +149,15 @@ $paginator = DocuWare::search()
     ->get();
 
 /**
- * Search in multiple file cabinets. Provide an array of additional
- * file cabinet ids.
+ * Search in multiple file cabinets. Provide an array of file cabinet ids.
  */
-$ids = [
+$fileCabinetIds = [
     '0ee72de3-4258-4353-8020-6a3ff6dd650f',
     '3f9cb4ff-82f2-44dc-b439-dd648269064f',
 ];
 
 $paginator = DocuWare::search()
-    ->fileCabinet($id)
-    ->additionalFileCabinets($ids)
+    ->fileCabinets($fileCabinetIds)
     ->get();
 
 /**
@@ -239,7 +237,6 @@ $paginator = DocuWare::search()
  */
 $paginator = DocuWare::search()
     ->fileCabinet($id)
-    ->additionalFileCabinets($ids)
     ->page(2)
     ->perPage(30)
     ->fulltext('My secret document')

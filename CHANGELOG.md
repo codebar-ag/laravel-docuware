@@ -2,10 +2,11 @@
 
 All notable changes to `laravel-docuware` will be documented in this file.
 
-## Unreleased
+## 1.0.0 - 2021-07-14
 
 ⚠️ This release introduces breaking changes. Update with caution ⚠️
 
+- Stable release.
 - **[Breaking Change]**: Searching in multiple file cabinets have been changed.
   The search no longer supports `additionalFileCabinets()`.  Please use
   `fileCabinets()` instead. Example:

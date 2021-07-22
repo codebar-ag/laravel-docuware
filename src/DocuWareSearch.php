@@ -9,6 +9,7 @@ use CodebarAg\DocuWare\Exceptions\UnableToSearch;
 use CodebarAg\DocuWare\Support\Auth;
 use CodebarAg\DocuWare\Support\EnsureValidCookie;
 use CodebarAg\DocuWare\Support\EnsureValidResponse;
+use Exception;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
@@ -192,9 +193,13 @@ class DocuWareSearch
 
         event(new DocuWareResponseLog($response));
 
-        EnsureValidResponse::from($response);
+        try {
+            EnsureValidResponse::from($response);
 
-        $data = $response->throw()->json();
+            $data = $response->throw()->json();
+        } catch (Exception $e) {
+            return DocumentPaginator::fromFailed($e);
+        }
 
         return DocumentPaginator::fromJson(
             $data,

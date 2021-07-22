@@ -2,6 +2,7 @@
 
 namespace CodebarAg\DocuWare\DTO;
 
+use Exception;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 
@@ -10,6 +11,38 @@ use Illuminate\Support\Collection;
  */
 class DocumentPaginator
 {
+    public function __construct(
+        public int $total,
+        public int $per_page,
+        public int $current_page,
+        public int $last_page,
+        public int $from,
+        public int $to,
+        public Collection $documents,
+        public ?ErrorBag $error = null,
+    ) {
+    }
+
+    public function showPrev(): bool
+    {
+        return $this->current_page > 1;
+    }
+
+    public function showNext(): bool
+    {
+        return $this->current_page < $this->last_page;
+    }
+
+    public function successful(): bool
+    {
+        return is_null($this->error);
+    }
+
+    public function failed(): bool
+    {
+        return !$this->successful();
+    }
+
     public static function fromJson(
         array $data,
         int $page,
@@ -38,25 +71,18 @@ class DocumentPaginator
         );
     }
 
-    public function __construct(
-        public int $total,
-        public int $per_page,
-        public int $current_page,
-        public int $last_page,
-        public int $from,
-        public int $to,
-        public Collection $documents,
-    ) {
-    }
-
-    public function showPrev(): bool
+    public static function fromFailed(Exception $e): self
     {
-        return $this->current_page > 1;
-    }
-
-    public function showNext(): bool
-    {
-        return $this->current_page < $this->last_page;
+        return new self(
+            total: 0,
+            per_page: 0,
+            current_page: 0,
+            last_page: 0,
+            from: 0,
+            to: 0,
+            documents: collect(),
+            error: ErrorBag::make($e),
+        );
     }
 
     public static function fake(

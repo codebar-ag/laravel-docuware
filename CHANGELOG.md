@@ -2,6 +2,22 @@
 
 All notable changes to `laravel-docuware` will be documented in this file.
 
+## 1.1.0 - 2021-07-22
+
+- Added `error` property to the `DocumentPaginator`. This is used for failed
+  requests otherwise it is null. When the request fails for any reason an 
+  ErrorBag is added with more information. Example:
+
+```php 
+CodebarAg\DocuWare\DTO\DocumentPaginator {
+  ...
+  +error: CodebarAg\DocuWare\DTO\ErrorBag {
+    +code: 422
+    +message: "'00000000-0000-0000-0000-0000000000000' is not valid cabinet id"
+  }
+}
+```
+
 ## 1.0.0 - 2021-07-14
 
 ⚠️ This release introduces breaking changes. Update with caution ⚠️

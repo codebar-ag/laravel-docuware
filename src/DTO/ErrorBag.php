@@ -15,7 +15,7 @@ class ErrorBag
     public static function make(Exception $e): self
     {
         return new self(
-            code: $e->getCode(),
+            code: (int) $e->getCode(),
             message: $e->getMessage(),
         );
     }

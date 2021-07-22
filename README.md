@@ -361,6 +361,10 @@ CodebarAg\DocuWare\DTO\DocumentPaginator
       1 => CodebarAg\DocuWare\DTO\Document    // Document
     ]
   }
+  +error: CodebarAg\DocuWare\DTO\ErrorBag {   // ErrorBag|null
+    +code: 422                                // int
+    +message: "'000' is not valid cabinet id" // string
+  }
 }
 ```
 

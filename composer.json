@@ -11,14 +11,14 @@
     "license": "MIT",
     "authors": [
         {
-            "name": "Ruslan Steiger",
-            "email": "ruslan.steiger@codebar.ch",
-            "homepage": "https://codebar.ch",
-            "role": "Developer"
+            "name": "Sebastian Fix",
+            "email": "sebastian.fix@codebar.ch",
+            "homepage": "https://www.codebar.ch",
+            "role": "Software Engineer"
         }
     ],
     "require": {
-        "php": "^8.0",
+        "php": "^8.1",
         "guzzlehttp/guzzle": "^7.0.1",
         "spatie/laravel-package-tools": "^1.6"
     },

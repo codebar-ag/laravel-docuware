@@ -16,24 +16,25 @@ class Auth
     public static function store(CookieJar $cookies): void
     {
         $cookie = collect($cookies->toArray())
-            ->reject(fn (array $cookie) => $cookie['Value'] === '')
+            ->reject(fn(array $cookie) => $cookie['Value'] === '')
             ->firstWhere('Name', self::COOKIE_NAME);
 
-        Cache::put(
-            self::CACHE_KEY,
-            [$cookie['Name'] => $cookie['Value']],
-            now()->addMinutes(config('docuware.cookie_lifetime')),
-        );
+        Cache::driver(config('docuware.default_cache_driver'))
+            ->put(
+                self::CACHE_KEY,
+                [$cookie['Name'] => $cookie['Value']],
+                now()->addMinutes(config('docuware.cookie_lifetime')),
+            );
     }
 
     public static function cookies(): ?array
     {
-        return Cache::get(self::CACHE_KEY);
+        return Cache::driver(config('docuware.default_cache_driver'))->get(self::CACHE_KEY);
     }
 
     public static function forget(): void
     {
-        Cache::forget(self::CACHE_KEY);
+        Cache::driver(config('docuware.default_cache_driver'))->forget(self::CACHE_KEY);
     }
 
     public static function domain(): string
@@ -51,6 +52,6 @@ class Auth
 
     public static function check(): bool
     {
-        return Cache::has(self::CACHE_KEY);
+        return Cache::driver(config('docuware.default_cache_driver'))->has(self::CACHE_KEY);
     }
 }

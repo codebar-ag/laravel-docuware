@@ -71,7 +71,7 @@ class DocuWareTest extends TestCase
     /** @test */
     public function it_can_list_fields_for_a_file_cabinet()
     {
-        $fileCabinetId = 'f0cfdb0d-9335-42e8-9e02-69309b62cd35';
+        $fileCabinetId = '75c7cee7-ff04-475f-bc43-44b8ec3f7754';
 
         $fields = (new DocuWare())->getFields($fileCabinetId);
 
@@ -83,7 +83,7 @@ class DocuWareTest extends TestCase
     /** @test */
     public function it_can_list_dialogs_for_a_file_cabinet()
     {
-        $fileCabinetId = 'f0cfdb0d-9335-42e8-9e02-69309b62cd35';
+        $fileCabinetId = '75c7cee7-ff04-475f-bc43-44b8ec3f7754';
 
         $dialogs = (new DocuWare())->getDialogs($fileCabinetId);
 
@@ -95,8 +95,8 @@ class DocuWareTest extends TestCase
     /** @test */
     public function it_can_list_values_for_a_select_list()
     {
-        $fileCabinetId = 'f0cfdb0d-9335-42e8-9e02-69309b62cd35';
-        $dialogId = '8f57d5d6-b11c-4b53-b2c6-335ea0bc8238';
+        $fileCabinetId = '75c7cee7-ff04-475f-bc43-44b8ec3f7754';
+        $dialogId = 'adfa26ea-3148-4365-b71f-45a01f0e95a0';
         $fieldName = 'DOCUMENT_TYPE';
 
         $types = (new DocuWare())->getSelectList(
@@ -112,7 +112,7 @@ class DocuWareTest extends TestCase
     /** @test */
     public function it_can_show_a_document()
     {
-        $fileCabinetId = 'f0cfdb0d-9335-42e8-9e02-69309b62cd35';
+        $fileCabinetId = '75c7cee7-ff04-475f-bc43-44b8ec3f7754';
         $documentId = 8;
 
         $document = (new DocuWare())->getDocument(
@@ -129,7 +129,7 @@ class DocuWareTest extends TestCase
     /** @test */
     public function it_can_preview_a_document_image()
     {
-        $fileCabinetId = 'f0cfdb0d-9335-42e8-9e02-69309b62cd35';
+        $fileCabinetId = '75c7cee7-ff04-475f-bc43-44b8ec3f7754';
         $documentId = 8;
 
         $image = (new DocuWare())->getDocumentPreview(
@@ -137,14 +137,14 @@ class DocuWareTest extends TestCase
             $documentId,
         );
 
-        $this->assertSame(11036, strlen($image));
+        $this->assertSame(2126, strlen($image));
         Event::assertDispatched(DocuWareResponseLog::class);
     }
 
     /** @test */
     public function it_can_download_a_document()
     {
-        $fileCabinetId = 'f0cfdb0d-9335-42e8-9e02-69309b62cd35';
+        $fileCabinetId = '75c7cee7-ff04-475f-bc43-44b8ec3f7754';
         $documentId = 8;
 
         $contents = (new DocuWare())->downloadDocument(
@@ -152,14 +152,14 @@ class DocuWareTest extends TestCase
             $documentId,
         );
 
-        $this->assertSame(46034, strlen($contents));
+        $this->assertSame(4911, strlen($contents));
         Event::assertDispatched(DocuWareResponseLog::class);
     }
 
     /** @test */
     public function it_can_download_multiple_documents()
     {
-        $fileCabinetId = 'f0cfdb0d-9335-42e8-9e02-69309b62cd35';
+        $fileCabinetId = '75c7cee7-ff04-475f-bc43-44b8ec3f7754';
         $documentIds = [7, 8];
 
         $contents = (new DocuWare())->downloadDocuments(
@@ -167,14 +167,14 @@ class DocuWareTest extends TestCase
             $documentIds,
         );
 
-        $this->assertSame(2095702, strlen($contents));
+        $this->assertSame(3818, strlen($contents));
         Event::assertDispatched(DocuWareResponseLog::class);
     }
 
     /** @test */
     public function it_can_update_a_document_value()
     {
-        $fileCabinetId = 'f0cfdb0d-9335-42e8-9e02-69309b62cd35';
+        $fileCabinetId = '75c7cee7-ff04-475f-bc43-44b8ec3f7754';
         $documentId = 7;
         $fieldName = 'DOCUMENT_LABEL';
         $newValue = 'Der neue Inhalt!';
@@ -194,7 +194,7 @@ class DocuWareTest extends TestCase
     public function it_can_upload_document_with_index_values_and_delete_it()
     {
         $this->markTestSkipped();
-        $fileCabinetId = 'f0cfdb0d-9335-42e8-9e02-69309b62cd35';
+        $fileCabinetId = '75c7cee7-ff04-475f-bc43-44b8ec3f7754';
         $fileContent = '::fake-file-content::';
         $fileName = 'example.txt';
 
@@ -221,7 +221,7 @@ class DocuWareTest extends TestCase
     /** @test */
     public function it_can_search_documents()
     {
-        $fileCabinetId = 'f0cfdb0d-9335-42e8-9e02-69309b62cd35';
+        $fileCabinetId = '75c7cee7-ff04-475f-bc43-44b8ec3f7754';
         $dialogId = '8f57d5d6-b11c-4b53-b2c6-335ea0bc8238';
 
         $paginator = (new DocuWare())
@@ -245,7 +245,7 @@ class DocuWareTest extends TestCase
     public function it_can_search_documents_with_null_values()
     {
         $fileCabinetIds = [
-            'f0cfdb0d-9335-42e8-9e02-69309b62cd35',
+            '75c7cee7-ff04-475f-bc43-44b8ec3f7754',
             '86a15ac1-ea58-4510-9905-6cb13c905a4f',
         ];
 
@@ -257,7 +257,7 @@ class DocuWareTest extends TestCase
             ->fulltext(null)
             ->dateFrom(null)
             ->dateUntil(null)
-            ->filter('DOKUMENTENTYP', null)
+            ->filter('DOCUMENT_TYPE', null)
             ->orderBy('DWSTOREDATETIME', null)
             ->get();
 
@@ -268,7 +268,7 @@ class DocuWareTest extends TestCase
     /** @test */
     public function it_can_create_encrypted_url_for_a_document_in_a_file_cabinet()
     {
-        $fileCabinetId = 'f0cfdb0d-9335-42e8-9e02-69309b62cd35';
+        $fileCabinetId = '75c7cee7-ff04-475f-bc43-44b8ec3f7754';
         $documentId = 7;
 
         $url = (new DocuWare())
@@ -279,7 +279,7 @@ class DocuWareTest extends TestCase
             ->make();
 
         $this->assertStringStartsWith(
-            'https://codebar.docuware.cloud/DocuWare/Platform/WebClient/Integration?ep=',
+            'https://vanta.docuware.cloud/DocuWare/Platform/WebClient/Integration?ep=',
             $url,
         );
     }
@@ -298,8 +298,9 @@ class DocuWareTest extends TestCase
             ->make();
 
         $this->assertStringStartsWith(
-            'https://codebar.docuware.cloud/DocuWare/Platform/WebClient/Integration?ep=',
+            'https://vanta.docuware.cloud/DocuWare/Platform/WebClient/Integration?ep=',
             $url,
         );
     }
+
 }

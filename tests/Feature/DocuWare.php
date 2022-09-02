@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 
-class DocuWareTest extends TestCase
+class DocuWare extends TestCase
 {
     public function setUp(): void
     {
@@ -35,7 +35,7 @@ class DocuWareTest extends TestCase
 
             Cache::put(
                 Auth::CACHE_KEY,
-                [Auth::COOKIE_NAME => (string) $cookie],
+                [Auth::COOKIE_NAME => (string)$cookie],
                 now()->addDay(),
             );
 
@@ -58,7 +58,7 @@ class DocuWareTest extends TestCase
         parent::tearDown();
     }
 
-    /** @test */
+    /** @test @group list */
     public function it_can_list_file_cabinets()
     {
         $fileCabinets = (new DocuWare())->getFileCabinets();
@@ -80,7 +80,8 @@ class DocuWareTest extends TestCase
         Event::assertDispatched(DocuWareResponseLog::class);
     }
 
-    /** @test */
+    /** @test
+     */
     public function it_can_list_dialogs_for_a_file_cabinet()
     {
         $fileCabinetId = 'f0cfdb0d-9335-42e8-9e02-69309b62cd35';

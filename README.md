@@ -286,7 +286,7 @@ $url = DocuWare::url()
     ->make();
 ```
 
-Please see [Tests](tests/Feature/DocuWareTest.php) for more details.
+Please see [Tests](tests/Feature/DocuWare.php) for more details.
 
 ## 🏋️ DTO showcase
 

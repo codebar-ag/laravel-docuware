@@ -10,7 +10,7 @@ use CodebarAg\DocuWare\DTO\Field;
 use CodebarAg\DocuWare\DTO\FileCabinet;
 use CodebarAg\DocuWare\Tests\TestCase;
 
-class DTOTest extends TestCase
+class DTO extends TestCase
 {
     /** @test */
     public function it_does_create_a_fake_file_cabinet()

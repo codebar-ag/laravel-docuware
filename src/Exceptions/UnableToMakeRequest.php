@@ -11,7 +11,7 @@ class UnableToMakeRequest extends RuntimeException
         return new static(
             'You are not authorized. ' .
                 'Make sure you are logged in with the correct credentials.' .
-                'Try to use "->login()" before you make other requests.'
+                'Try to use "->login()" before you make other requests.',
         );
     }
 }

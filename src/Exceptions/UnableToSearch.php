@@ -18,7 +18,7 @@ class UnableToSearch extends RuntimeException
     {
         return new static(
             'You need to specify page number greater than zero. ' .
-                "Following is not valid: \"->page({$page})\""
+                "Following is not valid: \"->page({$page})\"",
         );
     }
 
@@ -26,7 +26,7 @@ class UnableToSearch extends RuntimeException
     {
         return new static(
             'You need to specify per page number greater than zero. ' .
-                "Following is not valid: \"->perPage({$perPage})\""
+                "Following is not valid: \"->perPage({$perPage})\"",
         );
     }
 }

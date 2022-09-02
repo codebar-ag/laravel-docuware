@@ -21,7 +21,7 @@ class ParseValue
         ?array $field,
         null | int | float | Carbon | string $default = null,
     ): null | int | float | Carbon | string {
-        if (!$field) {
+        if (! $field) {
             return $default;
         }
 

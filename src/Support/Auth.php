@@ -16,7 +16,7 @@ class Auth
     public static function store(CookieJar $cookies): void
     {
         $cookie = collect($cookies->toArray())
-            ->reject(fn(array $cookie) => $cookie['Value'] === '')
+            ->reject(fn (array $cookie) => $cookie['Value'] === '')
             ->firstWhere('Name', self::COOKIE_NAME);
 
         Cache::driver(config('docuware.default_cache_driver'))

@@ -20,7 +20,7 @@ class EnsureValidResponse
             UnableToMakeRequest::create(),
         );
 
-        if (!$response->json('Message')) {
+        if (! $response->json('Message')) {
             return;
         }
 

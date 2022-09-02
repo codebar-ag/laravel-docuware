@@ -52,6 +52,6 @@ return [
     |
     */
 
-    'cookie_lifetime' => (int)env('DOCUWARE_COOKIE_LIFETIME', 525600),
+    'cookie_lifetime' => (int) env('DOCUWARE_COOKIE_LIFETIME', 525600),
 
 ];

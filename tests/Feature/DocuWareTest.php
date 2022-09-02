@@ -302,5 +302,4 @@ class DocuWareTest extends TestCase
             $url,
         );
     }
-
 }

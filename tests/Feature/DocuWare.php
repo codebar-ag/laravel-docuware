@@ -35,7 +35,7 @@ class DocuWare extends TestCase
 
             Cache::put(
                 Auth::CACHE_KEY,
-                [Auth::COOKIE_NAME => (string)$cookie],
+                [Auth::COOKIE_NAME => (string) $cookie],
                 now()->addDay(),
             );
 

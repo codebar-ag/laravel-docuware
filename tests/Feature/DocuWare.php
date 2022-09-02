@@ -3,7 +3,6 @@
 namespace CodebarAg\DocuWare\Tests\Feature;
 
 use Carbon\Carbon;
-use CodebarAg\DocuWare\DocuWare;
 use CodebarAg\DocuWare\DTO\Document;
 use CodebarAg\DocuWare\DTO\DocumentField;
 use CodebarAg\DocuWare\DTO\DocumentIndex;

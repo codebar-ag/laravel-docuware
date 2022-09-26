@@ -74,7 +74,7 @@ class DocuWareUrl
         if ($this->validUntil) {
             $data = implode('&', [
                 $data,
-                'vu=' . $this->validUntil->format('Y-m-d\TH:i:s\Z'),
+                'vu='.$this->validUntil->format('Y-m-d\TH:i:s\Z'),
             ]);
         }
 

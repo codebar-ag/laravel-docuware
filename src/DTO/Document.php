@@ -39,7 +39,7 @@ class Document
         public int $file_size,
         public int $total_pages,
         public string $title,
-        public string $extension,
+        public string|null $extension,
         public string $content_type,
         public string $file_cabinet_id,
         public Carbon $created_at,

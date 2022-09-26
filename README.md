@@ -6,11 +6,10 @@
 [![Psalm](https://github.com/codebar-ag/laravel-docuware/actions/workflows/psalm.yml/badge.svg)](https://github.com/codebar-ag/laravel-docuware/actions/workflows/psalm.yml)
 [![Check & fix styling](https://github.com/codebar-ag/laravel-docuware/actions/workflows/php-cs-fixer.yml/badge.svg)](https://github.com/codebar-ag/laravel-docuware/actions/workflows/php-cs-fixer.yml)
 
-
 This package was developed to give you a quick start to communicate with the
 DocuWare REST API. It is used to query the most common endpoints.
 
-⚠️ This package is not designed as a replacement of the official 
+⚠️ This package is not designed as a replacement of the official
 [DocuWare REST API](https://developer.docuware.com/rest/index.html).
 See the documentation if you need further functionality. ⚠️
 
@@ -22,8 +21,16 @@ then optimize the processes that power the core of your business.
 
 ## 🛠 Requirements
 
+### >= v.1.2
+
+- PHP: `^8.1`
+- Laravel: `^9.*`
+- DocuWare Cloud Access
+
+### < v.1.2
+
 - PHP: `^8.0`
-- Laravel: `^8.12`
+- Laravel: `^8.*`
 - DocuWare Cloud Access
 
 ## ⚙️ Installation
@@ -43,7 +50,7 @@ DOCUWARE_PASSWORD=password
 DOCUWARE_PASSPHRASE="passphrase"
 ```
 
-With the passphrase we are able to encrypt the URLs. 
+With the passphrase we are able to encrypt the URLs.
 
 ⚠️ You need to escape backslashes in your passphrase with another backslash:
 
@@ -286,7 +293,7 @@ $url = DocuWare::url()
     ->make();
 ```
 
-Please see [Tests](tests/Feature/DocuWareTest.php) for more details.
+Please see [Tests](tests/Feature/DocuWare.php) for more details.
 
 ## 🏋️ DTO showcase
 
@@ -448,6 +455,7 @@ DocuWareResponseLog::class => [
 ## 🔧 Configuration file
 
 You can publish the config file with:
+
 ```bash
 php artisan vendor:publish --provider="CodebarAg\DocuWare\DocuWareServiceProvider" --tag="docuware-config"
 ```
@@ -508,12 +516,15 @@ return [
 ## 🚧 Testing
 
 Copy your own phpunit.xml-file.
+
 ```bash
 cp phpunit.xml.dist phpunit.xml
 ```
 
 Modify environment variables in the phpunit.xml-file:
+
 ```xml
+
 <env name="DOCUWARE_URL" value="https://domain.docuware.cloud"/>
 <env name="DOCUWARE_USERNAME" value="user@domain.test"/>
 <env name="DOCUWARE_PASSWORD" value="password"/>
@@ -521,6 +532,7 @@ Modify environment variables in the phpunit.xml-file:
 ```
 
 Run the tests:
+
 ```bash
 composer test
 ```

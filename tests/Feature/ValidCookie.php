@@ -6,7 +6,7 @@ use CodebarAg\DocuWare\DocuWare;
 use CodebarAg\DocuWare\Support\Auth;
 use CodebarAg\DocuWare\Tests\TestCase;
 
-class ValidCookieTest extends TestCase
+class ValidCookie extends TestCase
 {
     /** @test */
     public function it_does_automatically_login_user()

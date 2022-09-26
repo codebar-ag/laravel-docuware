@@ -12,7 +12,7 @@ class DocumentIndex
         public string $name,
         public int | string $value,
     ) {
-        $this->type = is_integer($value) ? 'Int' : 'String';
+        $this->type = is_int($value) ? 'Int' : 'String';
     }
 
     public static function make(string $name, int | string $value): self

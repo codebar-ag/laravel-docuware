@@ -40,7 +40,7 @@ class DocumentPaginator
 
     public function failed(): bool
     {
-        return !$this->successful();
+        return ! $this->successful();
     }
 
     public static function fromJson(

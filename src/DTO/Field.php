@@ -43,7 +43,7 @@ class Field
         return new static(
             name: $name ?? 'FAKE_FIELD',
             label: $label ?? 'Fake Field',
-            type: Arr::random(['Text', 'Memo', 'Numeric', 'Decimal', 'Date', 'DateTime', 'Keyword', ]),
+            type: Arr::random(['Text', 'Memo', 'Numeric', 'Decimal', 'Date', 'DateTime', 'Keyword']),
             scope: $scope ?? Arr::random(['System', 'User']),
         );
     }

@@ -3,7 +3,6 @@
 namespace CodebarAg\DocuWare\Tests\Feature;
 
 use Carbon\Carbon;
-use CodebarAg\DocuWare\DocuWare;
 use CodebarAg\DocuWare\DTO\Document;
 use CodebarAg\DocuWare\DTO\DocumentField;
 use CodebarAg\DocuWare\DTO\DocumentIndex;
@@ -17,7 +16,7 @@ use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 
-class DocuWareTest extends TestCase
+class DocuWare extends TestCase
 {
     public function setUp(): void
     {
@@ -58,7 +57,7 @@ class DocuWareTest extends TestCase
         parent::tearDown();
     }
 
-    /** @test */
+    /** @test @group list */
     public function it_can_list_file_cabinets()
     {
         $fileCabinets = (new DocuWare())->getFileCabinets();
@@ -80,7 +79,8 @@ class DocuWareTest extends TestCase
         Event::assertDispatched(DocuWareResponseLog::class);
     }
 
-    /** @test */
+    /** @test
+     */
     public function it_can_list_dialogs_for_a_file_cabinet()
     {
         $fileCabinetId = '75c7cee7-ff04-475f-bc43-44b8ec3f7754';

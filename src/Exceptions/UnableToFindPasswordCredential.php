@@ -2,10 +2,10 @@
 
 namespace CodebarAg\DocuWare\Exceptions;
 
+use RuntimeException;
 use Spatie\Ignition\Contracts\BaseSolution;
 use Spatie\Ignition\Contracts\ProvidesSolution;
 use Spatie\Ignition\Contracts\Solution;
-use RuntimeException;
 
 class UnableToFindPasswordCredential extends RuntimeException implements ProvidesSolution
 {

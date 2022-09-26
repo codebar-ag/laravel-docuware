@@ -9,7 +9,7 @@ return [
    |
    */
 
-    'default_cache_driver' => env('FILESYSTEM_DISK', 'local'),
+    'default_cache_driver' => env('CACHE_DRIVER', 'local'),
 
     /*
     |--------------------------------------------------------------------------

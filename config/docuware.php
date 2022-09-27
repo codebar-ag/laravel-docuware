@@ -3,13 +3,25 @@
 return [
 
     /*
+    |--------------------------------------------------------------------------
+    | Cache driver
+    |--------------------------------------------------------------------------
+    | You may like to define a different cache driver than the default laravel cache driver.
+    |
+    */
+
+    'cache_driver' => env('DOCUWARE_CACHE_DRIVER', env('CACHE_DRIVER', 'file')),
+
+    /*
    |--------------------------------------------------------------------------
-   | Set the Cache driver
+   | Cookies
    |--------------------------------------------------------------------------
+   | You can define the DocuWare Request Cookies statically.
+   | The DocuWare Request Cookie is usually valid for one year.
    |
    */
 
-    'default_cache_driver' => env('CACHE_DRIVER', 'local'),
+    'cookies' => env('DOCUWARE_COOKIES'),
 
     /*
     |--------------------------------------------------------------------------
@@ -52,6 +64,6 @@ return [
     |
     */
 
-    'cookie_lifetime' => (int) env('DOCUWARE_COOKIE_LIFETIME', 525600),
+    'cookie_lifetime' => (int)env('DOCUWARE_COOKIE_LIFETIME', 525600),
 
 ];

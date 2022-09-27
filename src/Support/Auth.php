@@ -5,21 +5,22 @@ namespace CodebarAg\DocuWare\Support;
 use CodebarAg\DocuWare\Exceptions\UnableToFindUrlCredential;
 use GuzzleHttp\Cookie\CookieJar;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Str;
 
 class Auth
 {
     const COOKIE_NAME = '.DWPLATFORMAUTH';
-
     const CACHE_KEY = 'docuware.cookies';
+    const FALLBACK_CACHE_DRIVER = 'file';
 
     public static function store(CookieJar $cookies): void
     {
         $cookie = collect($cookies->toArray())
-            ->reject(fn (array $cookie) => $cookie['Value'] === '')
+            ->reject(fn(array $cookie) => $cookie['Value'] === '')
             ->firstWhere('Name', self::COOKIE_NAME);
 
-        Cache::driver(config('docuware.default_cache_driver'))
+        Cache::driver(self::cacheDriver())
             ->put(
                 self::CACHE_KEY,
                 [$cookie['Name'] => $cookie['Value']],
@@ -29,12 +30,12 @@ class Auth
 
     public static function cookies(): ?array
     {
-        return Cache::driver(config('docuware.default_cache_driver'))->get(self::CACHE_KEY);
+        return Config::get('docuware.cookies', false) ?? Cache::driver(self::cacheDriver())->get(self::CACHE_KEY);
     }
 
     public static function forget(): void
     {
-        Cache::driver(config('docuware.default_cache_driver'))->forget(self::CACHE_KEY);
+        Cache::driver(self::cacheDriver())->forget(self::CACHE_KEY);
     }
 
     public static function domain(): string
@@ -52,6 +53,11 @@ class Auth
 
     public static function check(): bool
     {
-        return Cache::driver(config('docuware.default_cache_driver'))->has(self::CACHE_KEY);
+        return Config::has('docuware.cookies') ?? Cache::driver(self::cacheDriver())->has(self::CACHE_KEY);
+    }
+
+    protected static function cacheDriver(): string
+    {
+        return Config::get('docuware.cache_driver', self::FALLBACK_CACHE_DRIVER);
     }
 }

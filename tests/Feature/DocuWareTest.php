@@ -15,8 +15,9 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
+use CodebarAg\DocuWare\Facades\DocuWare;
 
-class DocuWare extends TestCase
+class DocuWareTest extends TestCase
 {
     public function setUp(): void
     {

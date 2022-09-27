@@ -5,7 +5,6 @@
 [![GitHub Code Style Action Status](https://img.shields.io/github/workflow/status/codebar-ag/laravel-docuware/Fix%20PHP%20code%20style%20issues?label=code%20style)](https://github.com/codebar-ag/laravel-docuware/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/codebar-ag/laravel-docuware.svg?style=flat-square)](https://packagist.org/packages/codebar-ag/laravel-docuware)
 
-
 This package was developed to give you a quick start to communicate with the
 DocuWare REST API. It is used to query the most common endpoints.
 

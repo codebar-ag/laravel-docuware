@@ -10,5 +10,4 @@ class UnableToFindPassphrase extends RuntimeException
     {
         return new static('Your passphrase is not found. Try to add "DOCUWARE_PASSPHRASE=passphrase" in your .env-file.');
     }
-
 }

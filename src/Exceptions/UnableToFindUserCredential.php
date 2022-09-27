@@ -10,5 +10,4 @@ class UnableToFindUserCredential extends RuntimeException
     {
         return new static('Your username is not found.ry to add "DOCUWARE_USERNAME=user@domain.test" following in your .env-file.');
     }
-
 }

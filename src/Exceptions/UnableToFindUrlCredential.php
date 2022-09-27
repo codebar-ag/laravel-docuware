@@ -1,6 +1,7 @@
 <?php
 
 namespace CodebarAg\DocuWare\Exceptions;
+
 use RuntimeException;
 
 class UnableToFindUrlCredential extends RuntimeException
@@ -9,5 +10,4 @@ class UnableToFindUrlCredential extends RuntimeException
     {
         return new static('Your URL is not found. Try to add "DOCUWARE_URL=https://domain.docuware.cloud" in your .env-file.');
     }
-
 }

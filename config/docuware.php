@@ -6,7 +6,7 @@ return [
     |--------------------------------------------------------------------------
     | Cache driver
     |--------------------------------------------------------------------------
-    | You may like to define a different cache driver than the default laravel cache driver.
+    | You may like to define a different cache driver than the default Laravel cache driver.
     |
     */
 
@@ -16,8 +16,7 @@ return [
    |--------------------------------------------------------------------------
    | Cookies
    |--------------------------------------------------------------------------
-   | You can define the DocuWare Request Cookies statically.
-   | The DocuWare Request Cookie is usually valid for one year.
+   | This variable is optional and only used if you want to set the request cookie manually.
    |
    */
 

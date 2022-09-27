@@ -6,6 +6,8 @@ All notable changes to `laravel-docuware` will be documented in this file.
 - Added `DOCUWARE_COOKIES` property to the config.php. This allows the user to manually set the DocuWare Request cookie instead of regenerating it after every cache reset. There is currently a DocuWare limitation with available seats per license, which can cause issues if you renew the request cookie too many times.  The current lifespan of a DocuWare cookie is one year.
 - Added `DOCUWARE_CACHE_DRIVER` property to the config.php. This allows the user to manually set the default Cache Driver, which is used to store the DocuWare Request Cookie.
 
+- Removed Solutions for Errors (Facade/Ignition).
+
 ## 1.1.0 - 2021-07-22
 
 - Added `error` property to the `DocumentPaginator`. This is used for failed

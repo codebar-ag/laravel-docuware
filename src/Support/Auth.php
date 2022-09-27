@@ -11,13 +11,15 @@ use Illuminate\Support\Str;
 class Auth
 {
     const COOKIE_NAME = '.DWPLATFORMAUTH';
+
     const CACHE_KEY = 'docuware.cookies';
+
     const FALLBACK_CACHE_DRIVER = 'file';
 
     public static function store(CookieJar $cookies): void
     {
         $cookie = collect($cookies->toArray())
-            ->reject(fn(array $cookie) => $cookie['Value'] === '')
+            ->reject(fn (array $cookie) => $cookie['Value'] === '')
             ->firstWhere('Name', self::COOKIE_NAME);
 
         Cache::driver(self::cacheDriver())

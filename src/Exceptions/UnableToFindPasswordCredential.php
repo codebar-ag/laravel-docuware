@@ -10,5 +10,4 @@ class UnableToFindPasswordCredential extends RuntimeException
     {
         return new static('Your password is not found. Try to add "DOCUWARE_PASSWORD=password" in your .env-file.');
     }
-
 }

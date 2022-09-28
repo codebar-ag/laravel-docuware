@@ -1,18 +1,15 @@
 <?php
 
 use CodebarAg\DocuWare\DocuWare;
-use Illuminate\Support\Facades\File;
-use CodebarAg\DocuWare\Tests\TestCase;
-use Illuminate\Support\Facades\Event;
-use Illuminate\Support\Str;
 use CodebarAg\DocuWare\Support\Auth;
+use CodebarAg\DocuWare\Tests\TestCase;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Str;
 
 uses(TestCase::class)->in(__DIR__);
 
 beforeAll(function () {
-
-
     $cookiePath = storage_path('app/.dwplatformauth');
 
     if (File::exists($cookiePath)) {
@@ -41,4 +38,3 @@ afterAll(function () {
         (new DocuWare())->logout();
     }
 });
-

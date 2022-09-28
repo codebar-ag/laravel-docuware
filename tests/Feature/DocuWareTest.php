@@ -112,7 +112,7 @@ it('it_can_update_a_document_value', function () {
 
     $this->assertSame('Der neue Inhalt!', $response);
     Event::assertDispatched(DocuWareResponseLog::class);
-})->group('docuware','test');
+})->group('docuware', 'test');
 
 it('it_can_download_multiple_documents', function () {
     Event::fake();
@@ -235,7 +235,6 @@ it('it_can_search_documents_with_null_values', function () {
 
     $this->assertInstanceOf(DocumentPaginator::class, $paginator);
     Event::assertDispatched(DocuWareResponseLog::class);
-
 })->group('docuware');
 
 it('it_can_create_encrypted_url_for_a_document_in_a_basket', function () {
@@ -255,5 +254,4 @@ it('it_can_create_encrypted_url_for_a_document_in_a_basket', function () {
         'https://vanta.docuware.cloud/DocuWare/Platform/WebClient/Integration?ep=',
         $url,
     );
-
 })->group('docuware');

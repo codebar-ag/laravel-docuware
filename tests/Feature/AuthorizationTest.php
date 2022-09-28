@@ -6,14 +6,13 @@ use CodebarAg\DocuWare\DocuWare;
 use CodebarAg\DocuWare\Support\Auth;
 
 it('authorization with & without cookie', function () {
-
     if (config('docuware.cookies')) {
         $this->assertArrayHasKey(Auth::COOKIE_NAME, Auth::cookies());
 
         (new DocuWare())->getFileCabinets();
     }
 
-    if (!config('docuware.cookies')) {
+    if (! config('docuware.cookies')) {
         $this->assertNull(Auth::cookies());
 
         (new DocuWare())->getFileCabinets();
@@ -23,5 +22,4 @@ it('authorization with & without cookie', function () {
         (new DocuWare())->logout();
         $this->assertNull(Auth::cookies());
     }
-
 })->group('authorization');

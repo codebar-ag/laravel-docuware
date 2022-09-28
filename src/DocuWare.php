@@ -24,6 +24,10 @@ class DocuWare
 {
     public function login(): void
     {
+        if (config('docuware.cookies')) {
+            return;
+        }
+
         EnsureValidCredentials::check();
 
         $url = sprintf(
@@ -52,6 +56,10 @@ class DocuWare
 
     public function logout(): void
     {
+        if (config('docuware.cookies')) {
+            return;
+        }
+
         EnsureValidCookie::check();
 
         $url = sprintf(
@@ -272,7 +280,7 @@ class DocuWare
         int $documentId,
         string $fieldName,
         string $newValue,
-    ): null | int | float | Carbon | string {
+    ): null|int|float|Carbon|string {
         EnsureValidCookie::check();
 
         $url = sprintf(

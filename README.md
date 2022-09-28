@@ -1,10 +1,9 @@
 <img src="https://banners.beyondco.de/Laravel%20DocuWare.png?theme=light&packageManager=composer+require&packageName=codebar-ag%2Flaravel-docuware&pattern=circuitBoard&style=style_1&description=An+opinionated+way+to+integrate+DocuWare+with+Laravel&md=1&showWatermark=0&fontSize=175px&images=document-report">
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/codebar-ag/laravel-docuware.svg?style=flat-square)](https://packagist.org/packages/codebar-ag/laravel-docuware)
+[![GitHub Tests Action Status](https://img.shields.io/github/workflow/status/codebar-ag/laravel-docuware/run-tests?label=tests)](https://github.com/codebar-ag/laravel-docuware/actions?query=workflow%3Arun-tests+branch%3Amain)
+[![GitHub Code Style Action Status](https://img.shields.io/github/workflow/status/codebar-ag/laravel-docuware/Fix%20PHP%20code%20style%20issues?label=code%20style)](https://github.com/codebar-ag/laravel-docuware/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/codebar-ag/laravel-docuware.svg?style=flat-square)](https://packagist.org/packages/codebar-ag/laravel-docuware)
-[![run-tests](https://github.com/codebar-ag/laravel-docuware/actions/workflows/run-tests.yml/badge.svg)](https://github.com/codebar-ag/laravel-docuware/actions/workflows/run-tests.yml)
-[![Psalm](https://github.com/codebar-ag/laravel-docuware/actions/workflows/psalm.yml/badge.svg)](https://github.com/codebar-ag/laravel-docuware/actions/workflows/psalm.yml)
-[![Check & fix styling](https://github.com/codebar-ag/laravel-docuware/actions/workflows/php-cs-fixer.yml/badge.svg)](https://github.com/codebar-ag/laravel-docuware/actions/workflows/php-cs-fixer.yml)
 
 This package was developed to give you a quick start to communicate with the
 DocuWare REST API. It is used to query the most common endpoints.
@@ -21,7 +20,7 @@ then optimize the processes that power the core of your business.
 
 ## 🛠 Requirements
 
-### >= v.1.2
+### > = v.1.2
 
 - PHP: `^8.1`
 - Laravel: `^9.*`
@@ -42,12 +41,14 @@ composer require codebar-ag/laravel-docuware
 ```
 
 Add the following environment variables to your `.env` file:
+The "DOCUWARE_COOKIES" variable is optional and only used if you want to set the request cookie manually.
 
 ```bash
 DOCUWARE_URL=https://domain.docuware.cloud
 DOCUWARE_USERNAME=user@domain.test
 DOCUWARE_PASSWORD=password
 DOCUWARE_PASSPHRASE="passphrase"
+DOCUWARE_COOKIES="cookie"
 ```
 
 With the passphrase we are able to encrypt the URLs.
@@ -467,6 +468,25 @@ This is the contents of the published config file:
 
 return [
 
+  /*
+    |--------------------------------------------------------------------------
+    | Cache driver
+    |--------------------------------------------------------------------------
+    | You may like to define a different cache driver than the default Laravel cache driver.
+    |
+    */
+
+    'cache_driver' => env('DOCUWARE_CACHE_DRIVER', env('CACHE_DRIVER', 'file')),
+    
+   /*
+   |--------------------------------------------------------------------------
+   | Cookies
+   |--------------------------------------------------------------------------
+   | This variable is optional and only used if you want to set the request cookie manually.
+   |
+   */
+
+    'cookies' => env('DOCUWARE_COOKIES'),
     /*
     |--------------------------------------------------------------------------
     | DocuWare Credentials
@@ -529,6 +549,7 @@ Modify environment variables in the phpunit.xml-file:
 <env name="DOCUWARE_USERNAME" value="user@domain.test"/>
 <env name="DOCUWARE_PASSWORD" value="password"/>
 <env name="DOCUWARE_PASSPHRASE" value="passphrase"/>
+<env name="DOCUWARE_COOKIE" value="cookie"/>
 ```
 
 Run the tests:

@@ -41,5 +41,6 @@
         <env name="DOCUWARE_USERNAME" value="user@domain.test"/>
         <env name="DOCUWARE_PASSWORD" value="password"/>
         <env name="DOCUWARE_PASSPHRASE" value="passphrase"/>
+        <env name="DOCUWARE_COOKIES" value="cookies"/>
     </php>
 </phpunit>

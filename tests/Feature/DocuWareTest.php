@@ -3,304 +3,257 @@
 namespace CodebarAg\DocuWare\Tests\Feature;
 
 use Carbon\Carbon;
+use CodebarAg\DocuWare\DocuWare;
 use CodebarAg\DocuWare\DTO\Document;
 use CodebarAg\DocuWare\DTO\DocumentField;
 use CodebarAg\DocuWare\DTO\DocumentIndex;
 use CodebarAg\DocuWare\DTO\DocumentPaginator;
 use CodebarAg\DocuWare\Events\DocuWareResponseLog;
-use CodebarAg\DocuWare\Support\Auth;
-use CodebarAg\DocuWare\Tests\TestCase;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Event;
-use Illuminate\Support\Facades\File;
-use Illuminate\Support\Str;
-use CodebarAg\DocuWare\Facades\DocuWare;
 
-class DocuWareTest extends TestCase
-{
-    public function setUp(): void
-    {
-        parent::setUp();
+it('it_can_list_file_cabinets', function () {
+    Event::fake();
 
-        Event::fake();
+    $fileCabinets = (new DocuWare())->getFileCabinets();
 
-        $cookiePath = storage_path('app/.dwplatformauth');
+    $this->assertInstanceOf(Collection::class, $fileCabinets);
+    $this->assertNotCount(0, $fileCabinets);
+    Event::assertDispatched(DocuWareResponseLog::class);
+})->group('docuware');
 
-        if (File::exists($cookiePath)) {
-            $cookie = Str::of(File::get($cookiePath))
-                ->trim()
-                ->trim(PHP_EOL)
-                ->trim();
+it('it_can_list_fields_for_a_file_cabinet', function () {
+    Event::fake();
 
-            Cache::put(
-                Auth::CACHE_KEY,
-                [Auth::COOKIE_NAME => (string) $cookie],
-                now()->addDay(),
-            );
+    $fileCabinetId = '75c7cee7-ff04-475f-bc43-44b8ec3f7754';
 
-            return;
-        }
+    $fields = (new DocuWare())->getFields($fileCabinetId);
 
-        (new DocuWare())->login();
+    $this->assertInstanceOf(Collection::class, $fields);
+    $this->assertNotCount(0, $fields);
+    Event::assertDispatched(DocuWareResponseLog::class);
+})->group('docuware');
 
-        File::put($cookiePath, Auth::cookies()[Auth::COOKIE_NAME]);
-    }
+it('it_can_list_values_for_a_select_list', function () {
+    Event::fake();
 
-    protected function tearDown(): void
-    {
-        if (File::exists(app_path('app/.dwplatformauth'))) {
-            File::delete(app_path('app/.dwplatformauth'));
+    $fileCabinetId = '75c7cee7-ff04-475f-bc43-44b8ec3f7754';
+    $dialogId = 'adfa26ea-3148-4365-b71f-45a01f0e95a0';
+    $fieldName = 'DOCUMENT_TYPE';
 
-            (new DocuWare())->logout();
-        }
+    $types = (new DocuWare())->getSelectList(
+        $fileCabinetId,
+        $dialogId,
+        $fieldName,
+    );
 
-        parent::tearDown();
-    }
+    $this->assertNotCount(0, $types);
+    Event::assertDispatched(DocuWareResponseLog::class);
+})->group('docuware');
 
-    /** @test @group list */
-    public function it_can_list_file_cabinets()
-    {
-        $fileCabinets = (new DocuWare())->getFileCabinets();
+it('it_can_list_dialogs_for_a_file_cabinet', function () {
+    Event::fake();
 
-        $this->assertInstanceOf(Collection::class, $fileCabinets);
-        $this->assertNotCount(0, $fileCabinets);
-        Event::assertDispatched(DocuWareResponseLog::class);
-    }
+    $fileCabinetId = '75c7cee7-ff04-475f-bc43-44b8ec3f7754';
 
-    /** @test */
-    public function it_can_list_fields_for_a_file_cabinet()
-    {
-        $fileCabinetId = '75c7cee7-ff04-475f-bc43-44b8ec3f7754';
+    $dialogs = (new DocuWare())->getDialogs($fileCabinetId);
 
-        $fields = (new DocuWare())->getFields($fileCabinetId);
+    $this->assertInstanceOf(Collection::class, $dialogs);
+    $this->assertNotCount(0, $dialogs);
+    Event::assertDispatched(DocuWareResponseLog::class);
+})->group('docuware');
 
-        $this->assertInstanceOf(Collection::class, $fields);
-        $this->assertNotCount(0, $fields);
-        Event::assertDispatched(DocuWareResponseLog::class);
-    }
+it('it_can_preview_a_document_image', function () {
+    Event::fake();
 
-    /** @test
-     */
-    public function it_can_list_dialogs_for_a_file_cabinet()
-    {
-        $fileCabinetId = '75c7cee7-ff04-475f-bc43-44b8ec3f7754';
+    $fileCabinetId = '75c7cee7-ff04-475f-bc43-44b8ec3f7754';
+    $documentId = 8;
 
-        $dialogs = (new DocuWare())->getDialogs($fileCabinetId);
+    $image = (new DocuWare())->getDocumentPreview(
+        $fileCabinetId,
+        $documentId,
+    );
 
-        $this->assertInstanceOf(Collection::class, $dialogs);
-        $this->assertNotCount(0, $dialogs);
-        Event::assertDispatched(DocuWareResponseLog::class);
-    }
+    $this->assertSame(2126, strlen($image));
+    Event::assertDispatched(DocuWareResponseLog::class);
+})->group('docuware');
 
-    /** @test */
-    public function it_can_list_values_for_a_select_list()
-    {
-        $fileCabinetId = '75c7cee7-ff04-475f-bc43-44b8ec3f7754';
-        $dialogId = 'adfa26ea-3148-4365-b71f-45a01f0e95a0';
-        $fieldName = 'DOCUMENT_TYPE';
+it('it_can_show_a_document', function () {
+    Event::fake();
 
-        $types = (new DocuWare())->getSelectList(
-            $fileCabinetId,
-            $dialogId,
-            $fieldName,
-        );
+    $fileCabinetId = '75c7cee7-ff04-475f-bc43-44b8ec3f7754';
+    $documentId = 8;
 
-        $this->assertNotCount(0, $types);
-        Event::assertDispatched(DocuWareResponseLog::class);
-    }
+    $document = (new DocuWare())->getDocument(
+        $fileCabinetId,
+        $documentId,
+    );
 
-    /** @test */
-    public function it_can_show_a_document()
-    {
-        $fileCabinetId = '75c7cee7-ff04-475f-bc43-44b8ec3f7754';
-        $documentId = 8;
+    $this->assertInstanceOf(Document::class, $document);
+    $this->assertSame($documentId, $document->id);
+    $this->assertSame($fileCabinetId, $document->file_cabinet_id);
+    Event::assertDispatched(DocuWareResponseLog::class);
+})->group('docuware');
 
-        $document = (new DocuWare())->getDocument(
-            $fileCabinetId,
-            $documentId,
-        );
+it('it_can_update_a_document_value', function () {
+    Event::fake();
 
-        $this->assertInstanceOf(Document::class, $document);
-        $this->assertSame($documentId, $document->id);
-        $this->assertSame($fileCabinetId, $document->file_cabinet_id);
-        Event::assertDispatched(DocuWareResponseLog::class);
-    }
+    $fileCabinetId = '75c7cee7-ff04-475f-bc43-44b8ec3f7754';
+    $documentId = 7;
+    $fieldName = 'DOCUMENT_LABEL';
+    $newValue = 'Der neue Inhalt!';
 
-    /** @test */
-    public function it_can_preview_a_document_image()
-    {
-        $fileCabinetId = '75c7cee7-ff04-475f-bc43-44b8ec3f7754';
-        $documentId = 8;
+    $response = (new DocuWare())->updateDocumentValue(
+        $fileCabinetId,
+        $documentId,
+        $fieldName,
+        $newValue,
+    );
 
-        $image = (new DocuWare())->getDocumentPreview(
-            $fileCabinetId,
-            $documentId,
-        );
+    $this->assertSame('Der neue Inhalt!', $response);
+    Event::assertDispatched(DocuWareResponseLog::class);
+})->group('docuware','test');
 
-        $this->assertSame(2126, strlen($image));
-        Event::assertDispatched(DocuWareResponseLog::class);
-    }
+it('it_can_download_multiple_documents', function () {
+    Event::fake();
 
-    /** @test */
-    public function it_can_download_a_document()
-    {
-        $fileCabinetId = '75c7cee7-ff04-475f-bc43-44b8ec3f7754';
-        $documentId = 8;
+    $fileCabinetId = '75c7cee7-ff04-475f-bc43-44b8ec3f7754';
+    $documentIds = [7, 8];
 
-        $contents = (new DocuWare())->downloadDocument(
-            $fileCabinetId,
-            $documentId,
-        );
+    $contents = (new DocuWare())->downloadDocuments(
+        $fileCabinetId,
+        $documentIds,
+    );
 
-        $this->assertSame(4911, strlen($contents));
-        Event::assertDispatched(DocuWareResponseLog::class);
-    }
+    $this->assertSame(3818, strlen($contents));
+    Event::assertDispatched(DocuWareResponseLog::class);
+})->group('docuware');
 
-    /** @test */
-    public function it_can_download_multiple_documents()
-    {
-        $fileCabinetId = '75c7cee7-ff04-475f-bc43-44b8ec3f7754';
-        $documentIds = [7, 8];
+it('it_can_download_a_document', function () {
+    Event::fake();
 
-        $contents = (new DocuWare())->downloadDocuments(
-            $fileCabinetId,
-            $documentIds,
-        );
+    $fileCabinetId = '75c7cee7-ff04-475f-bc43-44b8ec3f7754';
+    $documentId = 8;
 
-        $this->assertSame(3818, strlen($contents));
-        Event::assertDispatched(DocuWareResponseLog::class);
-    }
+    $contents = (new DocuWare())->downloadDocument(
+        $fileCabinetId,
+        $documentId,
+    );
 
-    /** @test */
-    public function it_can_update_a_document_value()
-    {
-        $fileCabinetId = '75c7cee7-ff04-475f-bc43-44b8ec3f7754';
-        $documentId = 7;
-        $fieldName = 'DOCUMENT_LABEL';
-        $newValue = 'Der neue Inhalt!';
+    $this->assertSame(4911, strlen($contents));
+    Event::assertDispatched(DocuWareResponseLog::class);
+})->group('docuware');
 
-        $response = (new DocuWare())->updateDocumentValue(
-            $fileCabinetId,
-            $documentId,
-            $fieldName,
-            $newValue,
-        );
+it('it_can_search_documents', function () {
+    Event::fake();
 
-        $this->assertSame('Der neue Inhalt!', $response);
-        Event::assertDispatched(DocuWareResponseLog::class);
-    }
+    $fileCabinetId = '75c7cee7-ff04-475f-bc43-44b8ec3f7754';
+    $dialogId = '8f57d5d6-b11c-4b53-b2c6-335ea0bc8238';
 
-    /** @test */
-    public function it_can_upload_document_with_index_values_and_delete_it()
-    {
-        $this->markTestSkipped();
-        $fileCabinetId = '75c7cee7-ff04-475f-bc43-44b8ec3f7754';
-        $fileContent = '::fake-file-content::';
-        $fileName = 'example.txt';
+    $paginator = (new DocuWare())
+        ->search()
+        ->fileCabinet($fileCabinetId)
+        ->dialog($dialogId)
+        ->page(1)
+        ->perPage(5)
+        ->fulltext('test')
+        ->dateFrom(Carbon::create(2021))
+        ->dateUntil(now())
+        ->filter('DOCUMENT_TYPE', 'Abrechnung')
+        ->orderBy('DWSTOREDATETIME', 'desc')
+        ->get();
 
-        $document = (new DocuWare())->uploadDocument(
-            $fileCabinetId,
-            $fileContent,
-            $fileName,
-            collect([
-                DocumentIndex::make('DOCUMENT_LABEL', '::text::'),
-            ]),
-        );
-        (new DocuWare())->deleteDocument($fileCabinetId, $document->id);
+    $this->assertInstanceOf(DocumentPaginator::class, $paginator);
+    Event::assertDispatched(DocuWareResponseLog::class);
+})->group('docuware');
 
-        $this->assertInstanceOf(Document::class, $document);
-        $this->assertSame('example', $document->title);
-        tap($document->fields['DOCUMENT_LABEL'], function (DocumentField $field) {
-            $this->assertSame($field->name, 'DOCUMENT_LABEL');
-            $this->assertSame($field->type, 'String');
-            $this->assertSame($field->value, '::text::');
-        });
-        Event::assertDispatched(DocuWareResponseLog::class);
-    }
+it('it_can_upload_document_with_index_values_and_delete_it', function () {
+    Event::fake();
 
-    /** @test */
-    public function it_can_search_documents()
-    {
-        $fileCabinetId = '75c7cee7-ff04-475f-bc43-44b8ec3f7754';
-        $dialogId = '8f57d5d6-b11c-4b53-b2c6-335ea0bc8238';
+    $fileCabinetId = '75c7cee7-ff04-475f-bc43-44b8ec3f7754';
+    $fileContent = '::fake-file-content::';
+    $fileName = 'example.txt';
 
-        $paginator = (new DocuWare())
-            ->search()
-            ->fileCabinet($fileCabinetId)
-            ->dialog($dialogId)
-            ->page(1)
-            ->perPage(5)
-            ->fulltext('test')
-            ->dateFrom(Carbon::create(2021))
-            ->dateUntil(now())
-            ->filter('DOCUMENT_TYPE', 'Abrechnung')
-            ->orderBy('DWSTOREDATETIME', 'desc')
-            ->get();
+    $document = (new DocuWare())->uploadDocument(
+        $fileCabinetId,
+        $fileContent,
+        $fileName,
+        collect([
+            DocumentIndex::make('DOCUMENT_LABEL', '::text::'),
+        ]),
+    );
+    (new DocuWare())->deleteDocument($fileCabinetId, $document->id);
 
-        $this->assertInstanceOf(DocumentPaginator::class, $paginator);
-        Event::assertDispatched(DocuWareResponseLog::class);
-    }
+    $this->assertInstanceOf(Document::class, $document);
+    $this->assertSame('example', $document->title);
+    tap($document->fields['DOCUMENT_LABEL'], function (DocumentField $field) {
+        $this->assertSame($field->name, 'DOCUMENT_LABEL');
+        $this->assertSame($field->type, 'String');
+        $this->assertSame($field->value, '::text::');
+    });
+    Event::assertDispatched(DocuWareResponseLog::class);
+})->group('docuware');
 
-    /** @test */
-    public function it_can_search_documents_with_null_values()
-    {
-        $fileCabinetIds = [
-            '75c7cee7-ff04-475f-bc43-44b8ec3f7754',
-            '86a15ac1-ea58-4510-9905-6cb13c905a4f',
-        ];
+it('it_can_create_encrypted_url_for_a_document_in_a_file_cabinet', function () {
+    Event::fake();
 
-        $paginator = (new DocuWare())
-            ->search()
-            ->fileCabinets($fileCabinetIds)
-            ->page(null)
-            ->perPage(null)
-            ->fulltext(null)
-            ->dateFrom(null)
-            ->dateUntil(null)
-            ->filter('DOCUMENT_TYPE', null)
-            ->orderBy('DWSTOREDATETIME', null)
-            ->get();
+    $fileCabinetId = '75c7cee7-ff04-475f-bc43-44b8ec3f7754';
+    $documentId = 7;
 
-        $this->assertInstanceOf(DocumentPaginator::class, $paginator);
-        Event::assertDispatched(DocuWareResponseLog::class);
-    }
+    $url = (new DocuWare())
+        ->url()
+        ->fileCabinet($fileCabinetId)
+        ->document($documentId)
+        ->validUntil(now()->addMinute())
+        ->make();
 
-    /** @test */
-    public function it_can_create_encrypted_url_for_a_document_in_a_file_cabinet()
-    {
-        $fileCabinetId = '75c7cee7-ff04-475f-bc43-44b8ec3f7754';
-        $documentId = 7;
+    $this->assertStringStartsWith(
+        'https://vanta.docuware.cloud/DocuWare/Platform/WebClient/Integration?ep=',
+        $url,
+    );
+})->group('docuware');
 
-        $url = (new DocuWare())
-            ->url()
-            ->fileCabinet($fileCabinetId)
-            ->document($documentId)
-            ->validUntil(now()->addMinute())
-            ->make();
+it('it_can_search_documents_with_null_values', function () {
+    Event::fake();
 
-        $this->assertStringStartsWith(
-            'https://vanta.docuware.cloud/DocuWare/Platform/WebClient/Integration?ep=',
-            $url,
-        );
-    }
+    $fileCabinetIds = [
+        '75c7cee7-ff04-475f-bc43-44b8ec3f7754',
+        '86a15ac1-ea58-4510-9905-6cb13c905a4f',
+    ];
 
-    /** @test */
-    public function it_can_create_encrypted_url_for_a_document_in_a_basket()
-    {
-        $basketId = 'b_8ae317d3-20cd-4097-b828-4825ce0e0403';
-        $documentId = 1;
+    $paginator = (new DocuWare())
+        ->search()
+        ->fileCabinets($fileCabinetIds)
+        ->page(null)
+        ->perPage(null)
+        ->fulltext(null)
+        ->dateFrom(null)
+        ->dateUntil(null)
+        ->filter('DOCUMENT_TYPE', null)
+        ->orderBy('DWSTOREDATETIME', null)
+        ->get();
 
-        $url = (new DocuWare())
-            ->url()
-            ->basket($basketId)
-            ->document($documentId)
-            ->validUntil(now()->addMinute())
-            ->make();
+    $this->assertInstanceOf(DocumentPaginator::class, $paginator);
+    Event::assertDispatched(DocuWareResponseLog::class);
 
-        $this->assertStringStartsWith(
-            'https://vanta.docuware.cloud/DocuWare/Platform/WebClient/Integration?ep=',
-            $url,
-        );
-    }
-}
+})->group('docuware');
+
+it('it_can_create_encrypted_url_for_a_document_in_a_basket', function () {
+    Event::fake();
+
+    $basketId = 'b_8ae317d3-20cd-4097-b828-4825ce0e0403';
+    $documentId = 1;
+
+    $url = (new DocuWare())
+        ->url()
+        ->basket($basketId)
+        ->document($documentId)
+        ->validUntil(now()->addMinute())
+        ->make();
+
+    $this->assertStringStartsWith(
+        'https://vanta.docuware.cloud/DocuWare/Platform/WebClient/Integration?ep=',
+        $url,
+    );
+
+})->group('docuware');

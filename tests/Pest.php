@@ -10,26 +10,30 @@ use Illuminate\Support\Str;
 uses(TestCase::class)->in(__DIR__);
 
 beforeAll(function () {
-    $cookiePath = storage_path('app/.dwplatformauth');
 
-    if (File::exists($cookiePath)) {
-        $cookie = Str::of(File::get($cookiePath))
-            ->trim()
-            ->trim(PHP_EOL)
-            ->trim();
+    if (!config('docuware.cookies')) {
 
-        Cache::put(
-            Auth::CACHE_KEY,
-            [Auth::COOKIE_NAME => (string) $cookie],
-            now()->addDay(),
-        );
+        $cookiePath = storage_path('app/.dwplatformauth');
 
-        return;
+        if (File::exists($cookiePath)) {
+            $cookie = Str::of(File::get($cookiePath))
+                ->trim()
+                ->trim(PHP_EOL)
+                ->trim();
+
+            Cache::put(
+                Auth::CACHE_KEY,
+                [Auth::COOKIE_NAME => (string)$cookie],
+                now()->addDay(),
+            );
+
+            return;
+        }
+
+        (new DocuWare())->login();
+
+        File::put($cookiePath, Auth::cookies()[Auth::COOKIE_NAME]);
     }
-
-    (new DocuWare())->login();
-
-    File::put($cookiePath, Auth::cookies()[Auth::COOKIE_NAME]);
 });
 
 afterAll(function () {

@@ -186,7 +186,7 @@ class DocuWareSearch
                     ],
                 ],
                 'Operation' => config('docuware.configurations.search.operation', 'And'),
-                'ForceRefresh' => config('docuware.configurations.search.force_refresh', false),
+                'ForceRefresh' => config('docuware.configurations.search.force_refresh', true),
                 'IncludeSuggestions' => config('docuware.configurations.search.include_suggestions', false),
                 'AdditionalResultFields' => config('docuware.configurations.search.additional_result_fields', []),
             ]);

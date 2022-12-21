@@ -21,23 +21,25 @@ class DocumentField
     }
 
     public function __construct(
-        public bool $systemField,
-        public string $name,
-        public string $label,
-        public bool $isNull,
+        public bool                         $systemField,
+        public string                       $name,
+        public string                       $label,
+        public bool                         $isNull,
         public null|int|float|Carbon|string $value,
-        public string $type,
-    ) {
+        public string                       $type,
+    )
+    {
     }
 
     public static function fake(
-        ?bool $systemField = false,
-        ?string $name = null,
-        ?string $label = null,
-        ?bool $isNull = true,
+        ?bool                        $systemField = false,
+        ?string                      $name = null,
+        ?string                      $label = null,
+        ?bool                        $isNull = true,
         null|int|float|Carbon|string $value = null,
-        ?string $type = null,
-    ): self {
+        ?string                      $type = null,
+    ): self
+    {
         $fakeType = Arr::random(['Int', 'Decimal', 'Text', 'DateTime']);
 
         $fakeValue = match ($fakeType) {

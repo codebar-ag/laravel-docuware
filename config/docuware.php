@@ -63,7 +63,7 @@ return [
     |
     */
 
-    'cookie_lifetime' => (int) env('DOCUWARE_COOKIE_LIFETIME', 525600),
+    'cookie_lifetime' => (int)env('DOCUWARE_COOKIE_LIFETIME', 525600),
 
     /*
    |--------------------------------------------------------------------------
@@ -81,7 +81,7 @@ return [
              * to false (default) or always a new one is executed when ForceRefresh is set to true.
              */
 
-            'force_refresh' => false,
+            'force_refresh' => true,
             'include_suggestions' => false,
             'additional_result_fields' => [],
         ],

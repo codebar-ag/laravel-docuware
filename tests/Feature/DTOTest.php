@@ -11,7 +11,6 @@ use CodebarAg\DocuWare\DTO\FileCabinet;
 
 it(' create a fake file cabinet', function () {
     $fake = FileCabinet::fake();
-
     $this->assertInstanceOf(FileCabinet::class, $fake);
 })->group('dto');
 

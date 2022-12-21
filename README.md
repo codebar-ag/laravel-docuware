@@ -594,7 +594,7 @@ Please see [CONTRIBUTING](.github/CONTRIBUTING.md) for details.
 Please review [our security policy](.github/SECURITY.md) on how to report security vulnerabilities.
 
 ## 🙏 Credits
-
+- [Sebastian Fix](https://github.com/StanBarrows)
 - [Ruslan Steiger](https://github.com/SuddenlyRust)
 - [All Contributors](../../contributors)
 - [Skeleton Repository from Spatie](https://github.com/spatie/package-skeleton-laravel)

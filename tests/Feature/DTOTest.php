@@ -8,10 +8,10 @@ use CodebarAg\DocuWare\DTO\DocumentField;
 use CodebarAg\DocuWare\DTO\DocumentPaginator;
 use CodebarAg\DocuWare\DTO\Field;
 use CodebarAg\DocuWare\DTO\FileCabinet;
+use CodebarAg\DocuWare\DTO\TableRow;
 
 it(' create a fake file cabinet', function () {
     $fake = FileCabinet::fake();
-
     $this->assertInstanceOf(FileCabinet::class, $fake);
 })->group('dto');
 
@@ -43,4 +43,10 @@ it('create a fake document paginator', function () {
     $fake = DocumentPaginator::fake();
 
     $this->assertInstanceOf(DocumentPaginator::class, $fake);
+})->group('dto');
+
+it('create a fake table row', function () {
+    $fake = TableRow::fake();
+
+    $this->assertInstanceOf(TableRow::class, $fake);
 })->group('dto');

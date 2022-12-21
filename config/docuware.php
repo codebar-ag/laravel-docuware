@@ -65,4 +65,43 @@ return [
 
     'cookie_lifetime' => (int) env('DOCUWARE_COOKIE_LIFETIME', 525600),
 
+    /*
+   |--------------------------------------------------------------------------
+   | Configurations
+   |--------------------------------------------------------------------------
+   |
+   */
+    'configurations' => [
+        'search' => [
+            'operation' => 'And',
+
+            /*
+             * Force Refresh
+             * Determine if result list is retrieved from the cache when ForceRefresh is set
+             * to false (default) or always a new one is executed when ForceRefresh is set to true.
+             */
+
+            'force_refresh' => true,
+            'include_suggestions' => false,
+            'additional_result_fields' => [],
+        ],
+    ],
+
+    /*
+ |--------------------------------------------------------------------------
+ | Configurations
+ |--------------------------------------------------------------------------
+ |
+ */
+    'tests' => [
+        'file_cabinet_id' => env('DOCUWARE_TESTS_FILE_CABINET_ID'),
+        'dialog_id' => env('DOCUWARE_TESTS_DIALOG_ID'),
+        'basket_id' => env('DOCUWARE_TESTS_BASKET_ID'),
+        'document_id' => 1,
+        'document_file_size_preview' => (int) env('DOCUWARE_TESTS_DOCUMENT_FILE_SIZE_PREVIEW'),
+        'document_file_size' => (int) env('DOCUWARE_TESTS_DOCUMENT_FILE_SIZE'),
+        'document_ids' => [1, 2],
+        'documents_file_size' => (int) env('DOCUWARE_TESTS_DOCUMENTS_FILE_SIZE'),
+        'field_name' => env('DOCUWARE_TESTS_FIELD_NAME'),
+    ],
 ];

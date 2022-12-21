@@ -468,7 +468,7 @@ This is the contents of the published config file:
 
 return [
 
-  /*
+    /*
     |--------------------------------------------------------------------------
     | Cache driver
     |--------------------------------------------------------------------------
@@ -477,8 +477,8 @@ return [
     */
 
     'cache_driver' => env('DOCUWARE_CACHE_DRIVER', env('CACHE_DRIVER', 'file')),
-    
-   /*
+
+    /*
    |--------------------------------------------------------------------------
    | Cookies
    |--------------------------------------------------------------------------
@@ -487,6 +487,7 @@ return [
    */
 
     'cookies' => env('DOCUWARE_COOKIES'),
+
     /*
     |--------------------------------------------------------------------------
     | DocuWare Credentials
@@ -530,6 +531,28 @@ return [
 
     'cookie_lifetime' => (int) env('DOCUWARE_COOKIE_LIFETIME', 525600),
 
+    /*
+   |--------------------------------------------------------------------------
+   | Configurations
+   |--------------------------------------------------------------------------
+   |
+   */
+    'configurations' => [
+        'search' => [
+            'operation' => 'And',
+
+            /*
+             * Force Refresh
+             * Determine if result list is retrieved from the cache when ForceRefresh is set
+             * to false (default) or always a new one is executed when ForceRefresh is set to true.
+             */
+
+            'force_refresh' => false,
+            'include_suggestions' => false,
+            'additional_result_fields' => [],
+        ],
+    ],
+
 ];
 ```
 
@@ -572,6 +595,7 @@ Please review [our security policy](.github/SECURITY.md) on how to report securi
 
 ## 🙏 Credits
 
+- [Sebastian Fix](https://github.com/StanBarrows)
 - [Ruslan Steiger](https://github.com/SuddenlyRust)
 - [All Contributors](../../contributors)
 - [Skeleton Repository from Spatie](https://github.com/spatie/package-skeleton-laravel)

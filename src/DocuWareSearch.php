@@ -185,10 +185,10 @@ class DocuWareSearch
                         'Direction' => $this->orderDirection,
                     ],
                 ],
-                'Operation' => 'And',
-                'ForceRefresh' => true,
-                'IncludeSuggestions' => false,
-                'AdditionalResultFields' => [],
+                'Operation' => config('docuware.configurations.search.operation', 'And'),
+                'ForceRefresh' => config('docuware.configurations.search.force_refresh', true),
+                'IncludeSuggestions' => config('docuware.configurations.search.include_suggestions', false),
+                'AdditionalResultFields' => config('docuware.configurations.search.additional_result_fields', []),
             ]);
 
         event(new DocuWareResponseLog($response));

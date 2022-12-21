@@ -10,12 +10,12 @@ class DocumentIndex
 
     public function __construct(
         public string $name,
-        public int | string $value,
+        public int|string $value,
     ) {
         $this->type = is_int($value) ? 'Int' : 'String';
     }
 
-    public static function make(string $name, int | string $value): self
+    public static function make(string $name, int|string $value): self
     {
         return new self($name, $value);
     }

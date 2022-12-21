@@ -94,15 +94,14 @@ return [
  |
  */
     'tests' => [
-        'url' => env('DOCUWARE_TESTS_BASKET_ID', 'https://codebar-invoice-demo.docuware.cloud'),
-        'file_cabinet_id' => env('DOCUWARE_TESTS_FILE_CABINET_ID', '4ca593b2-c19d-4399-96e6-c90168dbaa97'),
-        'dialog_id' => env('DOCUWARE_TESTS_DIALOG_ID', '4fc78419-37f4-409b-ab08-42e5cecdee92'),
-        'basket_id' => env('DOCUWARE_TESTS_BASKET_ID', 'b_da50d356-3ed5-4699-a8ab-d3fbeb855a4c'),
+        'file_cabinet_id' => env('DOCUWARE_TESTS_FILE_CABINET_ID'),
+        'dialog_id' => env('DOCUWARE_TESTS_DIALOG_ID'),
+        'basket_id' => env('DOCUWARE_TESTS_BASKET_ID'),
         'document_id' => 1,
-        'preview_document_file_size' => (int) env('DOCUWARE_TESTS_PREVIEW_DOCUMENT_FILE_SIZE', 266332),
-        'document_file_size' => (int) env('DOCUWARE_TESTS_DOCUMENT_FILE_SIZE', 190305),
+        'document_file_size_preview' => (int) env('DOCUWARE_TESTS_DOCUMENT_FILE_SIZE_PREVIEW', 266332),
+        'document_file_size' => (int) env('DOCUWARE_TESTS_DOCUMENT_FILE_SIZE', 132587),
         'document_ids' => [1, 2],
-        'documents_file_size' => (int) env('DOCUWARE_TESTS_DOCUMENTS_FILE_SIZE', 266332),
-        'field_name' => env('DOCUWARE_TESTS_FIELD_NAME', 'UUID'),
+        'documents_file_size' => (int) env('DOCUWARE_TESTS_DOCUMENTS_FILE_SIZE', 190305),
+        'field_name' => env('DOCUWARE_TESTS_FIELD_NAME'),
     ],
 ];

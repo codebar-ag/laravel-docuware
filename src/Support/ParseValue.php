@@ -34,6 +34,7 @@ class ParseValue
             'Decimal' => (float) $field['Item'],
             'Date','DateTime' => self::date($field['Item']),
             'Keywords' => implode(', ', $field['Item']['Keyword']),
+            'Table' => null,
             default => (string) $field['Item'],
         };
     }

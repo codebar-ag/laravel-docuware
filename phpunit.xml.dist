@@ -42,5 +42,10 @@
         <env name="DOCUWARE_PASSWORD" value="password"/>
         <env name="DOCUWARE_PASSPHRASE" value="passphrase"/>
         <env name="DOCUWARE_COOKIES" value="cookies"/>
+
+        <env name="DOCUWARE_TESTS_FILE_CABINET_ID" value=""/>
+        <env name="DOCUWARE_TESTS_DIALOG_ID" value=""/>
+        <env name="DOCUWARE_TESTS_BASKET_ID" value=""/>
+        <env name="DOCUWARE_TESTS_FIELD_NAME" value="UUID"/>
     </php>
 </phpunit>

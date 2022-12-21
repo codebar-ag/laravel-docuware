@@ -11,27 +11,35 @@ class DocumentField
     public static function fromJson(array $data): self
     {
         return new self(
+            systemField: $data['SystemField'],
             name: $data['FieldName'],
             label: $data['FieldLabel'],
+            isNull: $data['IsNull'],
             value: ParseValue::field($data),
             type: $data['ItemElementName'],
         );
     }
 
     public function __construct(
-        public string $name,
-        public string $label,
+        public bool                         $systemField,
+        public string                       $name,
+        public string                       $label,
+        public bool                         $isNull,
         public null|int|float|Carbon|string $value,
-        public string $type,
-    ) {
+        public string                       $type,
+    )
+    {
     }
 
     public static function fake(
-        ?string $name = null,
-        ?string $label = null,
+        ?bool                        $systemField = false,
+        ?string                      $name = null,
+        ?string                      $label = null,
+        ?bool                        $isNull = true,
         null|int|float|Carbon|string $value = null,
-        ?string $type = null,
-    ): self {
+        ?string                      $type = null,
+    ): self
+    {
         $fakeType = Arr::random(['Int', 'Decimal', 'Text', 'DateTime']);
 
         $fakeValue = match ($fakeType) {
@@ -42,8 +50,10 @@ class DocumentField
         };
 
         return new self(
+            systemField: $systemField ?? false,
             name: $name ?? 'FAKE_DOCUMENT_FIELD',
             label: $label ?? 'Fake Document Field',
+            isNull: $isNull ?? true,
             value: $value ?? $fakeValue,
             type: $type ?? $fakeType,
         );

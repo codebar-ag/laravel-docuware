@@ -77,7 +77,7 @@ it('it_can_preview_a_document_image', function () {
         $documentId,
     );
 
-    $this->assertSame(config('docuware.tests.preview_document_file_size'), strlen($image));
+    $this->assertSame(config('docuware.tests.document_file_size_preview'), strlen($image));
     Event::assertDispatched(DocuWareResponseLog::class);
 })->group('docuware');
 
@@ -128,7 +128,7 @@ it('it_can_download_multiple_documents', function () {
         $documentIds,
     );
 
-    $this->assertSame(config('docuware.tests.document_file_size'), strlen($contents));
+    $this->assertSame(config('docuware.tests.documents_file_size'), strlen($contents));
     Event::assertDispatched(DocuWareResponseLog::class);
 })->group('docuware');
 
@@ -143,7 +143,7 @@ it('it_can_download_a_document', function () {
         $documentId,
     );
 
-    $this->assertSame(config('docuware.tests.documents_file_size'), strlen($contents));
+    $this->assertSame(config('docuware.tests.document_file_size'), strlen($contents));
     Event::assertDispatched(DocuWareResponseLog::class);
 })->group('docuware');
 
@@ -212,7 +212,7 @@ it('it_can_create_encrypted_url_for_a_document_in_a_file_cabinet', function () {
 
     $endpoint = sprintf(
         '%s/DocuWare/Platform/WebClient/Integration?ep=',
-        config('docuware.tests.url'),
+        config('docuware.credentials.url'),
     );
 
     $this->assertStringStartsWith(
@@ -259,7 +259,7 @@ it('it_can_create_encrypted_url_for_a_document_in_a_basket', function () {
 
     $endpoint = sprintf(
         '%s/DocuWare/Platform/WebClient/Integration?ep=',
-        config('docuware.tests.url'),
+        config('docuware.credentials.url'),
     );
 
     $this->assertStringStartsWith(

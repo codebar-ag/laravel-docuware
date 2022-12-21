@@ -45,7 +45,6 @@ it('create a fake document paginator', function () {
     $this->assertInstanceOf(DocumentPaginator::class, $fake);
 })->group('dto');
 
-
 it('create a fake table row', function () {
     $fake = TableRow::fake();
 

@@ -20,11 +20,10 @@ class ParseValue
     }
 
     public static function field(
-        ?array                                  $field,
+        ?array $field,
         null|int|float|Carbon|string|Collection $default = null,
-    ): null|int|float|Carbon|string|Collection
-    {
-        if (!$field) {
+    ): null|int|float|Carbon|string|Collection {
+        if (! $field) {
             return $default;
         }
 
@@ -33,12 +32,12 @@ class ParseValue
         }
 
         return match ($field['ItemElementName']) {
-            'Int' => (int)$field['Item'],
-            'Decimal' => (float)$field['Item'],
+            'Int' => (int) $field['Item'],
+            'Decimal' => (float) $field['Item'],
             'Date', 'DateTime' => self::date($field['Item']),
             'Keywords' => implode(', ', $field['Item']['Keyword']),
             'Table' => self::table($field['Item']),
-            default => (string)$field['Item'],
+            default => (string) $field['Item'],
         };
     }
 
@@ -58,5 +57,4 @@ class ParseValue
             return TableRow::fromJson($row['ColumnValue']);
         });
     }
-
 }

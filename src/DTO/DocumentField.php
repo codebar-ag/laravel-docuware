@@ -21,7 +21,7 @@ class DocumentField
     public function __construct(
         public string $name,
         public string $label,
-        public null | int | float | Carbon | string $value,
+        public null|int|float|Carbon|string $value,
         public string $type,
     ) {
     }
@@ -29,7 +29,7 @@ class DocumentField
     public static function fake(
         ?string $name = null,
         ?string $label = null,
-        null | int | float | Carbon | string $value = null,
+        null|int|float|Carbon|string $value = null,
         ?string $type = null,
     ): self {
         $fakeType = Arr::random(['Int', 'Decimal', 'Text', 'DateTime']);

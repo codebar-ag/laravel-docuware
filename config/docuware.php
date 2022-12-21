@@ -63,7 +63,7 @@ return [
     |
     */
 
-    'cookie_lifetime' => (int)env('DOCUWARE_COOKIE_LIFETIME', 525600),
+    'cookie_lifetime' => (int) env('DOCUWARE_COOKIE_LIFETIME', 525600),
 
     /*
    |--------------------------------------------------------------------------
@@ -87,7 +87,6 @@ return [
         ],
     ],
 
-
     /*
  |--------------------------------------------------------------------------
  | Configurations
@@ -95,15 +94,15 @@ return [
  |
  */
     'tests' => [
-        'url' => 'https://codebar-invoice-demo.docuware.cloud',
-        'file_cabinet_id' => '4ca593b2-c19d-4399-96e6-c90168dbaa97',
-        'dialog_id' => '4fc78419-37f4-409b-ab08-42e5cecdee92',
-        'basket_id' => 'b_da50d356-3ed5-4699-a8ab-d3fbeb855a4c',
+        'url' => env('DOCUWARE_TESTS_BASKET_ID', 'https://codebar-invoice-demo.docuware.cloud'),
+        'file_cabinet_id' => env('DOCUWARE_TESTS_FILE_CABINET_ID', '4ca593b2-c19d-4399-96e6-c90168dbaa97'),
+        'dialog_id' => env('DOCUWARE_TESTS_DIALOG_ID', '4fc78419-37f4-409b-ab08-42e5cecdee92'),
+        'basket_id' => env('DOCUWARE_TESTS_BASKET_ID', 'b_da50d356-3ed5-4699-a8ab-d3fbeb855a4c'),
         'document_id' => 1,
-        'preview_document_file_size' => 266332,
-        'document_file_size' => 190305,
+        'preview_document_file_size' => (int) env('DOCUWARE_TESTS_PREVIEW_DOCUMENT_FILE_SIZE', 266332),
+        'document_file_size' => (int) env('DOCUWARE_TESTS_DOCUMENT_FILE_SIZE', 190305),
         'document_ids' => [1, 2],
-        'documents_file_size' => 132587,
-        'field_name' => 'UUID',
+        'documents_file_size' => (int) env('DOCUWARE_TESTS_DOCUMENTS_FILE_SIZE', 266332),
+        'field_name' => env('DOCUWARE_TESTS_FIELD_NAME', 'UUID'),
     ],
 ];

@@ -12,8 +12,8 @@ use CodebarAg\DocuWare\Events\DocuWareResponseLog;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Event;
 
-# fileCabinet = '4ca593b2-c19d-4399-96e6-c90168dbaa97';
-# dialog = '4fc78419-37f4-409b-ab08-42e5cecdee92';
+// fileCabinet = '4ca593b2-c19d-4399-96e6-c90168dbaa97';
+// dialog = '4fc78419-37f4-409b-ab08-42e5cecdee92';
 
 it('it_can_list_file_cabinets', function () {
     Event::fake();
@@ -103,7 +103,7 @@ it('it_can_update_a_document_value', function () {
 
     $fileCabinetId = config('docuware.tests.file_cabinet_id');
     $documentId = config('docuware.tests.document_id');
-    $fieldName = config('docuware.tests.field_name');;
+    $fieldName = config('docuware.tests.field_name');
     $newValue = 'laravel-docuware';
 
     $response = (new DocuWare())->updateDocumentValue(
@@ -225,7 +225,7 @@ it('it_can_search_documents_with_null_values', function () {
     Event::fake();
 
     $fileCabinetIds = [
-        config('docuware.tests.file_cabinet_id')
+        config('docuware.tests.file_cabinet_id'),
     ];
 
     $paginator = (new DocuWare())

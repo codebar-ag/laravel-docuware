@@ -10,9 +10,7 @@ use Illuminate\Support\Str;
 uses(TestCase::class)->in(__DIR__);
 
 beforeAll(function () {
-
-    if (!config('docuware.cookies')) {
-
+    if (! config('docuware.cookies')) {
         $cookiePath = storage_path('app/.dwplatformauth');
 
         if (File::exists($cookiePath)) {
@@ -23,7 +21,7 @@ beforeAll(function () {
 
             Cache::put(
                 Auth::CACHE_KEY,
-                [Auth::COOKIE_NAME => (string)$cookie],
+                [Auth::COOKIE_NAME => (string) $cookie],
                 now()->addDay(),
             );
 

@@ -5,6 +5,7 @@ namespace CodebarAg\DocuWare\DTO;
 use Carbon\Carbon;
 use CodebarAg\DocuWare\Support\ParseValue;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 
 class DocumentField
 {
@@ -21,12 +22,12 @@ class DocumentField
     }
 
     public function __construct(
-        public bool                         $systemField,
-        public string                       $name,
-        public string                       $label,
-        public bool                         $isNull,
-        public null|int|float|Carbon|string $value,
-        public string                       $type,
+        public bool                                    $systemField,
+        public string                                  $name,
+        public string                                  $label,
+        public bool                                    $isNull,
+        public null|int|float|Carbon|string|Collection $value,
+        public string                                  $type,
     )
     {
     }

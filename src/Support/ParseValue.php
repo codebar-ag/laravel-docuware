@@ -3,6 +3,8 @@
 namespace CodebarAg\DocuWare\Support;
 
 use Carbon\Carbon;
+use CodebarAg\DocuWare\DTO\TableRow;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 
 class ParseValue
@@ -18,10 +20,11 @@ class ParseValue
     }
 
     public static function field(
-        ?array $field,
-        null|int|float|Carbon|string $default = null,
-    ): null|int|float|Carbon|string {
-        if (! $field) {
+        ?array                                  $field,
+        null|int|float|Carbon|string|Collection $default = null,
+    ): null|int|float|Carbon|string|Collection
+    {
+        if (!$field) {
             return $default;
         }
 
@@ -30,12 +33,30 @@ class ParseValue
         }
 
         return match ($field['ItemElementName']) {
-            'Int' => (int) $field['Item'],
-            'Decimal' => (float) $field['Item'],
-            'Date','DateTime' => self::date($field['Item']),
+            'Int' => (int)$field['Item'],
+            'Decimal' => (float)$field['Item'],
+            'Date', 'DateTime' => self::date($field['Item']),
             'Keywords' => implode(', ', $field['Item']['Keyword']),
-            'Table' => null,
-            default => (string) $field['Item'],
+            'Table' => self::table($field['Item']),
+            default => (string)$field['Item'],
         };
     }
+
+    public static function table(array $Item): Collection|null
+    {
+        return match ($Item['$type']) {
+            'DocumentIndexFieldTable' => self::documentIndexFieldTable($Item['Row']),
+            default => null,
+        };
+    }
+
+    public static function documentIndexFieldTable(array $Row): Collection|null
+    {
+        $rows = collect($Row);
+
+        return $rows->map(function (array $row) {
+            return TableRow::fromJson($row['ColumnValue']);
+        });
+    }
+
 }

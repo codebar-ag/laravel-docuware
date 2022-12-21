@@ -2,16 +2,52 @@
 
 All notable changes to `laravel-docuware` will be documented in this file.
 
+## 1.3.0 - 2022-12-21
+
+- Added support for Table Fields that have been implemented in Docuware >= 7.1
+- Added search parameters into the configurations
+
+```
+'search' => [
+            'operation' => 'And',
+            'force_refresh' => true,
+            'include_suggestions' => false,
+            'additional_result_fields' => [],
+        ],
+    ],
+```
+
+- Added dynamic test configuration values
+
+```
+   'tests' => [
+        'file_cabinet_id' => env('DOCUWARE_TESTS_FILE_CABINET_ID'),
+        'dialog_id' => env('DOCUWARE_TESTS_DIALOG_ID'),
+        'basket_id' => env('DOCUWARE_TESTS_BASKET_ID'),
+        'document_id' => 1,
+        'document_file_size_preview' => (int) env('DOCUWARE_TESTS_DOCUMENT_FILE_SIZE_PREVIEW'),
+        'document_file_size' => (int) env('DOCUWARE_TESTS_DOCUMENT_FILE_SIZE'),
+        'document_ids' => [1, 2],
+        'documents_file_size' => (int) env('DOCUWARE_TESTS_DOCUMENTS_FILE_SIZE'),
+        'field_name' => env('DOCUWARE_TESTS_FIELD_NAME'),
+    ],
+```
+
 ## 1.2.2 - 2022-09-27
-- Added `DOCUWARE_COOKIES` property to the config.php. This allows the user to manually set the DocuWare Request cookie instead of regenerating it after every cache reset. There is currently a DocuWare limitation with available seats per license, which can cause issues if you renew the request cookie too many times.  The current lifespan of a DocuWare cookie is one year.
-- Added `DOCUWARE_CACHE_DRIVER` property to the config.php. This allows the user to manually set the default Cache Driver, which is used to store the DocuWare Request Cookie.
+
+- Added `DOCUWARE_COOKIES` property to the config.php. This allows the user to manually set the DocuWare Request cookie
+  instead of regenerating it after every cache reset. There is currently a DocuWare limitation with available seats per
+  license, which can cause issues if you renew the request cookie too many times. The current lifespan of a DocuWare
+  cookie is one year.
+- Added `DOCUWARE_CACHE_DRIVER` property to the config.php. This allows the user to manually set the default Cache
+  Driver, which is used to store the DocuWare Request Cookie.
 
 - Removed Solutions for Errors (Facade/Ignition).
 
 ## 1.1.0 - 2021-07-22
 
 - Added `error` property to the `DocumentPaginator`. This is used for failed
-  requests otherwise it is null. When the request fails for any reason an 
+  requests otherwise it is null. When the request fails for any reason an
   ErrorBag is added with more information. Example:
 
 ```php 
@@ -30,7 +66,7 @@ CodebarAg\DocuWare\DTO\DocumentPaginator {
 
 - Stable release.
 - **[Breaking Change]**: Searching in multiple file cabinets have been changed.
-  The search no longer supports `additionalFileCabinets()`.  Please use
+  The search no longer supports `additionalFileCabinets()`. Please use
   `fileCabinets()` instead. Example:
 
 ```php
@@ -83,7 +119,7 @@ $paginator = DocuWare::search()
 
 - Authentication is completely handled by the package now. No need to login
   (`DocuWare::login`) or logout (`DocuWare::logout`).
-- Added new environment variable **cookie_lifetime** to overwrite the lifetime 
+- Added new environment variable **cookie_lifetime** to overwrite the lifetime
   of the authentication cookie.
 
 ## 0.1.0 - 2021-04-06

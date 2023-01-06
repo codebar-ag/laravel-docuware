@@ -10,7 +10,7 @@ use CodebarAg\DocuWare\DTO\Field;
 use CodebarAg\DocuWare\DTO\FileCabinet;
 use CodebarAg\DocuWare\DTO\TableRow;
 
-it(' create a fake file cabinet', function () {
+it('create a fake file cabinet', function () {
     $fake = FileCabinet::fake();
     $this->assertInstanceOf(FileCabinet::class, $fake);
 })->group('dto');
@@ -21,7 +21,7 @@ it('create a fake dialog', function () {
     $this->assertInstanceOf(Dialog::class, $fake);
 })->group('dto');
 
-it(' create a fake field', function () {
+it('create a fake field', function () {
     $fake = Field::fake();
 
     $this->assertInstanceOf(Field::class, $fake);

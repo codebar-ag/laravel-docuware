@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Event;
 // fileCabinet = '4ca593b2-c19d-4399-96e6-c90168dbaa97';
 // dialog = '4fc78419-37f4-409b-ab08-42e5cecdee92';
 
-it('it_can_list_file_cabinets', function () {
+it('can list file cabinets', function () {
     Event::fake();
 
     $fileCabinets = (new DocuWare())->getFileCabinets();
@@ -25,7 +25,7 @@ it('it_can_list_file_cabinets', function () {
     Event::assertDispatched(DocuWareResponseLog::class);
 })->group('docuware');
 
-it('it_can_list_fields_for_a_file_cabinet', function () {
+it('can list fields for a file cabinet', function () {
     Event::fake();
 
     $fileCabinetId = config('docuware.tests.file_cabinet_id');
@@ -37,7 +37,7 @@ it('it_can_list_fields_for_a_file_cabinet', function () {
     Event::assertDispatched(DocuWareResponseLog::class);
 })->group('docuware');
 
-it('it_can_list_values_for_a_select_list', function () {
+it('can list values for a select list', function () {
     Event::fake();
 
     $fileCabinetId = config('docuware.tests.file_cabinet_id');
@@ -54,7 +54,7 @@ it('it_can_list_values_for_a_select_list', function () {
     Event::assertDispatched(DocuWareResponseLog::class);
 })->group('docuware');
 
-it('it_can_list_dialogs_for_a_file_cabinet', function () {
+it('can list dialogs for a file cabinet', function () {
     Event::fake();
 
     $fileCabinetId = config('docuware.tests.file_cabinet_id');
@@ -66,7 +66,7 @@ it('it_can_list_dialogs_for_a_file_cabinet', function () {
     Event::assertDispatched(DocuWareResponseLog::class);
 })->group('docuware');
 
-it('it_can_preview_a_document_image', function () {
+it('can preview a document image', function () {
     Event::fake();
 
     $fileCabinetId = config('docuware.tests.file_cabinet_id');
@@ -81,7 +81,7 @@ it('it_can_preview_a_document_image', function () {
     Event::assertDispatched(DocuWareResponseLog::class);
 })->group('docuware');
 
-it('it_can_show_a_document', function () {
+it('can show a document', function () {
     Event::fake();
 
     $fileCabinetId = config('docuware.tests.file_cabinet_id');
@@ -98,7 +98,7 @@ it('it_can_show_a_document', function () {
     Event::assertDispatched(DocuWareResponseLog::class);
 })->group('docuware');
 
-it('it_can_update_a_document_value', function () {
+it('can update a document value', function () {
     Event::fake();
 
     $fileCabinetId = config('docuware.tests.file_cabinet_id');
@@ -117,7 +117,7 @@ it('it_can_update_a_document_value', function () {
     Event::assertDispatched(DocuWareResponseLog::class);
 })->group('docuware', 'test');
 
-it('it_can_download_multiple_documents', function () {
+it('can download multiple documents', function () {
     Event::fake();
 
     $fileCabinetId = config('docuware.tests.file_cabinet_id');
@@ -132,7 +132,7 @@ it('it_can_download_multiple_documents', function () {
     Event::assertDispatched(DocuWareResponseLog::class);
 })->group('docuware');
 
-it('it_can_download_a_document', function () {
+it('can download a document', function () {
     Event::fake();
 
     $fileCabinetId = config('docuware.tests.file_cabinet_id');
@@ -147,7 +147,7 @@ it('it_can_download_a_document', function () {
     Event::assertDispatched(DocuWareResponseLog::class);
 })->group('docuware');
 
-it('it_can_search_documents', function () {
+it('can search documents', function () {
     Event::fake();
 
     $fileCabinetId = config('docuware.tests.file_cabinet_id');
@@ -170,7 +170,7 @@ it('it_can_search_documents', function () {
     Event::assertDispatched(DocuWareResponseLog::class);
 })->group('docuware');
 
-it('it_can_upload_document_with_index_values_and_delete_it', function () {
+it('can upload document with index values and delete it', function () {
     Event::fake();
 
     $fileCabinetId = config('docuware.tests.file_cabinet_id');
@@ -197,7 +197,7 @@ it('it_can_upload_document_with_index_values_and_delete_it', function () {
     Event::assertDispatched(DocuWareResponseLog::class);
 })->group('docuware');
 
-it('it_can_create_encrypted_url_for_a_document_in_a_file_cabinet', function () {
+it('can create encrypted url for a document in a file cabinet', function () {
     Event::fake();
 
     $fileCabinetId = config('docuware.tests.file_cabinet_id');
@@ -221,7 +221,7 @@ it('it_can_create_encrypted_url_for_a_document_in_a_file_cabinet', function () {
     );
 })->group('docuware');
 
-it('it_can_search_documents_with_null_values', function () {
+it('can search documents with null values', function () {
     Event::fake();
 
     $fileCabinetIds = [
@@ -244,7 +244,7 @@ it('it_can_search_documents_with_null_values', function () {
     Event::assertDispatched(DocuWareResponseLog::class);
 })->group('docuware');
 
-it('it_can_create_encrypted_url_for_a_document_in_a_basket', function () {
+it('can create encrypted url for a document in a basket', function () {
     Event::fake();
 
     $basketId = config('docuware.tests.basket_id');

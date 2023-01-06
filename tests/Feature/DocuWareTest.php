@@ -12,6 +12,8 @@ use CodebarAg\DocuWare\Events\DocuWareResponseLog;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Event;
 
+uses()->group('docuware');
+
 // fileCabinet = '4ca593b2-c19d-4399-96e6-c90168dbaa97';
 // dialog = '4fc78419-37f4-409b-ab08-42e5cecdee92';
 
@@ -23,7 +25,7 @@ it('can list file cabinets', function () {
     $this->assertInstanceOf(Collection::class, $fileCabinets);
     $this->assertNotCount(0, $fileCabinets);
     Event::assertDispatched(DocuWareResponseLog::class);
-})->group('docuware');
+});
 
 it('can list fields for a file cabinet', function () {
     Event::fake();
@@ -35,7 +37,7 @@ it('can list fields for a file cabinet', function () {
     $this->assertInstanceOf(Collection::class, $fields);
     $this->assertNotCount(0, $fields);
     Event::assertDispatched(DocuWareResponseLog::class);
-})->group('docuware');
+});
 
 it('can list values for a select list', function () {
     Event::fake();
@@ -52,7 +54,7 @@ it('can list values for a select list', function () {
 
     $this->assertNotCount(0, $types);
     Event::assertDispatched(DocuWareResponseLog::class);
-})->group('docuware');
+});
 
 it('can list dialogs for a file cabinet', function () {
     Event::fake();
@@ -64,7 +66,7 @@ it('can list dialogs for a file cabinet', function () {
     $this->assertInstanceOf(Collection::class, $dialogs);
     $this->assertNotCount(0, $dialogs);
     Event::assertDispatched(DocuWareResponseLog::class);
-})->group('docuware');
+});
 
 it('can preview a document image', function () {
     Event::fake();
@@ -79,7 +81,7 @@ it('can preview a document image', function () {
 
     $this->assertSame(config('docuware.tests.document_file_size_preview'), strlen($image));
     Event::assertDispatched(DocuWareResponseLog::class);
-})->group('docuware');
+});
 
 it('can show a document', function () {
     Event::fake();
@@ -96,7 +98,7 @@ it('can show a document', function () {
     $this->assertSame($documentId, $document->id);
     $this->assertSame($fileCabinetId, $document->file_cabinet_id);
     Event::assertDispatched(DocuWareResponseLog::class);
-})->group('docuware');
+});
 
 it('can update a document value', function () {
     Event::fake();
@@ -115,7 +117,7 @@ it('can update a document value', function () {
 
     $this->assertSame('laravel-docuware', $response);
     Event::assertDispatched(DocuWareResponseLog::class);
-})->group('docuware', 'test');
+});
 
 it('can download multiple documents', function () {
     Event::fake();
@@ -130,7 +132,7 @@ it('can download multiple documents', function () {
 
     $this->assertSame(config('docuware.tests.documents_file_size'), strlen($contents));
     Event::assertDispatched(DocuWareResponseLog::class);
-})->group('docuware');
+});
 
 it('can download a document', function () {
     Event::fake();
@@ -145,7 +147,7 @@ it('can download a document', function () {
 
     $this->assertSame(config('docuware.tests.document_file_size'), strlen($contents));
     Event::assertDispatched(DocuWareResponseLog::class);
-})->group('docuware');
+});
 
 it('can search documents', function () {
     Event::fake();
@@ -168,7 +170,7 @@ it('can search documents', function () {
 
     $this->assertInstanceOf(DocumentPaginator::class, $paginator);
     Event::assertDispatched(DocuWareResponseLog::class);
-})->group('docuware');
+});
 
 it('can upload document with index values and delete it', function () {
     Event::fake();
@@ -195,7 +197,7 @@ it('can upload document with index values and delete it', function () {
         $this->assertSame($field->value, '::text::');
     });
     Event::assertDispatched(DocuWareResponseLog::class);
-})->group('docuware');
+});
 
 it('can create encrypted url for a document in a file cabinet', function () {
     Event::fake();
@@ -219,7 +221,7 @@ it('can create encrypted url for a document in a file cabinet', function () {
         $endpoint,
         $url,
     );
-})->group('docuware');
+});
 
 it('can search documents with null values', function () {
     Event::fake();
@@ -242,7 +244,7 @@ it('can search documents with null values', function () {
 
     $this->assertInstanceOf(DocumentPaginator::class, $paginator);
     Event::assertDispatched(DocuWareResponseLog::class);
-})->group('docuware');
+});
 
 it('can create encrypted url for a document in a basket', function () {
     Event::fake();
@@ -266,4 +268,4 @@ it('can create encrypted url for a document in a basket', function () {
         $endpoint,
         $url,
     );
-})->group('docuware');
+});

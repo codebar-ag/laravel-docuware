@@ -51,5 +51,7 @@
         <env name="DOCUWARE_TESTS_DOCUMENT_FILE_SIZE_PREVIEW" value=""/>
         <env name="DOCUWARE_TESTS_DOCUMENT_FILE_SIZE" value=""/>
         <env name="DOCUWARE_TESTS_DOCUMENTS_FILE_SIZE" value=""/>
+        <env name="DOCUWARE_TESTS_DOCUMENT_ID" value=""/>
+        <env name="DOCUWARE_TESTS_DOCUMENTS_IDS" value="[]"/>
     </php>
 </phpunit>

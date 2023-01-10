@@ -42,6 +42,7 @@
         <env name="DOCUWARE_PASSWORD" value="password"/>
         <env name="DOCUWARE_PASSPHRASE" value="passphrase"/>
         <env name="DOCUWARE_COOKIES" value="cookies"/>
+        <env name="DOCUWARE_TIMEOUT" value="30"/>
 
         <env name="DOCUWARE_TESTS_FILE_CABINET_ID" value=""/>
         <env name="DOCUWARE_TESTS_DIALOG_ID" value=""/>

@@ -23,6 +23,16 @@ return [
     'cookies' => env('DOCUWARE_COOKIES'),
 
     /*
+   |--------------------------------------------------------------------------
+   | Requests timeout
+   |--------------------------------------------------------------------------
+   | This variable is optional and only used if you want to set the request timeout manually.
+   |
+   */
+
+    'timeout' => env('DOCUWARE_TIMEOUT', 30),
+
+    /*
     |--------------------------------------------------------------------------
     | DocuWare Credentials
     |--------------------------------------------------------------------------

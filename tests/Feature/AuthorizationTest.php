@@ -5,6 +5,8 @@ namespace CodebarAg\DocuWare\Tests\Feature;
 use CodebarAg\DocuWare\DocuWare;
 use CodebarAg\DocuWare\Support\Auth;
 
+uses()->group('authorization');
+
 it('authorization with & without cookie', function () {
     if (config('docuware.cookies')) {
         $this->assertArrayHasKey(Auth::COOKIE_NAME, Auth::cookies());
@@ -22,4 +24,4 @@ it('authorization with & without cookie', function () {
         (new DocuWare())->logout();
         $this->assertNull(Auth::cookies());
     }
-})->group('authorization');
+});

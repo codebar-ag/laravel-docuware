@@ -7,13 +7,13 @@ use CodebarAg\DocuWare\Support\ParseValue;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 
-class Document
+final class Document
 {
     public static function fromJson(array $data): self
     {
         $fields = self::convertFields(collect($data['Fields']));
 
-        return new static(
+        return new self(
             id: $data['Id'],
             file_size: $data['FileSize'],
             total_pages: $data['TotalPages'],

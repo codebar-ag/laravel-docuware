@@ -5,11 +5,11 @@ namespace CodebarAg\DocuWare\DTO;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 
-class FileCabinet
+final class FileCabinet
 {
     public static function fromJson(array $data): self
     {
-        return new static(
+        return new self(
             id: $data['Id'],
             name: $data['Name'],
             color: $data['Color'],

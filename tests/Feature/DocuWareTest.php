@@ -28,7 +28,7 @@ it('it_can_list_file_cabinets', function () {
 it('it_can_list_fields_for_a_file_cabinet', function () {
     Event::fake();
 
-    $fileCabinetId = '4ca593b2-c19d-4399-96e6-c90168dbaa97';
+    $fileCabinetId = config('docuware.tests.file_cabinet_id');
 
     $fields = (new DocuWare())->getFields($fileCabinetId);
 
@@ -40,8 +40,8 @@ it('it_can_list_fields_for_a_file_cabinet', function () {
 it('it_can_list_values_for_a_select_list', function () {
     Event::fake();
 
-    $fileCabinetId = '4ca593b2-c19d-4399-96e6-c90168dbaa97';
-    $dialogId = '4fc78419-37f4-409b-ab08-42e5cecdee92';
+    $fileCabinetId = config('docuware.tests.file_cabinet_id');
+    $dialogId = config('docuware.tests.dialog_id');
     $fieldName = 'UUID';
 
     $types = (new DocuWare())->getSelectList(

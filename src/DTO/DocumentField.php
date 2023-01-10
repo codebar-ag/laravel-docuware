@@ -7,7 +7,7 @@ use CodebarAg\DocuWare\Support\ParseValue;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 
-class DocumentField
+final class DocumentField
 {
     public static function fromJson(array $data): self
     {

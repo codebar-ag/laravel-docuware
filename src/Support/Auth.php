@@ -58,7 +58,7 @@ class Auth
 
     public static function check(): bool
     {
-        return ! empty(config('docuware.cookies')) ?? Cache::driver(self::cacheDriver())->has(self::CACHE_KEY);
+        return Cache::driver(self::cacheDriver())->has(self::CACHE_KEY);
     }
 
     protected static function cacheDriver(): string

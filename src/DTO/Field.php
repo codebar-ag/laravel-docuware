@@ -4,11 +4,11 @@ namespace CodebarAg\DocuWare\DTO;
 
 use Illuminate\Support\Arr;
 
-class Field
+final class Field
 {
     public static function fromJson(array $data): self
     {
-        return new static(
+        return new self(
             name: $data['DBFieldName'],
             label: $data['DisplayName'],
             type: $data['DWFieldType'],

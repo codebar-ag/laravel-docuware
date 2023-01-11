@@ -202,7 +202,7 @@ $paginator = DocuWare::search()
  */
 $paginator = DocuWare::search()
     ->fileCabinet($id)
-    ->dateFrom(Carbon::create(2021, 3, 1))
+    ->filterDate(Carbon::create(2021, 3, 1))
     ->get();
 
 /**
@@ -210,7 +210,7 @@ $paginator = DocuWare::search()
  */
 $paginator = DocuWare::search()
     ->fileCabinet($id)
-    ->dateUntil(Carbon::create(2021, 4, 1))
+    ->filterDate(Carbon::create(2021, 4, 1))
     ->get();
 
 /**

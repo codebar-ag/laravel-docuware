@@ -194,7 +194,6 @@ it('can\'t search documents by more than two dates', function () {
         ->filter('DOCUMENT_TYPE', 'Abrechnung')
         ->orderBy('DWSTOREDATETIME', 'desc')
         ->get();
-
 })->group('search');
 
 it('can override search documents dates filter by using same operator', function () {
@@ -217,9 +216,8 @@ it('can override search documents dates filter by using same operator', function
         ->orderBy('DWSTOREDATETIME', 'desc')
         ->get();
 
-        $this->assertInstanceOf(DocumentPaginator::class, $paginator);
-        Event::assertDispatched(DocuWareResponseLog::class);
-
+    $this->assertInstanceOf(DocumentPaginator::class, $paginator);
+    Event::assertDispatched(DocuWareResponseLog::class);
 })->group('search');
 
 it('can override search documents dates filter by using equal operator', function () {
@@ -241,9 +239,8 @@ it('can override search documents dates filter by using equal operator', functio
         ->orderBy('DWSTOREDATETIME', 'desc')
         ->get();
 
-        $this->assertInstanceOf(DocumentPaginator::class, $paginator);
-        Event::assertDispatched(DocuWareResponseLog::class);
-
+    $this->assertInstanceOf(DocumentPaginator::class, $paginator);
+    Event::assertDispatched(DocuWareResponseLog::class);
 })->group('search');
 
 it('can\'t search documents by diverged date range', function () {
@@ -266,7 +263,6 @@ it('can\'t search documents by diverged date range', function () {
         ->filter('DOCUMENT_TYPE', 'Abrechnung')
         ->orderBy('DWSTOREDATETIME', 'desc')
         ->get();
-
 })->group('search');
 
 it('can search documents dates filter in future', function () {
@@ -287,9 +283,8 @@ it('can search documents dates filter in future', function () {
         ->orderBy('DWSTOREDATETIME', 'desc')
         ->get();
 
-        $this->assertInstanceOf(DocumentPaginator::class, $paginator);
-        Event::assertDispatched(DocuWareResponseLog::class);
-
+    $this->assertInstanceOf(DocumentPaginator::class, $paginator);
+    Event::assertDispatched(DocuWareResponseLog::class);
 })->group('search');
 
 it('can search documents dates filter in past', function () {
@@ -310,9 +305,8 @@ it('can search documents dates filter in past', function () {
         ->orderBy('DWSTOREDATETIME', 'desc')
         ->get();
 
-        $this->assertInstanceOf(DocumentPaginator::class, $paginator);
-        Event::assertDispatched(DocuWareResponseLog::class);
-
+    $this->assertInstanceOf(DocumentPaginator::class, $paginator);
+    Event::assertDispatched(DocuWareResponseLog::class);
 })->group('search');
 
 it('can upload document with index values and delete it', function () {

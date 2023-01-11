@@ -265,7 +265,7 @@ class DocuWareSearch
 
     private function exactDateTime($date, $operator): Carbon
     {
-        return match($operator) {
+        return match ($operator) {
             '<', '>=' => $date->startOfDay(),
             '>', '<=' => $date->endOfDay(),
             default => $date,

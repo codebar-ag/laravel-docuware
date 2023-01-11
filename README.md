@@ -20,13 +20,19 @@ then optimize the processes that power the core of your business.
 
 ## 🛠 Requirements
 
-### > = v.1.2
+### > = v2.0
+
+- PHP: `^8.2`
+- Laravel: `^9.*` || Laravel: `^10.*`
+- DocuWare Cloud Access
+- 
+### > = v1.2
 
 - PHP: `^8.1`
 - Laravel: `^9.*`
 - DocuWare Cloud Access
 
-### < v.1.2
+### < v1.2
 
 - PHP: `^8.0`
 - Laravel: `^8.*`
@@ -248,8 +254,8 @@ $paginator = DocuWare::search()
     ->page(2)
     ->perPage(30)
     ->fulltext('My secret document')
-    ->dateFrom(Carbon::create(2021, 3, 1))
-    ->dateUntil(Carbon::create(2021, 4, 1))
+    ->filterDate('DWSTOREDATETIME','>=',Carbon::create(2021, 3, 1))
+    ->filterDate('DWSTOREDATETIME','<',Carbon::create(2021, 4, 1))
     ->filter('TYPE', 'Order')
     ->filter('OTHER_FIELD', 'other')
     ->orderBy('DWSTOREDATETIME', 'desc')

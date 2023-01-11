@@ -161,6 +161,7 @@ class DocuWareSearch
 
         $response = Http::acceptJson()
             ->withCookies(Auth::cookies(), Auth::domain())
+            ->timeout(config('docuware.timeout'))
             ->post($url, [
                 'Count' => $this->perPage,
                 'Start' => ($this->page - 1) * $this->perPage,

@@ -498,6 +498,16 @@ return [
     'cookies' => env('DOCUWARE_COOKIES'),
 
     /*
+   |--------------------------------------------------------------------------
+   | Requests timeout
+   |--------------------------------------------------------------------------
+   | This variable is optional and only used if you want to set the request timeout manually.
+   |
+   */
+
+    'timeout' => env('DOCUWARE_TIMEOUT', 30),
+
+    /*
     |--------------------------------------------------------------------------
     | DocuWare Credentials
     |--------------------------------------------------------------------------
@@ -572,11 +582,11 @@ return [
         'file_cabinet_id' => env('DOCUWARE_TESTS_FILE_CABINET_ID'),
         'dialog_id' => env('DOCUWARE_TESTS_DIALOG_ID'),
         'basket_id' => env('DOCUWARE_TESTS_BASKET_ID'),
-        'document_id' => 1,
-        'document_file_size_preview' => (int)env('DOCUWARE_TESTS_DOCUMENT_FILE_SIZE_PREVIEW'),
-        'document_file_size' => (int)env('DOCUWARE_TESTS_DOCUMENT_FILE_SIZE'),
-        'document_ids' => [1, 2],
-        'documents_file_size' => (int)env('DOCUWARE_TESTS_DOCUMENTS_FILE_SIZE'),
+        'document_id' => (int) env('DOCUWARE_TESTS_DOCUMENT_ID'),
+        'document_file_size_preview' => (int) env('DOCUWARE_TESTS_DOCUMENT_FILE_SIZE_PREVIEW'),
+        'document_file_size' => (int) env('DOCUWARE_TESTS_DOCUMENT_FILE_SIZE'),
+        'document_ids' => json_decode(env('DOCUWARE_TESTS_DOCUMENTS_IDS')),
+        'documents_file_size' => (int) env('DOCUWARE_TESTS_DOCUMENTS_FILE_SIZE'),
         'field_name' => env('DOCUWARE_TESTS_FIELD_NAME'),
     ],
 ];
@@ -593,12 +603,12 @@ cp phpunit.xml.dist phpunit.xml
 Modify environment variables in the phpunit.xml-file:
 
 ```xml
-
 <env name="DOCUWARE_URL" value="https://domain.docuware.cloud"/>
 <env name="DOCUWARE_USERNAME" value="user@domain.test"/>
 <env name="DOCUWARE_PASSWORD" value="password"/>
 <env name="DOCUWARE_PASSPHRASE" value="passphrase"/>
 <env name="DOCUWARE_COOKIES" value="cookies"/>
+<env name="DOCUWARE_TIMEOUT" value="30"/>
 
 <env name="DOCUWARE_TESTS_FILE_CABINET_ID" value=""/>
 <env name="DOCUWARE_TESTS_DIALOG_ID" value=""/>
@@ -608,6 +618,8 @@ Modify environment variables in the phpunit.xml-file:
 <env name="DOCUWARE_TESTS_DOCUMENT_FILE_SIZE_PREVIEW" value=""/>
 <env name="DOCUWARE_TESTS_DOCUMENT_FILE_SIZE" value=""/>
 <env name="DOCUWARE_TESTS_DOCUMENTS_FILE_SIZE" value=""/>
+<env name="DOCUWARE_TESTS_DOCUMENT_ID" value=""/>
+<env name="DOCUWARE_TESTS_DOCUMENTS_IDS" value="[]"/>
 ```
 
 Run the tests:

@@ -30,4 +30,19 @@ final class UnableToSearch extends RuntimeException
 
         );
     }
+
+    public static function InvalidDateFiltersCount(int $count): self
+    {
+        return new self(
+            "You can't filter by more than {$count} dates",
+
+        );
+    }
+
+    public static function DivergedDateFilterRange(): self
+    {
+        return new self(
+            'Diverged date filter range',
+        );
+    }
 }

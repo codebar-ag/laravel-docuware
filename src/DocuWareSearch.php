@@ -10,7 +10,6 @@ use CodebarAg\DocuWare\Support\Auth;
 use CodebarAg\DocuWare\Support\EnsureValidCookie;
 use CodebarAg\DocuWare\Support\EnsureValidResponse;
 use Exception;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 
@@ -28,15 +27,13 @@ class DocuWareSearch
 
     protected ?string $searchTerm = null;
 
-    protected ?Carbon $dateFrom = null;
-
-    protected ?Carbon $dateUntil = null;
-
     protected string $orderField = 'DWSTOREDATETIME';
 
     protected string $orderDirection = 'asc';
 
     protected array $filters = [];
+
+    protected array $usedDateOperators = [];
 
     public function fileCabinet(string $fileCabinetId): self
     {
@@ -90,16 +87,14 @@ class DocuWareSearch
         return $this;
     }
 
-    public function dateFrom(?Carbon $dateFrom): self
+    public function filterDate(string $name, string $operator, ?Carbon $date): self
     {
-        $this->dateFrom = $dateFrom;
+        $date = $this->exactDateTime($date, $operator);
 
-        return $this;
-    }
+        $this->makeSureFilterDateRangeIsCorrect($name, $operator);
 
-    public function dateUntil(?Carbon $dateUntil): self
-    {
-        $this->dateUntil = $dateUntil;
+        $this->filters[$name][] = $date;
+        $this->filters[$name] = array_values($this->filters[$name]);
 
         return $this;
     }
@@ -123,13 +118,15 @@ class DocuWareSearch
             $value = "\"{$value}\"";
         }
 
-        $this->filters[] = [$name, Arr::wrap($value)];
+        $this->filters[$name][] = $value;
 
         return $this;
     }
 
     public function get(): DocumentPaginator
     {
+        $this->checkDateFilterRangeDivergence();
+        $this->restructureMonoDateFilterRange();
         $this->guard();
 
         $url = sprintf(
@@ -151,17 +148,7 @@ class DocuWareSearch
             ];
         }
 
-        if ($this->dateFrom || $this->dateUntil) {
-            $condition[] = [
-                'DBName' => 'DWSTOREDATETIME',
-                'Value' => [
-                    $this->dateFrom?->startOfDay(),
-                    $this->dateUntil?->endOfDay(),
-                ],
-            ];
-        }
-
-        foreach ($this->filters as [$name, $value]) {
+        foreach ($this->filters as $name => $value) {
             if (empty($value)) {
                 continue;
             }
@@ -226,5 +213,62 @@ class DocuWareSearch
             $this->perPage <= 0,
             UnableToSearch::invalidPerPageNumber($this->perPage),
         );
+    }
+
+    private function checkDateFilterRangeDivergence(): void
+    {
+        foreach ($this->usedDateOperators as $name => $operators) {
+            if (count($operators) == 2) {
+                foreach ($operators as $index => $operator) {
+                    throw_if(
+                        eval("return {$this->filters[$name][$index]->timestamp} {$operator} {$this->filters[$name][$index + 1]->timestamp};"),
+                        UnableToSearch::DivergedDateFilterRange(),
+                    );
+                    break;
+                }
+            }
+        }
+    }
+
+    private function restructureMonoDateFilterRange(): void
+    {
+        foreach ($this->usedDateOperators as $name => $operators) {
+            if (count($operators) == 1) {
+                $this->filters[$name][] = match ($operators[0]) {
+                    '<=', '<' => Carbon::createFromTimestamp(0),
+                    '>=', '>' => now(),
+                    default => now(),
+                };
+            }
+        }
+    }
+
+    private function makeSureFilterDateRangeIsCorrect($name, $operator): void
+    {
+        if (isset($this->usedDateOperators[$name])) {
+            if ($operatorFilterIndex = array_search($operator, $this->usedDateOperators[$name])) {
+                unset($this->filters[$name][$operatorFilterIndex]);
+            } elseif ($operator == '=') {
+                unset($this->filters[$name]);
+                $this->usedDateOperators[$name] = [$operator];
+            } else {
+                $this->usedDateOperators[$name][] = $operator;
+            }
+        } else {
+            $this->usedDateOperators[$name][] = $operator;
+        }
+
+        if (isset($this->filters[$name]) && ($dateFiltersCount = count($this->filters[$name])) == 2) {
+            throw UnableToSearch::InvalidDateFiltersCount($dateFiltersCount);
+        }
+    }
+
+    private function exactDateTime($date, $operator): Carbon
+    {
+        return match ($operator) {
+            '<', '>=' => $date->startOfDay(),
+            '>', '<=' => $date->endOfDay(),
+            default => $date,
+        };
     }
 }

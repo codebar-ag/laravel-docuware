@@ -37,8 +37,8 @@ class ListAuthCookie extends Command
         $cookieHash = Arr::get($cookie, Auth::COOKIE_NAME);
         $cookieCreationDate = Arr::get($cookie, 'CreatedAt');
 
-        if (!$cookieHash) {
-            $this->info('No cookie found for the Key "' . $cacheKey . '".');
+        if (! $cookieHash) {
+            $this->info('No cookie found for the Key "'.$cacheKey.'".');
         }
         if ($cookieHash) {
             $this->info($cookieHash);

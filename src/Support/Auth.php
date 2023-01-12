@@ -4,6 +4,7 @@ namespace CodebarAg\DocuWare\Support;
 
 use CodebarAg\DocuWare\Exceptions\UnableToFindUrlCredential;
 use GuzzleHttp\Cookie\CookieJar;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 
@@ -24,7 +25,10 @@ class Auth
         Cache::driver(self::cacheDriver())
             ->put(
                 self::CACHE_KEY,
-                [$cookie['Name'] => $cookie['Value']],
+                [
+                    $cookie['Name'] => $cookie['Value'],
+                    'CreatedAt' => now()->toDateTimeString(),
+                ],
                 now()->addMinutes(config('docuware.cookie_lifetime')),
             );
     }
@@ -36,6 +40,11 @@ class Auth
         }
 
         return Cache::driver(self::cacheDriver())->get(self::CACHE_KEY);
+    }
+
+    public static function cookieDate(): string
+    {
+        return Arr::get(Cache::driver(self::cacheDriver())->get(self::CACHE_KEY), 'CreatedAt');
     }
 
     public static function forget(): void

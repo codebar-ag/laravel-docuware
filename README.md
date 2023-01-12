@@ -398,6 +398,8 @@ You only need to provide correct credentials. Everything else is automatically
 handled from the package. Under the hood we are storing the authentication
 cookie in the cache named *docuware.cookies*.
 
+You can run `php artisan docuware:list-auth-cookie` command to get your auth session that you can use in your `.env` file `DOCUWARE_COOKIES` key.
+
 But if you need further control you can use the following methods to login and
 logout with DocuWare:
 

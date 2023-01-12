@@ -4,6 +4,7 @@ namespace CodebarAg\DocuWare\Support;
 
 use Carbon\Carbon;
 use CodebarAg\DocuWare\DTO\TableRow;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 
@@ -23,21 +24,21 @@ class ParseValue
         ?array $field,
         null|int|float|Carbon|string|Collection $default = null,
     ): null|int|float|Carbon|string|Collection {
-        if (! $field) {
+        if (! $field || $field['IsNull']) {
             return $default;
         }
 
-        if ($field['IsNull']) {
-            return $default;
-        }
+        $item = Arr::get($field, 'Item');
+        $itemElementName = Arr::get($field, 'ItemElementName');
 
-        return match ($field['ItemElementName']) {
-            'Int' => (int) $field['Item'],
-            'Decimal' => (float) $field['Item'],
-            'Date', 'DateTime' => self::date($field['Item']),
-            'Keywords' => implode(', ', $field['Item']['Keyword']),
-            'Table' => self::table($field['Item']),
-            default => (string) $field['Item'],
+        return match ($itemElementName) {
+            'Int' => (int) $item,
+            'String' => (string) $item,
+            'Decimal' => (float) $item,
+            'Date', 'DateTime' => self::date($item),
+            'Keywords' => Arr::join($item['Keyword'], ', '),
+            'Table' => self::table($item),
+            default => $default,
         };
     }
 

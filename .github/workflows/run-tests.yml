@@ -14,15 +14,11 @@ jobs:
       matrix:
         os: [ ubuntu-latest, windows-latest ]
         php: [ 8.2,8.1 ]
-        laravel: [ 10.*, 9.* ]
+        laravel: [9.* ]
         stability: [ prefer-lowest, prefer-stable ]
         include:
           - laravel: 9.*
-            contracts: 9.28
             testbench: 7.*
-          - laravel: 10.*
-            contracts: 10.*
-            testbench: 8.*
 
     name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.stability }} - ${{ matrix.os }}
 
@@ -44,7 +40,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" "illuminate/contracts:${{ matrix.contracts }}" --no-interaction --no-update
+          composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update
           composer update --${{ matrix.stability }} --prefer-dist --no-interaction
 
       - name: Execute tests

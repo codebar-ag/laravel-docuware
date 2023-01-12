@@ -6,7 +6,6 @@ All notable changes to `laravel-docuware` will be documented in this file.
 ### General
 - Dropped support below PHP 8.1
 - Dropped Support below Laravel 9.0
-- Added Support for Laravel 10.0
 
 ### DocuWare
 - Added dynamic timeout via the configuration file

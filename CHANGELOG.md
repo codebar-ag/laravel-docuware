@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-docuware` will be documented in this file.
 
+## 2.0.0
+- Added support for PHP 8.2
+- Added support for Laravel 10
+
 ## 1.3.0 - 2022-12-21
 
 - Added support for Table Fields that have been implemented in Docuware >= 7.1

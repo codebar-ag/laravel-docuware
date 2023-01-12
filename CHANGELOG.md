@@ -2,9 +2,31 @@
 
 All notable changes to `laravel-docuware` will be documented in this file.
 
-## 2.0.0
-- Added support for PHP 8.2
-- Added support for Laravel 10
+## 2.0.0 pre-release
+### General
+- Dropped support below PHP 8.1
+- Dropped Support below Laravel 9.0
+- Added Support for Laravel 10.0
+
+### DocuWare
+- Added dynamic timeout via the configuration file
+```
+ 'timeout' => env('DOCUWARE_TIMEOUT', 30),
+```
+
+- Dropped date methods dateFrom & dateUntil (**BREAKING**!)
+```
+    ->dateFrom(Carbon::create(2021, 3, 1))
+    ->dateUntil(Carbon::create(2021, 4, 1))
+```
+
+- Added a more flexible way to filter date fields
+
+```
+    ->filterDate('DWSTOREDATETIME','>=',Carbon::create(2021, 3, 1))
+    ->filterDate('DWSTOREDATETIME','<',Carbon::create(2021, 4, 1))
+```
+
 
 ## 1.3.0 - 2022-12-21
 

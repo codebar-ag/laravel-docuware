@@ -6,7 +6,6 @@ use CodebarAg\DocuWare\Facades\DocuWare;
 use CodebarAg\DocuWare\Support\Auth;
 use Illuminate\Console\Command;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Cache;
 
 class ListAuthCookie extends Command
 {
@@ -32,8 +31,9 @@ class ListAuthCookie extends Command
     public function handle()
     {
         DocuWare::login();
-        $cacheKey = 'docuware.cookies';
-        $cookie = Cache::get($cacheKey);
+
+        $cacheKey = Auth::CACHE_KEY;
+        $cookie = Auth::cookies();
         $cookieHash = Arr::get($cookie, Auth::COOKIE_NAME);
         $cookieCreationDate = Arr::get($cookie, 'CreatedAt');
 

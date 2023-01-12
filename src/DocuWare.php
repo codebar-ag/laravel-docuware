@@ -37,7 +37,7 @@ class DocuWare
 
         $response = Http::asForm()
             ->acceptJson()
-            ->timeout(config('docuware.timeout'))
+            ->timeout(config('docuware.cookie_lifetime'))
             ->post($url, [
                 'UserName' => config('docuware.credentials.username'),
                 'Password' => config('docuware.credentials.password'),

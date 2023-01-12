@@ -19,9 +19,12 @@
             "role": "Sofware-Engineer"
         },
         {
+            "name": "Faissal Wahabali",
+            "role": "Software-Developer"
+        },
+        {
             "name": "Ruslan Steiger",
             "role": "Software-Developer"
-
         }
     ],
     "require": {
@@ -69,7 +72,6 @@
             "composer/package-versions-deprecated": true,
             "phpstan/extension-installer": true,
             "pestphp/pest-plugin": true
-
         }
     },
     "extra": {

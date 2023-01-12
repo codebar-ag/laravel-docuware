@@ -110,7 +110,7 @@ return [
         'document_id' => (int) env('DOCUWARE_TESTS_DOCUMENT_ID'),
         'document_file_size_preview' => (int) env('DOCUWARE_TESTS_DOCUMENT_FILE_SIZE_PREVIEW'),
         'document_file_size' => (int) env('DOCUWARE_TESTS_DOCUMENT_FILE_SIZE'),
-        'document_ids' => json_decode(env('DOCUWARE_TESTS_DOCUMENTS_IDS')),
+        'document_ids' => json_decode(env('DOCUWARE_TESTS_DOCUMENTS_IDS', "[]")),
         'documents_file_size' => (int) env('DOCUWARE_TESTS_DOCUMENTS_FILE_SIZE'),
         'field_name' => env('DOCUWARE_TESTS_FIELD_NAME'),
     ],

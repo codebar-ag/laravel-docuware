@@ -22,10 +22,11 @@ then optimize the processes that power the core of your business.
 
 ### > = v2.0
 
-- PHP: `^8.2`
-- Laravel: `^9.*` || Laravel: `^10.*`
+- PHP: `^8.1` |`^8.2`
+- Laravel: `^9.*`
 - DocuWare Cloud Access
-- 
+-
+
 ### > = v1.2
 
 - PHP: `^8.1`
@@ -609,6 +610,7 @@ cp phpunit.xml.dist phpunit.xml
 Modify environment variables in the phpunit.xml-file:
 
 ```xml
+
 <env name="DOCUWARE_URL" value="https://domain.docuware.cloud"/>
 <env name="DOCUWARE_USERNAME" value="user@domain.test"/>
 <env name="DOCUWARE_PASSWORD" value="password"/>
@@ -649,6 +651,7 @@ Please review [our security policy](.github/SECURITY.md) on how to report securi
 ## 🙏 Credits
 
 - [Sebastian Fix](https://github.com/StanBarrows)
+- [Faissal Wahabali](https://github.com/faissaloux)
 - [Ruslan Steiger](https://github.com/SuddenlyRust)
 - [All Contributors](../../contributors)
 - [Skeleton Repository from Spatie](https://github.com/spatie/package-skeleton-laravel)

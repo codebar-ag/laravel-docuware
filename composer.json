@@ -19,24 +19,27 @@
             "role": "Sofware-Engineer"
         },
         {
+            "name": "Faissal Wahabali",
+            "role": "Software-Developer"
+        },
+        {
             "name": "Ruslan Steiger",
             "role": "Software-Developer"
-
         }
     ],
     "require": {
-        "php": "^8.2",
+        "php": "^8.1",
         "guzzlehttp/guzzle": "^7.5",
-        "illuminate/contracts": "^9.0",
+        "illuminate/contracts": "^9.0|^10.0",
         "spatie/laravel-ignition": "^1.6",
-        "spatie/laravel-package-tools": "^1.13.0",
+        "spatie/laravel-package-tools": "^1.14.0",
         "nesbot/carbon": "^2.64.0"
     },
     "require-dev": {
-        "laravel/pint": "^1.3",
+        "laravel/pint": "^1.0",
         "nunomaduro/collision": "^6.0",
-        "nunomaduro/larastan": "^2.0",
-        "orchestra/testbench": "^7.0",
+        "nunomaduro/larastan": "^2.0.1",
+        "orchestra/testbench": "^7.7|^8.0",
         "pestphp/pest": "^1.21",
         "pestphp/pest-plugin-laravel": "^1.1",
         "pestphp/pest-plugin-parallel": "^1.2",
@@ -57,10 +60,11 @@
         }
     },
     "scripts": {
-        "psalm": "vendor/bin/psalm",
-        "test": "./vendor/bin/testbench package:test --no-coverage",
-        "test-coverage": "vendor/bin/pest --coverage-html coverage",
-        "format": "vendor/bin/php-cs-fixer fix --allow-risky=yes"
+        "post-autoload-dump": "@php ./vendor/bin/testbench package:discover --ansi",
+        "analyse": "vendor/bin/phpstan analyse",
+        "test": "vendor/bin/pest",
+        "test-coverage": "vendor/bin/pest --coverage",
+        "format": "vendor/bin/pint"
     },
     "config": {
         "sort-packages": true,
@@ -68,7 +72,6 @@
             "composer/package-versions-deprecated": true,
             "phpstan/extension-installer": true,
             "pestphp/pest-plugin": true
-
         }
     },
     "extra": {

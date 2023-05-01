@@ -20,7 +20,6 @@ final class Document
             ? self::convertFields(collect(Arr::get($data, 'Fields')))
             : null;
 
-
         return new self(
             id: $data['Id'],
             file_size: $data['FileSize'],
@@ -52,20 +51,19 @@ final class Document
     }
 
     public function __construct(
-        public int             $id,
-        public int             $file_size,
-        public int             $total_pages,
-        public string          $title,
-        public string|null     $extension,
-        public string          $content_type,
-        public string          $file_cabinet_id,
-        public string|null     $intellixTrust,
-        public Carbon          $created_at,
-        public Carbon          $updated_at,
+        public int $id,
+        public int $file_size,
+        public int $total_pages,
+        public string $title,
+        public string|null $extension,
+        public string $content_type,
+        public string $file_cabinet_id,
+        public string|null $intellixTrust,
+        public Carbon $created_at,
+        public Carbon $updated_at,
         public Collection|null $fields,
         public Collection|null $suggestions,
-    )
-    {
+    ) {
     }
 
     public function isPdf(): bool
@@ -107,35 +105,34 @@ final class Document
     }
 
     public static function fake(
-        ?int        $id = null,
-        ?int        $file_size = null,
-        ?int        $total_pages = null,
-        ?string     $title = null,
-        ?string     $extension = null,
-        ?string     $content_type = null,
-        ?string     $file_cabinet_id = null,
-        ?string     $intellixTrust = null,
-        ?Carbon     $created_at = null,
-        ?Carbon     $updated_at = null,
+        ?int $id = null,
+        ?int $file_size = null,
+        ?int $total_pages = null,
+        ?string $title = null,
+        ?string $extension = null,
+        ?string $content_type = null,
+        ?string $file_cabinet_id = null,
+        ?string $intellixTrust = null,
+        ?Carbon $created_at = null,
+        ?Carbon $updated_at = null,
         ?Collection $fields = null,
         ?Collection $suggestions = null,
-    ): self
-    {
-        return new static(
+    ): self {
+        return new self(
             id: $id ?? random_int(1, 999999),
             file_size: $file_size ?? random_int(1000, 999999),
             total_pages: $total_pages ?? random_int(1, 100),
             title: $title ?? 'Fake Title',
             extension: $extension ?? '.pdf',
             content_type: $content_type ?? 'application/pdf',
-            file_cabinet_id: $file_cabinet_id ?? (string)Str::uuid(),
+            file_cabinet_id: $file_cabinet_id ?? (string) Str::uuid(),
             intellixTrust: $intellixTrust ?? 'Red',
             created_at: $created_at ?? now()->subDay(),
             updated_at: $updated_at ?? now(),
             fields: $fields ?? collect([
-            DocumentField::fake(),
-            DocumentField::fake(),
-        ]),
+                DocumentField::fake(),
+                DocumentField::fake(),
+            ]),
             suggestions: $suggestions ?? null
         );
     }

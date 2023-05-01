@@ -17,21 +17,19 @@ final class SuggestionField
     }
 
     public function __construct(
-        public array       $value,
+        public array $value,
         public string|null $name,
         public string|null $db_name,
         public string|null $confidence,
-    )
-    {
+    ) {
     }
 
     public static function fake(
-        array   $value = [],
+        array $value = [],
         ?string $name = null,
         ?string $db_name = null,
         ?string $confidence = null,
-    ): self
-    {
+    ): self {
         return new self(
             value: $value ?? [],
             name: $name ?? 'Fake Name',

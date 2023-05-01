@@ -4,6 +4,7 @@ namespace CodebarAg\DocuWare\DTO;
 
 use Carbon\Carbon;
 use CodebarAg\DocuWare\Support\ParseValue;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 
@@ -11,7 +12,13 @@ final class Document
 {
     public static function fromJson(array $data): self
     {
-        $fields = self::convertFields(collect($data['Fields']));
+        $suggestions = Arr::has($data, 'Suggestions')
+            ? self::convertSuggestions(collect(Arr::get($data, 'Suggestions')))
+            : null;
+
+        $fields = Arr::has($data, 'Fields')
+            ? self::convertFields(collect(Arr::get($data, 'Fields')))
+            : null;
 
         return new self(
             id: $data['Id'],
@@ -21,9 +28,11 @@ final class Document
             extension: $fields['DWEXTENSION']->value,
             content_type: $data['ContentType'],
             file_cabinet_id: $data['FileCabinetId'],
+            intellixTrust: Arr::get($data, 'IntellixTrust'),
             created_at: ParseValue::date($data['CreatedAt']),
             updated_at: ParseValue::date($data['LastModified']),
             fields: $fields,
+            suggestions: $suggestions,
         );
     }
 
@@ -31,6 +40,13 @@ final class Document
     {
         return $fields->mapWithKeys(function (array $field) {
             return [$field['FieldName'] => DocumentField::fromJson($field)];
+        });
+    }
+
+    protected static function convertSuggestions(Collection $suggestions): Collection|null
+    {
+        return $suggestions->mapWithKeys(function (array $suggestion) {
+            return [$suggestion['DBName'] => SuggestionField::fromJson($suggestion)];
         });
     }
 
@@ -42,9 +58,11 @@ final class Document
         public string|null $extension,
         public string $content_type,
         public string $file_cabinet_id,
+        public string|null $intellixTrust,
         public Carbon $created_at,
         public Carbon $updated_at,
-        public Collection $fields,
+        public Collection|null $fields,
+        public Collection|null $suggestions,
     ) {
     }
 
@@ -94,11 +112,13 @@ final class Document
         ?string $extension = null,
         ?string $content_type = null,
         ?string $file_cabinet_id = null,
+        ?string $intellixTrust = null,
         ?Carbon $created_at = null,
         ?Carbon $updated_at = null,
         ?Collection $fields = null,
+        ?Collection $suggestions = null,
     ): self {
-        return new static(
+        return new self(
             id: $id ?? random_int(1, 999999),
             file_size: $file_size ?? random_int(1000, 999999),
             total_pages: $total_pages ?? random_int(1, 100),
@@ -106,12 +126,14 @@ final class Document
             extension: $extension ?? '.pdf',
             content_type: $content_type ?? 'application/pdf',
             file_cabinet_id: $file_cabinet_id ?? (string) Str::uuid(),
+            intellixTrust: $intellixTrust ?? 'Red',
             created_at: $created_at ?? now()->subDay(),
             updated_at: $updated_at ?? now(),
             fields: $fields ?? collect([
                 DocumentField::fake(),
                 DocumentField::fake(),
             ]),
+            suggestions: $suggestions ?? null
         );
     }
 }

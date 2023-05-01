@@ -40,7 +40,7 @@ final class Field
         ?string $type = null,
         ?string $scope = null,
     ): self {
-        return new static(
+        return new self(
             name: $name ?? 'FAKE_FIELD',
             label: $label ?? 'Fake Field',
             type: Arr::random(['Text', 'Memo', 'Numeric', 'Decimal', 'Date', 'DateTime', 'Keyword']),

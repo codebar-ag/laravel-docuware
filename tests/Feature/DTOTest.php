@@ -8,6 +8,7 @@ use CodebarAg\DocuWare\DTO\DocumentField;
 use CodebarAg\DocuWare\DTO\DocumentPaginator;
 use CodebarAg\DocuWare\DTO\Field;
 use CodebarAg\DocuWare\DTO\FileCabinet;
+use CodebarAg\DocuWare\DTO\SuggestionField;
 use CodebarAg\DocuWare\DTO\TableRow;
 
 uses()->group('dto');
@@ -33,6 +34,12 @@ it('create a fake document field', function () {
     $fake = DocumentField::fake();
 
     $this->assertInstanceOf(DocumentField::class, $fake);
+});
+
+it('create a fake suggestion field', function () {
+    $fake = SuggestionField::fake();
+
+    $this->assertInstanceOf(SuggestionField::class, $fake);
 });
 
 it('create a fake document', function () {

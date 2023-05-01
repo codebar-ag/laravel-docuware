@@ -99,7 +99,7 @@ class DocuWare
 
         $cabinets = $response->throw()->json('FileCabinet');
 
-        return collect($cabinets)->map(fn(array $cabinet) => FileCabinet::fromJson($cabinet));
+        return collect($cabinets)->map(fn (array $cabinet) => FileCabinet::fromJson($cabinet));
     }
 
     public function getFields(string $fileCabinetId): Collection
@@ -123,7 +123,7 @@ class DocuWare
 
         $fields = $response->throw()->json('Fields');
 
-        return collect($fields)->map(fn(array $field) => Field::fromJson($field));
+        return collect($fields)->map(fn (array $field) => Field::fromJson($field));
     }
 
     public function getDialogs(string $fileCabinetId): Collection
@@ -147,15 +147,14 @@ class DocuWare
 
         $dialogs = $response->throw()->json('Dialog');
 
-        return collect($dialogs)->map(fn(array $dialog) => Dialog::fromJson($dialog));
+        return collect($dialogs)->map(fn (array $dialog) => Dialog::fromJson($dialog));
     }
 
     public function getSelectList(
         string $fileCabinetId,
         string $dialogId,
         string $fieldName,
-    ): array
-    {
+    ): array {
         EnsureValidCookie::check();
 
         $url = sprintf(
@@ -207,9 +206,8 @@ class DocuWare
 
     public function getDocumentPreview(
         string $fileCabinetId,
-        int    $documentId,
-    ): string
-    {
+        int $documentId,
+    ): string {
         EnsureValidCookie::check();
 
         $url = sprintf(
@@ -233,9 +231,8 @@ class DocuWare
 
     public function downloadDocument(
         string $fileCabinetId,
-        int    $documentId,
-    ): string
-    {
+        int $documentId,
+    ): string {
         EnsureValidCookie::check();
 
         $url = sprintf(
@@ -259,9 +256,8 @@ class DocuWare
 
     public function downloadDocuments(
         string $fileCabinetId,
-        array  $documentIds,
-    ): string
-    {
+        array $documentIds,
+    ): string {
         EnsureValidCookie::check();
 
         throw_if(
@@ -294,11 +290,10 @@ class DocuWare
 
     public function updateDocumentValue(
         string $fileCabinetId,
-        int    $documentId,
+        int $documentId,
         string $fieldName,
         string $newValue,
-    ): null|int|float|Carbon|string
-    {
+    ): null|int|float|Carbon|string {
         EnsureValidCookie::check();
 
         $url = sprintf(
@@ -332,12 +327,11 @@ class DocuWare
     }
 
     public function uploadDocument(
-        string      $fileCabinetId,
-        string      $fileContent,
-        string      $fileName,
+        string $fileCabinetId,
+        string $fileContent,
+        string $fileName,
         ?Collection $indexes = null,
-    ): Document
-    {
+    ): Document {
         EnsureValidCookie::check();
 
         $url = sprintf(
@@ -370,9 +364,8 @@ class DocuWare
 
     public function deleteDocument(
         string $fileCabinetId,
-        int    $documentId,
-    ): void
-    {
+        int $documentId,
+    ): void {
         EnsureValidCookie::check();
 
         $url = sprintf(

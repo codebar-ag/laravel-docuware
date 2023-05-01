@@ -39,7 +39,7 @@ final class Dialog
         ?bool $isDefault = null,
         ?string $fileCabinetId = null,
     ): self {
-        return new static(
+        return new self(
             id: $id ?? (string) Str::uuid(),
             type: $type ?? Arr::random(['Search', 'Store', 'ResultList', 'InfoDialog']),
             label: $label ?? 'Fake Dialog',

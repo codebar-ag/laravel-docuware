@@ -345,7 +345,10 @@ class DocuWare
         if ($indexes) {
             $indexContent = DocumentIndex::makeContent($indexes);
 
+            ray($indexContent);
+
             $request->attach('document', $indexContent, 'index.json');
+
         }
 
         $response = $request->attach('file', $fileContent, $fileName)

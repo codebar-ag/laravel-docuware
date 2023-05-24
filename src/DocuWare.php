@@ -199,8 +199,6 @@ class DocuWare
 
         $data = $response->throw()->json();
 
-        ray($data, 'getDocument');
-
         return Document::fromJson($data);
     }
 

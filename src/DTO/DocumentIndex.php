@@ -57,7 +57,7 @@ class DocumentIndex
     {
         return match ($type) {
             'Int' => (int) $value,
-            'String' => (string) $value,
+            'String' => html_entity_decode($value),
             'Decimal' => (float) $value,
             'Table' => self::table($value),
             default => null,
@@ -80,19 +80,22 @@ class DocumentIndex
         $values = Arr::get($value, 'VALUES', []);
         $fields = Arr::get($value, 'FIELDS', []);
 
-        $rows = collect($values)->map(function ($item) use ($fields) {
+        $rows = collect();
+
+        collect($values)->each(function ($item) use ($fields, $rows) {
 
             if (Arr::get($item, 'LineItemType') != 'NORMAL') {
-                return null;
+                return;
             }
 
-            return self::row($fields, $item);
-        })->filter()->toArray();
+            $rows->push(self::row($fields, $item));
+        })->toArray();
 
         return [
             '$type' => 'DocumentIndexFieldTable',
             'Row' => $rows,
         ];
+
     }
 
     protected function row(array $fields, array $values)

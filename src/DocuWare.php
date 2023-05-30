@@ -199,8 +199,6 @@ class DocuWare
 
         $data = $response->throw()->json();
 
-        ray($data, 'getDocument');
-
         return Document::fromJson($data);
     }
 
@@ -344,8 +342,8 @@ class DocuWare
 
         if ($indexes) {
             $indexContent = DocumentIndex::makeContent($indexes);
-
             $request->attach('document', $indexContent, 'index.json');
+
         }
 
         $response = $request->attach('file', $fileContent, $fileName)

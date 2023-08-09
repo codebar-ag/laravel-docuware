@@ -18,6 +18,7 @@ class Auth
 
     public static function store(CookieJar $cookies): void
     {
+
         $cookie = collect($cookies->toArray())
             ->reject(fn (array $cookie) => $cookie['Value'] === '')
             ->firstWhere('Name', self::COOKIE_NAME);
@@ -35,11 +36,12 @@ class Auth
 
     public static function cookies(): ?array
     {
-        if (config('docuware.cookies')) {
-            return [self::COOKIE_NAME => config('docuware.cookies')];
-        }
-
         return Cache::driver(self::cacheDriver())->get(self::CACHE_KEY);
+    }
+
+    public static function cookieJar(): CookieJar
+    {
+        return CookieJar::fromArray(self::cookies(), self::domain());
     }
 
     public static function cookieDate(): string

@@ -11,11 +11,15 @@ use CodebarAg\DocuWare\DTO\FileCabinet;
 use CodebarAg\DocuWare\Events\DocuWareResponseLog;
 use CodebarAg\DocuWare\Exceptions\UnableToDownloadDocuments;
 use CodebarAg\DocuWare\Exceptions\UnableToLogin;
+use CodebarAg\DocuWare\Exceptions\UnableToLoginNoCookies;
+use CodebarAg\DocuWare\Exceptions\UnableToLogout;
+use CodebarAg\DocuWare\Requests\LogonRequest;
 use CodebarAg\DocuWare\Support\Auth;
 use CodebarAg\DocuWare\Support\EnsureValidCookie;
 use CodebarAg\DocuWare\Support\EnsureValidCredentials;
 use CodebarAg\DocuWare\Support\EnsureValidResponse;
 use CodebarAg\DocuWare\Support\ParseValue;
+use GuzzleHttp\Cookie\CookieJar;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
 use Symfony\Component\HttpFoundation\Response;
@@ -25,52 +29,45 @@ class DocuWare
     public function login(): void
     {
         if (config('docuware.cookies')) {
+            Auth::store(
+                CookieJar::fromArray(
+                    [Auth::COOKIE_NAME => config('docuware.cookies')],
+                    config('docuware.credentials.url'),
+                ),
+            );
+
             return;
         }
 
         EnsureValidCredentials::check();
 
-        $url = sprintf(
-            '%s/DocuWare/Platform/Account/Logon',
-            config('docuware.credentials.url'),
-        );
+        $jar = new CookieJar;
 
-        $response = Http::asForm()
-            ->acceptJson()
-            ->timeout(config('docuware.timeout'))
-            ->post($url, [
-                'UserName' => config('docuware.credentials.username'),
-                'Password' => config('docuware.credentials.password'),
-            ]);
+        $connection = new DocuWareConnector();
+        $request = new LogonRequest();
+
+        $request->config()->add('cookies', $jar);
+        $response = $connection->send($request);
 
         event(new DocuWareResponseLog($response));
 
-        throw_if(
-            $response->status() === Response::HTTP_UNAUTHORIZED,
-            UnableToLogin::create(),
-        );
+        throw_if($response->status() === Response::HTTP_UNAUTHORIZED, UnableToLogin::create());
+        throw_if($jar->toArray() === [], UnableToLoginNoCookies::create());
 
-        $cookies = $response->throw()->cookies();
-
-        Auth::store($cookies);
+        Auth::store($jar);
     }
 
     public function logout(): void
     {
-        if (config('docuware.cookies')) {
-            return;
-        }
+        throw_if(config('docuware.cookies'), UnableToLogout::create());
 
         EnsureValidCookie::check();
 
-        $url = sprintf(
-            '%s/DocuWare/Platform/Account/Logoff',
-            config('docuware.credentials.url'),
-        );
+        $connection = new DocuWareConnector();
+        $request = new LogonRequest();
 
-        $response = Http::withCookies(Auth::cookies(), Auth::domain())
-            ->timeout(config('docuware.timeout'))
-            ->get($url);
+        $request->config()->add('cookies', Auth::cookieJar());
+        $response = $connection->send($request);
 
         event(new DocuWareResponseLog($response));
 

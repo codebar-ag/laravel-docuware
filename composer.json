@@ -32,6 +32,7 @@
         "guzzlehttp/guzzle": "^7.5",
         "illuminate/contracts": "^9.0|^10.0",
         "nesbot/carbon": "^2.64.0",
+        "sammyjo20/saloon-laravel": "^2.0",
         "spatie/laravel-package-tools": "^1.14.0"
     },
     "require-dev": {

@@ -48,4 +48,3 @@ it('can logout with a cookie', function () {
 
     DocuWare::logout();
 })->doesNotPerformAssertions();
-

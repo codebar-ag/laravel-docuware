@@ -325,7 +325,7 @@ class DocuWare
         string $fileCabinetId,
         string $fileContent,
         string $fileName,
-        ?Collection $indexes = null,
+        Collection $indexes = null,
     ): Document {
         EnsureValidCookie::check();
 

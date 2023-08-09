@@ -64,7 +64,7 @@ class DocumentIndex
         };
     }
 
-    protected function type(string $type): string|null
+    protected function type(string $type): ?string
     {
         return match ($type) {
             'integer' => 'Int',

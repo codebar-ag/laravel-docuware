@@ -6,7 +6,6 @@ use Saloon\Contracts\Body\HasBody;
 use Saloon\Enums\Method;
 use Saloon\Http\Request;
 use Saloon\Traits\Body\HasFormBody;
-use Saloon\Traits\Body\HasJsonBody;
 
 class LogonRequest extends Request implements HasBody
 {

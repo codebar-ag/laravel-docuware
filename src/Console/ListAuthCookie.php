@@ -44,7 +44,7 @@ class ListAuthCookie extends Command
             $this->info($cookieHash);
             if ($this->option('with-date')) {
                 $this->newLine();
-                $this->info("created at: {$cookieCreationDate}");
+                $this->info("Created At: {$cookieCreationDate}");
             }
         }
 

@@ -35,7 +35,7 @@ it('can authenticate with no cookie', function () {
     expect(Auth::cookies()[Auth::COOKIE_NAME])->not->toBe('foo');
 })->group('authorization');
 
-it('can not logout with a cookie', function () {
+it('cant logout with a cookie', function () {
     if (config('docuware.cookies') === '') {
         $this->markTestSkipped('No cookie configured');
     }

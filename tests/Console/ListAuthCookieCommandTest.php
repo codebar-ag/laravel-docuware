@@ -10,9 +10,9 @@ uses()->group('console');
 
 beforeEach(function () {
     Auth::forget();
-//    EnsureValidCookie::check();
+    //    EnsureValidCookie::check();
 
-    if (! Arr::get(Auth::cookies(), Auth::COOKIE_NAME)){
+    if (! Arr::get(Auth::cookies(), Auth::COOKIE_NAME)) {
         $this->markTestIncomplete('No cookie configured');
     }
 });

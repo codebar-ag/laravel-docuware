@@ -2,6 +2,7 @@
 
 namespace CodebarAg\DocuWare;
 
+use CodebarAg\DocuWare\Support\Auth;
 use CodebarAg\DocuWare\Support\EnsureValidCredentials;
 use Saloon\Http\Connector;
 
@@ -31,6 +32,7 @@ class DocuWareConnector extends Connector
     {
         return [
             'timeout' => config('docuware.timeout'),
+            'cookies', Auth::cookieJar(),
         ];
     }
 }

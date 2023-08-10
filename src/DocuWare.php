@@ -41,12 +41,14 @@ class DocuWare
 
         EnsureValidCredentials::check();
 
-        $jar = new CookieJar;
+        $jar = new CookieJar();
 
         $connection = new DocuWareConnector();
-        $request = new LogonRequest();
+        $connection->config()->remove('cookies');
 
+        $request = new LogonRequest();
         $request->config()->add('cookies', $jar);
+
         $response = $connection->send($request);
 
         event(new DocuWareResponseLog($response));
@@ -66,7 +68,6 @@ class DocuWare
         $connection = new DocuWareConnector();
         $request = new LogonRequest();
 
-        $request->config()->add('cookies', Auth::cookieJar());
         $response = $connection->send($request);
 
         event(new DocuWareResponseLog($response));

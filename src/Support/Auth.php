@@ -18,7 +18,6 @@ class Auth
 
     public static function store(CookieJar $cookies): void
     {
-
         $cookie = collect($cookies->toArray())
             ->reject(fn (array $cookie) => $cookie['Value'] === '')
             ->firstWhere('Name', self::COOKIE_NAME);
@@ -41,6 +40,10 @@ class Auth
 
     public static function cookieJar(): CookieJar
     {
+        if (! self::cookies()) {
+            return new CookieJar();
+        }
+
         return CookieJar::fromArray(self::cookies(), self::domain());
     }
 

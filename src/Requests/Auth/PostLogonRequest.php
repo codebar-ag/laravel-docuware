@@ -1,13 +1,13 @@
 <?php
 
-namespace CodebarAg\DocuWare\Requests;
+namespace CodebarAg\DocuWare\Requests\Auth;
 
 use Saloon\Contracts\Body\HasBody;
 use Saloon\Enums\Method;
 use Saloon\Http\Request;
 use Saloon\Traits\Body\HasFormBody;
 
-class LogoffRequest extends Request implements HasBody
+class PostLogonRequest extends Request implements HasBody
 {
     use HasFormBody;
 
@@ -15,7 +15,7 @@ class LogoffRequest extends Request implements HasBody
 
     public function resolveEndpoint(): string
     {
-        return '/Account/Logoff';
+        return '/Account/Logon';
     }
 
     protected function defaultBody(): array

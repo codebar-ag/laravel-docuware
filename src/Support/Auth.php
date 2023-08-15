@@ -38,10 +38,10 @@ class Auth
         return Cache::driver(self::cacheDriver())->get(self::CACHE_KEY);
     }
 
-    public static function cookieJar(): CookieJar
+    public static function cookieJar(): ?CookieJar
     {
         if (! self::cookies()) {
-            return new CookieJar();
+            return null;
         }
 
         return CookieJar::fromArray(self::cookies(), self::domain());

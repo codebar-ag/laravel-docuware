@@ -21,7 +21,7 @@ class DocuWareConnector extends Connector
         return config('docuware.credentials.url').'/DocuWare/Platform';
     }
 
-    protected function defaultHeaders(): array
+    public function defaultHeaders(): array
     {
         return [
             'Accept' => 'application/json',
@@ -32,7 +32,7 @@ class DocuWareConnector extends Connector
     {
         return [
             'timeout' => config('docuware.timeout'),
-            'cookies', Auth::cookieJar(),
+            'cookies' => Auth::cookieJar(),
         ];
     }
 }

@@ -5,11 +5,12 @@ namespace CodebarAg\DocuWare\Support;
 use CodebarAg\DocuWare\Exceptions\UnableToMakeRequest;
 use CodebarAg\DocuWare\Exceptions\UnableToProcessRequest;
 use Illuminate\Http\Client\Response;
+use Saloon\Http\Response as SaloonResponse;
 use Symfony\Component\HttpFoundation\Response as Status;
 
 class EnsureValidResponse
 {
-    public static function from(Response $response): void
+    public static function from(Response|SaloonResponse $response): void
     {
         if ($response->successful()) {
             return;

@@ -15,10 +15,6 @@ beforeEach(function () {
 });
 
 it('can authenticate with a cookie', function () {
-    if (config('docuware.cookies') === '') {
-        $this->markTestSkipped('No cookie configured');
-    }
-
     EnsureValidCookie::check();
 
     expect(Auth::cookies())->toHaveKey(Auth::COOKIE_NAME);
@@ -36,10 +32,6 @@ it('can authenticate with no cookie', function () {
 })->group('authorization');
 
 it('cant logout with a cookie', function () {
-    if (config('docuware.cookies') === '') {
-        $this->markTestSkipped('No cookie configured');
-    }
-
     DocuWare::logout();
 })->throws(UnableToLogout::class);
 

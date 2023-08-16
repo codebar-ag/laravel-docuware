@@ -29,10 +29,6 @@ it('can list file cabinets', function () {
 });
 
 it('can list fields for a file cabinet', function () {
-    if (! config('docuware.tests.file_cabinet_id')) {
-        $this->markTestIncomplete('No file cabinet configured');
-    }
-
     Event::fake();
 
     $fileCabinetId = config('docuware.tests.file_cabinet_id');
@@ -45,14 +41,6 @@ it('can list fields for a file cabinet', function () {
 });
 
 it('can list values for a select list', function () {
-    if (! config('docuware.tests.file_cabinet_id')) {
-        $this->markTestIncomplete('No file cabinet configured');
-    }
-
-    if (! config('docuware.tests.dialog_id')) {
-        $this->markTestIncomplete('No dialog configured');
-    }
-
     Event::fake();
 
     $fileCabinetId = config('docuware.tests.file_cabinet_id');
@@ -70,10 +58,6 @@ it('can list values for a select list', function () {
 });
 
 it('can list dialogs for a file cabinet', function () {
-    if (! config('docuware.tests.file_cabinet_id')) {
-        $this->markTestIncomplete('No file cabinet configured');
-    }
-
     Event::fake();
 
     $fileCabinetId = config('docuware.tests.file_cabinet_id');
@@ -86,18 +70,6 @@ it('can list dialogs for a file cabinet', function () {
 });
 
 it('can preview a document image', function () {
-    if (! config('docuware.tests.file_cabinet_id')) {
-        $this->markTestIncomplete('No file cabinet configured');
-    }
-
-    if (! config('docuware.tests.document_id')) {
-        $this->markTestIncomplete('No document configured');
-    }
-
-    if (! config('docuware.tests.document_file_size_preview')) {
-        $this->markTestIncomplete('No document file size configured');
-    }
-
     Event::fake();
 
     $fileCabinetId = config('docuware.tests.file_cabinet_id');
@@ -113,14 +85,6 @@ it('can preview a document image', function () {
 });
 
 it('can show a document', function () {
-    if (! config('docuware.tests.file_cabinet_id')) {
-        $this->markTestIncomplete('No file cabinet configured');
-    }
-
-    if (! config('docuware.tests.document_id')) {
-        $this->markTestIncomplete('No document configured');
-    }
-
     Event::fake();
 
     $fileCabinetId = config('docuware.tests.file_cabinet_id');
@@ -138,14 +102,6 @@ it('can show a document', function () {
 });
 
 it('can update a document value', function () {
-    if (! config('docuware.tests.file_cabinet_id')) {
-        $this->markTestIncomplete('No file cabinet configured');
-    }
-
-    if (! config('docuware.tests.document_id')) {
-        $this->markTestIncomplete('No document configured');
-    }
-
     if (! config('docuware.tests.field_name')) {
         $this->markTestIncomplete('No field name configured');
     }
@@ -169,14 +125,6 @@ it('can update a document value', function () {
 });
 
 it('can download multiple documents', function () {
-    if (! config('docuware.tests.file_cabinet_id')) {
-        $this->markTestIncomplete('No file cabinet configured');
-    }
-
-    if (! config('docuware.tests.document_id')) {
-        $this->markTestIncomplete('No document configured');
-    }
-
     if (! config('docuware.tests.documents_file_size')) {
         $this->markTestIncomplete('No documents file size configured');
     }
@@ -196,14 +144,6 @@ it('can download multiple documents', function () {
 });
 
 it('can download a document', function () {
-    if (! config('docuware.tests.file_cabinet_id')) {
-        $this->markTestIncomplete('No file cabinet configured');
-    }
-
-    if (! config('docuware.tests.document_id')) {
-        $this->markTestIncomplete('No document configured');
-    }
-
     if (! config('docuware.tests.documents_file_size')) {
         $this->markTestIncomplete('No documents file size configured');
     }
@@ -223,14 +163,6 @@ it('can download a document', function () {
 });
 
 it('can search documents', function () {
-    if (! config('docuware.tests.file_cabinet_id')) {
-        $this->markTestIncomplete('No file cabinet configured');
-    }
-
-    if (! config('docuware.tests.dialog_id')) {
-        $this->markTestIncomplete('No dialog configured');
-    }
-
     Event::fake();
 
     $fileCabinetId = config('docuware.tests.file_cabinet_id');
@@ -254,14 +186,6 @@ it('can search documents', function () {
 })->group('search');
 
 it('can\'t search documents by more than two dates', function () {
-    if (! config('docuware.tests.file_cabinet_id')) {
-        $this->markTestIncomplete('No file cabinet configured');
-    }
-
-    if (! config('docuware.tests.dialog_id')) {
-        $this->markTestIncomplete('No dialog configured');
-    }
-
     Event::fake();
 
     $fileCabinetId = config('docuware.tests.file_cabinet_id');
@@ -285,14 +209,6 @@ it('can\'t search documents by more than two dates', function () {
 })->group('search');
 
 it('can override search documents dates filter by using same operator', function () {
-    if (! config('docuware.tests.file_cabinet_id')) {
-        $this->markTestIncomplete('No file cabinet configured');
-    }
-
-    if (! config('docuware.tests.dialog_id')) {
-        $this->markTestIncomplete('No dialog configured');
-    }
-
     Event::fake();
 
     $fileCabinetId = config('docuware.tests.file_cabinet_id');
@@ -317,14 +233,6 @@ it('can override search documents dates filter by using same operator', function
 })->group('search');
 
 it('can override search documents dates filter by using equal operator', function () {
-    if (! config('docuware.tests.file_cabinet_id')) {
-        $this->markTestIncomplete('No file cabinet configured');
-    }
-
-    if (! config('docuware.tests.dialog_id')) {
-        $this->markTestIncomplete('No dialog configured');
-    }
-
     Event::fake();
 
     $fileCabinetId = config('docuware.tests.file_cabinet_id');
@@ -348,14 +256,6 @@ it('can override search documents dates filter by using equal operator', functio
 })->group('search');
 
 it('can\'t search documents by diverged date range', function () {
-    if (! config('docuware.tests.file_cabinet_id')) {
-        $this->markTestIncomplete('No file cabinet configured');
-    }
-
-    if (! config('docuware.tests.dialog_id')) {
-        $this->markTestIncomplete('No dialog configured');
-    }
-
     Event::fake();
 
     $fileCabinetId = config('docuware.tests.file_cabinet_id');
@@ -378,14 +278,6 @@ it('can\'t search documents by diverged date range', function () {
 })->group('search');
 
 it('can search documents dates filter in future', function () {
-    if (! config('docuware.tests.file_cabinet_id')) {
-        $this->markTestIncomplete('No file cabinet configured');
-    }
-
-    if (! config('docuware.tests.dialog_id')) {
-        $this->markTestIncomplete('No dialog configured');
-    }
-
     Event::fake();
 
     $fileCabinetId = config('docuware.tests.file_cabinet_id');
@@ -408,14 +300,6 @@ it('can search documents dates filter in future', function () {
 })->group('search');
 
 it('can search documents dates filter in past', function () {
-    if (! config('docuware.tests.file_cabinet_id')) {
-        $this->markTestIncomplete('No file cabinet configured');
-    }
-
-    if (! config('docuware.tests.dialog_id')) {
-        $this->markTestIncomplete('No dialog configured');
-    }
-
     Event::fake();
 
     $fileCabinetId = config('docuware.tests.file_cabinet_id');
@@ -438,10 +322,6 @@ it('can search documents dates filter in past', function () {
 })->group('search');
 
 it('can upload document with index values and delete it', function () {
-    if (! config('docuware.tests.file_cabinet_id')) {
-        $this->markTestIncomplete('No file cabinet configured');
-    }
-
     Event::fake();
 
     $fileCabinetId = config('docuware.tests.file_cabinet_id');
@@ -469,14 +349,6 @@ it('can upload document with index values and delete it', function () {
 });
 
 it('can create encrypted url for a document in a file cabinet', function () {
-    if (! config('docuware.tests.file_cabinet_id')) {
-        $this->markTestIncomplete('No file cabinet configured');
-    }
-
-    if (! config('docuware.tests.document_id')) {
-        $this->markTestIncomplete('No document configured');
-    }
-
     Event::fake();
 
     $fileCabinetId = config('docuware.tests.file_cabinet_id');
@@ -501,10 +373,6 @@ it('can create encrypted url for a document in a file cabinet', function () {
 });
 
 it('can search documents with null values', function () {
-    if (! config('docuware.tests.file_cabinet_id')) {
-        $this->markTestIncomplete('No file cabinet configured');
-    }
-
     Event::fake();
 
     $fileCabinetIds = [
@@ -528,10 +396,6 @@ it('can search documents with null values', function () {
 it('can create encrypted url for a document in a basket', function () {
     if (! config('docuware.tests.basket_id')) {
         $this->markTestIncomplete('No basket configured');
-    }
-
-    if (! config('docuware.tests.document_id')) {
-        $this->markTestIncomplete('No document configured');
     }
 
     Event::fake();

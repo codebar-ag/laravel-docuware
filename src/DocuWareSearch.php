@@ -137,16 +137,6 @@ class DocuWareSearch
         $this->restructureMonoDateFilterRange();
         $this->guard();
 
-        //        $url = sprintf(
-        //            '%s/DocuWare/Platform/FileCabinets/%s/Query/DialogExpression',
-        //            config('docuware.credentials.url'),
-        //            $this->fileCabinetId,
-        //        );
-        //
-        //        if ($this->dialogId) {
-        //            $url .= "?dialogId={$this->dialogId}";
-        //        }
-
         $condition = [];
 
         if (Str::length($this->searchTerm) >= 1) {
@@ -166,26 +156,6 @@ class DocuWareSearch
                 'Value' => $value,
             ];
         }
-
-        //        $response = Http::acceptJson()
-        //            ->withCookies(Auth::cookies(), Auth::domain())
-        //            ->timeout(config('docuware.timeout'))
-        //            ->post($url, [
-        //                'Count' => $this->perPage,
-        //                'Start' => ($this->page - 1) * $this->perPage,
-        //                'Condition' => $condition,
-        //                'AdditionalCabinets' => $this->additionalFileCabinetIds,
-        //                'SortOrder' => [
-        //                    [
-        //                        'Field' => $this->orderField,
-        //                        'Direction' => $this->orderDirection,
-        //                    ],
-        //                ],
-        //                'Operation' => config('docuware.configurations.search.operation', 'And'),
-        //                'ForceRefresh' => config('docuware.configurations.search.force_refresh', true),
-        //                'IncludeSuggestions' => config('docuware.configurations.search.include_suggestions', false),
-        //                'AdditionalResultFields' => config('docuware.configurations.search.additional_result_fields', []),
-        //            ]);
 
         $connection = new DocuWareConnector();
         $request = new GetSearchRequest(

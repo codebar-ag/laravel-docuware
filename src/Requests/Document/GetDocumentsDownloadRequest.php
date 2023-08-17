@@ -5,13 +5,14 @@ namespace CodebarAg\DocuWare\Requests\Document;
 use Saloon\Enums\Method;
 use Saloon\Http\Request;
 
-class GetDocumentDownloadRequest extends Request
+class GetDocumentsDownloadRequest extends Request
 {
     protected Method $method = Method::GET;
 
     public function __construct(
         protected readonly string $fileCabinetId,
         protected readonly string $documentId,
+        protected readonly array $additionalDocumentIds,
     ) {
     }
 
@@ -23,8 +24,8 @@ class GetDocumentDownloadRequest extends Request
     public function defaultQuery(): array
     {
         return [
-            'targetFileType' => 'Auto',
             'keepAnnotations' => 'false',
+            'append' => implode(',', $this->additionalDocumentIds),
         ];
     }
 }

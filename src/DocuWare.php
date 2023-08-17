@@ -18,6 +18,7 @@ use CodebarAg\DocuWare\Requests\Document\DeleteDocumentRequest;
 use CodebarAg\DocuWare\Requests\Document\GetDocumentDownloadRequest;
 use CodebarAg\DocuWare\Requests\Document\GetDocumentPreviewRequest;
 use CodebarAg\DocuWare\Requests\Document\GetDocumentRequest;
+use CodebarAg\DocuWare\Requests\Document\GetDocumentsDownloadRequest;
 use CodebarAg\DocuWare\Requests\Document\PostDocumentRequest;
 use CodebarAg\DocuWare\Requests\Document\PutDocumentFieldRequest;
 use CodebarAg\DocuWare\Requests\GetCabinetsRequest;
@@ -255,7 +256,7 @@ class DocuWare
         $additionalDocumentIds = array_slice($documentIds, 1);
 
         $connection = new DocuWareConnector();
-        $request = new GetDocumentDownloadRequest(
+        $request = new GetDocumentsDownloadRequest(
             fileCabinetId: $fileCabinetId,
             documentId: $firstDocumentId,
             additionalDocumentIds: $additionalDocumentIds,

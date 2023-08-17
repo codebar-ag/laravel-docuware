@@ -27,7 +27,7 @@ it('can list organizations', function () {
     $this->assertInstanceOf(Collection::class, $organizations);
     $this->assertNotCount(0, $organizations);
     Event::assertDispatched(DocuWareResponseLog::class);
-})->group('this');
+});
 
 it('can get an organization', function () {
     Event::fake();
@@ -38,7 +38,7 @@ it('can get an organization', function () {
 
     $this->assertInstanceOf(Organization::class, $organization);
     Event::assertDispatched(DocuWareResponseLog::class);
-})->group('this');
+});
 
 it('can list file cabinets', function () {
     Event::fake();

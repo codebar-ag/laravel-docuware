@@ -111,12 +111,12 @@ class DocuWare
      * @throws \ReflectionException
      * @throws PendingRequestException
      */
-    public function getOrganization(string $orgId)
+    public function getOrganization(string $organizationId)
     {
         EnsureValidCookie::check();
 
         $connection = new DocuWareConnector();
-        $request = new GetOrganizationRequest($orgId);
+        $request = new GetOrganizationRequest($organizationId);
 
         $response = $connection->send($request);
 

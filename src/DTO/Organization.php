@@ -15,7 +15,7 @@ final class Organization
             guid: $data['Guid'] ?? null,
             additionalInfo: $data['AdditionalInfo'] ?? [],
             configurationRights: $data['ConfigurationRights'] ?? [],
-//            configurationRights: Arr::get($data, 'ConfigurationRights', []),
+            //            configurationRights: Arr::get($data, 'ConfigurationRights', []),
         );
     }
 

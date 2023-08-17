@@ -11,10 +11,11 @@ class GetOrganizationRequest extends Request
 
     public function __construct(
         public string $id,
-    ) { }
+    ) {
+    }
 
     public function resolveEndpoint(): string
     {
-        return '/Organizations/' . $this->id;
+        return '/Organizations/'.$this->id;
     }
 }

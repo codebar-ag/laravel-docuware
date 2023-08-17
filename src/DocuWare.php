@@ -7,6 +7,8 @@ use CodebarAg\DocuWare\DTO\Dialog;
 use CodebarAg\DocuWare\DTO\Document;
 use CodebarAg\DocuWare\DTO\Field;
 use CodebarAg\DocuWare\DTO\FileCabinet;
+use CodebarAg\DocuWare\DTO\Organization;
+use CodebarAg\DocuWare\DTO\OrganizationIndex;
 use CodebarAg\DocuWare\Events\DocuWareResponseLog;
 use CodebarAg\DocuWare\Exceptions\UnableToDownloadDocuments;
 use CodebarAg\DocuWare\Exceptions\UnableToLogin;
@@ -25,6 +27,8 @@ use CodebarAg\DocuWare\Requests\GetCabinetsRequest;
 use CodebarAg\DocuWare\Requests\GetDialogsRequest;
 use CodebarAg\DocuWare\Requests\GetFieldsRequest;
 use CodebarAg\DocuWare\Requests\GetSelectListRequest;
+use CodebarAg\DocuWare\Requests\Organization\GetOrganizationRequest;
+use CodebarAg\DocuWare\Requests\Organization\GetOrganizationsRequest;
 use CodebarAg\DocuWare\Support\Auth;
 use CodebarAg\DocuWare\Support\EnsureValidCookie;
 use CodebarAg\DocuWare\Support\EnsureValidCredentials;
@@ -100,6 +104,52 @@ class DocuWare
         Auth::forget();
 
         $response->throw();
+    }
+
+    /**
+     * @throws \ReflectionException
+     * @throws InvalidResponseClassException
+     * @throws PendingRequestException
+     */
+    public function getOrganization(string $orgId): Organization
+    {
+        EnsureValidCookie::check();
+
+        $connection = new DocuWareConnector();
+        $request = new GetOrganizationRequest($orgId);
+
+        $response = $connection->send($request);
+
+        event(new DocuWareResponseLog($response));
+
+        EnsureValidResponse::from($response);
+
+        $organization = $response->throw()->json('Organization');
+
+        return Organization::fromJson($organization);
+    }
+
+    /**
+     * @throws \ReflectionException
+     * @throws InvalidResponseClassException
+     * @throws PendingRequestException
+     */
+    public function getOrganizations(): Collection
+    {
+        EnsureValidCookie::check();
+
+        $connection = new DocuWareConnector();
+        $request = new GetOrganizationsRequest();
+
+        $response = $connection->send($request);
+
+        event(new DocuWareResponseLog($response));
+
+        EnsureValidResponse::from($response);
+
+        $organizations = $response->throw()->json('Organization');
+
+        return collect($organizations)->map(fn (array $cabinet) => OrganizationIndex::fromJson($cabinet));
     }
 
     /**

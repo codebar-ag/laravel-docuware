@@ -18,6 +18,16 @@ uses()->group('docuware');
 
 beforeEach(fn () => EnsureValidCookie::check());
 
+it('can list organizations', function () {
+    Event::fake();
+
+    $organizations = (new DocuWare())->getOrganizations();
+
+    $this->assertInstanceOf(Collection::class, $organizations);
+    $this->assertNotCount(0, $organizations);
+    Event::assertDispatched(DocuWareResponseLog::class);
+});
+
 it('can list file cabinets', function () {
     Event::fake();
 

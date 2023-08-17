@@ -107,11 +107,11 @@ class DocuWare
     }
 
     /**
-     * @throws \ReflectionException
      * @throws InvalidResponseClassException
+     * @throws \ReflectionException
      * @throws PendingRequestException
      */
-    public function getOrganization(string $orgId): Organization
+    public function getOrganization(string $orgId)
     {
         EnsureValidCookie::check();
 
@@ -124,7 +124,7 @@ class DocuWare
 
         EnsureValidResponse::from($response);
 
-        $organization = $response->throw()->json('Organization');
+        $organization = $response->throw()->json();
 
         return Organization::fromJson($organization);
     }

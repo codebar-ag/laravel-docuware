@@ -8,6 +8,7 @@ use CodebarAg\DocuWare\DTO\Document;
 use CodebarAg\DocuWare\DTO\DocumentField;
 use CodebarAg\DocuWare\DTO\DocumentIndex;
 use CodebarAg\DocuWare\DTO\DocumentPaginator;
+use CodebarAg\DocuWare\DTO\Organization;
 use CodebarAg\DocuWare\Events\DocuWareResponseLog;
 use CodebarAg\DocuWare\Exceptions\UnableToSearch;
 use CodebarAg\DocuWare\Support\EnsureValidCookie;
@@ -26,7 +27,18 @@ it('can list organizations', function () {
     $this->assertInstanceOf(Collection::class, $organizations);
     $this->assertNotCount(0, $organizations);
     Event::assertDispatched(DocuWareResponseLog::class);
-});
+})->group('this');
+
+it('can get an organization', function () {
+    Event::fake();
+
+    $orgID = config('docuware.tests.organization_id');
+
+    $organization = (new DocuWare())->getOrganization($orgID);
+
+    $this->assertInstanceOf(Organization::class, $organization);
+    Event::assertDispatched(DocuWareResponseLog::class);
+})->group('this');
 
 it('can list file cabinets', function () {
     Event::fake();

@@ -2,6 +2,7 @@
 
 namespace CodebarAg\DocuWare\DTO;
 
+use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 
 final class OrganizationIndex
@@ -9,9 +10,9 @@ final class OrganizationIndex
     public static function fromJson(array $data): self
     {
         return new self(
-            id: $data['Id'],
-            name: $data['Name'],
-            guid: $data['Guid'] ?? null,
+            id: Arr::get($data, 'Id'),
+            name: Arr::get($data, 'Name'),
+            guid: Arr::get($data, 'Guid'),
         );
     }
 

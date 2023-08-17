@@ -10,11 +10,11 @@ final class Dialog
     public static function fromJson(array $data): self
     {
         return new self(
-            id: $data['Id'],
-            type: $data['Type'],
-            label: $data['DisplayName'],
-            isDefault: $data['IsDefault'],
-            fileCabinetId: $data['FileCabinetId'],
+            id: Arr::get($data, 'Id'),
+            type: Arr::get($data, 'Type'),
+            label: Arr::get($data, 'DisplayName'),
+            isDefault: Arr::get($data, 'IsDefault'),
+            fileCabinetId: Arr::get($data, 'FileCabinetId'),
         );
     }
 

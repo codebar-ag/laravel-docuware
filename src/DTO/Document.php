@@ -21,16 +21,16 @@ final class Document
             : null;
 
         return new self(
-            id: $data['Id'],
-            file_size: $data['FileSize'],
-            total_pages: $data['TotalPages'],
-            title: $data['Title'],
+            id: Arr::get($data, 'Id'),
+            file_size: Arr::get($data, 'FileSize'),
+            total_pages: Arr::get($data, 'TotalPages'),
+            title: Arr::get($data, 'Title'),
             extension: $fields['DWEXTENSION']->value,
-            content_type: $data['ContentType'],
-            file_cabinet_id: $data['FileCabinetId'],
+            content_type: Arr::get($data, 'ContentType'),
+            file_cabinet_id: Arr::get($data, 'FileCabinetId'),
             intellixTrust: Arr::get($data, 'IntellixTrust'),
-            created_at: ParseValue::date($data['CreatedAt']),
-            updated_at: ParseValue::date($data['LastModified']),
+            created_at: ParseValue::date(Arr::get($data, 'CreatedAt')),
+            updated_at: ParseValue::date(Arr::get($data, 'LastModified')),
             fields: $fields,
             suggestions: $suggestions,
         );

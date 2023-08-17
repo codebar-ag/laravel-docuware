@@ -10,10 +10,10 @@ final class FileCabinet
     public static function fromJson(array $data): self
     {
         return new self(
-            id: $data['Id'],
-            name: $data['Name'],
-            color: $data['Color'],
-            isBasket: $data['IsBasket'],
+            id: Arr::get($data, 'Id'),
+            name: Arr::get($data, 'Name'),
+            color: Arr::get($data, 'Color'),
+            isBasket: Arr::get($data, 'IsBasket'),
             assignedCabinet: Arr::get($data, 'AssignedCabinetId'),
         );
     }

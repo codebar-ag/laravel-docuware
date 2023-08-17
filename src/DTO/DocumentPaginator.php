@@ -56,7 +56,7 @@ class DocumentPaginator
 
         $to = $page === $lastPage ? $total : $page * $perPage;
 
-        $documents = collect($data['Items'])->map(function (array $document) {
+        $documents = collect(Arr::get($data, 'Items'))->map(function (array $document) {
             return Document::fromJson($document);
         });
 

@@ -9,10 +9,10 @@ final class Field
     public static function fromJson(array $data): self
     {
         return new self(
-            name: $data['DBFieldName'],
-            label: $data['DisplayName'],
-            type: $data['DWFieldType'],
-            scope: $data['Scope'],
+            name: Arr::get($data, 'DBFieldName'),
+            label: Arr::get($data, 'DisplayName'),
+            type: Arr::get($data, 'DWFieldType'),
+            scope: Arr::get($data, 'Scope'),
         );
     }
 

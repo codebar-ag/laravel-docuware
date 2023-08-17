@@ -102,10 +102,6 @@ it('can show a document', function () {
 });
 
 it('can update a document value', function () {
-    if (! config('docuware.tests.field_name')) {
-        $this->markTestIncomplete('No field name configured');
-    }
-
     Event::fake();
 
     $fileCabinetId = config('docuware.tests.file_cabinet_id');
@@ -125,10 +121,6 @@ it('can update a document value', function () {
 });
 
 it('can download multiple documents', function () {
-    if (! config('docuware.tests.documents_file_size')) {
-        $this->markTestIncomplete('No documents file size configured');
-    }
-
     Event::fake();
 
     $fileCabinetId = config('docuware.tests.file_cabinet_id');
@@ -144,10 +136,6 @@ it('can download multiple documents', function () {
 });
 
 it('can download a document', function () {
-    if (! config('docuware.tests.documents_file_size')) {
-        $this->markTestIncomplete('No documents file size configured');
-    }
-
     Event::fake();
 
     $fileCabinetId = config('docuware.tests.file_cabinet_id');
@@ -394,10 +382,6 @@ it('can search documents with null values', function () {
 })->group('search');
 
 it('can create encrypted url for a document in a basket', function () {
-    if (! config('docuware.tests.basket_id')) {
-        $this->markTestIncomplete('No basket configured');
-    }
-
     Event::fake();
 
     $basketId = config('docuware.tests.basket_id');

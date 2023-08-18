@@ -31,7 +31,7 @@ final class SuggestionField
         string $confidence = null,
     ): self {
         return new self(
-            value: $value ?? [],
+            value: $value,
             name: $name ?? 'Fake Name',
             db_name: $db_name ?? 'FAKE_NAME',
             confidence: $confidence ?? 'Red',

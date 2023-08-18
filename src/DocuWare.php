@@ -64,22 +64,18 @@ class DocuWare
 
         EnsureValidCredentials::check();
 
-        $jar = new CookieJar();
-
         $connection = new DocuWareConnector();
-        $connection->config()->remove('cookies');
 
         $request = new PostLogonRequest();
-        $request->config()->add('cookies', $jar);
 
         $response = $connection->send($request);
 
         event(new DocuWareResponseLog($response));
 
         throw_if($response->status() === Response::HTTP_UNAUTHORIZED, UnableToLogin::create());
-        throw_if($jar->toArray() === [], UnableToLoginNoCookies::create());
+        throw_if($connection->getCoookieJar()->toArray() === [], UnableToLoginNoCookies::create());
 
-        Auth::store($jar);
+        Auth::store($connection->getCoookieJar());
     }
 
     /**

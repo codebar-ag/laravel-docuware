@@ -2,26 +2,41 @@
 
 namespace CodebarAg\DocuWare\Tests\Feature;
 
-use CodebarAg\DocuWare\DocuWare;
+use CodebarAg\DocuWare\Exceptions\UnableToLogout;
+use CodebarAg\DocuWare\Facades\DocuWare;
 use CodebarAg\DocuWare\Support\Auth;
+use CodebarAg\DocuWare\Support\EnsureValidCookie;
 
 uses()->group('authorization');
 
-it('authorization with & without cookie', function () {
-    if (config('docuware.cookies')) {
-        $this->assertArrayHasKey(Auth::COOKIE_NAME, Auth::cookies());
-
-        (new DocuWare())->getFileCabinets();
-    }
-
-    if (! config('docuware.cookies')) {
-        $this->assertNull(Auth::cookies());
-
-        (new DocuWare())->getFileCabinets();
-
-        $this->assertArrayHasKey(Auth::COOKIE_NAME, Auth::cookies());
-
-        (new DocuWare())->logout();
-        $this->assertNull(Auth::cookies());
-    }
+beforeEach(function () {
+    Auth::forget();
+    expect(Auth::cookies())->toBeNull();
 });
+
+it('can authenticate with a cookie', function () {
+    EnsureValidCookie::check();
+
+    expect(Auth::cookies())->toHaveKey(Auth::COOKIE_NAME);
+    expect(Auth::cookies()[Auth::COOKIE_NAME])->toBe(config('docuware.cookies'));
+})->group('authorization');
+
+it('can authenticate with no cookie', function () {
+    config(['docuware.cookies' => '']);
+
+    EnsureValidCookie::check();
+
+    expect(Auth::cookies())->toHaveKey(Auth::COOKIE_NAME);
+    expect(Auth::cookies()[Auth::COOKIE_NAME])->not->toBeNull();
+    expect(Auth::cookies()[Auth::COOKIE_NAME])->not->toBe('foo');
+})->group('authorization');
+
+it('cant logout with a cookie', function () {
+    DocuWare::logout();
+})->throws(UnableToLogout::class);
+
+it('can logout with a cookie', function () {
+    config(['docuware.cookies' => '']);
+
+    DocuWare::logout();
+})->doesNotPerformAssertions();

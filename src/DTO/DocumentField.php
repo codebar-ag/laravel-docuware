@@ -12,12 +12,12 @@ final class DocumentField
     public static function fromJson(array $data): self
     {
         return new self(
-            systemField: $data['SystemField'],
-            name: $data['FieldName'],
-            label: $data['FieldLabel'],
-            isNull: $data['IsNull'],
+            systemField: Arr::get($data, 'SystemField'),
+            name: Arr::get($data, 'FieldName'),
+            label: Arr::get($data, 'FieldLabel'),
+            isNull: Arr::get($data, 'IsNull'),
             value: ParseValue::field($data),
-            type: $data['ItemElementName'],
+            type: Arr::get($data, 'ItemElementName'),
         );
     }
 
@@ -33,11 +33,11 @@ final class DocumentField
 
     public static function fake(
         ?bool $systemField = false,
-        ?string $name = null,
-        ?string $label = null,
+        string $name = null,
+        string $label = null,
         ?bool $isNull = true,
-        null|int|float|Carbon|string $value = null,
-        ?string $type = null,
+        int|float|Carbon|string $value = null,
+        string $type = null,
     ): self {
         $fakeType = Arr::random(['Int', 'Decimal', 'Text', 'DateTime']);
 

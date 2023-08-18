@@ -76,6 +76,16 @@ DOCUWARE_PASSPHRASE="a#bcd>2~C1'abc\\#"
 use CodebarAg\DocuWare\Facades\DocuWare;
 
 /**
+ * Return all organizations.
+ */
+$cabinets = DocuWare::getOrganizations();
+
+/**
+ * Return an organization.
+ */
+$cabinets = DocuWare::getOrganization($organizationId);
+
+/**
  * Return all file cabinets.
  */
 $cabinets = DocuWare::getFileCabinets();
@@ -306,6 +316,24 @@ Please see [Tests](tests/Feature/DocuWare.php) for more details.
 ## 🏋️ DTO showcase
 
 ```php
+CodebarAg\DocuWare\DTO\OrganizationIndex {
+  +id: "2f071481-095d-4363-abd9-29ef845a8b05"              // string
+  +name: "Fake File Cabinet"                               // string
+  +guid: "1334c006-f095-4ae7-892b-fe59282c8bed"            // string|null
+}
+```
+
+```php
+CodebarAg\DocuWare\DTO\Organization {
+  +id: "2f071481-095d-4363-abd9-29ef845a8b05"              // string
+  +name: "Fake File Cabinet"                               // string
+  +guid: "1334c006-f095-4ae7-892b-fe59282c8bed"            // string|null
+  +additionalInfo: []                                      // array
+  +configurationRights: []                                 // array
+}
+```
+
+```php
 CodebarAg\DocuWare\DTO\FileCabinet {
   +id: "2f071481-095d-4363-abd9-29ef845a8b05"              // string
   +name: "Fake File Cabinet"                               // string
@@ -408,8 +436,8 @@ use CodebarAg\DocuWare\Facades\DocuWare;
 
 /**
  * Login with your credentials. You only need to login once. Afterwards the
- * authentication cookie is stored in the cache `docuware.cookies` and is
- * used for all further requests.
+ * authentication cookie is stored in the cache as `docuware.cookies` and
+ * is used for all further requests.
  */
 DocuWare::login();
 
@@ -438,6 +466,13 @@ which does not exist.
 
 This exception can only be thrown during the login if the credentials did not
 match.
+
+---
+
+- `CodebarAg\DocuWare\Exceptions\UnableToLoginNoCookies`
+
+This exception can only be thrown during the login if there was no cookies in
+the response from the api.
 
 ---
 
@@ -591,6 +626,7 @@ return [
         'file_cabinet_id' => env('DOCUWARE_TESTS_FILE_CABINET_ID'),
         'dialog_id' => env('DOCUWARE_TESTS_DIALOG_ID'),
         'basket_id' => env('DOCUWARE_TESTS_BASKET_ID'),
+        'organization_id' => env('DOCUWARE_TESTS_ORGANIZATION_ID'),
         'document_id' => (int) env('DOCUWARE_TESTS_DOCUMENT_ID'),
         'document_file_size_preview' => (int) env('DOCUWARE_TESTS_DOCUMENT_FILE_SIZE_PREVIEW'),
         'document_file_size' => (int) env('DOCUWARE_TESTS_DOCUMENT_FILE_SIZE'),
@@ -623,6 +659,7 @@ Modify environment variables in the phpunit.xml-file:
 <env name="DOCUWARE_TESTS_FILE_CABINET_ID" value=""/>
 <env name="DOCUWARE_TESTS_DIALOG_ID" value=""/>
 <env name="DOCUWARE_TESTS_BASKET_ID" value=""/>
+<env name="DOCUWARE_TESTS_ORGANIZATION_ID" value=""/>
 <env name="DOCUWARE_TESTS_FIELD_NAME" value="UUID"/>
 
 <env name="DOCUWARE_TESTS_DOCUMENT_FILE_SIZE_PREVIEW" value=""/>
@@ -655,6 +692,7 @@ Please review [our security policy](.github/SECURITY.md) on how to report securi
 - [Sebastian Fix](https://github.com/StanBarrows)
 - [Faissal Wahabali](https://github.com/faissaloux)
 - [Ruslan Steiger](https://github.com/SuddenlyRust)
+- [Rhys Lees](https://github.com/RhysLees)
 - [All Contributors](../../contributors)
 - [Skeleton Repository from Spatie](https://github.com/spatie/package-skeleton-laravel)
 - [Laravel Package Training from Spatie](https://spatie.be/videos/laravel-package-training)

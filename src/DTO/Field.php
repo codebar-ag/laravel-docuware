@@ -9,10 +9,10 @@ final class Field
     public static function fromJson(array $data): self
     {
         return new self(
-            name: $data['DBFieldName'],
-            label: $data['DisplayName'],
-            type: $data['DWFieldType'],
-            scope: $data['Scope'],
+            name: Arr::get($data, 'DBFieldName'),
+            label: Arr::get($data, 'DisplayName'),
+            type: Arr::get($data, 'DWFieldType'),
+            scope: Arr::get($data, 'Scope'),
         );
     }
 
@@ -35,10 +35,10 @@ final class Field
     }
 
     public static function fake(
-        ?string $name = null,
-        ?string $label = null,
-        ?string $type = null,
-        ?string $scope = null,
+        string $name = null,
+        string $label = null,
+        string $type = null,
+        string $scope = null,
     ): self {
         return new self(
             name: $name ?? 'FAKE_FIELD',

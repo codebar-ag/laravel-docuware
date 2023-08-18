@@ -8,15 +8,37 @@ use CodebarAg\DocuWare\DTO\Document;
 use CodebarAg\DocuWare\DTO\DocumentField;
 use CodebarAg\DocuWare\DTO\DocumentIndex;
 use CodebarAg\DocuWare\DTO\DocumentPaginator;
+use CodebarAg\DocuWare\DTO\Organization;
 use CodebarAg\DocuWare\Events\DocuWareResponseLog;
 use CodebarAg\DocuWare\Exceptions\UnableToSearch;
+use CodebarAg\DocuWare\Support\EnsureValidCookie;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Event;
 
 uses()->group('docuware');
 
-// fileCabinet = '4ca593b2-c19d-4399-96e6-c90168dbaa97';
-// dialog = '4fc78419-37f4-409b-ab08-42e5cecdee92';
+beforeEach(fn () => EnsureValidCookie::check());
+
+it('can list organizations', function () {
+    Event::fake();
+
+    $organizations = (new DocuWare())->getOrganizations();
+
+    $this->assertInstanceOf(Collection::class, $organizations);
+    $this->assertNotCount(0, $organizations);
+    Event::assertDispatched(DocuWareResponseLog::class);
+});
+
+it('can get an organization', function () {
+    Event::fake();
+
+    $orgID = config('docuware.tests.organization_id');
+
+    $organization = (new DocuWare())->getOrganization($orgID);
+
+    $this->assertInstanceOf(Organization::class, $organization);
+    Event::assertDispatched(DocuWareResponseLog::class);
+});
 
 it('can list file cabinets', function () {
     Event::fake();

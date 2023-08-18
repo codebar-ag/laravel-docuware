@@ -6,12 +6,13 @@ use Carbon\Carbon;
 use CodebarAg\DocuWare\DTO\DocumentPaginator;
 use CodebarAg\DocuWare\Events\DocuWareResponseLog;
 use CodebarAg\DocuWare\Exceptions\UnableToSearch;
-use CodebarAg\DocuWare\Support\Auth;
+use CodebarAg\DocuWare\Requests\Search\GetSearchRequest;
 use CodebarAg\DocuWare\Support\EnsureValidCookie;
 use CodebarAg\DocuWare\Support\EnsureValidResponse;
 use Exception;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
+use Saloon\Exceptions\InvalidResponseClassException;
+use Saloon\Exceptions\PendingRequestException;
 
 class DocuWareSearch
 {
@@ -123,21 +124,16 @@ class DocuWareSearch
         return $this;
     }
 
+    /**
+     * @throws \ReflectionException
+     * @throws InvalidResponseClassException
+     * @throws PendingRequestException
+     */
     public function get(): DocumentPaginator
     {
         $this->checkDateFilterRangeDivergence();
         $this->restructureMonoDateFilterRange();
         $this->guard();
-
-        $url = sprintf(
-            '%s/DocuWare/Platform/FileCabinets/%s/Query/DialogExpression',
-            config('docuware.credentials.url'),
-            $this->fileCabinetId,
-        );
-
-        if ($this->dialogId) {
-            $url .= "?dialogId={$this->dialogId}";
-        }
 
         $condition = [];
 
@@ -159,25 +155,20 @@ class DocuWareSearch
             ];
         }
 
-        $response = Http::acceptJson()
-            ->withCookies(Auth::cookies(), Auth::domain())
-            ->timeout(config('docuware.timeout'))
-            ->post($url, [
-                'Count' => $this->perPage,
-                'Start' => ($this->page - 1) * $this->perPage,
-                'Condition' => $condition,
-                'AdditionalCabinets' => $this->additionalFileCabinetIds,
-                'SortOrder' => [
-                    [
-                        'Field' => $this->orderField,
-                        'Direction' => $this->orderDirection,
-                    ],
-                ],
-                'Operation' => config('docuware.configurations.search.operation', 'And'),
-                'ForceRefresh' => config('docuware.configurations.search.force_refresh', true),
-                'IncludeSuggestions' => config('docuware.configurations.search.include_suggestions', false),
-                'AdditionalResultFields' => config('docuware.configurations.search.additional_result_fields', []),
-            ]);
+        $connection = new DocuWareConnector();
+        $request = new GetSearchRequest(
+            fileCabinetId: $this->fileCabinetId,
+            dialogId: $this->dialogId,
+            additionalFileCabinetIds: $this->additionalFileCabinetIds,
+            page: $this->page,
+            perPage: $this->perPage,
+            searchTerm: $this->searchTerm,
+            orderField: $this->orderField,
+            orderDirection: $this->orderDirection,
+            condition: $condition,
+        );
+
+        $response = $connection->send($request);
 
         event(new DocuWareResponseLog($response));
 

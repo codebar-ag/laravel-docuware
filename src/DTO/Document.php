@@ -21,16 +21,16 @@ final class Document
             : null;
 
         return new self(
-            id: $data['Id'],
-            file_size: $data['FileSize'],
-            total_pages: $data['TotalPages'],
-            title: $data['Title'],
+            id: Arr::get($data, 'Id'),
+            file_size: Arr::get($data, 'FileSize'),
+            total_pages: Arr::get($data, 'TotalPages'),
+            title: Arr::get($data, 'Title'),
             extension: $fields['DWEXTENSION']->value,
-            content_type: $data['ContentType'],
-            file_cabinet_id: $data['FileCabinetId'],
+            content_type: Arr::get($data, 'ContentType'),
+            file_cabinet_id: Arr::get($data, 'FileCabinetId'),
             intellixTrust: Arr::get($data, 'IntellixTrust'),
-            created_at: ParseValue::date($data['CreatedAt']),
-            updated_at: ParseValue::date($data['LastModified']),
+            created_at: ParseValue::date(Arr::get($data, 'CreatedAt')),
+            updated_at: ParseValue::date(Arr::get($data, 'LastModified')),
             fields: $fields,
             suggestions: $suggestions,
         );
@@ -43,7 +43,7 @@ final class Document
         });
     }
 
-    protected static function convertSuggestions(Collection $suggestions): Collection|null
+    protected static function convertSuggestions(Collection $suggestions): ?Collection
     {
         return $suggestions->mapWithKeys(function (array $suggestion) {
             return [$suggestion['DBName'] => SuggestionField::fromJson($suggestion)];
@@ -55,14 +55,14 @@ final class Document
         public int $file_size,
         public int $total_pages,
         public string $title,
-        public string|null $extension,
+        public ?string $extension,
         public string $content_type,
         public string $file_cabinet_id,
-        public string|null $intellixTrust,
+        public ?string $intellixTrust,
         public Carbon $created_at,
         public Carbon $updated_at,
-        public Collection|null $fields,
-        public Collection|null $suggestions,
+        public ?Collection $fields,
+        public ?Collection $suggestions,
     ) {
     }
 
@@ -105,18 +105,18 @@ final class Document
     }
 
     public static function fake(
-        ?int $id = null,
-        ?int $file_size = null,
-        ?int $total_pages = null,
-        ?string $title = null,
-        ?string $extension = null,
-        ?string $content_type = null,
-        ?string $file_cabinet_id = null,
-        ?string $intellixTrust = null,
-        ?Carbon $created_at = null,
-        ?Carbon $updated_at = null,
-        ?Collection $fields = null,
-        ?Collection $suggestions = null,
+        int $id = null,
+        int $file_size = null,
+        int $total_pages = null,
+        string $title = null,
+        string $extension = null,
+        string $content_type = null,
+        string $file_cabinet_id = null,
+        string $intellixTrust = null,
+        Carbon $created_at = null,
+        Carbon $updated_at = null,
+        Collection $fields = null,
+        Collection $suggestions = null,
     ): self {
         return new self(
             id: $id ?? random_int(1, 999999),

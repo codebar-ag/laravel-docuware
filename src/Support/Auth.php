@@ -35,11 +35,16 @@ class Auth
 
     public static function cookies(): ?array
     {
-        if (config('docuware.cookies')) {
-            return [self::COOKIE_NAME => config('docuware.cookies')];
+        return Cache::driver(self::cacheDriver())->get(self::CACHE_KEY);
+    }
+
+    public static function cookieJar(): ?CookieJar
+    {
+        if (! self::cookies()) {
+            return null;
         }
 
-        return Cache::driver(self::cacheDriver())->get(self::CACHE_KEY);
+        return CookieJar::fromArray(self::cookies(), self::domain());
     }
 
     public static function cookieDate(): string

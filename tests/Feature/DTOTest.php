@@ -8,10 +8,22 @@ use CodebarAg\DocuWare\DTO\DocumentField;
 use CodebarAg\DocuWare\DTO\DocumentPaginator;
 use CodebarAg\DocuWare\DTO\Field;
 use CodebarAg\DocuWare\DTO\FileCabinet;
+use CodebarAg\DocuWare\DTO\Organization;
+use CodebarAg\DocuWare\DTO\OrganizationIndex;
 use CodebarAg\DocuWare\DTO\SuggestionField;
 use CodebarAg\DocuWare\DTO\TableRow;
 
 uses()->group('dto');
+
+it('create a fake organization', function () {
+    $fake = Organization::fake();
+    $this->assertInstanceOf(Organization::class, $fake);
+});
+
+it('create a fake organization index', function () {
+    $fake = OrganizationIndex::fake();
+    $this->assertInstanceOf(OrganizationIndex::class, $fake);
+});
 
 it('create a fake file cabinet', function () {
     $fake = FileCabinet::fake();

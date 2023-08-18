@@ -5,72 +5,95 @@ namespace CodebarAg\DocuWare;
 use Carbon\Carbon;
 use CodebarAg\DocuWare\DTO\Dialog;
 use CodebarAg\DocuWare\DTO\Document;
-use CodebarAg\DocuWare\DTO\DocumentIndex;
 use CodebarAg\DocuWare\DTO\Field;
 use CodebarAg\DocuWare\DTO\FileCabinet;
+use CodebarAg\DocuWare\DTO\Organization;
+use CodebarAg\DocuWare\DTO\OrganizationIndex;
 use CodebarAg\DocuWare\Events\DocuWareResponseLog;
 use CodebarAg\DocuWare\Exceptions\UnableToDownloadDocuments;
 use CodebarAg\DocuWare\Exceptions\UnableToLogin;
+use CodebarAg\DocuWare\Exceptions\UnableToLoginNoCookies;
+use CodebarAg\DocuWare\Exceptions\UnableToLogout;
+use CodebarAg\DocuWare\Requests\Auth\GetLogoffRequest;
+use CodebarAg\DocuWare\Requests\Auth\PostLogonRequest;
+use CodebarAg\DocuWare\Requests\Document\DeleteDocumentRequest;
+use CodebarAg\DocuWare\Requests\Document\GetDocumentDownloadRequest;
+use CodebarAg\DocuWare\Requests\Document\GetDocumentPreviewRequest;
+use CodebarAg\DocuWare\Requests\Document\GetDocumentRequest;
+use CodebarAg\DocuWare\Requests\Document\GetDocumentsDownloadRequest;
+use CodebarAg\DocuWare\Requests\Document\PostDocumentRequest;
+use CodebarAg\DocuWare\Requests\Document\PutDocumentFieldRequest;
+use CodebarAg\DocuWare\Requests\GetCabinetsRequest;
+use CodebarAg\DocuWare\Requests\GetDialogsRequest;
+use CodebarAg\DocuWare\Requests\GetFieldsRequest;
+use CodebarAg\DocuWare\Requests\GetSelectListRequest;
+use CodebarAg\DocuWare\Requests\Organization\GetOrganizationRequest;
+use CodebarAg\DocuWare\Requests\Organization\GetOrganizationsRequest;
 use CodebarAg\DocuWare\Support\Auth;
 use CodebarAg\DocuWare\Support\EnsureValidCookie;
 use CodebarAg\DocuWare\Support\EnsureValidCredentials;
 use CodebarAg\DocuWare\Support\EnsureValidResponse;
 use CodebarAg\DocuWare\Support\ParseValue;
+use GuzzleHttp\Cookie\CookieJar;
+use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Http;
+use Saloon\Exceptions\InvalidResponseClassException;
+use Saloon\Exceptions\PendingRequestException;
 use Symfony\Component\HttpFoundation\Response;
 
 class DocuWare
 {
+    /**
+     * @throws InvalidResponseClassException
+     * @throws \Throwable
+     * @throws \ReflectionException
+     * @throws PendingRequestException
+     */
     public function login(): void
     {
         if (config('docuware.cookies')) {
+            Auth::store(
+                CookieJar::fromArray(
+                    [Auth::COOKIE_NAME => config('docuware.cookies')],
+                    config('docuware.credentials.url'),
+                ),
+            );
+
             return;
         }
 
         EnsureValidCredentials::check();
 
-        $url = sprintf(
-            '%s/DocuWare/Platform/Account/Logon',
-            config('docuware.credentials.url'),
-        );
+        $connection = new DocuWareConnector();
 
-        $response = Http::asForm()
-            ->acceptJson()
-            ->timeout(config('docuware.timeout'))
-            ->post($url, [
-                'UserName' => config('docuware.credentials.username'),
-                'Password' => config('docuware.credentials.password'),
-            ]);
+        $request = new PostLogonRequest();
+
+        $response = $connection->send($request);
 
         event(new DocuWareResponseLog($response));
 
-        throw_if(
-            $response->status() === Response::HTTP_UNAUTHORIZED,
-            UnableToLogin::create(),
-        );
+        throw_if($response->status() === Response::HTTP_UNAUTHORIZED, UnableToLogin::create());
+        throw_if($connection->getCoookieJar()->toArray() === [], UnableToLoginNoCookies::create());
 
-        $cookies = $response->throw()->cookies();
-
-        Auth::store($cookies);
+        Auth::store($connection->getCoookieJar());
     }
 
+    /**
+     * @throws InvalidResponseClassException
+     * @throws \Throwable
+     * @throws \ReflectionException
+     * @throws PendingRequestException
+     */
     public function logout(): void
     {
-        if (config('docuware.cookies')) {
-            return;
-        }
+        throw_if(config('docuware.cookies'), UnableToLogout::create());
 
         EnsureValidCookie::check();
 
-        $url = sprintf(
-            '%s/DocuWare/Platform/Account/Logoff',
-            config('docuware.credentials.url'),
-        );
+        $connection = new DocuWareConnector();
+        $request = new GetLogoffRequest();
 
-        $response = Http::withCookies(Auth::cookies(), Auth::domain())
-            ->timeout(config('docuware.timeout'))
-            ->get($url);
+        $response = $connection->send($request);
 
         event(new DocuWareResponseLog($response));
 
@@ -79,19 +102,65 @@ class DocuWare
         $response->throw();
     }
 
+    /**
+     * @throws InvalidResponseClassException
+     * @throws \ReflectionException
+     * @throws PendingRequestException
+     */
+    public function getOrganization(string $organizationId)
+    {
+        EnsureValidCookie::check();
+
+        $connection = new DocuWareConnector();
+        $request = new GetOrganizationRequest($organizationId);
+
+        $response = $connection->send($request);
+
+        event(new DocuWareResponseLog($response));
+
+        EnsureValidResponse::from($response);
+
+        $organization = $response->throw()->json();
+
+        return Organization::fromJson($organization);
+    }
+
+    /**
+     * @throws \ReflectionException
+     * @throws InvalidResponseClassException
+     * @throws PendingRequestException
+     */
+    public function getOrganizations(): Collection
+    {
+        EnsureValidCookie::check();
+
+        $connection = new DocuWareConnector();
+        $request = new GetOrganizationsRequest();
+
+        $response = $connection->send($request);
+
+        event(new DocuWareResponseLog($response));
+
+        EnsureValidResponse::from($response);
+
+        $organizations = $response->throw()->json('Organization');
+
+        return collect($organizations)->map(fn (array $cabinet) => OrganizationIndex::fromJson($cabinet));
+    }
+
+    /**
+     * @throws \ReflectionException
+     * @throws InvalidResponseClassException
+     * @throws PendingRequestException
+     */
     public function getFileCabinets(): Collection
     {
         EnsureValidCookie::check();
 
-        $url = sprintf(
-            '%s/DocuWare/Platform/FileCabinets',
-            config('docuware.credentials.url'),
-        );
+        $connection = new DocuWareConnector();
+        $request = new GetCabinetsRequest();
 
-        $response = Http::acceptJson()
-            ->withCookies(Auth::cookies(), Auth::domain())
-            ->timeout(config('docuware.timeout'))
-            ->get($url);
+        $response = $connection->send($request);
 
         event(new DocuWareResponseLog($response));
 
@@ -106,16 +175,10 @@ class DocuWare
     {
         EnsureValidCookie::check();
 
-        $url = sprintf(
-            '%s/DocuWare/Platform/FileCabinets/%s',
-            config('docuware.credentials.url'),
-            $fileCabinetId,
-        );
+        $connection = new DocuWareConnector();
+        $request = new GetFieldsRequest(fileCabinetId: $fileCabinetId);
 
-        $response = Http::acceptJson()
-            ->withCookies(Auth::cookies(), Auth::domain())
-            ->timeout(config('docuware.timeout'))
-            ->get($url);
+        $response = $connection->send($request);
 
         event(new DocuWareResponseLog($response));
 
@@ -130,16 +193,10 @@ class DocuWare
     {
         EnsureValidCookie::check();
 
-        $url = sprintf(
-            '%s/DocuWare/Platform/FileCabinets/%s/Dialogs',
-            config('docuware.credentials.url'),
-            $fileCabinetId,
-        );
+        $connection = new DocuWareConnector();
+        $request = new GetDialogsRequest(fileCabinetId: $fileCabinetId);
 
-        $response = Http::acceptJson()
-            ->withCookies(Auth::cookies(), Auth::domain())
-            ->timeout(config('docuware.timeout'))
-            ->get($url);
+        $response = $connection->send($request);
 
         event(new DocuWareResponseLog($response));
 
@@ -157,18 +214,14 @@ class DocuWare
     ): array {
         EnsureValidCookie::check();
 
-        $url = sprintf(
-            '%s/DocuWare/Platform/FileCabinets/%s/Query/SelectListExpression?dialogId=%s&fieldName=%s',
-            config('docuware.credentials.url'),
-            $fileCabinetId,
-            $dialogId,
-            $fieldName,
+        $connection = new DocuWareConnector();
+        $request = new GetSelectListRequest(
+            fileCabinetId: $fileCabinetId,
+            dialogId: $dialogId,
+            fieldName: $fieldName
         );
 
-        $response = Http::acceptJson()
-            ->withCookies(Auth::cookies(), Auth::domain())
-            ->timeout(config('docuware.timeout'))
-            ->get($url);
+        $response = $connection->send($request);
 
         event(new DocuWareResponseLog($response));
 
@@ -181,17 +234,13 @@ class DocuWare
     {
         EnsureValidCookie::check();
 
-        $url = sprintf(
-            '%s/DocuWare/Platform/FileCabinets/%s/Documents/%s',
-            config('docuware.credentials.url'),
-            $fileCabinetId,
-            $documentId,
+        $connection = new DocuWareConnector();
+        $request = new GetDocumentRequest(
+            fileCabinetId: $fileCabinetId,
+            documentId: $documentId,
         );
 
-        $response = Http::acceptJson()
-            ->withCookies(Auth::cookies(), Auth::domain())
-            ->timeout(config('docuware.timeout'))
-            ->get($url);
+        $response = $connection->send($request);
 
         event(new DocuWareResponseLog($response));
 
@@ -202,23 +251,17 @@ class DocuWare
         return Document::fromJson($data);
     }
 
-    public function getDocumentPreview(
-        string $fileCabinetId,
-        int $documentId,
-    ): string {
+    public function getDocumentPreview(string $fileCabinetId, int $documentId): string
+    {
         EnsureValidCookie::check();
 
-        $url = sprintf(
-            '%s/DocuWare/Platform/FileCabinets/%s/Documents/%s/Image',
-            config('docuware.credentials.url'),
-            $fileCabinetId,
-            $documentId,
+        $connection = new DocuWareConnector();
+        $request = new GetDocumentPreviewRequest(
+            fileCabinetId: $fileCabinetId,
+            documentId: $documentId,
         );
 
-        $response = Http::acceptJson()
-            ->withCookies(Auth::cookies(), Auth::domain())
-            ->timeout(config('docuware.timeout'))
-            ->get($url);
+        $response = $connection->send($request);
 
         event(new DocuWareResponseLog($response));
 
@@ -227,23 +270,17 @@ class DocuWare
         return $response->throw()->body();
     }
 
-    public function downloadDocument(
-        string $fileCabinetId,
-        int $documentId,
-    ): string {
+    public function downloadDocument(string $fileCabinetId, int $documentId): string
+    {
         EnsureValidCookie::check();
 
-        $url = sprintf(
-            '%s/DocuWare/Platform/FileCabinets/%s/Documents/%s/FileDownload?targetFileType=Auto&keepAnnotations=false',
-            config('docuware.credentials.url'),
-            $fileCabinetId,
-            $documentId,
+        $connection = new DocuWareConnector();
+        $request = new GetDocumentDownloadRequest(
+            fileCabinetId: $fileCabinetId,
+            documentId: $documentId,
         );
 
-        $response = Http::acceptJson()
-            ->withCookies(Auth::cookies(), Auth::domain())
-            ->timeout(config('docuware.timeout'))
-            ->get($url);
+        $response = $connection->send($request);
 
         event(new DocuWareResponseLog($response));
 
@@ -252,10 +289,8 @@ class DocuWare
         return $response->throw()->body();
     }
 
-    public function downloadDocuments(
-        string $fileCabinetId,
-        array $documentIds,
-    ): string {
+    public function downloadDocuments(string $fileCabinetId, array $documentIds): string
+    {
         EnsureValidCookie::check();
 
         throw_if(
@@ -264,20 +299,16 @@ class DocuWare
         );
 
         $firstDocumentId = $documentIds[0];
-        $additionalDocumentIds = implode(',', array_slice($documentIds, 1));
+        $additionalDocumentIds = array_slice($documentIds, 1);
 
-        $url = sprintf(
-            '%s/DocuWare/Platform/FileCabinets/%s/Documents/%s/FileDownload?&keepAnnotations=false&append=%s',
-            config('docuware.credentials.url'),
-            $fileCabinetId,
-            $firstDocumentId,
-            $additionalDocumentIds,
+        $connection = new DocuWareConnector();
+        $request = new GetDocumentsDownloadRequest(
+            fileCabinetId: $fileCabinetId,
+            documentId: $firstDocumentId,
+            additionalDocumentIds: $additionalDocumentIds,
         );
 
-        $response = Http::acceptJson()
-            ->withCookies(Auth::cookies(), Auth::domain())
-            ->timeout(config('docuware.timeout'))
-            ->get($url);
+        $response = $connection->send($request);
 
         event(new DocuWareResponseLog($response));
 
@@ -294,24 +325,15 @@ class DocuWare
     ): null|int|float|Carbon|string {
         EnsureValidCookie::check();
 
-        $url = sprintf(
-            '%s/DocuWare/Platform/FileCabinets/%s/Documents/%s/Fields',
-            config('docuware.credentials.url'),
-            $fileCabinetId,
-            $documentId,
+        $connection = new DocuWareConnector();
+        $request = new PutDocumentFieldRequest(
+            fileCabinetId: $fileCabinetId,
+            documentId: $documentId,
+            fieldName: $fieldName,
+            newValue: $newValue,
         );
 
-        $response = Http::acceptJson()
-            ->withCookies(Auth::cookies(), Auth::domain())
-            ->timeout(config('docuware.timeout'))
-            ->put($url, [
-                'Field' => [
-                    [
-                        'FieldName' => $fieldName,
-                        'Item' => $newValue,
-                    ],
-                ],
-            ]);
+        $response = $connection->send($request);
 
         event(new DocuWareResponseLog($response));
 
@@ -324,32 +346,29 @@ class DocuWare
         return ParseValue::field($field);
     }
 
+    /**
+     * @throws InvalidResponseClassException
+     * @throws RequestException
+     * @throws \ReflectionException
+     * @throws PendingRequestException
+     */
     public function uploadDocument(
         string $fileCabinetId,
         string $fileContent,
         string $fileName,
-        ?Collection $indexes = null,
+        Collection $indexes = null,
     ): Document {
         EnsureValidCookie::check();
 
-        $url = sprintf(
-            '%s/DocuWare/Platform/FileCabinets/%s/Documents',
-            config('docuware.credentials.url'),
-            $fileCabinetId,
+        $connection = new DocuWareConnector();
+        $request = new PostDocumentRequest(
+            fileCabinetId: $fileCabinetId,
+            fileContent: $fileContent,
+            fileName: $fileName,
+            indexes: $indexes,
         );
 
-        $request = Http::acceptJson();
-
-        if ($indexes) {
-            $indexContent = DocumentIndex::makeContent($indexes);
-            $request->attach('document', $indexContent, 'index.json');
-
-        }
-
-        $response = $request->attach('file', $fileContent, $fileName)
-            ->withCookies(Auth::cookies(), Auth::domain())
-            ->timeout(config('docuware.timeout'))
-            ->post($url);
+        $response = $connection->send($request);
 
         event(new DocuWareResponseLog($response));
 
@@ -360,23 +379,25 @@ class DocuWare
         return Document::fromJson($data);
     }
 
+    /**
+     * @throws InvalidResponseClassException
+     * @throws RequestException
+     * @throws \ReflectionException
+     * @throws PendingRequestException
+     */
     public function deleteDocument(
         string $fileCabinetId,
         int $documentId,
     ): void {
         EnsureValidCookie::check();
 
-        $url = sprintf(
-            '%s/DocuWare/Platform/FileCabinets/%s/Documents/%s',
-            config('docuware.credentials.url'),
-            $fileCabinetId,
-            $documentId,
+        $connection = new DocuWareConnector();
+        $request = new DeleteDocumentRequest(
+            fileCabinetId: $fileCabinetId,
+            documentId: $documentId,
         );
 
-        $response = Http::acceptJson()
-            ->withCookies(Auth::cookies(), Auth::domain())
-            ->timeout(config('docuware.timeout'))
-            ->delete($url);
+        $response = $connection->send($request);
 
         event(new DocuWareResponseLog($response));
 

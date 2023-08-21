@@ -122,6 +122,11 @@ $content = DocuWare::downloadDocument($fileCabinetId, $documentId);
 
 /**
  * Download multiple documents.
+ * 
+ * Although there are no mentioned limits in the documentation,
+ * it is not advisable to download more than 100 documents at once.
+ * 
+ * Also note there is a default request timeout of 30 seconds.
  */
 $content = DocuWare::downloadDocuments($fileCabinetId, $documentIds);
 

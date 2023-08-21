@@ -141,6 +141,11 @@ $value = DocuWare::updateDocumentValue($fileCabinetId, $documentId, $fieldName, 
 $document = DocuWare::uploadDocument($fileCabinetId, $fileContent, $fileName);
 
 /**
+ * Get total document count.
+ */
+$content = DocuWare::documentCount($fileCabinetId, $dialogId)
+
+/**
  * Upload new document with index values.
  */
 use CodebarAg\DocuWare\DTO\DocumentIndex;
@@ -491,6 +496,12 @@ could not be found.
 - `CodebarAg\DocuWare\Exceptions\UnableToMakeUrl`
 
 Something is wrong during the URL making.
+
+---
+
+- `CodebarAg\DocuWare\Exceptions\UnableToGetDocumentCount`
+
+Something is wrong with the response from getting the document count.
 
 ---
 

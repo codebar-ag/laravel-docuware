@@ -52,6 +52,7 @@
 
         <env name="DOCUWARE_TESTS_DOCUMENT_FILE_SIZE_PREVIEW" value=""/>
         <env name="DOCUWARE_TESTS_DOCUMENT_FILE_SIZE" value=""/>
+        <env name="DOCUWARE_TESTS_DOCUMENT_COUNT" value=""/>
         <env name="DOCUWARE_TESTS_DOCUMENT_THUMBNAIL_FILE_SIZE" value=""/>
         <env name="DOCUWARE_TESTS_DOCUMENTS_FILE_SIZE" value=""/>
         <env name="DOCUWARE_TESTS_DOCUMENT_ID" value=""/>

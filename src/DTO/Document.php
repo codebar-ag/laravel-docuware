@@ -25,7 +25,7 @@ final class Document
             file_size: Arr::get($data, 'FileSize'),
             total_pages: Arr::get($data, 'TotalPages'),
             title: Arr::get($data, 'Title'),
-            extension: $fields['DWEXTENSION']->value,
+            extension: (Arr::get($fields, 'DWEXTENSION'))->value ?? null,
             content_type: Arr::get($data, 'ContentType'),
             file_cabinet_id: Arr::get($data, 'FileCabinetId'),
             intellixTrust: Arr::get($data, 'IntellixTrust'),

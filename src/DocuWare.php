@@ -11,12 +11,14 @@ use CodebarAg\DocuWare\DTO\Organization;
 use CodebarAg\DocuWare\DTO\OrganizationIndex;
 use CodebarAg\DocuWare\Events\DocuWareResponseLog;
 use CodebarAg\DocuWare\Exceptions\UnableToDownloadDocuments;
+use CodebarAg\DocuWare\Exceptions\UnableToGetDocumentCount;
 use CodebarAg\DocuWare\Exceptions\UnableToLogin;
 use CodebarAg\DocuWare\Exceptions\UnableToLoginNoCookies;
 use CodebarAg\DocuWare\Exceptions\UnableToLogout;
 use CodebarAg\DocuWare\Requests\Auth\GetLogoffRequest;
 use CodebarAg\DocuWare\Requests\Auth\PostLogonRequest;
 use CodebarAg\DocuWare\Requests\Document\DeleteDocumentRequest;
+use CodebarAg\DocuWare\Requests\Document\GetDocumentCountRequest;
 use CodebarAg\DocuWare\Requests\Document\GetDocumentDownloadRequest;
 use CodebarAg\DocuWare\Requests\Document\GetDocumentPreviewRequest;
 use CodebarAg\DocuWare\Requests\Document\GetDocumentRequest;
@@ -37,6 +39,7 @@ use CodebarAg\DocuWare\Support\EnsureValidResponse;
 use CodebarAg\DocuWare\Support\ParseValue;
 use GuzzleHttp\Cookie\CookieJar;
 use Illuminate\Http\Client\RequestException;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Saloon\Exceptions\InvalidResponseClassException;
 use Saloon\Exceptions\PendingRequestException;
@@ -426,6 +429,33 @@ class DocuWare
         EnsureValidResponse::from($response);
 
         return $response->throw()->body();
+    }
+
+    public function documentCount(string $fileCabinetId, string $dialogId): int
+    {
+        EnsureValidCookie::check();
+        $connection = new DocuWareConnector();
+        $request = new GetDocumentCountRequest(
+            fileCabinetId: $fileCabinetId,
+            dialogId: $dialogId,
+        );
+
+        $response = $connection->send($request);
+
+        event(new DocuWareResponseLog($response));
+
+        EnsureValidResponse::from($response);
+
+        $content = $response->throw()->json();
+        throw_unless(Arr::has($content, 'Group'), UnableToGetDocumentCount::noCount());
+
+        $group = Arr::get($content, 'Group');
+        throw_unless(Arr::has($group, '0'), UnableToGetDocumentCount::noGroupKeyIndexZero());
+        $group = Arr::get($group, '0');
+
+        throw_unless(Arr::has($group, 'Count'), UnableToGetDocumentCount::noCount());
+
+        return Arr::get($group, 'Count');
     }
 
     public function search(): DocuWareSearch

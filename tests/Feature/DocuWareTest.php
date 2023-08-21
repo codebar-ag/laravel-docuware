@@ -193,16 +193,14 @@ it('can get a total count of documents', function () {
     Event::fake();
 
     $fileCabinetId = config('docuware.tests.file_cabinet_id');
-    $documentId = config('docuware.tests.document_id');
-    $section = config('docuware.tests.section');
+    $dialogId = config('docuware.tests.dialog_id');
 
-    $contents = (new DocuWare())->downloadDocumentThumbnail(
+    $count = (new DocuWare())->documentCount(
         $fileCabinetId,
-        $documentId,
-        $section,
+        $dialogId,
     );
 
-    $this->assertSame(config('docuware.tests.document_thumbnail_file_size'), strlen($contents));
+    $this->assertSame(config('docuware.tests.document_count'), $count);
     Event::assertDispatched(DocuWareResponseLog::class);
 });
 

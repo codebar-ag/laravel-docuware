@@ -47,10 +47,12 @@
         <env name="DOCUWARE_TESTS_FILE_CABINET_ID" value=""/>
         <env name="DOCUWARE_TESTS_DIALOG_ID" value=""/>
         <env name="DOCUWARE_TESTS_BASKET_ID" value=""/>
+        <env name="DOCUWARE_TESTS_SECTION" value=""/>
         <env name="DOCUWARE_TESTS_FIELD_NAME" value="UUID"/>
 
         <env name="DOCUWARE_TESTS_DOCUMENT_FILE_SIZE_PREVIEW" value=""/>
         <env name="DOCUWARE_TESTS_DOCUMENT_FILE_SIZE" value=""/>
+        <env name="DOCUWARE_TESTS_DOCUMENT_THUMBNAIL_FILE_SIZE" value=""/>
         <env name="DOCUWARE_TESTS_DOCUMENTS_FILE_SIZE" value=""/>
         <env name="DOCUWARE_TESTS_DOCUMENT_ID" value=""/>
         <env name="DOCUWARE_TESTS_DOCUMENTS_IDS" value="[]"/>

@@ -23,6 +23,7 @@ use CodebarAg\DocuWare\Requests\Document\GetDocumentRequest;
 use CodebarAg\DocuWare\Requests\Document\GetDocumentsDownloadRequest;
 use CodebarAg\DocuWare\Requests\Document\PostDocumentRequest;
 use CodebarAg\DocuWare\Requests\Document\PutDocumentFieldRequest;
+use CodebarAg\DocuWare\Requests\Document\Thumbnail\GetDocumentDownloadThumbnailRequest;
 use CodebarAg\DocuWare\Requests\GetCabinetsRequest;
 use CodebarAg\DocuWare\Requests\GetDialogsRequest;
 use CodebarAg\DocuWare\Requests\GetFieldsRequest;
@@ -404,6 +405,26 @@ class DocuWare
         EnsureValidResponse::from($response);
 
         $response->throw();
+    }
+
+    public function downloadDocumentThumbnail(string $fileCabinetId, int $documentId, int $section): string
+    {
+        EnsureValidCookie::check();
+
+        $connection = new DocuWareConnector();
+        $request = new GetDocumentDownloadThumbnailRequest(
+            fileCabinetId: $fileCabinetId,
+            documentId: $documentId,
+            section: $section,
+        );
+
+        $response = $connection->send($request);
+
+        event(new DocuWareResponseLog($response));
+
+        EnsureValidResponse::from($response);
+
+        return $response->throw()->body();
     }
 
     public function search(): DocuWareSearch

@@ -11,7 +11,7 @@ class GetDocumentDownloadRequest extends Request
 
     public function __construct(
         protected readonly string $fileCabinetId,
-        protected readonly string $documentId,
+        protected readonly int $documentId,
     ) {
     }
 

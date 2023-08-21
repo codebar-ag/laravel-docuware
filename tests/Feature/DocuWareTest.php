@@ -189,6 +189,23 @@ it('can download a document thumbnail', function () {
     Event::assertDispatched(DocuWareResponseLog::class);
 });
 
+it('can get a total count of documents', function () {
+    Event::fake();
+
+    $fileCabinetId = config('docuware.tests.file_cabinet_id');
+    $documentId = config('docuware.tests.document_id');
+    $section = config('docuware.tests.section');
+
+    $contents = (new DocuWare())->downloadDocumentThumbnail(
+        $fileCabinetId,
+        $documentId,
+        $section,
+    );
+
+    $this->assertSame(config('docuware.tests.document_thumbnail_file_size'), strlen($contents));
+    Event::assertDispatched(DocuWareResponseLog::class);
+});
+
 it('can search documents', function () {
     Event::fake();
 

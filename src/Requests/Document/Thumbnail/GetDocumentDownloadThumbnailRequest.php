@@ -11,8 +11,9 @@ class GetDocumentDownloadThumbnailRequest extends Request
 
     public function __construct(
         protected readonly string $fileCabinetId,
-        protected readonly string $documentId,
-        protected readonly string $section,
+        protected readonly int $documentId,
+        protected readonly int $section,
+        protected readonly int $page,
     ) {
     }
 
@@ -24,7 +25,7 @@ class GetDocumentDownloadThumbnailRequest extends Request
     public function defaultQuery(): array
     {
         return [
-            'page' => 0,
+            'page' => $this->page,
         ];
     }
 }

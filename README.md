@@ -126,6 +126,11 @@ $content = DocuWare::downloadDocument($fileCabinetId, $documentId);
 $content = DocuWare::downloadDocuments($fileCabinetId, $documentIds);
 
 /**
+ * Download a document thumbnail.
+ */
+$content = DocuWare::downloadDocumentThumbnail($fileCabinetId, $documentId, $section, $page);
+
+/**
  * Update value of a indexed field.
  */
 $value = DocuWare::updateDocumentValue($fileCabinetId, $documentId, $fieldName, $newValue);

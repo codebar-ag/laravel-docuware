@@ -407,7 +407,7 @@ class DocuWare
         $response->throw();
     }
 
-    public function downloadDocumentThumbnail(string $fileCabinetId, int $documentId, int $section): string
+    public function downloadDocumentThumbnail(string $fileCabinetId, int $documentId, int $section, int $page = 0): string
     {
         EnsureValidCookie::check();
 
@@ -416,6 +416,7 @@ class DocuWare
             fileCabinetId: $fileCabinetId,
             documentId: $documentId,
             section: $section,
+            page: $page,
         );
 
         $response = $connection->send($request);

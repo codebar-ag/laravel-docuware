@@ -548,22 +548,22 @@ return [
     'cache_driver' => env('DOCUWARE_CACHE_DRIVER', env('CACHE_DRIVER', 'file')),
 
     /*
-   |--------------------------------------------------------------------------
-   | Cookies
-   |--------------------------------------------------------------------------
-   | This variable is optional and only used if you want to set the request cookie manually.
-   |
-   */
+    |--------------------------------------------------------------------------
+    | Cookies
+    |--------------------------------------------------------------------------
+    | This variable is optional and only used if you want to set the request cookie manually.
+    |
+    */
 
     'cookies' => env('DOCUWARE_COOKIES'),
 
     /*
-   |--------------------------------------------------------------------------
-   | Requests timeout
-   |--------------------------------------------------------------------------
-   | This variable is optional and only used if you want to set the request timeout manually.
-   |
-   */
+    |--------------------------------------------------------------------------
+    | Requests timeout
+    |--------------------------------------------------------------------------
+    | This variable is optional and only used if you want to set the request timeout manually.
+    |
+    */
 
     'timeout' => env('DOCUWARE_TIMEOUT', 30),
 
@@ -611,11 +611,11 @@ return [
     'cookie_lifetime' => (int) env('DOCUWARE_COOKIE_LIFETIME', 525600),
 
     /*
-   |--------------------------------------------------------------------------
-   | Configurations
-   |--------------------------------------------------------------------------
-   |
-   */
+    |--------------------------------------------------------------------------
+    | Configurations
+    |--------------------------------------------------------------------------
+    |
+    */
     'configurations' => [
         'search' => [
             'operation' => 'And',
@@ -633,11 +633,11 @@ return [
     ],
     
     /*
-     |--------------------------------------------------------------------------
-     | Tests
-     |--------------------------------------------------------------------------
-     |
-     */
+    |--------------------------------------------------------------------------
+    | Tests
+    |--------------------------------------------------------------------------
+    |
+    */
     'tests' => [
         'file_cabinet_id' => env('DOCUWARE_TESTS_FILE_CABINET_ID'),
         'dialog_id' => env('DOCUWARE_TESTS_DIALOG_ID'),

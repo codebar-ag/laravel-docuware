@@ -117,5 +117,6 @@ return [
         'document_ids' => json_decode(env('DOCUWARE_TESTS_DOCUMENTS_IDS', '[]')),
         'documents_file_size' => (int) env('DOCUWARE_TESTS_DOCUMENTS_FILE_SIZE'),
         'field_name' => env('DOCUWARE_TESTS_FIELD_NAME'),
+        'field_name_2' => env('DOCUWARE_TESTS_FIELD_NAME_2'),
     ],
 ];

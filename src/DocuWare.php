@@ -175,6 +175,11 @@ class DocuWare
         return collect($cabinets)->map(fn (array $cabinet) => FileCabinet::fromJson($cabinet));
     }
 
+    /**
+     * @throws \ReflectionException
+     * @throws InvalidResponseClassException
+     * @throws PendingRequestException
+     */
     public function getFields(string $fileCabinetId): Collection
     {
         EnsureValidCookie::check();
@@ -193,6 +198,11 @@ class DocuWare
         return collect($fields)->map(fn (array $field) => Field::fromJson($field));
     }
 
+    /**
+     * @throws \ReflectionException
+     * @throws InvalidResponseClassException
+     * @throws PendingRequestException
+     */
     public function getDialogs(string $fileCabinetId): Collection
     {
         EnsureValidCookie::check();
@@ -211,6 +221,11 @@ class DocuWare
         return collect($dialogs)->map(fn (array $dialog) => Dialog::fromJson($dialog));
     }
 
+    /**
+     * @throws \ReflectionException
+     * @throws InvalidResponseClassException
+     * @throws PendingRequestException
+     */
     public function getSelectList(
         string $fileCabinetId,
         string $dialogId,
@@ -234,6 +249,11 @@ class DocuWare
         return $response->throw()->json('Value');
     }
 
+    /**
+     * @throws \ReflectionException
+     * @throws InvalidResponseClassException
+     * @throws PendingRequestException
+     */
     public function getDocument(string $fileCabinetId, int $documentId): Document
     {
         EnsureValidCookie::check();
@@ -255,6 +275,11 @@ class DocuWare
         return Document::fromJson($data);
     }
 
+    /**
+     * @throws \ReflectionException
+     * @throws InvalidResponseClassException
+     * @throws PendingRequestException
+     */
     public function getDocumentPreview(string $fileCabinetId, int $documentId): string
     {
         EnsureValidCookie::check();
@@ -274,6 +299,11 @@ class DocuWare
         return $response->throw()->body();
     }
 
+    /**
+     * @throws \ReflectionException
+     * @throws InvalidResponseClassException
+     * @throws PendingRequestException
+     */
     public function downloadDocument(string $fileCabinetId, int $documentId): string
     {
         EnsureValidCookie::check();
@@ -293,6 +323,12 @@ class DocuWare
         return $response->throw()->body();
     }
 
+    /**
+     * @throws InvalidResponseClassException
+     * @throws \Throwable
+     * @throws \ReflectionException
+     * @throws PendingRequestException
+     */
     public function downloadDocuments(string $fileCabinetId, array $documentIds): string
     {
         EnsureValidCookie::check();
@@ -321,20 +357,47 @@ class DocuWare
         return $response->throw()->body();
     }
 
+    /**
+     * @throws InvalidResponseClassException
+     * @throws \ReflectionException
+     * @throws PendingRequestException
+     */
     public function updateDocumentValue(
         string $fileCabinetId,
         int $documentId,
         string $fieldName,
         string $newValue,
+        bool $forceUpdate = false,
     ): null|int|float|Carbon|string {
+        $fields = $this->updateDocumentValues(
+            fileCabinetId: $fileCabinetId,
+            documentId: $documentId,
+            values: [$fieldName => $newValue],
+            forceUpdate: $forceUpdate,
+        );
+
+        return collect($fields)->get($fieldName) ?? null;
+    }
+
+    /**
+     * @throws \ReflectionException
+     * @throws InvalidResponseClassException
+     * @throws PendingRequestException
+     */
+    public function updateDocumentValues(
+        string $fileCabinetId,
+        int $documentId,
+        array $values,
+        bool $forceUpdate = false,
+    ): ?Collection {
         EnsureValidCookie::check();
 
         $connection = new DocuWareConnector();
         $request = new PutDocumentFieldRequest(
             fileCabinetId: $fileCabinetId,
             documentId: $documentId,
-            fieldName: $fieldName,
-            newValue: $newValue,
+            values: $values,
+            forceUpdate: $forceUpdate,
         );
 
         $response = $connection->send($request);
@@ -345,9 +408,11 @@ class DocuWare
 
         $fields = $response->throw()->json('Field');
 
-        $field = collect($fields)->firstWhere('FieldName', $fieldName);
-
-        return ParseValue::field($field);
+        return collect($fields)->mapWithKeys(function (array $field) {
+            return [
+                $field['FieldName'] => ParseValue::field($field),
+            ];
+        });
     }
 
     /**

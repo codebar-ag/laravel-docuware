@@ -2,6 +2,7 @@
 
 namespace CodebarAg\DocuWare\Requests\Document;
 
+use CodebarAg\DocuWare\Exceptions\UnableToUpdateFields;
 use Saloon\Contracts\Body\HasBody;
 use Saloon\Enums\Method;
 use Saloon\Http\Request;
@@ -16,8 +17,8 @@ class PutDocumentFieldRequest extends Request implements HasBody
     public function __construct(
         protected readonly string $fileCabinetId,
         protected readonly string $documentId,
-        protected readonly string $fieldName,
-        protected readonly string $newValue,
+        protected readonly array $values,
+        protected readonly bool $forceUpdate = false,
     ) {
     }
 
@@ -28,13 +29,26 @@ class PutDocumentFieldRequest extends Request implements HasBody
 
     public function defaultBody(): array
     {
-        return [
-            'Field' => [
-                [
-                    'FieldName' => $this->fieldName,
-                    'Item' => $this->newValue,
-                ],
-            ],
+        throw_unless(count($this->values) > 0, UnableToUpdateFields::noValuesProvided());
+
+        $fields = [];
+
+        foreach ($this->values as $key => $value) {
+            throw_unless($value, UnableToUpdateFields::noValuesProvidedForField($key));
+            $fields[] = [
+                'FieldName' => $key,
+                'Item' => $value,
+            ];
+        }
+
+        $content = [
+            'Field' => $fields,
         ];
+
+        if ($this->forceUpdate) {
+            $content['ForceUpdate'] = true;
+        }
+
+        return $content;
     }
 }

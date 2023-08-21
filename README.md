@@ -138,7 +138,12 @@ $content = DocuWare::downloadDocumentThumbnail($fileCabinetId, $documentId, $sec
 /**
  * Update value of a indexed field.
  */
-$value = DocuWare::updateDocumentValue($fileCabinetId, $documentId, $fieldName, $newValue);
+$value = DocuWare::updateDocumentValue($fileCabinetId, $documentId, $fieldName, $newValue, $forceDownload);
+
+/**
+ * Update multiple values of indexed fields.
+ */
+$value = DocuWare::updateDocumentValue($fileCabinetId, $documentId, $values, $forceDownload);
 
 /**
  * Upload new document.
@@ -504,6 +509,12 @@ Something is wrong during the URL making.
 
 ---
 
+- `CodebarAg\DocuWare\Exceptions\UnableToUpdateFields`
+
+No fields were supplied.
+
+---
+
 - `CodebarAg\DocuWare\Exceptions\UnableToGetDocumentCount`
 
 Something is wrong with the response from getting the document count.
@@ -657,6 +668,7 @@ return [
         'document_ids' => json_decode(env('DOCUWARE_TESTS_DOCUMENTS_IDS', '[]')),
         'documents_file_size' => (int) env('DOCUWARE_TESTS_DOCUMENTS_FILE_SIZE'),
         'field_name' => env('DOCUWARE_TESTS_FIELD_NAME'),
+        'field_name_2' => env('DOCUWARE_TESTS_FIELD_NAME_2'),
     ],
 ];
 ```
@@ -684,6 +696,7 @@ Modify environment variables in the phpunit.xml-file:
 <env name="DOCUWARE_TESTS_BASKET_ID" value=""/>
 <env name="DOCUWARE_TESTS_SECTION" value=""/>
 <env name="DOCUWARE_TESTS_FIELD_NAME" value="UUID"/>
+<env name="DOCUWARE_TESTS_FIELD_NAME_2" value="DOCUMENT_LABEL"/>
 
 <env name="DOCUWARE_TESTS_DOCUMENT_FILE_SIZE_PREVIEW" value=""/>
 <env name="DOCUWARE_TESTS_DOCUMENT_FILE_SIZE" value=""/>

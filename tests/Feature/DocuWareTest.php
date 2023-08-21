@@ -142,6 +142,29 @@ it('can update a document value', function () {
     Event::assertDispatched(DocuWareResponseLog::class);
 });
 
+it('can update multiple document values', function () {
+    Event::fake();
+
+    $fileCabinetId = config('docuware.tests.file_cabinet_id');
+    $documentId = config('docuware.tests.document_id');
+    $values = [
+        config('docuware.tests.field_name') => 'laravel-docuware',
+        config('docuware.tests.field_name_2') => 'laravel-docuware-2',
+    ];
+
+    $response = (new DocuWare())->updateDocumentValues(
+        $fileCabinetId,
+        $documentId,
+        $values,
+        true
+    );
+
+    $this->assertSame('laravel-docuware', $response->get(config('docuware.tests.field_name')));
+    $this->assertSame('laravel-docuware-2', $response->get(config('docuware.tests.field_name_2')));
+
+    Event::assertDispatched(DocuWareResponseLog::class);
+});
+
 it('can download multiple documents', function () {
     Event::fake();
 

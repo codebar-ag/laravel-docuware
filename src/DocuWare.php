@@ -376,7 +376,7 @@ class DocuWare
             forceUpdate: $forceUpdate,
         );
 
-        return collect($fields)->get($fieldName) ?? null;
+        return $fields->get($fieldName) ?? null;
     }
 
     /**

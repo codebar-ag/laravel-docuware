@@ -10,16 +10,6 @@ use Illuminate\Support\Str;
 
 class ParseValue
 {
-    public static function date(string $date): Carbon
-    {
-        $timestamp = Str::of($date)
-            ->ltrim('/Date(')
-            ->rtrim(')/')
-            ->__toString();
-
-        return Carbon::createFromTimestampMs($timestamp);
-    }
-
     public static function field(
         ?array $field,
         int|float|Carbon|string|Collection $default = null,
@@ -40,6 +30,16 @@ class ParseValue
             'Table' => self::table($item),
             default => $default,
         };
+    }
+
+    public static function date(string $date): Carbon
+    {
+        $timestamp = Str::of($date)
+            ->ltrim('/Date(')
+            ->rtrim(')/')
+            ->__toString();
+
+        return Carbon::createFromTimestampMs($timestamp);
     }
 
     public static function table(array $Item): ?Collection

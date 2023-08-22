@@ -122,18 +122,38 @@ $content = DocuWare::downloadDocument($fileCabinetId, $documentId);
 
 /**
  * Download multiple documents.
+ * 
+ * Although there are no mentioned limits in the documentation,
+ * it is not advisable to download more than 100 documents at once.
+ * 
+ * Also note there is a default request timeout of 30 seconds.
  */
 $content = DocuWare::downloadDocuments($fileCabinetId, $documentIds);
 
 /**
+ * Download a document thumbnail.
+ */
+$content = DocuWare::downloadDocumentThumbnail($fileCabinetId, $documentId, $section, $page);
+
+/**
  * Update value of a indexed field.
  */
-$value = DocuWare::updateDocumentValue($fileCabinetId, $documentId, $fieldName, $newValue);
+$value = DocuWare::updateDocumentValue($fileCabinetId, $documentId, $fieldName, $newValue, $forceDownload);
+
+/**
+ * Update multiple values of indexed fields.
+ */
+$value = DocuWare::updateDocumentValue($fileCabinetId, $documentId, $values, $forceDownload);
 
 /**
  * Upload new document.
  */
 $document = DocuWare::uploadDocument($fileCabinetId, $fileContent, $fileName);
+
+/**
+ * Get total document count.
+ */
+$content = DocuWare::documentCount($fileCabinetId, $dialogId)
 
 /**
  * Upload new document with index values.
@@ -489,6 +509,18 @@ Something is wrong during the URL making.
 
 ---
 
+- `CodebarAg\DocuWare\Exceptions\UnableToUpdateFields`
+
+No fields were supplied.
+
+---
+
+- `CodebarAg\DocuWare\Exceptions\UnableToGetDocumentCount`
+
+Something is wrong with the response from getting the document count.
+
+---
+
 - `Illuminate\Http\Client\RequestException`
 
 All other cases if the response is not successfully.
@@ -532,22 +564,22 @@ return [
     'cache_driver' => env('DOCUWARE_CACHE_DRIVER', env('CACHE_DRIVER', 'file')),
 
     /*
-   |--------------------------------------------------------------------------
-   | Cookies
-   |--------------------------------------------------------------------------
-   | This variable is optional and only used if you want to set the request cookie manually.
-   |
-   */
+    |--------------------------------------------------------------------------
+    | Cookies
+    |--------------------------------------------------------------------------
+    | This variable is optional and only used if you want to set the request cookie manually.
+    |
+    */
 
     'cookies' => env('DOCUWARE_COOKIES'),
 
     /*
-   |--------------------------------------------------------------------------
-   | Requests timeout
-   |--------------------------------------------------------------------------
-   | This variable is optional and only used if you want to set the request timeout manually.
-   |
-   */
+    |--------------------------------------------------------------------------
+    | Requests timeout
+    |--------------------------------------------------------------------------
+    | This variable is optional and only used if you want to set the request timeout manually.
+    |
+    */
 
     'timeout' => env('DOCUWARE_TIMEOUT', 30),
 
@@ -595,11 +627,11 @@ return [
     'cookie_lifetime' => (int) env('DOCUWARE_COOKIE_LIFETIME', 525600),
 
     /*
-   |--------------------------------------------------------------------------
-   | Configurations
-   |--------------------------------------------------------------------------
-   |
-   */
+    |--------------------------------------------------------------------------
+    | Configurations
+    |--------------------------------------------------------------------------
+    |
+    */
     'configurations' => [
         'search' => [
             'operation' => 'And',
@@ -617,22 +649,26 @@ return [
     ],
     
     /*
-     |--------------------------------------------------------------------------
-     | Tests
-     |--------------------------------------------------------------------------
-     |
-     */
+    |--------------------------------------------------------------------------
+    | Tests
+    |--------------------------------------------------------------------------
+    |
+    */
     'tests' => [
         'file_cabinet_id' => env('DOCUWARE_TESTS_FILE_CABINET_ID'),
         'dialog_id' => env('DOCUWARE_TESTS_DIALOG_ID'),
         'basket_id' => env('DOCUWARE_TESTS_BASKET_ID'),
+        'section' => (int) env('DOCUWARE_TESTS_SECTION'),
         'organization_id' => env('DOCUWARE_TESTS_ORGANIZATION_ID'),
         'document_id' => (int) env('DOCUWARE_TESTS_DOCUMENT_ID'),
         'document_file_size_preview' => (int) env('DOCUWARE_TESTS_DOCUMENT_FILE_SIZE_PREVIEW'),
         'document_file_size' => (int) env('DOCUWARE_TESTS_DOCUMENT_FILE_SIZE'),
-        'document_ids' => json_decode(env('DOCUWARE_TESTS_DOCUMENTS_IDS')),
+        'document_count' => (int) env('DOCUWARE_TESTS_DOCUMENT_COUNT'),
+        'document_thumbnail_file_size' => (int) env('DOCUWARE_TESTS_DOCUMENT_THUMBNAIL_FILE_SIZE'),
+        'document_ids' => json_decode(env('DOCUWARE_TESTS_DOCUMENTS_IDS', '[]')),
         'documents_file_size' => (int) env('DOCUWARE_TESTS_DOCUMENTS_FILE_SIZE'),
         'field_name' => env('DOCUWARE_TESTS_FIELD_NAME'),
+        'field_name_2' => env('DOCUWARE_TESTS_FIELD_NAME_2'),
     ],
 ];
 ```
@@ -648,7 +684,6 @@ cp phpunit.xml.dist phpunit.xml
 Modify environment variables in the phpunit.xml-file:
 
 ```xml
-
 <env name="DOCUWARE_URL" value="https://domain.docuware.cloud"/>
 <env name="DOCUWARE_USERNAME" value="user@domain.test"/>
 <env name="DOCUWARE_PASSWORD" value="password"/>
@@ -659,11 +694,14 @@ Modify environment variables in the phpunit.xml-file:
 <env name="DOCUWARE_TESTS_FILE_CABINET_ID" value=""/>
 <env name="DOCUWARE_TESTS_DIALOG_ID" value=""/>
 <env name="DOCUWARE_TESTS_BASKET_ID" value=""/>
-<env name="DOCUWARE_TESTS_ORGANIZATION_ID" value=""/>
+<env name="DOCUWARE_TESTS_SECTION" value=""/>
 <env name="DOCUWARE_TESTS_FIELD_NAME" value="UUID"/>
+<env name="DOCUWARE_TESTS_FIELD_NAME_2" value="DOCUMENT_LABEL"/>
 
 <env name="DOCUWARE_TESTS_DOCUMENT_FILE_SIZE_PREVIEW" value=""/>
 <env name="DOCUWARE_TESTS_DOCUMENT_FILE_SIZE" value=""/>
+<env name="DOCUWARE_TESTS_DOCUMENT_COUNT" value=""/>
+<env name="DOCUWARE_TESTS_DOCUMENT_THUMBNAIL_FILE_SIZE" value=""/>
 <env name="DOCUWARE_TESTS_DOCUMENTS_FILE_SIZE" value=""/>
 <env name="DOCUWARE_TESTS_DOCUMENT_ID" value=""/>
 <env name="DOCUWARE_TESTS_DOCUMENTS_IDS" value="[]"/>

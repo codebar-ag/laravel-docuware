@@ -13,22 +13,22 @@ return [
     'cache_driver' => env('DOCUWARE_CACHE_DRIVER', env('CACHE_DRIVER', 'file')),
 
     /*
-   |--------------------------------------------------------------------------
-   | Cookies
-   |--------------------------------------------------------------------------
-   | This variable is optional and only used if you want to set the request cookie manually.
-   |
-   */
+    |--------------------------------------------------------------------------
+    | Cookies
+    |--------------------------------------------------------------------------
+    | This variable is optional and only used if you want to set the request cookie manually.
+    |
+    */
 
     'cookies' => env('DOCUWARE_COOKIES'),
 
     /*
-   |--------------------------------------------------------------------------
-   | Requests timeout
-   |--------------------------------------------------------------------------
-   | This variable is optional and only used if you want to set the request timeout manually.
-   |
-   */
+    |--------------------------------------------------------------------------
+    | Requests timeout
+    |--------------------------------------------------------------------------
+    | This variable is optional and only used if you want to set the request timeout manually.
+    |
+    */
 
     'timeout' => env('DOCUWARE_TIMEOUT', 30),
 
@@ -76,11 +76,11 @@ return [
     'cookie_lifetime' => (int) env('DOCUWARE_COOKIE_LIFETIME', 525600),
 
     /*
-   |--------------------------------------------------------------------------
-   | Configurations
-   |--------------------------------------------------------------------------
-   |
-   */
+    |--------------------------------------------------------------------------
+    | Configurations
+    |--------------------------------------------------------------------------
+    |
+    */
     'configurations' => [
         'search' => [
             'operation' => 'And',
@@ -98,21 +98,25 @@ return [
     ],
 
     /*
-     |--------------------------------------------------------------------------
-     | Tests
-     |--------------------------------------------------------------------------
-     |
-     */
+    |--------------------------------------------------------------------------
+    | Tests
+    |--------------------------------------------------------------------------
+    |
+    */
     'tests' => [
         'file_cabinet_id' => env('DOCUWARE_TESTS_FILE_CABINET_ID'),
         'dialog_id' => env('DOCUWARE_TESTS_DIALOG_ID'),
         'basket_id' => env('DOCUWARE_TESTS_BASKET_ID'),
+        'section' => (int) env('DOCUWARE_TESTS_SECTION'),
         'organization_id' => env('DOCUWARE_TESTS_ORGANIZATION_ID'),
         'document_id' => (int) env('DOCUWARE_TESTS_DOCUMENT_ID'),
         'document_file_size_preview' => (int) env('DOCUWARE_TESTS_DOCUMENT_FILE_SIZE_PREVIEW'),
         'document_file_size' => (int) env('DOCUWARE_TESTS_DOCUMENT_FILE_SIZE'),
+        'document_count' => (int) env('DOCUWARE_TESTS_DOCUMENT_COUNT'),
+        'document_thumbnail_file_size' => (int) env('DOCUWARE_TESTS_DOCUMENT_THUMBNAIL_FILE_SIZE'),
         'document_ids' => json_decode(env('DOCUWARE_TESTS_DOCUMENTS_IDS', '[]')),
         'documents_file_size' => (int) env('DOCUWARE_TESTS_DOCUMENTS_FILE_SIZE'),
         'field_name' => env('DOCUWARE_TESTS_FIELD_NAME'),
+        'field_name_2' => env('DOCUWARE_TESTS_FIELD_NAME_2'),
     ],
 ];

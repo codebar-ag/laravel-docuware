@@ -20,6 +20,12 @@ then optimize the processes that power the core of your business.
 
 ## 🛠 Requirements
 
+### > = v3.0
+
+- PHP: `^8.2``
+- Laravel: `^10.*`
+- DocuWare Cloud Access
+
 ### > = v2.0
 
 - PHP: `^8.1` |`^8.2`

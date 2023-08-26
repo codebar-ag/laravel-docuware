@@ -111,7 +111,7 @@ class DocuWare
      * @throws \ReflectionException
      * @throws PendingRequestException
      */
-    public function getOrganization(string $organizationId)
+    public function getOrganization(string $organizationId): Organization
     {
         EnsureValidCookie::check();
 

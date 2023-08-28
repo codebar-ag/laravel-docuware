@@ -493,7 +493,10 @@ class DocuWare
 
         EnsureValidResponse::from($response);
 
-        return $response->throw()->body();
+        $base64 = base64_encode($response->throw()->body());
+        $mime = $response->throw()->header('Content-Type');
+
+        return 'data:' . $mime . ';base64,' . $base64;
     }
 
     public function documentCount(string $fileCabinetId, string $dialogId): int

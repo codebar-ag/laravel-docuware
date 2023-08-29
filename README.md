@@ -133,7 +133,7 @@ $content = DocuWare::downloadDocuments(string $fileCabinetId, array $documentIds
 /**
  * Download a document thumbnail.
  */
-$content = DocuWare::downloadDocumentThumbnail(string $fileCabinetId, int $documentId, int $section, int $page = 0): string;
+$thumbnail = DocuWare::downloadDocumentThumbnail(string $fileCabinetId, int $documentId, int $section, int $page = 0): CodebarAg\DocuWare\DTO\DocumentThumbnail;
 
 /**
  * Update value of a indexed field.
@@ -406,6 +406,14 @@ CodebarAg\DocuWare\DTO\Document {
       1 => CodebarAg\DocuWare\DTO\DocumentField            // DocumentField
     ]
   }
+}
+```
+
+```php
+CodebarAg\DocuWare\DTO\DocumentThumbnail {
+  +mime: "image/png"                                        // string
+  +data: "somedata"                                         // string
+  +base64: "data:image/png;base64,WXpJNWRGcFhVbWhrUjBVOQ==" // string
 }
 ```
 

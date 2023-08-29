@@ -208,7 +208,11 @@ it('can download a document thumbnail', function () {
         $section,
     );
 
-    $this->assertSame(config('docuware.tests.document_thumbnail_file_size'), strlen($contents));
+    ray($contents);
+    ray(config('docuware.tests.document_thumbnail_mime_type'));
+
+    $this->assertSame(config('docuware.tests.document_thumbnail_mime_type'), $contents->mime);
+    $this->assertSame(config('docuware.tests.document_thumbnail_file_size'), strlen($contents->data));
     Event::assertDispatched(DocuWareResponseLog::class);
 });
 

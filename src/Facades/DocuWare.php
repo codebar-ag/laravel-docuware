@@ -39,8 +39,8 @@ use Illuminate\Support\Facades\Facade;
  */
 class DocuWare extends Facade
 {
-	protected static function getFacadeAccessor(): string
-	{
-		return \CodebarAg\DocuWare\DocuWare::class;
-	}
+    protected static function getFacadeAccessor(): string
+    {
+        return \CodebarAg\DocuWare\DocuWare::class;
+    }
 }

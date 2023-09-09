@@ -7,6 +7,7 @@ use CodebarAg\DocuWare\DocuWareSearch;
 use CodebarAg\DocuWare\DocuWareUrl;
 use CodebarAg\DocuWare\DTO\Dialog;
 use CodebarAg\DocuWare\DTO\Document;
+use CodebarAg\DocuWare\DTO\DocumentThumbnail;
 use CodebarAg\DocuWare\DTO\Field;
 use CodebarAg\DocuWare\DTO\FileCabinet;
 use CodebarAg\DocuWare\DTO\Organization;
@@ -29,18 +30,19 @@ use Illuminate\Support\Facades\Facade;
  * @method static string getDocumentPreview(string $fileCabinetId, int $documentId)
  * @method static string downloadDocument(string $fileCabinetId, int $documentId)
  * @method static string downloadDocuments(string $fileCabinetId, array $documentIds)
- * @method static null|int|float|Carbon|string updateDocumentValue(string $fileCabinetId, int $documentId, string $fieldName, string $newValue)
+ * @method DocumentThumbnail downloadDocumentThumbnail(string $fileCabinetId, int $documentId, int $section, int $page = 0)
+ * @method static null|int|float|Carbon|string updateDocumentValue(string $fileCabinetId, int $documentId, string $fieldName, string $newValue, bool $forceUpdate = false)
+ * @method static null|int|float|Carbon|string updateDocumentValues(string $fileCabinetId, int $documentId, array $values, bool $forceUpdate = false)
  * @method static Document uploadDocument(string $fileCabinetId, string $fileContent, string $fileName, ?Collection $indexes = null)
+ * @method static int documentCount(string $fileCabinetId, string $dialogId)
  * @method static void deleteDocument(string $fileCabinetId, int $documentId)
- * @method static downloadDocumentThumbnail(string $fileCabinetId, int $documentId, int $section, int $page = 0)
- * @method static documentCount(string $fileCabinetId, string $dialogId)
  * @method static DocuWareSearch search()
  * @method static DocuWareUrl url()
  */
 class DocuWare extends Facade
 {
-	protected static function getFacadeAccessor(): string
-	{
-		return \CodebarAg\DocuWare\DocuWare::class;
-	}
+    protected static function getFacadeAccessor(): string
+    {
+        return \CodebarAg\DocuWare\DocuWare::class;
+    }
 }

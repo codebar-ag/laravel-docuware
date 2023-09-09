@@ -5,6 +5,7 @@ namespace CodebarAg\DocuWare;
 use Carbon\Carbon;
 use CodebarAg\DocuWare\DTO\Dialog;
 use CodebarAg\DocuWare\DTO\Document;
+use CodebarAg\DocuWare\DTO\DocumentThumbnail;
 use CodebarAg\DocuWare\DTO\Field;
 use CodebarAg\DocuWare\DTO\FileCabinet;
 use CodebarAg\DocuWare\DTO\Organization;
@@ -111,7 +112,7 @@ class DocuWare
      * @throws \ReflectionException
      * @throws PendingRequestException
      */
-    public function getOrganization(string $organizationId)
+    public function getOrganization(string $organizationId): Organization
     {
         EnsureValidCookie::check();
 
@@ -475,7 +476,7 @@ class DocuWare
         $response->throw();
     }
 
-    public function downloadDocumentThumbnail(string $fileCabinetId, int $documentId, int $section, int $page = 0): string
+    public function downloadDocumentThumbnail(string $fileCabinetId, int $documentId, int $section, int $page = 0): DocumentThumbnail
     {
         EnsureValidCookie::check();
 
@@ -493,7 +494,10 @@ class DocuWare
 
         EnsureValidResponse::from($response);
 
-        return $response->throw()->body();
+        return DocumentThumbnail::fromData([
+            'mime' => $response->throw()->header('Content-Type'),
+            'data' => $response->throw()->body(),
+        ]);
     }
 
     public function documentCount(string $fileCabinetId, string $dialogId): int

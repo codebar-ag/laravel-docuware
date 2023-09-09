@@ -76,49 +76,49 @@ DOCUWARE_PASSPHRASE="a#bcd>2~C1'abc\\#"
 use CodebarAg\DocuWare\Facades\DocuWare;
 
 /**
- * Return all organizations.
- */
-$cabinets = DocuWare::getOrganizations();
-
-/**
  * Return an organization.
  */
-$cabinets = DocuWare::getOrganization($organizationId);
+$organization = DocuWare::getOrganization(string $organizationId): CodebarAg\DocuWare\DTO\Organization;
+
+/**
+ * Return all organizations.
+ */
+$organizations = DocuWare::getOrganizations(): Illuminate\Support\Collection;
 
 /**
  * Return all file cabinets.
  */
-$cabinets = DocuWare::getFileCabinets();
+$cabinets = DocuWare::getFileCabinets(): Illuminate\Support\Collection|CodebarAg\DocuWare\DTO\FileCabinet[];
 
 /**
  * Return all fields of a file cabinet.
  */
-$fields = DocuWare::getFields($fileCabinetId);
+$fields = DocuWare::getFields(string $fileCabinetId): Illuminate\Support\Collection|CodebarAg\DocuWare\DTO\Field[];
 
 /**
  * Return all dialogs of a file cabinet.
  */
-$dialogs = DocuWare::getDialogs($fileCabinetId);
+$dialogs = DocuWare::getDialogs(string $fileCabinetId): Illuminate\Support\Collection|CodebarAg\DocuWare\DTO\Dialog[];
 
 /**
  * Return all used values for a specific field.
  */
-$values = DocuWare::getSelectList($fileCabinetId, $dialogId, $fieldName);
+$values = DocuWare::getSelectList(string $fileCabinetId, string $dialogId, string $fieldName): array;
 
 /**
  * Return a document.
  */
-$document = DocuWare::getDocument($fileCabinetId, $documentId);
+$document = DocuWare::getDocument(string $fileCabinetId, int $documentId): CodebarAg\DocuWare\DTO\Document;
 
 /**
  * Return image preview of a document.
  */
-$content = DocuWare::getDocumentPreview($fileCabinetId, $documentId);
+$content = DocuWare::getDocumentPreview(string $fileCabinetId, int $documentId): string;
 
 /**
  * Download single document.
  */
-$content = DocuWare::downloadDocument($fileCabinetId, $documentId);
+$content = DocuWare::downloadDocument(string $fileCabinetId, int $documentId): string;
 
 /**
  * Download multiple documents.
@@ -128,32 +128,32 @@ $content = DocuWare::downloadDocument($fileCabinetId, $documentId);
  * 
  * Also note there is a default request timeout of 30 seconds.
  */
-$content = DocuWare::downloadDocuments($fileCabinetId, $documentIds);
+$content = DocuWare::downloadDocuments(string $fileCabinetId, array $documentIds): string;
 
 /**
  * Download a document thumbnail.
  */
-$content = DocuWare::downloadDocumentThumbnail($fileCabinetId, $documentId, $section, $page);
+$thumbnail = DocuWare::downloadDocumentThumbnail(string $fileCabinetId, int $documentId, int $section, int $page = 0): CodebarAg\DocuWare\DTO\DocumentThumbnail;
 
 /**
  * Update value of a indexed field.
  */
-$value = DocuWare::updateDocumentValue($fileCabinetId, $documentId, $fieldName, $newValue, $forceDownload);
+$value = DocuWare::updateDocumentValue(string $fileCabinetId, int $documentId, string $fieldName, string $newValue, bool $forceUpdate = false): null|int|float|Carbon|string;
 
 /**
  * Update multiple values of indexed fields.
  */
-$value = DocuWare::updateDocumentValue($fileCabinetId, $documentId, $values, $forceDownload);
+$value = DocuWare::updateDocumentValues(string $fileCabinetId, int $documentId, array $values, bool $forceUpdate = false): null|int|float|Carbon|string;
 
 /**
  * Upload new document.
  */
-$document = DocuWare::uploadDocument($fileCabinetId, $fileContent, $fileName);
+$document = DocuWare::uploadDocument(string $fileCabinetId, string $fileContent, string $fileName, ?Collection $indexes = null): CodebarAg\DocuWare\DTO\Document;
 
 /**
  * Get total document count.
  */
-$content = DocuWare::documentCount($fileCabinetId, $dialogId)
+$content = DocuWare::documentCount(string $fileCabinetId, string $dialogId): int;
 
 /**
  * Upload new document with index values.
@@ -170,12 +170,12 @@ $document = DocuWare::uploadDocument(
     $fileContent,
     $fileName,
     $indexes,
-);
+): CodebarAg\DocuWare\DTO\Document;
 
 /**
  * Delete document.
  */
-DocuWare::deleteDocument($fileCabinetId, $documentId);
+DocuWare::deleteDocument($fileCabinetId, $documentId): void;
 ```
 
 ## 🔍 Search usage
@@ -406,6 +406,14 @@ CodebarAg\DocuWare\DTO\Document {
       1 => CodebarAg\DocuWare\DTO\DocumentField            // DocumentField
     ]
   }
+}
+```
+
+```php
+CodebarAg\DocuWare\DTO\DocumentThumbnail {
+  +mime: "image/png"                                        // string
+  +data: "somedata"                                         // string
+  +base64: "data:image/png;base64,WXpJNWRGcFhVbWhrUjBVOQ==" // string
 }
 ```
 

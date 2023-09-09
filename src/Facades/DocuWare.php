@@ -9,6 +9,8 @@ use CodebarAg\DocuWare\DTO\Dialog;
 use CodebarAg\DocuWare\DTO\Document;
 use CodebarAg\DocuWare\DTO\Field;
 use CodebarAg\DocuWare\DTO\FileCabinet;
+use CodebarAg\DocuWare\DTO\Organization;
+use CodebarAg\DocuWare\DTO\OrganizationIndex;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Facade;
 
@@ -17,6 +19,8 @@ use Illuminate\Support\Facades\Facade;
  *
  * @method static string login()
  * @method static void logout()
+ * @method static Organization getOrganization(string $organizationId)
+ * @method static Collection|OrganizationIndex[] getOrganizations()
  * @method static Collection|FileCabinet[] getFileCabinets()
  * @method static Collection|Field[] getFields(string $fileCabinetId)
  * @method static Collection|Dialog[] getDialogs(string $fileCabinetId)
@@ -28,13 +32,15 @@ use Illuminate\Support\Facades\Facade;
  * @method static null|int|float|Carbon|string updateDocumentValue(string $fileCabinetId, int $documentId, string $fieldName, string $newValue)
  * @method static Document uploadDocument(string $fileCabinetId, string $fileContent, string $fileName, ?Collection $indexes = null)
  * @method static void deleteDocument(string $fileCabinetId, int $documentId)
+ * @method static downloadDocumentThumbnail(string $fileCabinetId, int $documentId, int $section, int $page = 0)
+ * @method static documentCount(string $fileCabinetId, string $dialogId)
  * @method static DocuWareSearch search()
  * @method static DocuWareUrl url()
  */
 class DocuWare extends Facade
 {
-    protected static function getFacadeAccessor(): string
-    {
-        return \CodebarAg\DocuWare\DocuWare::class;
-    }
+	protected static function getFacadeAccessor(): string
+	{
+		return \CodebarAg\DocuWare\DocuWare::class;
+	}
 }

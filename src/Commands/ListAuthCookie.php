@@ -1,6 +1,6 @@
 <?php
 
-namespace CodebarAg\DocuWare\Console;
+namespace CodebarAg\DocuWare\Commands;
 
 use CodebarAg\DocuWare\Support\Auth;
 use Illuminate\Console\Command;

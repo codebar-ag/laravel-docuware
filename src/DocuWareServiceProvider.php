@@ -2,7 +2,7 @@
 
 namespace CodebarAg\DocuWare;
 
-use CodebarAg\DocuWare\Console\ListAuthCookie;
+use CodebarAg\DocuWare\Commands\ListAuthCookie;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 

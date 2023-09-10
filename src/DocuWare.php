@@ -52,11 +52,41 @@ use Symfony\Component\HttpFoundation\Response;
 
 class DocuWare
 {
+    const COOKIE_NAME = '.DWPLATFORMAUTH';
+
     protected $connection;
 
     public function __construct(protected ?string $cookie = null)
     {
         $this->connection = self::connection();
+    }
+
+    /**
+     * @throws InvalidResponseClassException
+     * @throws \Throwable
+     * @throws \ReflectionException
+     * @throws PendingRequestException
+     */
+    public function getCookie(): string
+    {
+        EnsureValidCredentials::check();
+
+        $request = new PostLogonRequest();
+
+        $response = $this->connection->send($request);
+
+        event(new DocuWareResponseLog($response));
+
+        throw_if($response->status() === Response::HTTP_UNAUTHORIZED, UnableToLogin::create());
+        throw_if($this->connection->getCoookieJar()->toArray() === [], UnableToLoginNoCookies::create());
+
+        $cookies = $this->connection->getCoookieJar();
+
+        $cookie = collect($cookies->toArray())
+            ->reject(fn (array $cookie) => Arr::get($cookie, 'Value') === '')
+            ->firstWhere('Name', self::COOKIE_NAME);
+
+        return Arr::get($cookie, 'Value');
     }
 
     /**

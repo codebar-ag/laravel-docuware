@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Facade;
 /**
  * @see \CodebarAg\DocuWare\DocuWare
  *
+ * @method static string getCookie()
  * @method static string login()
  * @method static void logout()
  * @method static Organization getOrganization(string $organizationId)

@@ -460,13 +460,19 @@ You only need to provide correct credentials. Everything else is automatically
 handled from the package. Under the hood we are storing the authentication
 cookie in the cache named *docuware.cookies*.
 
-You can run `php artisan docuware:list-auth-cookie` command to get your auth session that you can use in your `.env` file `DOCUWARE_COOKIES` key.
+You can run `php artisan docuware:list-auth-cookie` command to get your auth session that you can use in your `.env`
+file `DOCUWARE_COOKIES` key.
 
 But if you need further control you can use the following methods to login and
 logout with DocuWare:
 
 ```php
 use CodebarAg\DocuWare\Facades\DocuWare;
+
+/**
+ * If you would like to handle the cookie storage by yourself you can get a fresh cookie with the getCookie() method.
+ */
+DocuWare::getCookie();
 
 /**
  * Login with your credentials. You only need to login once. Afterwards the
@@ -566,6 +572,15 @@ This is the contents of the published config file:
 <?php
 
 return [
+    /*
+    |--------------------------------------------------------------------------
+    | Connection
+    |--------------------------------------------------------------------------
+    | Select a connector to authenticate with. You can choose between: WITHOUT_COOKIE, STATIC_COOKIE
+    |
+    */
+
+    'connection' => ConnectionEnum::WITHOUT_COOKIE,
 
     /*
     |--------------------------------------------------------------------------
@@ -698,6 +713,7 @@ cp phpunit.xml.dist phpunit.xml
 Modify environment variables in the phpunit.xml-file:
 
 ```xml
+
 <env name="DOCUWARE_URL" value="https://domain.docuware.cloud"/>
 <env name="DOCUWARE_USERNAME" value="user@domain.test"/>
 <env name="DOCUWARE_PASSWORD" value="password"/>

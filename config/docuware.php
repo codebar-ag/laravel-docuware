@@ -8,7 +8,7 @@ return [
     |--------------------------------------------------------------------------
     | Connection
     |--------------------------------------------------------------------------
-    | Select a connector to authenticate with. You can choose between: WITHOUT_COOKIE, STATIC_COOKIE, DYNAMIC_COOKIE
+    | Select a connector to authenticate with. You can choose between: WITHOUT_COOKIE, STATIC_COOKIE
     |
     */
 

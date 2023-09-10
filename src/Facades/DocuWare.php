@@ -12,12 +12,14 @@ use CodebarAg\DocuWare\DTO\Field;
 use CodebarAg\DocuWare\DTO\FileCabinet;
 use CodebarAg\DocuWare\DTO\Organization;
 use CodebarAg\DocuWare\DTO\OrganizationIndex;
+use GuzzleHttp\Cookie\CookieJar;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Facade;
 
 /**
  * @see \CodebarAg\DocuWare\DocuWare
  *
+ * @method static CookieJar getCookie()
  * @method static string login()
  * @method static void logout()
  * @method static Organization getOrganization(string $organizationId)

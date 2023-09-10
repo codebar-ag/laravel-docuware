@@ -43,6 +43,7 @@ use CodebarAg\DocuWare\Support\EnsureValidCookie;
 use CodebarAg\DocuWare\Support\EnsureValidCredentials;
 use CodebarAg\DocuWare\Support\EnsureValidResponse;
 use CodebarAg\DocuWare\Support\ParseValue;
+use GuzzleHttp\Cookie\CookieJar;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
@@ -57,6 +58,28 @@ class DocuWare
     public function __construct(protected ?string $cookie = null)
     {
         $this->connection = self::connection();
+    }
+
+    /**
+     * @throws InvalidResponseClassException
+     * @throws \Throwable
+     * @throws \ReflectionException
+     * @throws PendingRequestException
+     */
+    public function getCookie(): CookieJar
+    {
+        self::methodNotAllowed();
+
+        $request = new PostLogonRequest();
+
+        $response = $this->connection->send($request);
+
+        event(new DocuWareResponseLog($response));
+
+        throw_if($response->status() === Response::HTTP_UNAUTHORIZED, UnableToLogin::create());
+        throw_if($this->connection->getCoookieJar()->toArray() === [], UnableToLoginNoCookies::create());
+
+        return $this->connection->getCoookieJar();
     }
 
     /**

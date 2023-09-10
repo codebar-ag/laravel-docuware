@@ -16,7 +16,6 @@ beforeEach(function () {
 
 it('can receive a ', function () {
     $cookie = DocuWare::getCookie();
-    ray($cookie);
     expect($cookie)->not()->toBeEmpty()->toBeString($cookie);
 })->group('authorization');
 

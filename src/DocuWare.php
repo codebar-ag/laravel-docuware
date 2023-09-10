@@ -69,7 +69,7 @@ class DocuWare
      */
     public function getCookie(): string
     {
-        self::methodNotAllowed();
+        EnsureValidCredentials::check();
 
         $request = new PostLogonRequest();
 

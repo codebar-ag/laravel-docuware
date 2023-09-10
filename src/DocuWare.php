@@ -43,7 +43,6 @@ use CodebarAg\DocuWare\Support\EnsureValidCookie;
 use CodebarAg\DocuWare\Support\EnsureValidCredentials;
 use CodebarAg\DocuWare\Support\EnsureValidResponse;
 use CodebarAg\DocuWare\Support\ParseValue;
-use GuzzleHttp\Cookie\CookieJar;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
@@ -53,6 +52,8 @@ use Symfony\Component\HttpFoundation\Response;
 
 class DocuWare
 {
+    const COOKIE_NAME = '.DWPLATFORMAUTH';
+
     protected $connection;
 
     public function __construct(protected ?string $cookie = null)
@@ -66,7 +67,7 @@ class DocuWare
      * @throws \ReflectionException
      * @throws PendingRequestException
      */
-    public function getCookie(): CookieJar
+    public function getCookie(): string
     {
         self::methodNotAllowed();
 
@@ -79,7 +80,13 @@ class DocuWare
         throw_if($response->status() === Response::HTTP_UNAUTHORIZED, UnableToLogin::create());
         throw_if($this->connection->getCoookieJar()->toArray() === [], UnableToLoginNoCookies::create());
 
-        return $this->connection->getCoookieJar();
+        $cookies = $this->connection->getCoookieJar();
+
+        $cookie = collect($cookies->toArray())
+            ->reject(fn (array $cookie) => Arr::get($cookie, 'Value') === '')
+            ->firstWhere('Name', self::COOKIE_NAME);
+
+        return Arr::get($cookie, 'Value');
     }
 
     /**

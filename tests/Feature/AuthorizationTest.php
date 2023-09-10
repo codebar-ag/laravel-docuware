@@ -14,6 +14,12 @@ beforeEach(function () {
     expect(Auth::cookies())->toBeNull();
 });
 
+it('can receive a ', function () {
+    $cookie = DocuWare::getCookie();
+    ray($cookie);
+    expect($cookie)->not()->toBeEmpty()->toBeString($cookie);
+})->group('authorization');
+
 it('can authenticate with a cookie', function () {
     EnsureValidCookie::check();
     expect(Auth::cookies())->toHaveKey(Auth::COOKIE_NAME);

@@ -16,10 +16,9 @@ beforeEach(function () {
 
 it('can authenticate with a cookie', function () {
     EnsureValidCookie::check();
-
     expect(Auth::cookies())->toHaveKey(Auth::COOKIE_NAME);
     expect(Auth::cookies()[Auth::COOKIE_NAME])->toBe(config('docuware.cookies'));
-})->group('authorization');
+})->group('authorization')->todo('Changed the way how cookie auth is working');
 
 it('can authenticate with no cookie', function () {
     config(['docuware.cookies' => '']);

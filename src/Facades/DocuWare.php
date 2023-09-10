@@ -11,6 +11,7 @@ use CodebarAg\DocuWare\DTO\DocumentThumbnail;
 use CodebarAg\DocuWare\DTO\Field;
 use CodebarAg\DocuWare\DTO\FileCabinet;
 use CodebarAg\DocuWare\DTO\Organization;
+use CodebarAg\DocuWare\DTO\OrganizationIndex;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Facade;
 
@@ -20,7 +21,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static string login()
  * @method static void logout()
  * @method static Organization getOrganization(string $organizationId)
- * @method static Collection getOrganizations()
+ * @method static Collection|OrganizationIndex[] getOrganizations()
  * @method static Collection|FileCabinet[] getFileCabinets()
  * @method static Collection|Field[] getFields(string $fileCabinetId)
  * @method static Collection|Dialog[] getDialogs(string $fileCabinetId)

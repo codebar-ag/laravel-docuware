@@ -19,14 +19,14 @@ class Auth
     public static function store(CookieJar $cookies): void
     {
         $cookie = collect($cookies->toArray())
-            ->reject(fn (array $cookie) => $cookie['Value'] === '')
+            ->reject(fn (array $cookie) => Arr::get($cookie, 'Value') === '')
             ->firstWhere('Name', self::COOKIE_NAME);
 
         Cache::driver(self::cacheDriver())
             ->put(
                 self::CACHE_KEY,
                 [
-                    $cookie['Name'] => $cookie['Value'],
+                    Arr::get($cookie, 'Name') => Arr::get($cookie, 'Value'),
                     'CreatedAt' => now()->toDateTimeString(),
                 ],
                 now()->addMinutes(config('docuware.cookie_lifetime')),

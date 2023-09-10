@@ -24,5 +24,6 @@ class EnsureValidCredentials
             empty(config('docuware.credentials.password')),
             UnableToFindPasswordCredential::create(),
         );
+
     }
 }

@@ -1,13 +1,13 @@
 <?php
 
-namespace CodebarAg\DocuWare;
+namespace CodebarAg\DocuWare\Connectors;
 
 use CodebarAg\DocuWare\Support\Auth;
 use CodebarAg\DocuWare\Support\EnsureValidCredentials;
 use GuzzleHttp\Cookie\CookieJar;
 use Saloon\Http\Connector;
 
-class DocuWareConnector extends Connector
+class DocuWareWithoutCookieConnector extends Connector
 {
     public CookieJar $cookieJar;
 
@@ -33,7 +33,7 @@ class DocuWareConnector extends Connector
         ];
     }
 
-    protected function defaultConfig(): array
+    public function defaultConfig(): array
     {
         return [
             'timeout' => config('docuware.timeout'),

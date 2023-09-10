@@ -3,8 +3,12 @@
 namespace CodebarAg\DocuWare;
 
 use Carbon\Carbon;
+use CodebarAg\DocuWare\Connectors\DocuWareStaticCookieConnector;
+use CodebarAg\DocuWare\Connectors\DocuWareWithoutCookieConnector;
 use CodebarAg\DocuWare\DTO\DocumentPaginator;
+use CodebarAg\DocuWare\Enums\ConnectionEnum;
 use CodebarAg\DocuWare\Events\DocuWareResponseLog;
+use CodebarAg\DocuWare\Exceptions\UnableToFindConnection;
 use CodebarAg\DocuWare\Exceptions\UnableToSearch;
 use CodebarAg\DocuWare\Requests\Search\GetSearchRequest;
 use CodebarAg\DocuWare\Support\EnsureValidCookie;
@@ -35,6 +39,13 @@ class DocuWareSearch
     protected array $filters = [];
 
     protected array $usedDateOperators = [];
+
+    protected $connection;
+
+    public function __construct(protected ?string $cookie = null)
+    {
+        $this->connection = self::connection();
+    }
 
     public function fileCabinet(string $fileCabinetId): self
     {
@@ -155,7 +166,6 @@ class DocuWareSearch
             ];
         }
 
-        $connection = new DocuWareConnector();
         $request = new GetSearchRequest(
             fileCabinetId: $this->fileCabinetId,
             dialogId: $this->dialogId,
@@ -168,7 +178,7 @@ class DocuWareSearch
             condition: $condition,
         );
 
-        $response = $connection->send($request);
+        $response = $this->connection->send($request);
 
         event(new DocuWareResponseLog($response));
 
@@ -189,7 +199,12 @@ class DocuWareSearch
 
     protected function guard(): void
     {
-        EnsureValidCookie::check();
+
+        match (config('docuware.connection')) {
+            ConnectionEnum::WITHOUT_COOKIE => EnsureValidCookie::check(),
+            ConnectionEnum::STATIC_COOKIE => null,
+            default => null,
+        };
 
         throw_if(
             is_null($this->fileCabinetId),
@@ -261,6 +276,15 @@ class DocuWareSearch
             '<', '>=' => $date->startOfDay(),
             '>', '<=' => $date->endOfDay(),
             default => $date,
+        };
+    }
+
+    protected function connection()
+    {
+        return match (config('docuware.connection')) {
+            ConnectionEnum::WITHOUT_COOKIE => new DocuWareWithoutCookieConnector(),
+            ConnectionEnum::STATIC_COOKIE => new DocuWareStaticCookieConnector($this->cookie),
+            default => throw (UnableToFindConnection::create()),
         };
     }
 }

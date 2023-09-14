@@ -5,12 +5,18 @@ namespace CodebarAg\DocuWare\Requests\Document\Thumbnail;
 use CodebarAg\DocuWare\DTO\DocumentThumbnail;
 use CodebarAg\DocuWare\Events\DocuWareResponseLog;
 use CodebarAg\DocuWare\Support\EnsureValidResponse;
+use Illuminate\Support\Facades\Cache;
+use Saloon\CachePlugin\Contracts\Cacheable;
+use Saloon\CachePlugin\Drivers\LaravelCacheDriver;
+use Saloon\CachePlugin\Traits\HasCaching;
 use Saloon\Contracts\Response;
 use Saloon\Enums\Method;
 use Saloon\Http\Request;
 
-class GetDocumentDownloadThumbnailRequest extends Request
+class GetDocumentDownloadThumbnailRequest extends Request implements Cacheable
 {
+    use HasCaching;
+
     protected Method $method = Method::GET;
 
     public function __construct(
@@ -24,6 +30,16 @@ class GetDocumentDownloadThumbnailRequest extends Request
     public function resolveEndpoint(): string
     {
         return '/FileCabinets/'.$this->fileCabinetId.'/Rendering/'.$this->documentId.'-'.$this->section.'/Thumbnail';
+    }
+
+    public function resolveCacheDriver(): LaravelCacheDriver
+    {
+        return new LaravelCacheDriver(Cache::store(config('cache.default')));
+    }
+
+    public function cacheExpiryInSeconds(): int
+    {
+        return config('docuware.cache.expiry_in_seconds', 3600);
     }
 
     public function defaultQuery(): array

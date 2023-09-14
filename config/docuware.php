@@ -107,6 +107,9 @@ return [
             'include_suggestions' => false,
             'additional_result_fields' => [],
         ],
+        'cache' => [
+            'lifetime_in_seconds' => 60,
+        ],
     ],
 
     /*

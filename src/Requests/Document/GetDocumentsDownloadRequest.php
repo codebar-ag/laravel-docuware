@@ -6,12 +6,18 @@ use CodebarAg\DocuWare\Events\DocuWareResponseLog;
 use CodebarAg\DocuWare\Exceptions\UnableToDownloadDocuments;
 use CodebarAg\DocuWare\Support\EnsureValidResponse;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Cache;
+use Saloon\CachePlugin\Contracts\Cacheable;
+use Saloon\CachePlugin\Drivers\LaravelCacheDriver;
+use Saloon\CachePlugin\Traits\HasCaching;
 use Saloon\Contracts\Response;
 use Saloon\Enums\Method;
 use Saloon\Http\Request;
 
-class GetDocumentsDownloadRequest extends Request
+class GetDocumentsDownloadRequest extends Request implements Cacheable
 {
+    use HasCaching;
+
     protected Method $method = Method::GET;
 
     protected readonly string $documentId;
@@ -32,6 +38,16 @@ class GetDocumentsDownloadRequest extends Request
     public function resolveEndpoint(): string
     {
         return '/FileCabinets/'.$this->fileCabinetId.'/Documents/'.$this->documentId.'/FileDownload';
+    }
+
+    public function resolveCacheDriver(): LaravelCacheDriver
+    {
+        return new LaravelCacheDriver(Cache::store(config('cache.default')));
+    }
+
+    public function cacheExpiryInSeconds(): int
+    {
+        return config('docuware.cache.expiry_in_seconds', 3600);
     }
 
     public function defaultQuery(): array

@@ -5,12 +5,18 @@ namespace CodebarAg\DocuWare\Requests;
 use CodebarAg\DocuWare\DTO\Dialog;
 use CodebarAg\DocuWare\Events\DocuWareResponseLog;
 use CodebarAg\DocuWare\Support\EnsureValidResponse;
+use Illuminate\Support\Facades\Cache;
+use Saloon\CachePlugin\Contracts\Cacheable;
+use Saloon\CachePlugin\Drivers\LaravelCacheDriver;
+use Saloon\CachePlugin\Traits\HasCaching;
 use Saloon\Contracts\Response;
 use Saloon\Enums\Method;
 use Saloon\Http\Request;
 
-class GetDialogsRequest extends Request
+class GetDialogsRequest extends Request implements Cacheable
 {
+    use HasCaching;
+
     protected Method $method = Method::GET;
 
     public function __construct(
@@ -21,6 +27,16 @@ class GetDialogsRequest extends Request
     public function resolveEndpoint(): string
     {
         return '/FileCabinets/'.$this->fileCabinetId.'/Dialogs';
+    }
+
+    public function resolveCacheDriver(): LaravelCacheDriver
+    {
+        return new LaravelCacheDriver(Cache::store(config('cache.default')));
+    }
+
+    public function cacheExpiryInSeconds(): int
+    {
+        return config('docuware.cache.expiry_in_seconds', 3600);
     }
 
     public function createDtoFromResponse(Response $response): mixed

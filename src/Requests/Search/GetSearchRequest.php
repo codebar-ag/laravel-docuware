@@ -2,13 +2,18 @@
 
 namespace CodebarAg\DocuWare\Requests\Search;
 
+use Illuminate\Support\Facades\Cache;
+use Saloon\CachePlugin\Contracts\Cacheable;
+use Saloon\CachePlugin\Drivers\LaravelCacheDriver;
+use Saloon\CachePlugin\Traits\HasCaching;
 use Saloon\Contracts\Body\HasBody;
 use Saloon\Enums\Method;
 use Saloon\Http\Request;
 use Saloon\Traits\Body\HasJsonBody;
 
-class GetSearchRequest extends Request implements HasBody
+class GetSearchRequest extends Request implements HasBody, Cacheable
 {
+    use HasCaching;
     use HasJsonBody;
 
     protected Method $method = Method::POST;
@@ -29,6 +34,16 @@ class GetSearchRequest extends Request implements HasBody
     public function resolveEndpoint(): string
     {
         return '/FileCabinets/'.$this->fileCabinetId.'/Query/DialogExpression';
+    }
+
+    public function resolveCacheDriver(): LaravelCacheDriver
+    {
+        return new LaravelCacheDriver(Cache::store(config('cache.default')));
+    }
+
+    public function cacheExpiryInSeconds(): int
+    {
+        return config('docuware.cache.expiry_in_seconds', 3600);
     }
 
     public function defaultQuery(): array

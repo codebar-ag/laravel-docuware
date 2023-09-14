@@ -34,7 +34,7 @@ class GetDocumentDownloadThumbnailRequest extends Request implements Cacheable
 
     public function resolveCacheDriver(): LaravelCacheDriver
     {
-        return new LaravelCacheDriver(Cache::store(config('cache.default')));
+        return new LaravelCacheDriver(Cache::store(config('docuware.cache.driver')));
     }
 
     public function cacheExpiryInSeconds(): int

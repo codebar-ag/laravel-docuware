@@ -79,9 +79,9 @@ DOCUWARE_PASSPHRASE="a#bcd>2~C1'abc\\#"
 ## 🏗 Usage
 
 ```php
-use CodebarAg\DocuWare\Connectors\DocuWareConnector;
+use CodebarAg\DocuWare\Connectors\DocuWareWithoutCookieConnector;
 
-$connector = new DocuWareConnector();
+$connector = new DocuWareWithoutCookieConnector();
 
 /**
  * Return an organization.

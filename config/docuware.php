@@ -108,6 +108,7 @@ return [
             'additional_result_fields' => [],
         ],
         'cache' => [
+            'driver' => env('DOCUWARE_CACHE_DRIVER', env('CACHE_DRIVER', 'file')),
             'lifetime_in_seconds' => 60,
         ],
     ],

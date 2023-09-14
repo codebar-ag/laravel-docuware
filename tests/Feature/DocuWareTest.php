@@ -3,7 +3,7 @@
 namespace CodebarAg\DocuWare\Tests\Feature;
 
 use Carbon\Carbon;
-use CodebarAg\DocuWare\Connectors\DocuWareConnector;
+use CodebarAg\DocuWare\Connectors\DocuWareWithoutCookieConnector;
 use CodebarAg\DocuWare\DocuWare;
 use CodebarAg\DocuWare\DTO\Document;
 use CodebarAg\DocuWare\DTO\DocumentField;
@@ -36,7 +36,7 @@ uses()->group('docuware');
 beforeEach(function () {
     EnsureValidCookie::check();
 
-    $this->connector = new DocuWareConnector(config('docuware.cookies'));
+    $this->connector = new DocuWareWithoutCookieConnector(config('docuware.cookies'));
 });
 
 it('can list organizations', function () {

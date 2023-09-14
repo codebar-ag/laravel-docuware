@@ -9,25 +9,16 @@ use CodebarAg\DocuWare\Support\EnsureValidCredentials;
 use GuzzleHttp\Cookie\CookieJar;
 use Saloon\Http\Connector;
 
-class DocuWareConnector extends Connector
+class DocuWareWithoutCookieConnector extends Connector
 {
     public CookieJar $cookieJar;
 
-    public function __construct(string $cookie = null)
+    public function __construct()
     {
-        if ($cookie) {
-            event(new DocuWareAuthenticateLog('Authenticating with cookie'));
+        EnsureValidCredentials::check();
+        EnsureValidCookie::check();
 
-            $this->cookieJar = CookieJar::fromArray(
-                [Auth::COOKIE_NAME => $cookie],
-                parse_url(config('docuware.credentials.url'), PHP_URL_HOST)
-            );
-        } else {
-            EnsureValidCredentials::check();
-            EnsureValidCookie::check();
-
-            $this->cookieJar = Auth::cookieJar() ?? throw new \Exception('No cookie jar found');
-        }
+        $this->cookieJar = Auth::cookieJar() ?? throw new \Exception('No cookie jar found');
     }
 
     /**

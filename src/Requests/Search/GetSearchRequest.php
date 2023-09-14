@@ -11,7 +11,7 @@ use Saloon\Enums\Method;
 use Saloon\Http\Request;
 use Saloon\Traits\Body\HasJsonBody;
 
-class GetSearchRequest extends Request implements HasBody, Cacheable
+class GetSearchRequest extends Request implements Cacheable, HasBody
 {
     use HasCaching;
     use HasJsonBody;

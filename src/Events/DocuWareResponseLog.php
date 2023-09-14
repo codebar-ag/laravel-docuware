@@ -17,5 +17,6 @@ class DocuWareResponseLog
 
     public function __construct(
         public Response|SaloonResponse|SaloonContracts $response
-    ) {}
+    ) {
+    }
 }

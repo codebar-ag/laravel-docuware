@@ -3,8 +3,8 @@
 namespace CodebarAg\DocuWare;
 
 use Carbon\Carbon;
-use CodebarAg\DocuWare\Connectors\DocuWareStaticCookieConnector;
 use CodebarAg\DocuWare\Connectors\DocuWareConnector;
+use CodebarAg\DocuWare\Connectors\DocuWareStaticCookieConnector;
 use CodebarAg\DocuWare\DTO\DocumentPaginator;
 use CodebarAg\DocuWare\Enums\ConnectionEnum;
 use CodebarAg\DocuWare\Events\DocuWareResponseLog;

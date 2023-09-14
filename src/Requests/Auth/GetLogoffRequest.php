@@ -17,6 +17,6 @@ class GetLogoffRequest extends SoloRequest
 
     public function resolveEndpoint(): string
     {
-        return config('docuware.credentials.url') . '/DocuWare/Platform/Account/Logoff';
+        return config('docuware.credentials.url').'/DocuWare/Platform/Account/Logoff';
     }
 }

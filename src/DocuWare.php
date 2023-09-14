@@ -3,8 +3,6 @@
 namespace CodebarAg\DocuWare;
 
 use Carbon\Carbon;
-use CodebarAg\DocuWare\Connectors\DocuWareManualConnector;
-use CodebarAg\DocuWare\Connectors\DocuWareStaticCookieConnector;
 use CodebarAg\DocuWare\Connectors\DocuWareConnector;
 use CodebarAg\DocuWare\DTO\Dialog;
 use CodebarAg\DocuWare\DTO\Document;
@@ -13,17 +11,9 @@ use CodebarAg\DocuWare\DTO\Field;
 use CodebarAg\DocuWare\DTO\FileCabinet;
 use CodebarAg\DocuWare\DTO\Organization;
 use CodebarAg\DocuWare\DTO\OrganizationIndex;
-use CodebarAg\DocuWare\Enums\ConnectionEnum;
 use CodebarAg\DocuWare\Events\DocuWareResponseLog;
-use CodebarAg\DocuWare\Exceptions\MethodNotAllowed;
-use CodebarAg\DocuWare\Exceptions\UnableToDownloadDocuments;
-use CodebarAg\DocuWare\Exceptions\UnableToFindConnection;
 use CodebarAg\DocuWare\Exceptions\UnableToGetDocumentCount;
-use CodebarAg\DocuWare\Exceptions\UnableToLogin;
-use CodebarAg\DocuWare\Exceptions\UnableToLoginNoCookies;
-use CodebarAg\DocuWare\Exceptions\UnableToLogout;
 use CodebarAg\DocuWare\Requests\Auth\GetLogoffRequest;
-use CodebarAg\DocuWare\Requests\Auth\PostLogonRequest;
 use CodebarAg\DocuWare\Requests\Document\DeleteDocumentRequest;
 use CodebarAg\DocuWare\Requests\Document\GetDocumentCountRequest;
 use CodebarAg\DocuWare\Requests\Document\GetDocumentDownloadRequest;
@@ -49,7 +39,6 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Saloon\Exceptions\InvalidResponseClassException;
 use Saloon\Exceptions\PendingRequestException;
-use Symfony\Component\HttpFoundation\Response;
 
 class DocuWare
 {
@@ -63,7 +52,7 @@ class DocuWare
         $this->connection = new DocuWareConnector();
     }
 
-    public function cookie(?string $cookie = null): self
+    public function cookie(string $cookie = null): self
     {
         $this->connection = new DocuWareConnector($cookie);
 
@@ -103,7 +92,6 @@ class DocuWare
 
         $response->throw();
     }
-
 
     /**
      * @throws InvalidResponseClassException

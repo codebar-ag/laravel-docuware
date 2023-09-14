@@ -2,7 +2,6 @@
 
 namespace CodebarAg\DocuWare\Support;
 
-use CodebarAg\DocuWare\DocuWare;
 use CodebarAg\DocuWare\Events\DocuWareAuthenticateLog;
 use CodebarAg\DocuWare\Events\DocuWareResponseLog;
 use CodebarAg\DocuWare\Exceptions\UnableToLogin;
@@ -20,6 +19,7 @@ class EnsureValidCookie
     {
         if (Auth::check()) {
             event(new DocuWareAuthenticateLog('Authenticating with cached credentials'));
+
             return;
         }
 

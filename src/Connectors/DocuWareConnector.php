@@ -13,7 +13,7 @@ class DocuWareConnector extends Connector
 {
     public CookieJar $cookieJar;
 
-    public function __construct(?string $cookie = null)
+    public function __construct(string $cookie = null)
     {
         if ($cookie) {
             event(new DocuWareAuthenticateLog('Authenticating with cookie'));
@@ -22,7 +22,7 @@ class DocuWareConnector extends Connector
                 [Auth::COOKIE_NAME => $cookie],
                 parse_url(config('docuware.credentials.url'), PHP_URL_HOST)
             );
-        }else{
+        } else {
             EnsureValidCredentials::check();
             EnsureValidCookie::check();
 
@@ -35,7 +35,7 @@ class DocuWareConnector extends Connector
      */
     public function resolveBaseUrl(): string
     {
-        return config('docuware.credentials.url') . '/DocuWare/Platform';
+        return config('docuware.credentials.url').'/DocuWare/Platform';
     }
 
     public function defaultHeaders(): array

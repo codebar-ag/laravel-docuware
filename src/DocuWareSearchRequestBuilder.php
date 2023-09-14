@@ -3,8 +3,6 @@
 namespace CodebarAg\DocuWare;
 
 use Carbon\Carbon;
-use CodebarAg\DocuWare\Connectors\DocuWareStaticCookieConnector;
-use CodebarAg\DocuWare\DTO\DocumentPaginator;
 use CodebarAg\DocuWare\Exceptions\UnableToSearch;
 use CodebarAg\DocuWare\Requests\Search\GetSearchRequest;
 use Illuminate\Support\Str;

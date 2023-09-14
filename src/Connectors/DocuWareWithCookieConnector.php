@@ -4,8 +4,6 @@ namespace CodebarAg\DocuWare\Connectors;
 
 use CodebarAg\DocuWare\Events\DocuWareAuthenticateLog;
 use CodebarAg\DocuWare\Support\Auth;
-use CodebarAg\DocuWare\Support\EnsureValidCookie;
-use CodebarAg\DocuWare\Support\EnsureValidCredentials;
 use GuzzleHttp\Cookie\CookieJar;
 use Saloon\Http\Connector;
 

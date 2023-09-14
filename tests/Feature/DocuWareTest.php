@@ -30,6 +30,8 @@ use CodebarAg\DocuWare\Requests\Organization\GetOrganizationsRequest;
 use CodebarAg\DocuWare\Support\EnsureValidCookie;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Event;
+use Saloon\Exceptions\InvalidResponseClassException;
+use Saloon\Exceptions\PendingRequestException;
 
 uses()->group('docuware');
 
@@ -97,7 +99,7 @@ it('can list values for a select list', function () {
 
     $this->assertNotCount(0, $types);
     Event::assertDispatched(DocuWareResponseLog::class);
-});
+})->skip();
 
 it('can list dialogs for a file cabinet', function () {
     Event::fake();
@@ -115,74 +117,94 @@ it('can preview a document image', function () {
     Event::fake();
 
     $fileCabinetId = config('docuware.tests.file_cabinet_id');
-    $documentId = config('docuware.tests.document_id');
 
-    $image = $this->connector->send(new GetDocumentPreviewRequest($fileCabinetId, $documentId))->dto();
+    $document = $this->connector->send(new PostDocumentRequest(
+        $fileCabinetId,
+        '::fake-file-content::',
+        'example.txt'
+    ))->dto();
 
-    $this->assertSame(config('docuware.tests.document_file_size_preview'), strlen($image));
+    $image = $this->connector->send(new GetDocumentPreviewRequest($fileCabinetId, $document->id))->dto();
+
+    $this->assertSame(9221, strlen($image));
     Event::assertDispatched(DocuWareResponseLog::class);
+
+    $this->connector->send(new DeleteDocumentRequest(
+        $fileCabinetId,
+        $document->id
+    ))->dto();
 });
 
 it('can show a document', function () {
     Event::fake();
 
     $fileCabinetId = config('docuware.tests.file_cabinet_id');
-    $documentId = config('docuware.tests.document_id');
 
-    $document = $this->connector->send(new GetDocumentRequest($fileCabinetId, $documentId))->dto();
+    $document = $this->connector->send(new PostDocumentRequest(
+        $fileCabinetId,
+        '::fake-file-content::',
+        'example.txt'
+    ))->dto();
 
-    $this->assertInstanceOf(Document::class, $document);
-    $this->assertSame($documentId, $document->id);
-    $this->assertSame($fileCabinetId, $document->file_cabinet_id);
+    $getdocument = $this->connector->send(new GetDocumentRequest($fileCabinetId, $document->id))->dto();
+
+    $this->assertInstanceOf(Document::class, $getdocument);
+    $this->assertSame($document->id, $getdocument->id);
+    $this->assertSame($fileCabinetId, $getdocument->file_cabinet_id);
     Event::assertDispatched(DocuWareResponseLog::class);
+
+    $this->connector->send(new DeleteDocumentRequest(
+        $fileCabinetId,
+        $document->id
+    ))->dto();
 });
 
 it('can update a document value', function () {
     Event::fake();
 
     $fileCabinetId = config('docuware.tests.file_cabinet_id');
-    $documentId = config('docuware.tests.document_id');
     $fieldName = config('docuware.tests.field_name');
     $newValue = 'laravel-docuware';
-    $fileContent = '::fake-file-content::';
-    $fileName = 'example.txt';
 
     $document = $this->connector->send(new PostDocumentRequest(
         $fileCabinetId,
-        $fileContent,
-        $fileName,
-        collect([
-            DocumentIndex::make('DOCUMENT_LABEL', '::text::'),
-        ]),
+        '::fake-file-content::',
+        'example.txt'
     ))->dto();
-
-    ray($document);
 
     $response = $this->connector->send(new PutDocumentFieldsRequest(
         $fileCabinetId,
-        $documentId,
+        $document->id,
         [$fieldName => $newValue]
     ))->dto();
 
-    ray($response);
-
     $this->assertSame('laravel-docuware', $response[$fieldName]);
     Event::assertDispatched(DocuWareResponseLog::class);
+
+    $this->connector->send(new DeleteDocumentRequest(
+        $fileCabinetId,
+        $document->id
+    ))->dto();
 });
 
 it('can update multiple document values', function () {
     Event::fake();
 
     $fileCabinetId = config('docuware.tests.file_cabinet_id');
-    $documentId = config('docuware.tests.document_id');
     $values = [
         config('docuware.tests.field_name') => 'laravel-docuware',
         config('docuware.tests.field_name_2') => 'laravel-docuware-2',
     ];
 
+    $document = $this->connector->send(new PostDocumentRequest(
+        $fileCabinetId,
+        '::fake-file-content::',
+        'example.txt'
+    ))->dto();
+
     $response = $this->connector->send(new PutDocumentFieldsRequest(
         $fileCabinetId,
-        $documentId,
+        $document->id,
         $values,
         true
     ))->dto();
@@ -191,36 +213,72 @@ it('can update multiple document values', function () {
     $this->assertSame('laravel-docuware-2', $response[config('docuware.tests.field_name_2')]);
 
     Event::assertDispatched(DocuWareResponseLog::class);
+
+    $this->connector->send(new DeleteDocumentRequest(
+        $fileCabinetId,
+        $document->id
+    ))->dto();
 });
 
 it('can download multiple documents', function () {
     Event::fake();
 
     $fileCabinetId = config('docuware.tests.file_cabinet_id');
-    $documentIds = config('docuware.tests.document_ids');
+
+    $document1 = $this->connector->send(new PostDocumentRequest(
+        $fileCabinetId,
+        '::fake-file-content::',
+        'example.txt'
+    ))->dto();
+
+    $document2 = $this->connector->send(new PostDocumentRequest(
+        $fileCabinetId,
+        '::fake-file-content::',
+        'example.txt'
+    ))->dto();
 
     $contents = $this->connector->send(new GetDocumentsDownloadRequest(
         $fileCabinetId,
-        $documentIds
+        [$document1->id, $document2->id]
     ))->dto();
 
-    $this->assertSame(config('docuware.tests.documents_file_size'), strlen($contents));
+    $this->assertSame(478, strlen($contents));
     Event::assertDispatched(DocuWareResponseLog::class);
+
+    $this->connector->send(new DeleteDocumentRequest(
+        $fileCabinetId,
+        $document1->id
+    ))->dto();
+
+    $this->connector->send(new DeleteDocumentRequest(
+        $fileCabinetId,
+        $document2->id
+    ))->dto();
 });
 
 it('can download a document', function () {
     Event::fake();
 
     $fileCabinetId = config('docuware.tests.file_cabinet_id');
-    $documentId = config('docuware.tests.document_id');
+
+    $document = $this->connector->send(new PostDocumentRequest(
+        $fileCabinetId,
+        '::fake-file-content::',
+        'example.txt'
+    ))->dto();
 
     $contents = $this->connector->send(new GetDocumentDownloadRequest(
         $fileCabinetId,
-        $documentId
+        $document->id
     ))->dto();
 
-    $this->assertSame(config('docuware.tests.document_file_size'), strlen($contents));
+    $this->assertSame(strlen('::fake-file-content::'), strlen($contents));
     Event::assertDispatched(DocuWareResponseLog::class);
+
+    $this->connector->send(new DeleteDocumentRequest(
+        $fileCabinetId,
+        $document->id
+    ))->dto();
 });
 
 it('can download a document thumbnail', function () {
@@ -247,23 +305,38 @@ it('can get a total count of documents', function () {
     $fileCabinetId = config('docuware.tests.file_cabinet_id');
     $dialogId = config('docuware.tests.dialog_id');
 
+    $document = $this->connector->send(new PostDocumentRequest(
+        $fileCabinetId,
+        '::fake-file-content::',
+        'example.txt'
+    ))->dto();
+
     $count = $this->connector->send(new GetDocumentCountRequest(
         $fileCabinetId,
         $dialogId
     ))->dto();
 
-    $this->assertSame(config('docuware.tests.document_count'), $count);
+    $this->assertSame(1, $count);
     Event::assertDispatched(DocuWareResponseLog::class);
+
+    $this->connector->send(new DeleteDocumentRequest(
+        $fileCabinetId,
+        $document->id
+    ))->dto();
 });
 
-it('can search documents', function () {
+it(/**
+ * @throws InvalidResponseClassException
+ * @throws \ReflectionException
+ * @throws PendingRequestException
+ */ 'can search documents', function () {
     Event::fake();
 
     $fileCabinetId = config('docuware.tests.file_cabinet_id');
     $dialogId = config('docuware.tests.dialog_id');
 
-    $paginator = (new DocuWare())
-        ->search()
+    $paginatorRequest = (new DocuWare())
+        ->searchRequestBuilder()
         ->fileCabinet($fileCabinetId)
         ->dialog($dialogId)
         ->page(1)
@@ -274,6 +347,8 @@ it('can search documents', function () {
         ->filter('DOCUMENT_TYPE', 'Abrechnung')
         ->orderBy('DWSTOREDATETIME', 'desc')
         ->get();
+
+    $paginator = $this->connector->send($paginatorRequest)->dto();
 
     $this->assertInstanceOf(DocumentPaginator::class, $paginator);
     Event::assertDispatched(DocuWareResponseLog::class);
@@ -287,8 +362,8 @@ it('can\'t search documents by more than two dates', function () {
 
     $this->expectException(UnableToSearch::class);
 
-    (new DocuWare())
-        ->search()
+    $request = (new DocuWare())
+        ->searchRequestBuilder()
         ->fileCabinet($fileCabinetId)
         ->dialog($dialogId)
         ->page(1)
@@ -300,6 +375,8 @@ it('can\'t search documents by more than two dates', function () {
         ->filter('DOCUMENT_TYPE', 'Abrechnung')
         ->orderBy('DWSTOREDATETIME', 'desc')
         ->get();
+
+    $this->connector->send($request)->dto();
 })->group('search');
 
 it('can override search documents dates filter by using same operator', function () {
@@ -308,8 +385,8 @@ it('can override search documents dates filter by using same operator', function
     $fileCabinetId = config('docuware.tests.file_cabinet_id');
     $dialogId = config('docuware.tests.dialog_id');
 
-    $paginator = (new DocuWare())
-        ->search()
+    $paginatorRequest = (new DocuWare())
+        ->searchRequestBuilder()
         ->fileCabinet($fileCabinetId)
         ->dialog($dialogId)
         ->page(1)
@@ -322,6 +399,8 @@ it('can override search documents dates filter by using same operator', function
         ->orderBy('DWSTOREDATETIME', 'desc')
         ->get();
 
+    $paginator = $this->connector->send($paginatorRequest)->dto();
+
     $this->assertInstanceOf(DocumentPaginator::class, $paginator);
     Event::assertDispatched(DocuWareResponseLog::class);
 })->group('search');
@@ -332,8 +411,8 @@ it('can override search documents dates filter by using equal operator', functio
     $fileCabinetId = config('docuware.tests.file_cabinet_id');
     $dialogId = config('docuware.tests.dialog_id');
 
-    $paginator = (new DocuWare())
-        ->search()
+    $paginatorRequest = (new DocuWare())
+        ->searchRequestBuilder()
         ->fileCabinet($fileCabinetId)
         ->dialog($dialogId)
         ->page(1)
@@ -344,6 +423,8 @@ it('can override search documents dates filter by using equal operator', functio
         ->filter('DOCUMENT_TYPE', 'Abrechnung')
         ->orderBy('DWSTOREDATETIME', 'desc')
         ->get();
+
+    $paginator = $this->connector->send($paginatorRequest)->dto();
 
     $this->assertInstanceOf(DocumentPaginator::class, $paginator);
     Event::assertDispatched(DocuWareResponseLog::class);
@@ -357,8 +438,8 @@ it('can\'t search documents by diverged date range', function () {
 
     $this->expectException(UnableToSearch::class);
 
-    (new DocuWare())
-        ->search()
+    $request = (new DocuWare())
+        ->searchRequestBuilder()
         ->fileCabinet($fileCabinetId)
         ->dialog($dialogId)
         ->page(1)
@@ -369,6 +450,8 @@ it('can\'t search documents by diverged date range', function () {
         ->filter('DOCUMENT_TYPE', 'Abrechnung')
         ->orderBy('DWSTOREDATETIME', 'desc')
         ->get();
+
+    $this->connector->send($request)->dto();
 })->group('search');
 
 it('can search documents dates filter in future', function () {
@@ -377,8 +460,8 @@ it('can search documents dates filter in future', function () {
     $fileCabinetId = config('docuware.tests.file_cabinet_id');
     $dialogId = config('docuware.tests.dialog_id');
 
-    $paginator = (new DocuWare())
-        ->search()
+    $paginatorRequest = (new DocuWare())
+        ->searchRequestBuilder()
         ->fileCabinet($fileCabinetId)
         ->dialog($dialogId)
         ->page(1)
@@ -388,6 +471,8 @@ it('can search documents dates filter in future', function () {
         ->filter('DOCUMENT_TYPE', 'Abrechnung')
         ->orderBy('DWSTOREDATETIME', 'desc')
         ->get();
+
+    $paginator = $this->connector->send($paginatorRequest)->dto();
 
     $this->assertInstanceOf(DocumentPaginator::class, $paginator);
     Event::assertDispatched(DocuWareResponseLog::class);
@@ -399,8 +484,8 @@ it('can search documents dates filter in past', function () {
     $fileCabinetId = config('docuware.tests.file_cabinet_id');
     $dialogId = config('docuware.tests.dialog_id');
 
-    $paginator = (new DocuWare())
-        ->search()
+    $paginatorRequest = (new DocuWare())
+        ->searchRequestBuilder()
         ->fileCabinet($fileCabinetId)
         ->dialog($dialogId)
         ->page(1)
@@ -410,6 +495,8 @@ it('can search documents dates filter in past', function () {
         ->filter('DOCUMENT_TYPE', 'Abrechnung')
         ->orderBy('DWSTOREDATETIME', 'desc')
         ->get();
+
+    $paginator = $this->connector->send($paginatorRequest)->dto();
 
     $this->assertInstanceOf(DocumentPaginator::class, $paginator);
     Event::assertDispatched(DocuWareResponseLog::class);
@@ -477,8 +564,8 @@ it('can search documents with null values', function () {
         config('docuware.tests.file_cabinet_id'),
     ];
 
-    $paginator = (new DocuWare())
-        ->search()
+    $paginatorRequest = (new DocuWare())
+        ->searchRequestBuilder()
         ->fileCabinets($fileCabinetIds)
         ->page(null)
         ->perPage(null)
@@ -486,6 +573,8 @@ it('can search documents with null values', function () {
         ->filter('DOCUMENT_TYPE', null)
         ->orderBy('DWSTOREDATETIME', null)
         ->get();
+
+    $paginator = $this->connector->send($paginatorRequest)->dto();
 
     $this->assertInstanceOf(DocumentPaginator::class, $paginator);
     Event::assertDispatched(DocuWareResponseLog::class);

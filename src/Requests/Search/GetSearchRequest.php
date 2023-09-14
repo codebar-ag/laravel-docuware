@@ -2,11 +2,16 @@
 
 namespace CodebarAg\DocuWare\Requests\Search;
 
+use CodebarAg\DocuWare\DTO\DocumentPaginator;
+use CodebarAg\DocuWare\Events\DocuWareResponseLog;
+use CodebarAg\DocuWare\Support\EnsureValidResponse;
+use Exception;
 use Illuminate\Support\Facades\Cache;
 use Saloon\CachePlugin\Contracts\Cacheable;
 use Saloon\CachePlugin\Drivers\LaravelCacheDriver;
 use Saloon\CachePlugin\Traits\HasCaching;
 use Saloon\Contracts\Body\HasBody;
+use Saloon\Contracts\Response;
 use Saloon\Enums\Method;
 use Saloon\Http\Request;
 use Saloon\Traits\Body\HasJsonBody;
@@ -75,5 +80,24 @@ class GetSearchRequest extends Request implements Cacheable, HasBody
             'IncludeSuggestions' => config('docuware.configurations.search.include_suggestions', false),
             'AdditionalResultFields' => config('docuware.configurations.search.additional_result_fields', []),
         ];
+    }
+
+    public function createDtoFromResponse(Response $response): mixed
+    {
+        event(new DocuWareResponseLog($response));
+
+        try {
+            EnsureValidResponse::from($response);
+
+            $data = $response->throw()->json();
+        } catch (Exception $e) {
+            return DocumentPaginator::fromFailed($e);
+        }
+
+        return DocumentPaginator::fromJson(
+            $data,
+            $this->page,
+            $this->perPage,
+        );
     }
 }

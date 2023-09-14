@@ -4,21 +4,14 @@ namespace CodebarAg\DocuWare;
 
 use Carbon\Carbon;
 use CodebarAg\DocuWare\Connectors\DocuWareStaticCookieConnector;
-use CodebarAg\DocuWare\Connectors\DocuWareWithoutCookieConnector;
 use CodebarAg\DocuWare\DTO\DocumentPaginator;
-use CodebarAg\DocuWare\Enums\ConnectionEnum;
-use CodebarAg\DocuWare\Events\DocuWareResponseLog;
-use CodebarAg\DocuWare\Exceptions\UnableToFindConnection;
 use CodebarAg\DocuWare\Exceptions\UnableToSearch;
 use CodebarAg\DocuWare\Requests\Search\GetSearchRequest;
-use CodebarAg\DocuWare\Support\EnsureValidCookie;
-use CodebarAg\DocuWare\Support\EnsureValidResponse;
-use Exception;
 use Illuminate\Support\Str;
 use Saloon\Exceptions\InvalidResponseClassException;
 use Saloon\Exceptions\PendingRequestException;
 
-class DocuWareSearch
+class DocuWareSearchRequestBuilder
 {
     protected ?string $fileCabinetId = null;
 
@@ -39,13 +32,6 @@ class DocuWareSearch
     protected array $filters = [];
 
     protected array $usedDateOperators = [];
-
-    protected $connection;
-
-    public function __construct(protected ?string $cookie = null)
-    {
-        $this->connection = self::connection();
-    }
 
     public function fileCabinet(string $fileCabinetId): self
     {
@@ -140,7 +126,7 @@ class DocuWareSearch
      * @throws InvalidResponseClassException
      * @throws PendingRequestException
      */
-    public function get(): DocumentPaginator
+    public function get(): GetSearchRequest
     {
         $this->checkDateFilterRangeDivergence();
         $this->restructureMonoDateFilterRange();
@@ -166,7 +152,7 @@ class DocuWareSearch
             ];
         }
 
-        $request = new GetSearchRequest(
+        return new GetSearchRequest(
             fileCabinetId: $this->fileCabinetId,
             dialogId: $this->dialogId,
             additionalFileCabinetIds: $this->additionalFileCabinetIds,
@@ -177,35 +163,10 @@ class DocuWareSearch
             orderDirection: $this->orderDirection,
             condition: $condition,
         );
-
-        $response = $this->connection->send($request);
-
-        event(new DocuWareResponseLog($response));
-
-        try {
-            EnsureValidResponse::from($response);
-
-            $data = $response->throw()->json();
-        } catch (Exception $e) {
-            return DocumentPaginator::fromFailed($e);
-        }
-
-        return DocumentPaginator::fromJson(
-            $data,
-            $this->page,
-            $this->perPage,
-        );
     }
 
     protected function guard(): void
     {
-
-        match (config('docuware.connection')) {
-            ConnectionEnum::WITHOUT_COOKIE => EnsureValidCookie::check(),
-            ConnectionEnum::STATIC_COOKIE => null,
-            default => null,
-        };
-
         throw_if(
             is_null($this->fileCabinetId),
             UnableToSearch::cabinetNotSet(),
@@ -276,15 +237,6 @@ class DocuWareSearch
             '<', '>=' => $date->startOfDay(),
             '>', '<=' => $date->endOfDay(),
             default => $date,
-        };
-    }
-
-    protected function connection()
-    {
-        return match (config('docuware.connection')) {
-            ConnectionEnum::WITHOUT_COOKIE => new DocuWareWithoutCookieConnector(),
-            ConnectionEnum::STATIC_COOKIE => new DocuWareStaticCookieConnector($this->cookie),
-            default => throw (UnableToFindConnection::create()),
         };
     }
 }

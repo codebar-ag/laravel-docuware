@@ -46,9 +46,9 @@ class DocuWare
         $response->throw();
     }
 
-    public function search(): DocuWareSearch
+    public function searchRequestBuilder(): DocuWareSearchRequestBuilder
     {
-        return new DocuWareSearch();
+        return new DocuWareSearchRequestBuilder();
     }
 
     public function url(): DocuWareUrl

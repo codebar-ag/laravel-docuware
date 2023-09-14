@@ -18,14 +18,10 @@ class EnsureValidCookie
     public static function check(): void
     {
         if (Auth::check()) {
-            event(new DocuWareAuthenticateLog('Authenticating with cached credentials'));
-
             return;
         }
 
         EnsureValidCredentials::check();
-
-        event(new DocuWareAuthenticateLog('Authenticating with credentials'));
 
         $cookieJar = new CookieJar();
 

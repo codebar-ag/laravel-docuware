@@ -3,6 +3,7 @@
 namespace CodebarAg\DocuWare\Tests\Feature;
 
 use Carbon\Carbon;
+use CodebarAg\DocuWare\Connectors\DocuWareConnector;
 use CodebarAg\DocuWare\DocuWare;
 use CodebarAg\DocuWare\DTO\Document;
 use CodebarAg\DocuWare\DTO\DocumentField;
@@ -11,18 +12,27 @@ use CodebarAg\DocuWare\DTO\DocumentPaginator;
 use CodebarAg\DocuWare\DTO\Organization;
 use CodebarAg\DocuWare\Events\DocuWareResponseLog;
 use CodebarAg\DocuWare\Exceptions\UnableToSearch;
+use CodebarAg\DocuWare\Requests\GetCabinetsRequest;
+use CodebarAg\DocuWare\Requests\GetFieldsRequest;
+use CodebarAg\DocuWare\Requests\GetSelectListRequest;
+use CodebarAg\DocuWare\Requests\Organization\GetOrganizationRequest;
+use CodebarAg\DocuWare\Requests\Organization\GetOrganizationsRequest;
 use CodebarAg\DocuWare\Support\EnsureValidCookie;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Event;
 
 uses()->group('docuware');
 
-beforeEach(fn () => EnsureValidCookie::check());
+beforeEach(function () {
+    EnsureValidCookie::check();
+
+    $this->connector = new DocuWareConnector(config('docuware.cookies'));
+});
 
 it('can list organizations', function () {
     Event::fake();
 
-    $organizations = (new DocuWare())->getOrganizations();
+    $organizations = $this->connector->send(new GetOrganizationsRequest())->dto();
 
     $this->assertInstanceOf(Collection::class, $organizations);
     $this->assertNotCount(0, $organizations);
@@ -34,7 +44,7 @@ it('can get an organization', function () {
 
     $orgID = config('docuware.tests.organization_id');
 
-    $organization = (new DocuWare())->getOrganization($orgID);
+    $organization = $this->connector->send(new GetOrganizationRequest($orgID))->dto();
 
     $this->assertInstanceOf(Organization::class, $organization);
     Event::assertDispatched(DocuWareResponseLog::class);
@@ -43,7 +53,7 @@ it('can get an organization', function () {
 it('can list file cabinets', function () {
     Event::fake();
 
-    $fileCabinets = (new DocuWare())->getFileCabinets();
+    $fileCabinets = $this->connector->send(new GetCabinetsRequest())->dto();
 
     $this->assertInstanceOf(Collection::class, $fileCabinets);
     $this->assertNotCount(0, $fileCabinets);
@@ -55,7 +65,7 @@ it('can list fields for a file cabinet', function () {
 
     $fileCabinetId = config('docuware.tests.file_cabinet_id');
 
-    $fields = (new DocuWare())->getFields($fileCabinetId);
+    $fields = $this->connector->send(new GetFieldsRequest($fileCabinetId))->dto();
 
     $this->assertInstanceOf(Collection::class, $fields);
     $this->assertNotCount(0, $fields);
@@ -69,11 +79,11 @@ it('can list values for a select list', function () {
     $dialogId = config('docuware.tests.dialog_id');
     $fieldName = 'UUID';
 
-    $types = (new DocuWare())->getSelectList(
+    $types = $this->connector->send(new GetSelectListRequest(
         $fileCabinetId,
         $dialogId,
         $fieldName,
-    );
+    ))->dto();
 
     $this->assertNotCount(0, $types);
     Event::assertDispatched(DocuWareResponseLog::class);

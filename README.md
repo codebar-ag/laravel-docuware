@@ -79,17 +79,19 @@ DOCUWARE_PASSPHRASE="a#bcd>2~C1'abc\\#"
 ## 🏗 Usage
 
 ```php
-use CodebarAg\DocuWare\Facades\DocuWare;
+use CodebarAg\DocuWare\Connectors\DocuWareConnector;
+
+$connector = new DocuWareConnector();
 
 /**
  * Return an organization.
  */
-$organization = DocuWare::getOrganization(string $organizationId): CodebarAg\DocuWare\DTO\Organization;
+$organization = $connector->send(new GetOrganizationRequest($id))->dto();
 
 /**
  * Return all organizations.
  */
-$organizations = DocuWare::getOrganizations(): Illuminate\Support\Collection;
+$organizations = $connector->send(new GetOrganizationsRequest())->dto();
 
 /**
  * Return all file cabinets.

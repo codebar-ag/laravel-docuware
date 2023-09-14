@@ -2,7 +2,6 @@
 
 namespace CodebarAg\DocuWare\Connectors;
 
-use CodebarAg\DocuWare\Events\DocuWareAuthenticateLog;
 use CodebarAg\DocuWare\Support\Auth;
 use GuzzleHttp\Cookie\CookieJar;
 use Saloon\Http\Connector;
@@ -13,8 +12,6 @@ class DocuWareWithCookieConnector extends Connector
 
     public function __construct(string $cookie)
     {
-        event(new DocuWareAuthenticateLog('Authenticating with cookie'));
-
         $this->cookieJar = CookieJar::fromArray(
             [Auth::COOKIE_NAME => $cookie],
             parse_url(config('docuware.credentials.url'), PHP_URL_HOST)

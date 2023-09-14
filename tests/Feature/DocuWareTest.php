@@ -91,15 +91,26 @@ it('can list values for a select list', function () {
     $dialogId = config('docuware.tests.dialog_id');
     $fieldName = 'UUID';
 
+    $document = $this->connector->send(new PostDocumentRequest(
+        $fileCabinetId,
+        '::fake-file-content::',
+        'example.txt',
+        collect([
+            DocumentIndex::make('UUID', 'laravel-docuware'),
+        ])
+    ))->dto();
+
     $types = $this->connector->send(new GetSelectListRequest(
         $fileCabinetId,
         $dialogId,
         $fieldName,
     ))->dto();
 
+    ray($types);
+
     $this->assertNotCount(0, $types);
     Event::assertDispatched(DocuWareResponseLog::class);
-})->skip();
+})->only();
 
 it('can list dialogs for a file cabinet', function () {
     Event::fake();

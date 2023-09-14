@@ -96,37 +96,37 @@ $organizations = $connector->send(new GetOrganizationsRequest())->dto();
 /**
  * Return all file cabinets.
  */
-$cabinets = DocuWare::getFileCabinets(): Illuminate\Support\Collection|CodebarAg\DocuWare\DTO\FileCabinet[];
+$fileCabinets = $connector->send(new GetCabinetsRequest())->dto();
 
 /**
  * Return all fields of a file cabinet.
  */
-$fields = DocuWare::getFields(string $fileCabinetId): Illuminate\Support\Collection|CodebarAg\DocuWare\DTO\Field[];
+$fields = $connector->send(new GetFieldsRequest($fileCabinetId))->dto();
 
 /**
  * Return all dialogs of a file cabinet.
  */
-$dialogs = DocuWare::getDialogs(string $fileCabinetId): Illuminate\Support\Collection|CodebarAg\DocuWare\DTO\Dialog[];
+$dialogs = $connector->send(new GetDialogsRequest($fileCabinetId))->dto();
 
 /**
  * Return all used values for a specific field.
  */
-$values = DocuWare::getSelectList(string $fileCabinetId, string $dialogId, string $fieldName): array;
+$values = $connector->send(new GetSelectListRequest($fileCabinetId, $dialogId, $fieldName))->dto();
 
 /**
  * Return a document.
  */
-$document = DocuWare::getDocument(string $fileCabinetId, int $documentId): CodebarAg\DocuWare\DTO\Document;
+$document = $connector->send(new GetDocumentRequest($fileCabinetId, $documentId))->dto();
 
 /**
  * Return image preview of a document.
  */
-$content = DocuWare::getDocumentPreview(string $fileCabinetId, int $documentId): string;
+$content = $connector->send(new GetDocumentPreviewRequest($fileCabinetId, $documentId))->dto();
 
 /**
  * Download single document.
  */
-$content = DocuWare::downloadDocument(string $fileCabinetId, int $documentId): string;
+$content = $connector->send(new GetDocumentDownloadRequest($fileCabinetId, $documentId))->dto();
 
 /**
  * Download multiple documents.
@@ -136,32 +136,35 @@ $content = DocuWare::downloadDocument(string $fileCabinetId, int $documentId): s
  * 
  * Also note there is a default request timeout of 30 seconds.
  */
-$content = DocuWare::downloadDocuments(string $fileCabinetId, array $documentIds): string;
+$content = $connector->send(new GetDocumentsDownloadRequest($fileCabinetId, $documentIds))->dto();
 
 /**
  * Download a document thumbnail.
  */
-$thumbnail = DocuWare::downloadDocumentThumbnail(string $fileCabinetId, int $documentId, int $section, int $page = 0): CodebarAg\DocuWare\DTO\DocumentThumbnail;
+$thumbnail = $connector->send(new GetDocumentDownloadThumbnailRequest($fileCabinetId, $documentId, $section))->dto();
 
 /**
  * Update value of a indexed field.
  */
-$value = DocuWare::updateDocumentValue(string $fileCabinetId, int $documentId, string $fieldName, string $newValue, bool $forceUpdate = false): null|int|float|Carbon|string;
+$value = $connector->send(new PutDocumentFieldsRequest($fileCabinetId, $documentId, [$fieldName => $newValue]))->dto()[$fieldName];
 
 /**
  * Update multiple values of indexed fields.
  */
-$value = DocuWare::updateDocumentValues(string $fileCabinetId, int $documentId, array $values, bool $forceUpdate = false): null|int|float|Carbon|string;
+$values = $connector->send(new PutDocumentFieldsRequest($fileCabinetId, $documentId, [
+    $fieldName => $newValue,
+    $field2Name => $new2Value,
+]))->dto();
 
 /**
  * Upload new document.
  */
-$document = DocuWare::uploadDocument(string $fileCabinetId, string $fileContent, string $fileName, ?Collection $indexes = null): CodebarAg\DocuWare\DTO\Document;
+$document = $connector->send(new PostDocumentRequest($fileCabinetId, $fileContent, $fileName))->dto();
 
 /**
  * Get total document count.
  */
-$content = DocuWare::documentCount(string $fileCabinetId, string $dialogId): int;
+$content = $connector->send(new GetDocumentCountRequest($fileCabinetId, $dialogId))->dto();
 
 /**
  * Upload new document with index values.
@@ -173,17 +176,17 @@ $indexes = collect([
     DocumentIndex::make('DOCUMENT_NUMBER', 42),
 ]);
 
-$document = DocuWare::uploadDocument(
+$document = $connector->send(new PostDocumentRequest(
     $fileCabinetId,
     $fileContent,
     $fileName,
     $indexes,
-): CodebarAg\DocuWare\DTO\Document;
+))->dto();
 
 /**
  * Delete document.
  */
-DocuWare::deleteDocument($fileCabinetId, $documentId): void;
+$connector->send(new DeleteDocumentRequest($fileCabinetId, $document->id))->dto();
 ```
 
 ## 🔍 Search usage

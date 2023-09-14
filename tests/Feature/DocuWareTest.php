@@ -12,7 +12,17 @@ use CodebarAg\DocuWare\DTO\DocumentPaginator;
 use CodebarAg\DocuWare\DTO\Organization;
 use CodebarAg\DocuWare\Events\DocuWareResponseLog;
 use CodebarAg\DocuWare\Exceptions\UnableToSearch;
+use CodebarAg\DocuWare\Requests\Document\DeleteDocumentRequest;
+use CodebarAg\DocuWare\Requests\Document\GetDocumentCountRequest;
+use CodebarAg\DocuWare\Requests\Document\GetDocumentDownloadRequest;
+use CodebarAg\DocuWare\Requests\Document\GetDocumentPreviewRequest;
+use CodebarAg\DocuWare\Requests\Document\GetDocumentRequest;
+use CodebarAg\DocuWare\Requests\Document\GetDocumentsDownloadRequest;
+use CodebarAg\DocuWare\Requests\Document\PostDocumentRequest;
+use CodebarAg\DocuWare\Requests\Document\PutDocumentFieldsRequest;
+use CodebarAg\DocuWare\Requests\Document\Thumbnail\GetDocumentDownloadThumbnailRequest;
 use CodebarAg\DocuWare\Requests\GetCabinetsRequest;
+use CodebarAg\DocuWare\Requests\GetDialogsRequest;
 use CodebarAg\DocuWare\Requests\GetFieldsRequest;
 use CodebarAg\DocuWare\Requests\GetSelectListRequest;
 use CodebarAg\DocuWare\Requests\Organization\GetOrganizationRequest;
@@ -94,7 +104,7 @@ it('can list dialogs for a file cabinet', function () {
 
     $fileCabinetId = config('docuware.tests.file_cabinet_id');
 
-    $dialogs = (new DocuWare())->getDialogs($fileCabinetId);
+    $dialogs = $this->connector->send(new GetDialogsRequest($fileCabinetId))->dto();
 
     $this->assertInstanceOf(Collection::class, $dialogs);
     $this->assertNotCount(0, $dialogs);
@@ -107,10 +117,7 @@ it('can preview a document image', function () {
     $fileCabinetId = config('docuware.tests.file_cabinet_id');
     $documentId = config('docuware.tests.document_id');
 
-    $image = (new DocuWare())->getDocumentPreview(
-        $fileCabinetId,
-        $documentId,
-    );
+    $image = $this->connector->send(new GetDocumentPreviewRequest($fileCabinetId, $documentId))->dto();
 
     $this->assertSame(config('docuware.tests.document_file_size_preview'), strlen($image));
     Event::assertDispatched(DocuWareResponseLog::class);
@@ -122,10 +129,7 @@ it('can show a document', function () {
     $fileCabinetId = config('docuware.tests.file_cabinet_id');
     $documentId = config('docuware.tests.document_id');
 
-    $document = (new DocuWare())->getDocument(
-        $fileCabinetId,
-        $documentId,
-    );
+    $document = $this->connector->send(new GetDocumentRequest($fileCabinetId, $documentId))->dto();
 
     $this->assertInstanceOf(Document::class, $document);
     $this->assertSame($documentId, $document->id);
@@ -141,14 +145,15 @@ it('can update a document value', function () {
     $fieldName = config('docuware.tests.field_name');
     $newValue = 'laravel-docuware';
 
-    $response = (new DocuWare())->updateDocumentValue(
+    $response = $this->connector->send(new PutDocumentFieldsRequest(
         $fileCabinetId,
         $documentId,
-        $fieldName,
-        $newValue,
-    );
+        [$fieldName => $newValue]
+    ))->dto();
 
-    $this->assertSame('laravel-docuware', $response);
+    ray($response);
+
+    $this->assertSame('laravel-docuware', $response[$fieldName]);
     Event::assertDispatched(DocuWareResponseLog::class);
 });
 
@@ -162,15 +167,15 @@ it('can update multiple document values', function () {
         config('docuware.tests.field_name_2') => 'laravel-docuware-2',
     ];
 
-    $response = (new DocuWare())->updateDocumentValues(
+    $response = $this->connector->send(new PutDocumentFieldsRequest(
         $fileCabinetId,
         $documentId,
         $values,
         true
-    );
+    ))->dto();
 
-    $this->assertSame('laravel-docuware', $response->get(config('docuware.tests.field_name')));
-    $this->assertSame('laravel-docuware-2', $response->get(config('docuware.tests.field_name_2')));
+    $this->assertSame('laravel-docuware', $response[config('docuware.tests.field_name')]);
+    $this->assertSame('laravel-docuware-2', $response[config('docuware.tests.field_name_2')]);
 
     Event::assertDispatched(DocuWareResponseLog::class);
 });
@@ -181,10 +186,10 @@ it('can download multiple documents', function () {
     $fileCabinetId = config('docuware.tests.file_cabinet_id');
     $documentIds = config('docuware.tests.document_ids');
 
-    $contents = (new DocuWare())->downloadDocuments(
+    $contents = $this->connector->send(new GetDocumentsDownloadRequest(
         $fileCabinetId,
-        $documentIds,
-    );
+        $documentIds
+    ))->dto();
 
     $this->assertSame(config('docuware.tests.documents_file_size'), strlen($contents));
     Event::assertDispatched(DocuWareResponseLog::class);
@@ -196,10 +201,10 @@ it('can download a document', function () {
     $fileCabinetId = config('docuware.tests.file_cabinet_id');
     $documentId = config('docuware.tests.document_id');
 
-    $contents = (new DocuWare())->downloadDocument(
+    $contents = $this->connector->send(new GetDocumentDownloadRequest(
         $fileCabinetId,
-        $documentId,
-    );
+        $documentId
+    ))->dto();
 
     $this->assertSame(config('docuware.tests.document_file_size'), strlen($contents));
     Event::assertDispatched(DocuWareResponseLog::class);
@@ -212,11 +217,11 @@ it('can download a document thumbnail', function () {
     $documentId = config('docuware.tests.document_id');
     $section = config('docuware.tests.section');
 
-    $contents = (new DocuWare())->downloadDocumentThumbnail(
+    $contents = $this->connector->send(new GetDocumentDownloadThumbnailRequest(
         $fileCabinetId,
         $documentId,
         $section,
-    );
+    ))->dto();
 
     $this->assertSame(config('docuware.tests.document_thumbnail_mime_type'), $contents->mime);
     $this->assertSame(config('docuware.tests.document_thumbnail_file_size'), strlen($contents->data));
@@ -229,10 +234,10 @@ it('can get a total count of documents', function () {
     $fileCabinetId = config('docuware.tests.file_cabinet_id');
     $dialogId = config('docuware.tests.dialog_id');
 
-    $count = (new DocuWare())->documentCount(
+    $count = $this->connector->send(new GetDocumentCountRequest(
         $fileCabinetId,
-        $dialogId,
-    );
+        $dialogId
+    ))->dto();
 
     $this->assertSame(config('docuware.tests.document_count'), $count);
     Event::assertDispatched(DocuWareResponseLog::class);
@@ -404,15 +409,19 @@ it('can upload document with index values and delete it', function () {
     $fileContent = '::fake-file-content::';
     $fileName = 'example.txt';
 
-    $document = (new DocuWare())->uploadDocument(
+    $document = $this->connector->send(new PostDocumentRequest(
         $fileCabinetId,
         $fileContent,
         $fileName,
         collect([
             DocumentIndex::make('DOCUMENT_LABEL', '::text::'),
         ]),
-    );
-    (new DocuWare())->deleteDocument($fileCabinetId, $document->id);
+    ))->dto();
+
+    $this->connector->send(new DeleteDocumentRequest(
+        $fileCabinetId,
+        $document->id,
+    ))->dto();
 
     $this->assertInstanceOf(Document::class, $document);
     $this->assertSame('example', $document->title);

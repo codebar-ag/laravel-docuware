@@ -17,7 +17,7 @@ class GetDocumentDownloadThumbnailRequest extends Request
         protected readonly string $fileCabinetId,
         protected readonly int $documentId,
         protected readonly int $section,
-        protected readonly int $page,
+        protected readonly int $page = 0,
     ) {
     }
 

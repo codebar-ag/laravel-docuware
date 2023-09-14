@@ -2,7 +2,6 @@
 
 namespace CodebarAg\DocuWare\Support;
 
-use CodebarAg\DocuWare\Events\DocuWareAuthenticateLog;
 use CodebarAg\DocuWare\Events\DocuWareResponseLog;
 use CodebarAg\DocuWare\Exceptions\UnableToLogin;
 use CodebarAg\DocuWare\Exceptions\UnableToLoginNoCookies;

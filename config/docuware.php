@@ -56,7 +56,7 @@ return [
     */
 
     'credentials' => [
-        'url' => 'https://'.env('DOCUWARE_URL').'.docuware.cloud',
+        'url' => env('DOCUWARE_URL'),
         'username' => env('DOCUWARE_USERNAME'),
         'password' => env('DOCUWARE_PASSWORD'),
     ],

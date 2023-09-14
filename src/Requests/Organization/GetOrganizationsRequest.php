@@ -15,8 +15,8 @@ class GetOrganizationsRequest extends Request
         return '/Organizations';
     }
 
-	public function resolveResponseClass(): string
-	{
-		return OrganizationIndex::class;
-	}
+    public function resolveResponseClass(): string
+    {
+        return OrganizationIndex::class;
+    }
 }

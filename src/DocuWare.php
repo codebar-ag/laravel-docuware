@@ -3,8 +3,9 @@
 namespace CodebarAg\DocuWare;
 
 use Carbon\Carbon;
+use CodebarAg\DocuWare\Connectors\DocuWareManualConnector;
 use CodebarAg\DocuWare\Connectors\DocuWareStaticCookieConnector;
-use CodebarAg\DocuWare\Connectors\DocuWareWithoutCookieConnector;
+use CodebarAg\DocuWare\Connectors\DocuWareConnector;
 use CodebarAg\DocuWare\DTO\Dialog;
 use CodebarAg\DocuWare\DTO\Document;
 use CodebarAg\DocuWare\DTO\DocumentThumbnail;
@@ -52,41 +53,21 @@ use Symfony\Component\HttpFoundation\Response;
 
 class DocuWare
 {
-    const COOKIE_NAME = '.DWPLATFORMAUTH';
-
-    protected $connection;
-
-    public function __construct(protected ?string $cookie = null)
-    {
-        $this->connection = self::connection();
-    }
+    protected DocuWareConnector $connection;
 
     /**
-     * @throws InvalidResponseClassException
-     * @throws \Throwable
-     * @throws \ReflectionException
-     * @throws PendingRequestException
+     * @throws \Exception
      */
-    public function getCookie(): string
+    public function __construct()
     {
-        EnsureValidCredentials::check();
+        $this->connection = new DocuWareConnector();
+    }
 
-        $request = new PostLogonRequest();
+    public function cookie(?string $cookie = null): self
+    {
+        $this->connection = new DocuWareConnector($cookie);
 
-        $response = $this->connection->send($request);
-
-        event(new DocuWareResponseLog($response));
-
-        throw_if($response->status() === Response::HTTP_UNAUTHORIZED, UnableToLogin::create());
-        throw_if($this->connection->getCoookieJar()->toArray() === [], UnableToLoginNoCookies::create());
-
-        $cookies = $this->connection->getCoookieJar();
-
-        $cookie = collect($cookies->toArray())
-            ->reject(fn (array $cookie) => Arr::get($cookie, 'Value') === '')
-            ->firstWhere('Name', self::COOKIE_NAME);
-
-        return Arr::get($cookie, 'Value');
+        return $this;
     }
 
     /**
@@ -97,20 +78,10 @@ class DocuWare
      */
     public function login(): void
     {
-        self::methodNotAllowed();
-
         EnsureValidCredentials::check();
 
-        $request = new PostLogonRequest();
-
-        $response = $this->connection->send($request);
-
-        event(new DocuWareResponseLog($response));
-
-        throw_if($response->status() === Response::HTTP_UNAUTHORIZED, UnableToLogin::create());
-        throw_if($this->connection->getCoookieJar()->toArray() === [], UnableToLoginNoCookies::create());
-
-        Auth::store($this->connection->getCoookieJar());
+        // Checks if already logged in, if not, logs in
+        EnsureValidCookie::check();
     }
 
     /**
@@ -121,15 +92,10 @@ class DocuWare
      */
     public function logout(): void
     {
-        self::methodNotAllowed();
-
-        throw_if(config('docuware.cookies'), UnableToLogout::create());
-
-        self::ensureValidCookie();
-
+        // SoloRequest
         $request = new GetLogoffRequest();
 
-        $response = $this->connection->send($request);
+        $response = $request->send();
 
         event(new DocuWareResponseLog($response));
 
@@ -138,6 +104,7 @@ class DocuWare
         $response->throw();
     }
 
+
     /**
      * @throws InvalidResponseClassException
      * @throws \ReflectionException
@@ -145,8 +112,6 @@ class DocuWare
      */
     public function getOrganization(string $organizationId): Organization
     {
-        self::ensureValidCookie();
-
         $request = new GetOrganizationRequest($organizationId);
 
         $response = $this->connection->send($request);
@@ -167,8 +132,6 @@ class DocuWare
      */
     public function getOrganizations(): Collection
     {
-        self::ensureValidCookie();
-
         $request = new GetOrganizationsRequest();
 
         $response = $this->connection->send($request);
@@ -189,8 +152,6 @@ class DocuWare
      */
     public function getFileCabinets(): Collection
     {
-        self::ensureValidCookie();
-
         $request = new GetCabinetsRequest();
 
         $response = $this->connection->send($request);
@@ -211,8 +172,6 @@ class DocuWare
      */
     public function getFields(string $fileCabinetId): Collection
     {
-        self::ensureValidCookie();
-
         $request = new GetFieldsRequest(fileCabinetId: $fileCabinetId);
 
         $response = $this->connection->send($request);
@@ -233,8 +192,6 @@ class DocuWare
      */
     public function getDialogs(string $fileCabinetId): Collection
     {
-        self::ensureValidCookie();
-
         $request = new GetDialogsRequest(fileCabinetId: $fileCabinetId);
 
         $response = $this->connection->send($request);
@@ -258,8 +215,6 @@ class DocuWare
         string $dialogId,
         string $fieldName,
     ): array {
-        self::ensureValidCookie();
-
         $request = new GetSelectListRequest(
             fileCabinetId: $fileCabinetId,
             dialogId: $dialogId,
@@ -282,8 +237,6 @@ class DocuWare
      */
     public function getDocument(string $fileCabinetId, int $documentId): Document
     {
-        self::ensureValidCookie();
-
         $request = new GetDocumentRequest(
             fileCabinetId: $fileCabinetId,
             documentId: $documentId,
@@ -307,8 +260,6 @@ class DocuWare
      */
     public function getDocumentPreview(string $fileCabinetId, int $documentId): string
     {
-        self::ensureValidCookie();
-
         $request = new GetDocumentPreviewRequest(
             fileCabinetId: $fileCabinetId,
             documentId: $documentId,
@@ -330,8 +281,6 @@ class DocuWare
      */
     public function downloadDocument(string $fileCabinetId, int $documentId): string
     {
-        self::ensureValidCookie();
-
         $request = new GetDocumentDownloadRequest(
             fileCabinetId: $fileCabinetId,
             documentId: $documentId,
@@ -354,8 +303,6 @@ class DocuWare
      */
     public function downloadDocuments(string $fileCabinetId, array $documentIds): string
     {
-        self::ensureValidCookie();
-
         throw_if(
             count($documentIds) < 2,
             UnableToDownloadDocuments::selectAtLeastTwoDocuments(),
@@ -412,8 +359,6 @@ class DocuWare
         array $values,
         bool $forceUpdate = false,
     ): ?Collection {
-        self::ensureValidCookie();
-
         $request = new PutDocumentFieldRequest(
             fileCabinetId: $fileCabinetId,
             documentId: $documentId,
@@ -448,8 +393,6 @@ class DocuWare
         string $fileName,
         Collection $indexes = null,
     ): Document {
-        self::ensureValidCookie();
-
         $request = new PostDocumentRequest(
             fileCabinetId: $fileCabinetId,
             fileContent: $fileContent,
@@ -478,8 +421,6 @@ class DocuWare
         string $fileCabinetId,
         int $documentId,
     ): void {
-        self::ensureValidCookie();
-
         $request = new DeleteDocumentRequest(
             fileCabinetId: $fileCabinetId,
             documentId: $documentId,
@@ -496,8 +437,6 @@ class DocuWare
 
     public function downloadDocumentThumbnail(string $fileCabinetId, int $documentId, int $section, int $page = 0): DocumentThumbnail
     {
-        self::ensureValidCookie();
-
         $request = new GetDocumentDownloadThumbnailRequest(
             fileCabinetId: $fileCabinetId,
             documentId: $documentId,
@@ -517,10 +456,14 @@ class DocuWare
         ]);
     }
 
+    /**
+     * @throws InvalidResponseClassException
+     * @throws \Throwable
+     * @throws \ReflectionException
+     * @throws PendingRequestException
+     */
     public function documentCount(string $fileCabinetId, string $dialogId): int
     {
-        self::ensureValidCookie();
-
         $request = new GetDocumentCountRequest(
             fileCabinetId: $fileCabinetId,
             dialogId: $dialogId,
@@ -552,32 +495,5 @@ class DocuWare
     public function url(): DocuWareUrl
     {
         return new DocuWareUrl();
-    }
-
-    protected function connection()
-    {
-        return match (config('docuware.connection')) {
-            ConnectionEnum::WITHOUT_COOKIE => new DocuWareWithoutCookieConnector(),
-            ConnectionEnum::STATIC_COOKIE => new DocuWareStaticCookieConnector($this->cookie),
-            default => throw (UnableToFindConnection::create()),
-        };
-    }
-
-    protected function ensureValidCookie(): void
-    {
-        match (config('docuware.connection')) {
-            ConnectionEnum::WITHOUT_COOKIE => EnsureValidCookie::check(),
-            ConnectionEnum::STATIC_COOKIE => null,
-            default => throw (UnableToFindConnection::create()),
-        };
-    }
-
-    protected function methodNotAllowed(): void
-    {
-        match (config('docuware.connection')) {
-            ConnectionEnum::WITHOUT_COOKIE => null,
-            ConnectionEnum::STATIC_COOKIE => MethodNotAllowed::create(),
-            default => throw (UnableToFindConnection::create()),
-        };
     }
 }

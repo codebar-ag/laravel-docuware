@@ -9,13 +9,13 @@ use Illuminate\Queue\SerializesModels;
 use Saloon\Contracts\Response as SaloonContracts;
 use Saloon\Http\Response as SaloonResponse;
 
-class DocuWareResponseLog
+class DocuWareAuthenticateLog
 {
     use Dispatchable;
     use InteractsWithSockets;
     use SerializesModels;
 
     public function __construct(
-        public Response|SaloonResponse|SaloonContracts $response
+        public string $message
     ) {}
 }

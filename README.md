@@ -470,11 +470,6 @@ logout with DocuWare:
 use CodebarAg\DocuWare\Facades\DocuWare;
 
 /**
- * If you would like to handle the cookie storage by yourself you can get a fresh cookie with the getCookie() method.
- */
-DocuWare::getCookie();
-
-/**
  * Login with your credentials. You only need to login once. Afterwards the
  * authentication cookie is stored in the cache as `docuware.cookies` and
  * is used for all further requests.
@@ -486,6 +481,18 @@ DocuWare::login();
  */
 DocuWare::logout();
 ```
+
+### Manual authentication
+
+If you want to provide your own authentication cookie you can use the following connector
+to authenticate with the DocuWare REST API:
+
+```php
+use CodebarAg\DocuWare\Connectors\StaticCookieConnector;
+```
+
+
+
 
 ## 💥 Exceptions explained
 

@@ -4,7 +4,7 @@ namespace CodebarAg\DocuWare;
 
 use Carbon\Carbon;
 use CodebarAg\DocuWare\Connectors\DocuWareStaticCookieConnector;
-use CodebarAg\DocuWare\Connectors\DocuWareWithoutCookieConnector;
+use CodebarAg\DocuWare\Connectors\DocuWareConnector;
 use CodebarAg\DocuWare\DTO\DocumentPaginator;
 use CodebarAg\DocuWare\Enums\ConnectionEnum;
 use CodebarAg\DocuWare\Events\DocuWareResponseLog;
@@ -282,7 +282,7 @@ class DocuWareSearch
     protected function connection()
     {
         return match (config('docuware.connection')) {
-            ConnectionEnum::WITHOUT_COOKIE => new DocuWareWithoutCookieConnector(),
+            ConnectionEnum::WITHOUT_COOKIE => new DocuWareConnector(),
             ConnectionEnum::STATIC_COOKIE => new DocuWareStaticCookieConnector($this->cookie),
             default => throw (UnableToFindConnection::create()),
         };

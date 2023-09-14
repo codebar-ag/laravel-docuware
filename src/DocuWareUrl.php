@@ -4,8 +4,8 @@ namespace CodebarAg\DocuWare;
 
 use Carbon\Carbon;
 use CodebarAg\DocuWare\Exceptions\UnableToMakeUrl;
+use CodebarAg\DocuWare\Requests\EnsureValidPassphrase;
 use CodebarAg\DocuWare\Support\EnsureValidCredentials;
-use CodebarAg\DocuWare\Support\EnsureValidPassphrase;
 use CodebarAg\DocuWare\Support\URL;
 
 class DocuWareUrl

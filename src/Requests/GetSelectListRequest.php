@@ -2,6 +2,9 @@
 
 namespace CodebarAg\DocuWare\Requests;
 
+use CodebarAg\DocuWare\Events\DocuWareResponseLog;
+use CodebarAg\DocuWare\Support\EnsureValidResponse;
+use Saloon\Contracts\Response;
 use Saloon\Enums\Method;
 use Saloon\Http\Request;
 
@@ -27,5 +30,14 @@ class GetSelectListRequest extends Request
             'dialogId' => $this->dialogId,
             'fieldName' => $this->fieldName,
         ];
+    }
+
+    public function createDtoFromResponse(Response $response): mixed
+    {
+        event(new DocuWareResponseLog($response));
+
+        EnsureValidResponse::from($response);
+
+        return $response->throw()->json('Value');
     }
 }

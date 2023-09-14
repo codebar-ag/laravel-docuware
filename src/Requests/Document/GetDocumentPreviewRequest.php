@@ -2,6 +2,9 @@
 
 namespace CodebarAg\DocuWare\Requests\Document;
 
+use CodebarAg\DocuWare\Events\DocuWareResponseLog;
+use CodebarAg\DocuWare\Support\EnsureValidResponse;
+use Saloon\Contracts\Response;
 use Saloon\Enums\Method;
 use Saloon\Http\Request;
 
@@ -18,5 +21,14 @@ class GetDocumentPreviewRequest extends Request
     public function resolveEndpoint(): string
     {
         return '/FileCabinets/'.$this->fileCabinetId.'/Documents/'.$this->documentId.'/Image';
+    }
+
+    public function createDtoFromResponse(Response $response): mixed
+    {
+        event(new DocuWareResponseLog($response));
+
+        EnsureValidResponse::from($response);
+
+        return $response->throw()->body();
     }
 }

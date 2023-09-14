@@ -2,6 +2,10 @@
 
 namespace CodebarAg\DocuWare\Requests\Document\Thumbnail;
 
+use CodebarAg\DocuWare\DTO\DocumentThumbnail;
+use CodebarAg\DocuWare\Events\DocuWareResponseLog;
+use CodebarAg\DocuWare\Support\EnsureValidResponse;
+use Saloon\Contracts\Response;
 use Saloon\Enums\Method;
 use Saloon\Http\Request;
 
@@ -27,5 +31,17 @@ class GetDocumentDownloadThumbnailRequest extends Request
         return [
             'page' => $this->page,
         ];
+    }
+
+    public function createDtoFromResponse(Response $response): mixed
+    {
+        event(new DocuWareResponseLog($response));
+
+        EnsureValidResponse::from($response);
+
+        return DocumentThumbnail::fromData([
+            'mime' => $response->throw()->header('Content-Type'),
+            'data' => $response->throw()->body(),
+        ]);
     }
 }

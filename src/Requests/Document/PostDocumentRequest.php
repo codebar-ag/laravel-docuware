@@ -2,9 +2,13 @@
 
 namespace CodebarAg\DocuWare\Requests\Document;
 
+use CodebarAg\DocuWare\DTO\Document;
 use CodebarAg\DocuWare\DTO\DocumentIndex;
+use CodebarAg\DocuWare\Events\DocuWareResponseLog;
+use CodebarAg\DocuWare\Support\EnsureValidResponse;
 use Illuminate\Support\Collection;
 use Saloon\Contracts\Body\HasBody;
+use Saloon\Contracts\Response;
 use Saloon\Data\MultipartValue;
 use Saloon\Enums\Method;
 use Saloon\Http\Request;
@@ -42,5 +46,16 @@ class PostDocumentRequest extends Request implements HasBody
         $body[] = new MultipartValue(name: 'file', value: $this->fileContent, filename: $this->fileName);
 
         return $body;
+    }
+
+    public function createDtoFromResponse(Response $response): mixed
+    {
+        event(new DocuWareResponseLog($response));
+
+        EnsureValidResponse::from($response);
+
+        $data = $response->throw()->json();
+
+        return Document::fromJson($data);
     }
 }

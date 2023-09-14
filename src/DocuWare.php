@@ -31,7 +31,7 @@ use CodebarAg\DocuWare\Requests\Document\GetDocumentPreviewRequest;
 use CodebarAg\DocuWare\Requests\Document\GetDocumentRequest;
 use CodebarAg\DocuWare\Requests\Document\GetDocumentsDownloadRequest;
 use CodebarAg\DocuWare\Requests\Document\PostDocumentRequest;
-use CodebarAg\DocuWare\Requests\Document\PutDocumentFieldRequest;
+use CodebarAg\DocuWare\Requests\Document\PutDocumentFieldsRequest;
 use CodebarAg\DocuWare\Requests\Document\Thumbnail\GetDocumentDownloadThumbnailRequest;
 use CodebarAg\DocuWare\Requests\GetCabinetsRequest;
 use CodebarAg\DocuWare\Requests\GetDialogsRequest;
@@ -303,18 +303,9 @@ class DocuWare
      */
     public function downloadDocuments(string $fileCabinetId, array $documentIds): string
     {
-        throw_if(
-            count($documentIds) < 2,
-            UnableToDownloadDocuments::selectAtLeastTwoDocuments(),
-        );
-
-        $firstDocumentId = $documentIds[0];
-        $additionalDocumentIds = array_slice($documentIds, 1);
-
         $request = new GetDocumentsDownloadRequest(
             fileCabinetId: $fileCabinetId,
-            documentId: $firstDocumentId,
-            additionalDocumentIds: $additionalDocumentIds,
+            documentIds: $documentIds,
         );
 
         $response = $this->connection->send($request);
@@ -359,7 +350,7 @@ class DocuWare
         array $values,
         bool $forceUpdate = false,
     ): ?Collection {
-        $request = new PutDocumentFieldRequest(
+        $request = new PutDocumentFieldsRequest(
             fileCabinetId: $fileCabinetId,
             documentId: $documentId,
             values: $values,

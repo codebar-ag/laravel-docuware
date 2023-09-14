@@ -22,6 +22,8 @@ class EnsureValidCookie
 
         EnsureValidCredentials::check();
 
+        event(new DocuWareAuthenticateLog('Creating new authenticaion cookie for caching'));
+
         $cookieJar = new CookieJar();
 
         $request = new PostLogonRequest();

@@ -21,7 +21,7 @@ use CodebarAg\DocuWare\Requests\Document\GetDocumentsDownloadRequest;
 use CodebarAg\DocuWare\Requests\Document\PostDocumentRequest;
 use CodebarAg\DocuWare\Requests\Document\PutDocumentFieldsRequest;
 use CodebarAg\DocuWare\Requests\Document\Thumbnail\GetDocumentDownloadThumbnailRequest;
-use CodebarAg\DocuWare\Requests\GetCabinetsRequest;
+use CodebarAg\DocuWare\Requests\GetFileCabinetsRequest;
 use CodebarAg\DocuWare\Requests\GetDialogsRequest;
 use CodebarAg\DocuWare\Requests\GetFieldsRequest;
 use CodebarAg\DocuWare\Requests\GetSelectListRequest;
@@ -63,7 +63,7 @@ it('can get an organization', function () {
 it('can list file cabinets', function () {
     Event::fake();
 
-    $fileCabinets = $this->connector->send(new GetCabinetsRequest())->dto();
+    $fileCabinets = $this->connector->send(new GetFileCabinetsRequest())->dto();
 
     $this->assertInstanceOf(Collection::class, $fileCabinets);
     $this->assertNotCount(0, $fileCabinets);
@@ -144,6 +144,19 @@ it('can update a document value', function () {
     $documentId = config('docuware.tests.document_id');
     $fieldName = config('docuware.tests.field_name');
     $newValue = 'laravel-docuware';
+    $fileContent = '::fake-file-content::';
+    $fileName = 'example.txt';
+
+    $document = $this->connector->send(new PostDocumentRequest(
+        $fileCabinetId,
+        $fileContent,
+        $fileName,
+        collect([
+            DocumentIndex::make('DOCUMENT_LABEL', '::text::'),
+        ]),
+    ))->dto();
+
+    ray($document);
 
     $response = $this->connector->send(new PutDocumentFieldsRequest(
         $fileCabinetId,

@@ -3,6 +3,7 @@
 namespace CodebarAg\DocuWare\Requests\Document;
 
 use CodebarAg\DocuWare\Events\DocuWareResponseLog;
+use CodebarAg\DocuWare\Responses\Document\DeleteDocumentResponse;
 use CodebarAg\DocuWare\Support\EnsureValidResponse;
 use Saloon\Contracts\Response;
 use Saloon\Enums\Method;
@@ -25,10 +26,6 @@ class DeleteDocumentRequest extends Request
 
     public function createDtoFromResponse(Response $response): mixed
     {
-        event(new DocuWareResponseLog($response));
-
-        EnsureValidResponse::from($response);
-
-        return $response->throw();
+        return DeleteDocumentResponse::fromResponse($response);
     }
 }

@@ -4,6 +4,7 @@ namespace CodebarAg\DocuWare\Requests\Organization;
 
 use CodebarAg\DocuWare\DTO\OrganizationIndex;
 use CodebarAg\DocuWare\Events\DocuWareResponseLog;
+use CodebarAg\DocuWare\Responses\Organization\GetOrganizationsResponse;
 use CodebarAg\DocuWare\Support\EnsureValidResponse;
 use Illuminate\Support\Facades\Cache;
 use Saloon\CachePlugin\Contracts\Cacheable;
@@ -36,12 +37,6 @@ class GetOrganizationsRequest extends Request implements Cacheable
 
     public function createDtoFromResponse(Response $response): mixed
     {
-        event(new DocuWareResponseLog($response));
-
-        EnsureValidResponse::from($response);
-
-        $organizations = $response->throw()->json('Organization');
-
-        return collect($organizations)->map(fn (array $cabinet) => OrganizationIndex::fromJson($cabinet));
+        return GetOrganizationsResponse::fromResponse($response);
     }
 }

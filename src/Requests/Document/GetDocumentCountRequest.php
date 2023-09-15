@@ -4,6 +4,7 @@ namespace CodebarAg\DocuWare\Requests\Document;
 
 use CodebarAg\DocuWare\Events\DocuWareResponseLog;
 use CodebarAg\DocuWare\Exceptions\UnableToGetDocumentCount;
+use CodebarAg\DocuWare\Responses\Document\GetDocumentCountResponse;
 use CodebarAg\DocuWare\Support\EnsureValidResponse;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Cache;
@@ -50,19 +51,6 @@ class GetDocumentCountRequest extends Request implements Cacheable
 
     public function createDtoFromResponse(Response $response): mixed
     {
-        event(new DocuWareResponseLog($response));
-
-        EnsureValidResponse::from($response);
-
-        $content = $response->throw()->json();
-        throw_unless(Arr::has($content, 'Group'), UnableToGetDocumentCount::noCount());
-
-        $group = Arr::get($content, 'Group');
-        throw_unless(Arr::has($group, '0'), UnableToGetDocumentCount::noGroupKeyIndexZero());
-        $group = Arr::get($group, '0');
-
-        throw_unless(Arr::has($group, 'Count'), UnableToGetDocumentCount::noCount());
-
-        return Arr::get($group, 'Count');
+        return GetDocumentCountResponse::fromResponse($response);
     }
 }

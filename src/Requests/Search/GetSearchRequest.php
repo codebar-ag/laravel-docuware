@@ -4,6 +4,7 @@ namespace CodebarAg\DocuWare\Requests\Search;
 
 use CodebarAg\DocuWare\DTO\DocumentPaginator;
 use CodebarAg\DocuWare\Events\DocuWareResponseLog;
+use CodebarAg\DocuWare\Responses\Search\GetSearchResponse;
 use CodebarAg\DocuWare\Support\EnsureValidResponse;
 use Exception;
 use Illuminate\Support\Facades\Cache;
@@ -84,20 +85,6 @@ class GetSearchRequest extends Request implements Cacheable, HasBody
 
     public function createDtoFromResponse(Response $response): mixed
     {
-        event(new DocuWareResponseLog($response));
-
-        try {
-            EnsureValidResponse::from($response);
-
-            $data = $response->throw()->json();
-        } catch (Exception $e) {
-            return DocumentPaginator::fromFailed($e);
-        }
-
-        return DocumentPaginator::fromJson(
-            $data,
-            $this->page,
-            $this->perPage,
-        );
+        return GetSearchResponse::fromResponse($response, $this->page, $this->perPage);
     }
 }

@@ -4,6 +4,7 @@ namespace CodebarAg\DocuWare\Requests\Document\Thumbnail;
 
 use CodebarAg\DocuWare\DTO\DocumentThumbnail;
 use CodebarAg\DocuWare\Events\DocuWareResponseLog;
+use CodebarAg\DocuWare\Responses\Document\Thumbnail\GetDocumentDownloadThumbnailResponse;
 use CodebarAg\DocuWare\Support\EnsureValidResponse;
 use Illuminate\Support\Facades\Cache;
 use Saloon\CachePlugin\Contracts\Cacheable;
@@ -51,13 +52,6 @@ class GetDocumentDownloadThumbnailRequest extends Request implements Cacheable
 
     public function createDtoFromResponse(Response $response): mixed
     {
-        event(new DocuWareResponseLog($response));
-
-        EnsureValidResponse::from($response);
-
-        return DocumentThumbnail::fromData([
-            'mime' => $response->throw()->header('Content-Type'),
-            'data' => $response->throw()->body(),
-        ]);
+        return GetDocumentDownloadThumbnailResponse::fromResponse($response);
     }
 }

@@ -4,6 +4,7 @@ namespace CodebarAg\DocuWare\Requests\Document;
 
 use CodebarAg\DocuWare\Events\DocuWareResponseLog;
 use CodebarAg\DocuWare\Exceptions\UnableToDownloadDocuments;
+use CodebarAg\DocuWare\Responses\Document\GetDocumentsDownloadResponse;
 use CodebarAg\DocuWare\Support\EnsureValidResponse;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Cache;
@@ -60,10 +61,6 @@ class GetDocumentsDownloadRequest extends Request implements Cacheable
 
     public function createDtoFromResponse(Response $response): mixed
     {
-        event(new DocuWareResponseLog($response));
-
-        EnsureValidResponse::from($response);
-
-        return $response->throw()->body();
+        return GetDocumentsDownloadResponse::fromResponse($response);
     }
 }

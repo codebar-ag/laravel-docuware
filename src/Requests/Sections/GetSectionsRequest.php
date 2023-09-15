@@ -3,6 +3,7 @@
 namespace CodebarAg\DocuWare\Requests\Sections;
 
 use CodebarAg\DocuWare\Events\DocuWareResponseLog;
+use CodebarAg\DocuWare\Responses\Sections\GetSectionsResponse;
 use CodebarAg\DocuWare\Support\EnsureValidResponse;
 use Illuminate\Support\Facades\Cache;
 use Saloon\CachePlugin\Contracts\Cacheable;
@@ -48,10 +49,6 @@ class GetSectionsRequest extends Request implements Cacheable
 
     public function createDtoFromResponse(Response $response): mixed
     {
-        event(new DocuWareResponseLog($response));
-
-        EnsureValidResponse::from($response);
-
-        return $response->throw()->json('Sections');
+        return GetSectionsResponse::fromResponse($response);
     }
 }

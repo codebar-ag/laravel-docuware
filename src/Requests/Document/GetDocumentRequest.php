@@ -4,6 +4,7 @@ namespace CodebarAg\DocuWare\Requests\Document;
 
 use CodebarAg\DocuWare\DTO\Document;
 use CodebarAg\DocuWare\Events\DocuWareResponseLog;
+use CodebarAg\DocuWare\Responses\Document\GetDocumentResponse;
 use CodebarAg\DocuWare\Support\EnsureValidResponse;
 use Illuminate\Support\Facades\Cache;
 use Saloon\CachePlugin\Contracts\Cacheable;
@@ -42,12 +43,6 @@ class GetDocumentRequest extends Request implements Cacheable
 
     public function createDtoFromResponse(Response $response): mixed
     {
-        event(new DocuWareResponseLog($response));
-
-        EnsureValidResponse::from($response);
-
-        $data = $response->throw()->json();
-
-        return Document::fromJson($data);
+        return GetDocumentResponse::fromResponse($response);
     }
 }

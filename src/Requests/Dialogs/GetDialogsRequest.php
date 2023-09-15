@@ -2,9 +2,7 @@
 
 namespace CodebarAg\DocuWare\Requests\Dialogs;
 
-use CodebarAg\DocuWare\DTO\Dialog;
-use CodebarAg\DocuWare\Events\DocuWareResponseLog;
-use CodebarAg\DocuWare\Support\EnsureValidResponse;
+use CodebarAg\DocuWare\Responses\Dialogs\GetDialogsResponse;
 use Illuminate\Support\Facades\Cache;
 use Saloon\CachePlugin\Contracts\Cacheable;
 use Saloon\CachePlugin\Drivers\LaravelCacheDriver;
@@ -41,12 +39,6 @@ class GetDialogsRequest extends Request implements Cacheable
 
     public function createDtoFromResponse(Response $response): mixed
     {
-        event(new DocuWareResponseLog($response));
-
-        EnsureValidResponse::from($response);
-
-        $dialogs = $response->throw()->json('Dialog');
-
-        return collect($dialogs)->map(fn (array $dialog) => Dialog::fromJson($dialog));
+        return GetDialogsResponse::fromResponse($response);
     }
 }

@@ -4,6 +4,7 @@ namespace CodebarAg\DocuWare\Requests\Document;
 
 use CodebarAg\DocuWare\Events\DocuWareResponseLog;
 use CodebarAg\DocuWare\Exceptions\UnableToUpdateFields;
+use CodebarAg\DocuWare\Responses\Document\PutDocumentFieldsResponse;
 use CodebarAg\DocuWare\Support\EnsureValidResponse;
 use CodebarAg\DocuWare\Support\ParseValue;
 use Saloon\Contracts\Body\HasBody;
@@ -61,16 +62,6 @@ class PutDocumentFieldsRequest extends Request implements HasBody
 
     public function createDtoFromResponse(Response $response): mixed
     {
-        event(new DocuWareResponseLog($response));
-
-        EnsureValidResponse::from($response);
-
-        $fields = $response->throw()->json('Field');
-
-        return collect($fields)->mapWithKeys(function (array $field) {
-            return [
-                $field['FieldName'] => ParseValue::field($field),
-            ];
-        });
+        return PutDocumentFieldsResponse::fromResponse($response);
     }
 }

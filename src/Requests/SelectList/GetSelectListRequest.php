@@ -3,6 +3,7 @@
 namespace CodebarAg\DocuWare\Requests\SelectList;
 
 use CodebarAg\DocuWare\Events\DocuWareResponseLog;
+use CodebarAg\DocuWare\Responses\SelectList\GetSelectListResponse;
 use CodebarAg\DocuWare\Support\EnsureValidResponse;
 use Illuminate\Support\Facades\Cache;
 use Saloon\CachePlugin\Contracts\Cacheable;
@@ -50,10 +51,6 @@ class GetSelectListRequest extends Request implements Cacheable
 
     public function createDtoFromResponse(Response $response): mixed
     {
-        event(new DocuWareResponseLog($response));
-
-        EnsureValidResponse::from($response);
-
-        return $response->throw()->json('Value');
+        return GetSelectListResponse::fromResponse($response);
     }
 }

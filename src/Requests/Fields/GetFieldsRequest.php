@@ -4,6 +4,7 @@ namespace CodebarAg\DocuWare\Requests\Fields;
 
 use CodebarAg\DocuWare\DTO\Field;
 use CodebarAg\DocuWare\Events\DocuWareResponseLog;
+use CodebarAg\DocuWare\Responses\Fields\GetFieldsResponse;
 use CodebarAg\DocuWare\Support\EnsureValidResponse;
 use Illuminate\Support\Facades\Cache;
 use Saloon\CachePlugin\Contracts\Cacheable;
@@ -41,12 +42,6 @@ class GetFieldsRequest extends Request implements Cacheable
 
     public function createDtoFromResponse(Response $response): mixed
     {
-        event(new DocuWareResponseLog($response));
-
-        EnsureValidResponse::from($response);
-
-        $fields = $response->throw()->json('Fields');
-
-        return collect($fields)->map(fn (array $field) => Field::fromJson($field));
+        return GetFieldsResponse::fromResponse($response);
     }
 }

@@ -3,6 +3,7 @@
 namespace CodebarAg\DocuWare\Requests\Document;
 
 use CodebarAg\DocuWare\Events\DocuWareResponseLog;
+use CodebarAg\DocuWare\Responses\Document\GetDocumentPreviewResponse;
 use CodebarAg\DocuWare\Support\EnsureValidResponse;
 use Illuminate\Support\Facades\Cache;
 use Saloon\CachePlugin\Contracts\Cacheable;
@@ -41,10 +42,6 @@ class GetDocumentPreviewRequest extends Request implements Cacheable
 
     public function createDtoFromResponse(Response $response): mixed
     {
-        event(new DocuWareResponseLog($response));
-
-        EnsureValidResponse::from($response);
-
-        return $response->throw()->body();
+        return GetDocumentPreviewResponse::fromResponse($response);
     }
 }

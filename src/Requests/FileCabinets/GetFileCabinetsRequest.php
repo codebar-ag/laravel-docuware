@@ -4,6 +4,7 @@ namespace CodebarAg\DocuWare\Requests\FileCabinets;
 
 use CodebarAg\DocuWare\DTO\FileCabinet;
 use CodebarAg\DocuWare\Events\DocuWareResponseLog;
+use CodebarAg\DocuWare\Responses\FileCabinets\GetFileCabinetsResponse;
 use CodebarAg\DocuWare\Support\EnsureValidResponse;
 use Illuminate\Support\Facades\Cache;
 use Saloon\CachePlugin\Contracts\Cacheable;
@@ -36,12 +37,6 @@ class GetFileCabinetsRequest extends Request implements Cacheable
 
     public function createDtoFromResponse(Response $response): mixed
     {
-        event(new DocuWareResponseLog($response));
-
-        EnsureValidResponse::from($response);
-
-        $cabinets = $response->throw()->json('FileCabinet');
-
-        return collect($cabinets)->map(fn (array $cabinet) => FileCabinet::fromJson($cabinet));
+        return GetFileCabinetsResponse::fromResponse($response);
     }
 }

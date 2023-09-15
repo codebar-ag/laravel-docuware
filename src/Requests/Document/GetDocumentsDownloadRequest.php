@@ -2,10 +2,8 @@
 
 namespace CodebarAg\DocuWare\Requests\Document;
 
-use CodebarAg\DocuWare\Events\DocuWareResponseLog;
 use CodebarAg\DocuWare\Exceptions\UnableToDownloadDocuments;
 use CodebarAg\DocuWare\Responses\Document\GetDocumentsDownloadResponse;
-use CodebarAg\DocuWare\Support\EnsureValidResponse;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Cache;
 use Saloon\CachePlugin\Contracts\Cacheable;

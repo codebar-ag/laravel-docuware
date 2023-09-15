@@ -2,10 +2,7 @@
 
 namespace CodebarAg\DocuWare\Requests\Organization;
 
-use CodebarAg\DocuWare\DTO\Organization;
-use CodebarAg\DocuWare\Events\DocuWareResponseLog;
 use CodebarAg\DocuWare\Responses\Organization\GetOrganizationResponse;
-use CodebarAg\DocuWare\Support\EnsureValidResponse;
 use Illuminate\Support\Facades\Cache;
 use Saloon\CachePlugin\Contracts\Cacheable;
 use Saloon\CachePlugin\Drivers\LaravelCacheDriver;

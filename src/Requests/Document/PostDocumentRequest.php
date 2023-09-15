@@ -2,11 +2,8 @@
 
 namespace CodebarAg\DocuWare\Requests\Document;
 
-use CodebarAg\DocuWare\DTO\Document;
 use CodebarAg\DocuWare\DTO\DocumentIndex;
-use CodebarAg\DocuWare\Events\DocuWareResponseLog;
 use CodebarAg\DocuWare\Responses\Document\PostDocumentResponse;
-use CodebarAg\DocuWare\Support\EnsureValidResponse;
 use Illuminate\Support\Collection;
 use Saloon\Contracts\Body\HasBody;
 use Saloon\Contracts\Response;

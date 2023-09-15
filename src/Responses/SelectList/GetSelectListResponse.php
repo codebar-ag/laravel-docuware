@@ -4,8 +4,6 @@ namespace CodebarAg\DocuWare\Responses\SelectList;
 
 use CodebarAg\DocuWare\Events\DocuWareResponseLog;
 use CodebarAg\DocuWare\Support\EnsureValidResponse;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Enumerable;
 use Saloon\Contracts\Response;
 
 final class GetSelectListResponse

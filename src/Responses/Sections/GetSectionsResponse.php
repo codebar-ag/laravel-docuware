@@ -2,7 +2,6 @@
 
 namespace CodebarAg\DocuWare\Responses\Sections;
 
-use CodebarAg\DocuWare\DTO\FileCabinet;
 use CodebarAg\DocuWare\Events\DocuWareResponseLog;
 use CodebarAg\DocuWare\Support\EnsureValidResponse;
 use Illuminate\Support\Collection;

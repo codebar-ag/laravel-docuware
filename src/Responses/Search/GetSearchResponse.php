@@ -3,12 +3,9 @@
 namespace CodebarAg\DocuWare\Responses\Search;
 
 use CodebarAg\DocuWare\DTO\DocumentPaginator;
-use CodebarAg\DocuWare\DTO\OrganizationIndex;
 use CodebarAg\DocuWare\Events\DocuWareResponseLog;
 use CodebarAg\DocuWare\Support\EnsureValidResponse;
 use Exception;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Enumerable;
 use Saloon\Contracts\Response;
 
 final class GetSearchResponse

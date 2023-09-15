@@ -2,12 +2,9 @@
 
 namespace CodebarAg\DocuWare\Responses\Document\Thumbnail;
 
-use CodebarAg\DocuWare\DTO\Dialog;
 use CodebarAg\DocuWare\DTO\DocumentThumbnail;
 use CodebarAg\DocuWare\Events\DocuWareResponseLog;
 use CodebarAg\DocuWare\Support\EnsureValidResponse;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Enumerable;
 use Saloon\Contracts\Response;
 
 final class GetDocumentDownloadThumbnailResponse

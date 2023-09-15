@@ -2,7 +2,6 @@
 
 namespace CodebarAg\DocuWare\Responses\Organization;
 
-use CodebarAg\DocuWare\DTO\FileCabinet;
 use CodebarAg\DocuWare\DTO\OrganizationIndex;
 use CodebarAg\DocuWare\Events\DocuWareResponseLog;
 use CodebarAg\DocuWare\Support\EnsureValidResponse;

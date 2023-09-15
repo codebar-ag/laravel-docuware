@@ -2,7 +2,6 @@
 
 namespace CodebarAg\DocuWare\Responses\FileCabinets;
 
-use CodebarAg\DocuWare\DTO\Field;
 use CodebarAg\DocuWare\DTO\FileCabinet;
 use CodebarAg\DocuWare\Events\DocuWareResponseLog;
 use CodebarAg\DocuWare\Support\EnsureValidResponse;

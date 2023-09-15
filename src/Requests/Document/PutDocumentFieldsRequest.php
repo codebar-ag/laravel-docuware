@@ -2,11 +2,8 @@
 
 namespace CodebarAg\DocuWare\Requests\Document;
 
-use CodebarAg\DocuWare\Events\DocuWareResponseLog;
 use CodebarAg\DocuWare\Exceptions\UnableToUpdateFields;
 use CodebarAg\DocuWare\Responses\Document\PutDocumentFieldsResponse;
-use CodebarAg\DocuWare\Support\EnsureValidResponse;
-use CodebarAg\DocuWare\Support\ParseValue;
 use Saloon\Contracts\Body\HasBody;
 use Saloon\Contracts\Response;
 use Saloon\Enums\Method;

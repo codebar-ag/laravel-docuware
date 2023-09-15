@@ -2,11 +2,7 @@
 
 namespace CodebarAg\DocuWare\Requests\Search;
 
-use CodebarAg\DocuWare\DTO\DocumentPaginator;
-use CodebarAg\DocuWare\Events\DocuWareResponseLog;
 use CodebarAg\DocuWare\Responses\Search\GetSearchResponse;
-use CodebarAg\DocuWare\Support\EnsureValidResponse;
-use Exception;
 use Illuminate\Support\Facades\Cache;
 use Saloon\CachePlugin\Contracts\Cacheable;
 use Saloon\CachePlugin\Drivers\LaravelCacheDriver;

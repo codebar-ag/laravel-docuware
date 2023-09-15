@@ -2,9 +2,7 @@
 
 namespace CodebarAg\DocuWare\Requests\Document;
 
-use CodebarAg\DocuWare\Events\DocuWareResponseLog;
 use CodebarAg\DocuWare\Responses\Document\DeleteDocumentResponse;
-use CodebarAg\DocuWare\Support\EnsureValidResponse;
 use Saloon\Contracts\Response;
 use Saloon\Enums\Method;
 use Saloon\Http\Request;

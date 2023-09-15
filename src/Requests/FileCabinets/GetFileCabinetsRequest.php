@@ -2,10 +2,7 @@
 
 namespace CodebarAg\DocuWare\Requests\FileCabinets;
 
-use CodebarAg\DocuWare\DTO\FileCabinet;
-use CodebarAg\DocuWare\Events\DocuWareResponseLog;
 use CodebarAg\DocuWare\Responses\FileCabinets\GetFileCabinetsResponse;
-use CodebarAg\DocuWare\Support\EnsureValidResponse;
 use Illuminate\Support\Facades\Cache;
 use Saloon\CachePlugin\Contracts\Cacheable;
 use Saloon\CachePlugin\Drivers\LaravelCacheDriver;

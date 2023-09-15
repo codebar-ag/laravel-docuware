@@ -2,10 +2,7 @@
 
 namespace CodebarAg\DocuWare\Requests\Document\Thumbnail;
 
-use CodebarAg\DocuWare\DTO\DocumentThumbnail;
-use CodebarAg\DocuWare\Events\DocuWareResponseLog;
 use CodebarAg\DocuWare\Responses\Document\Thumbnail\GetDocumentDownloadThumbnailResponse;
-use CodebarAg\DocuWare\Support\EnsureValidResponse;
 use Illuminate\Support\Facades\Cache;
 use Saloon\CachePlugin\Contracts\Cacheable;
 use Saloon\CachePlugin\Drivers\LaravelCacheDriver;

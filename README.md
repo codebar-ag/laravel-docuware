@@ -653,7 +653,7 @@ return [
     |
     */
 
-    'timeout' => env('DOCUWARE_TIMEOUT', 30),
+    'timeout' => env('DOCUWARE_TIMEOUT', 15),
 
     /*
     |--------------------------------------------------------------------------
@@ -730,17 +730,7 @@ return [
         'file_cabinet_id' => env('DOCUWARE_TESTS_FILE_CABINET_ID'),
         'dialog_id' => env('DOCUWARE_TESTS_DIALOG_ID'),
         'basket_id' => env('DOCUWARE_TESTS_BASKET_ID'),
-        'section' => (int) env('DOCUWARE_TESTS_SECTION'),
         'organization_id' => env('DOCUWARE_TESTS_ORGANIZATION_ID'),
-        'document_id' => (int) env('DOCUWARE_TESTS_DOCUMENT_ID'),
-        'document_file_size_preview' => (int) env('DOCUWARE_TESTS_DOCUMENT_FILE_SIZE_PREVIEW'),
-        'document_file_size' => (int) env('DOCUWARE_TESTS_DOCUMENT_FILE_SIZE'),
-        'document_count' => (int) env('DOCUWARE_TESTS_DOCUMENT_COUNT'),
-        'document_thumbnail_file_size' => (int) env('DOCUWARE_TESTS_DOCUMENT_THUMBNAIL_FILE_SIZE'),
-        'document_ids' => json_decode(env('DOCUWARE_TESTS_DOCUMENTS_IDS', '[]')),
-        'documents_file_size' => (int) env('DOCUWARE_TESTS_DOCUMENTS_FILE_SIZE'),
-        'field_name' => env('DOCUWARE_TESTS_FIELD_NAME'),
-        'field_name_2' => env('DOCUWARE_TESTS_FIELD_NAME_2'),
     ],
 ];
 ```
@@ -762,22 +752,12 @@ Modify environment variables in the phpunit.xml-file:
 <env name="DOCUWARE_PASSWORD" value="password"/>
 <env name="DOCUWARE_PASSPHRASE" value="passphrase"/>
 <env name="DOCUWARE_COOKIES" value="cookies"/>
-<env name="DOCUWARE_TIMEOUT" value="30"/>
+<env name="DOCUWARE_TIMEOUT" value="15"/>
 
 <env name="DOCUWARE_TESTS_FILE_CABINET_ID" value=""/>
 <env name="DOCUWARE_TESTS_DIALOG_ID" value=""/>
 <env name="DOCUWARE_TESTS_BASKET_ID" value=""/>
-<env name="DOCUWARE_TESTS_SECTION" value=""/>
-<env name="DOCUWARE_TESTS_FIELD_NAME" value="UUID"/>
-<env name="DOCUWARE_TESTS_FIELD_NAME_2" value="DOCUMENT_LABEL"/>
-
-<env name="DOCUWARE_TESTS_DOCUMENT_FILE_SIZE_PREVIEW" value=""/>
-<env name="DOCUWARE_TESTS_DOCUMENT_FILE_SIZE" value=""/>
-<env name="DOCUWARE_TESTS_DOCUMENT_COUNT" value=""/>
-<env name="DOCUWARE_TESTS_DOCUMENT_THUMBNAIL_FILE_SIZE" value=""/>
-<env name="DOCUWARE_TESTS_DOCUMENTS_FILE_SIZE" value=""/>
-<env name="DOCUWARE_TESTS_DOCUMENT_ID" value=""/>
-<env name="DOCUWARE_TESTS_DOCUMENTS_IDS" value="[]"/>
+<env name="DOCUWARE_TESTS_ORGANIZATION_ID" value=""/>
 ```
 
 Run the tests:

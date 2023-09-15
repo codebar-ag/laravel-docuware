@@ -110,7 +110,7 @@ it('can list values for a select list', function () {
 
     $this->assertNotCount(0, $types);
     Event::assertDispatched(DocuWareResponseLog::class);
-})->only();
+});
 
 it('can list dialogs for a file cabinet', function () {
     Event::fake();

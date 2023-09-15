@@ -22,7 +22,7 @@ class GetDocumentDownloadThumbnailRequest extends Request implements Cacheable
     public function __construct(
         protected readonly string $fileCabinetId,
         protected readonly int $documentId,
-        protected readonly string $section,
+        protected readonly int $section,
         protected readonly int $page = 0,
     ) {
     }

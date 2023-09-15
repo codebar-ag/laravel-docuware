@@ -31,10 +31,6 @@ class DocuWareSearchRequestBuilder
 
     protected array $usedDateOperators = [];
 
-<<<<<<< HEAD:src/DocuWareSearch.php
-
-=======
->>>>>>> a2b47744374d0cb4b30c4fd77fed35fb440d8372:src/DocuWareSearchRequestBuilder.php
     public function fileCabinet(string $fileCabinetId): self
     {
         $this->fileCabinetId = $fileCabinetId;
@@ -241,8 +237,4 @@ class DocuWareSearchRequestBuilder
             default => $date,
         };
     }
-<<<<<<< HEAD:src/DocuWareSearch.php
-
-=======
->>>>>>> a2b47744374d0cb4b30c4fd77fed35fb440d8372:src/DocuWareSearchRequestBuilder.php
 }

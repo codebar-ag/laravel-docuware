@@ -42,7 +42,7 @@ return [
     |
     */
 
-    'timeout' => env('DOCUWARE_TIMEOUT', 30),
+    'timeout' => env('DOCUWARE_TIMEOUT', 15),
 
     /*
     |--------------------------------------------------------------------------

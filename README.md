@@ -207,10 +207,10 @@ $connector = new DocuWareWithoutCookieConnector();
  * Most basic example to search for documents. You only need to provide a valid
  * file cabinet id.
  */
-$id = '87356f8d-e50c-450b-909c-4eaccd318fbf';
+$fileCabinetId = '87356f8d-e50c-450b-909c-4eaccd318fbf';
 
 $paginatorRequest = DocuWare::searchRequestBuilder()
-    ->fileCabinet($id)
+    ->fileCabinet($fileCabinetId)
     ->get();
     
 $paginator = $connector->send($paginatorRequest)->dto();

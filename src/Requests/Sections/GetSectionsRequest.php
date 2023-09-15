@@ -1,8 +1,7 @@
 <?php
 
-namespace CodebarAg\DocuWare\Requests;
+namespace CodebarAg\DocuWare\Requests\Sections;
 
-use CodebarAg\DocuWare\DTO\Field;
 use CodebarAg\DocuWare\Events\DocuWareResponseLog;
 use CodebarAg\DocuWare\Support\EnsureValidResponse;
 use Illuminate\Support\Facades\Cache;
@@ -13,20 +12,28 @@ use Saloon\Contracts\Response;
 use Saloon\Enums\Method;
 use Saloon\Http\Request;
 
-class GetFieldsRequest extends Request implements Cacheable
+class GetSectionsRequest extends Request implements Cacheable
 {
     use HasCaching;
 
     protected Method $method = Method::GET;
 
     public function __construct(
-        protected readonly string $fileCabinetId
+        protected readonly string $fileCabinetId,
+        protected readonly int $documentId
     ) {
     }
 
     public function resolveEndpoint(): string
     {
-        return '/FileCabinets/'.$this->fileCabinetId;
+        return '/FileCabinets/'.$this->fileCabinetId.'/Sections';
+    }
+
+    public function defaultQuery(): array
+    {
+        return [
+            'docid' => $this->documentId,
+        ];
     }
 
     public function resolveCacheDriver(): LaravelCacheDriver
@@ -45,8 +52,6 @@ class GetFieldsRequest extends Request implements Cacheable
 
         EnsureValidResponse::from($response);
 
-        $fields = $response->throw()->json('Fields');
-
-        return collect($fields)->map(fn (array $field) => Field::fromJson($field));
+        dd($response->throw()->json('Section'));
     }
 }

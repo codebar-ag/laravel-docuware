@@ -298,7 +298,6 @@ it('can download a document thumbnail', function () {
     Event::fake();
 
     $fileCabinetId = config('docuware.tests.file_cabinet_id');
-    $section = config('docuware.tests.section');
 
     $document = $this->connector->send(new PostDocumentRequest(
         $fileCabinetId,
@@ -309,11 +308,11 @@ it('can download a document thumbnail', function () {
     $contents = $this->connector->send(new GetDocumentDownloadThumbnailRequest(
         $fileCabinetId,
         $document->id,
-        1,
+        $document->id - 1
     ))->dto();
 
-    $this->assertSame(config('docuware.tests.document_thumbnail_mime_type'), $contents->mime);
-    $this->assertSame(config('docuware.tests.document_thumbnail_file_size'), strlen($contents->data));
+    $this->assertSame('image/png', $contents->mime);
+    $this->assertSame(282, strlen($contents->data));
     Event::assertDispatched(DocuWareResponseLog::class);
 
     $this->connector->send(new DeleteDocumentRequest(

@@ -81,7 +81,13 @@ DOCUWARE_PASSPHRASE="a#bcd>2~C1'abc\\#"
 ```php
 use CodebarAg\DocuWare\Connectors\DocuWareWithoutCookieConnector;
 
+// Will use user credentials to authenticate and store cookie in cache
 $connector = new DocuWareWithoutCookieConnector();
+
+// OR
+
+// Will use the cookie provided
+$connector = new DocuWareWithCookieConnector($cookie);
 
 /**
  * Return an organization.

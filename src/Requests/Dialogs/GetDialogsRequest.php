@@ -1,8 +1,8 @@
 <?php
 
-namespace CodebarAg\DocuWare\Requests;
+namespace CodebarAg\DocuWare\Requests\Dialogs;
 
-use CodebarAg\DocuWare\DTO\Field;
+use CodebarAg\DocuWare\DTO\Dialog;
 use CodebarAg\DocuWare\Events\DocuWareResponseLog;
 use CodebarAg\DocuWare\Support\EnsureValidResponse;
 use Illuminate\Support\Facades\Cache;
@@ -13,7 +13,7 @@ use Saloon\Contracts\Response;
 use Saloon\Enums\Method;
 use Saloon\Http\Request;
 
-class GetFieldsRequest extends Request implements Cacheable
+class GetDialogsRequest extends Request implements Cacheable
 {
     use HasCaching;
 
@@ -26,7 +26,7 @@ class GetFieldsRequest extends Request implements Cacheable
 
     public function resolveEndpoint(): string
     {
-        return '/FileCabinets/'.$this->fileCabinetId;
+        return '/FileCabinets/'.$this->fileCabinetId.'/Dialogs';
     }
 
     public function resolveCacheDriver(): LaravelCacheDriver
@@ -45,8 +45,8 @@ class GetFieldsRequest extends Request implements Cacheable
 
         EnsureValidResponse::from($response);
 
-        $fields = $response->throw()->json('Fields');
+        $dialogs = $response->throw()->json('Dialog');
 
-        return collect($fields)->map(fn (array $field) => Field::fromJson($field));
+        return collect($dialogs)->map(fn (array $dialog) => Dialog::fromJson($dialog));
     }
 }

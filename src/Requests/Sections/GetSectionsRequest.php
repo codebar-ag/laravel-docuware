@@ -52,6 +52,6 @@ class GetSectionsRequest extends Request implements Cacheable
 
         EnsureValidResponse::from($response);
 
-        dd($response->throw()->json('Section'));
+        return $response->throw()->json('Sections');
     }
 }

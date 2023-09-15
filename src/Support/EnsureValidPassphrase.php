@@ -1,6 +1,6 @@
 <?php
 
-namespace CodebarAg\DocuWare\Requests;
+namespace CodebarAg\DocuWare\Support;
 
 use CodebarAg\DocuWare\Exceptions\UnableToFindPassphrase;
 

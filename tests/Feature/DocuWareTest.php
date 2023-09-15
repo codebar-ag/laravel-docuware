@@ -12,6 +12,7 @@ use CodebarAg\DocuWare\DTO\DocumentPaginator;
 use CodebarAg\DocuWare\DTO\Organization;
 use CodebarAg\DocuWare\Events\DocuWareResponseLog;
 use CodebarAg\DocuWare\Exceptions\UnableToSearch;
+use CodebarAg\DocuWare\Requests\Dialogs\GetDialogsRequest;
 use CodebarAg\DocuWare\Requests\Document\DeleteDocumentRequest;
 use CodebarAg\DocuWare\Requests\Document\GetDocumentCountRequest;
 use CodebarAg\DocuWare\Requests\Document\GetDocumentDownloadRequest;
@@ -21,12 +22,11 @@ use CodebarAg\DocuWare\Requests\Document\GetDocumentsDownloadRequest;
 use CodebarAg\DocuWare\Requests\Document\PostDocumentRequest;
 use CodebarAg\DocuWare\Requests\Document\PutDocumentFieldsRequest;
 use CodebarAg\DocuWare\Requests\Document\Thumbnail\GetDocumentDownloadThumbnailRequest;
-use CodebarAg\DocuWare\Requests\GetDialogsRequest;
-use CodebarAg\DocuWare\Requests\GetFieldsRequest;
-use CodebarAg\DocuWare\Requests\GetFileCabinetsRequest;
-use CodebarAg\DocuWare\Requests\GetSelectListRequest;
+use CodebarAg\DocuWare\Requests\Fields\GetFieldsRequest;
+use CodebarAg\DocuWare\Requests\FileCabinets\GetFileCabinetsRequest;
 use CodebarAg\DocuWare\Requests\Organization\GetOrganizationRequest;
 use CodebarAg\DocuWare\Requests\Organization\GetOrganizationsRequest;
+use CodebarAg\DocuWare\Requests\SelectList\GetSelectListRequest;
 use CodebarAg\DocuWare\Support\EnsureValidCookie;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Event;
@@ -319,7 +319,7 @@ it('can download a document thumbnail', function () {
         $fileCabinetId,
         $document->id
     ))->dto();
-})->only();
+});
 
 it('can get a total count of documents', function () {
     Event::fake();

@@ -96,7 +96,7 @@ it('can list values for a select list', function () {
         '::fake-file-content::',
         'example.txt',
         collect([
-            DocumentIndex::make('UUID', 'laravel-docuware'),
+            DocumentIndex::make($fieldName, 'laravel-docuware'),
         ])
     ))->dto();
 
@@ -108,6 +108,11 @@ it('can list values for a select list', function () {
 
     $this->assertNotCount(0, $types);
     Event::assertDispatched(DocuWareResponseLog::class);
+
+    $this->connector->send(new DeleteDocumentRequest(
+        $fileCabinetId,
+        $document->id
+    ))->dto();
 });
 
 it('can list dialogs for a file cabinet', function () {
@@ -172,7 +177,6 @@ it('can update a document value', function () {
     Event::fake();
 
     $fileCabinetId = config('docuware.tests.file_cabinet_id');
-    $fieldName = config('docuware.tests.field_name');
     $newValue = 'laravel-docuware';
 
     $document = $this->connector->send(new PostDocumentRequest(
@@ -184,10 +188,10 @@ it('can update a document value', function () {
     $response = $this->connector->send(new PutDocumentFieldsRequest(
         $fileCabinetId,
         $document->id,
-        [$fieldName => $newValue]
+        ['UUID' => $newValue]
     ))->dto();
 
-    $this->assertSame('laravel-docuware', $response[$fieldName]);
+    $this->assertSame('laravel-docuware', $response['UUID']);
     Event::assertDispatched(DocuWareResponseLog::class);
 
     $this->connector->send(new DeleteDocumentRequest(
@@ -201,8 +205,8 @@ it('can update multiple document values', function () {
 
     $fileCabinetId = config('docuware.tests.file_cabinet_id');
     $values = [
-        config('docuware.tests.field_name') => 'laravel-docuware',
-        config('docuware.tests.field_name_2') => 'laravel-docuware-2',
+        'UUID' => 'laravel-docuware',
+        'DOCUMENT_LABEL' => 'laravel-docuware-2',
     ];
 
     $document = $this->connector->send(new PostDocumentRequest(
@@ -218,8 +222,8 @@ it('can update multiple document values', function () {
         true
     ))->dto();
 
-    $this->assertSame('laravel-docuware', $response[config('docuware.tests.field_name')]);
-    $this->assertSame('laravel-docuware-2', $response[config('docuware.tests.field_name_2')]);
+    $this->assertSame('laravel-docuware', $response['UUID']);
+    $this->assertSame('laravel-docuware-2', $response['DOCUMENT_LABEL']);
 
     Event::assertDispatched(DocuWareResponseLog::class);
 
@@ -294,19 +298,29 @@ it('can download a document thumbnail', function () {
     Event::fake();
 
     $fileCabinetId = config('docuware.tests.file_cabinet_id');
-    $documentId = config('docuware.tests.document_id');
     $section = config('docuware.tests.section');
+
+    $document = $this->connector->send(new PostDocumentRequest(
+        $fileCabinetId,
+        '::fake-file-content::',
+        'example.txt'
+    ))->dto();
 
     $contents = $this->connector->send(new GetDocumentDownloadThumbnailRequest(
         $fileCabinetId,
-        $documentId,
-        $section,
+        $document->id,
+        1,
     ))->dto();
 
     $this->assertSame(config('docuware.tests.document_thumbnail_mime_type'), $contents->mime);
     $this->assertSame(config('docuware.tests.document_thumbnail_file_size'), strlen($contents->data));
     Event::assertDispatched(DocuWareResponseLog::class);
-});
+
+    $this->connector->send(new DeleteDocumentRequest(
+        $fileCabinetId,
+        $document->id
+    ))->dto();
+})->only();
 
 it('can get a total count of documents', function () {
     Event::fake();

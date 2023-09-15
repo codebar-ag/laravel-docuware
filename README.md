@@ -81,7 +81,13 @@ DOCUWARE_PASSPHRASE="a#bcd>2~C1'abc\\#"
 ```php
 use CodebarAg\DocuWare\Connectors\DocuWareWithoutCookieConnector;
 
+// Will use user credentials to authenticate and store cookie in cache
 $connector = new DocuWareWithoutCookieConnector();
+
+// OR
+
+// Will use the cookie provided
+$connector = new DocuWareWithCookieConnector($cookie);
 
 /**
  * Return an organization.
@@ -193,6 +199,9 @@ $connector->send(new DeleteDocumentRequest($fileCabinetId, $document->id))->dto(
 
 ```php
 use CodebarAg\DocuWare\Facades\DocuWare;
+use CodebarAg\DocuWare\Connectors\DocuWareWithoutCookieConnector;
+
+$connector = new DocuWareWithoutCookieConnector();
 
 /**
  * Most basic example to search for documents. You only need to provide a valid
@@ -200,9 +209,11 @@ use CodebarAg\DocuWare\Facades\DocuWare;
  */
 $id = '87356f8d-e50c-450b-909c-4eaccd318fbf';
 
-$paginator = DocuWare::search()
+$paginatorRequest = DocuWare::searchRequestBuilder()
     ->fileCabinet($id)
     ->get();
+    
+$paginator = $connector->send($paginatorRequest)->dto();
 
 /**
  * Search in multiple file cabinets. Provide an array of file cabinet ids.
@@ -212,86 +223,104 @@ $fileCabinetIds = [
     '3f9cb4ff-82f2-44dc-b439-dd648269064f',
 ];
 
-$paginator = DocuWare::search()
+$paginatorRequest = DocuWare::searchRequestBuilder()
     ->fileCabinets($fileCabinetIds)
     ->get();
+    
+$paginator = $connector->send($paginatorRequest)->dto();
 
 /**
  * Find results on the next page. 
  * 
  * Default: 1
  */
-$paginator = DocuWare::search()
+$paginatorRequest = DocuWare::searchRequestBuilder()
     ->fileCabinet($id)
     ->page(2)
     ->get();
+    
+$paginator = $connector->send($paginatorRequest)->dto();
     
 /**
  * Define the number of results which should be shown per page.
  * 
  * Default: 50
  */
-$paginator = DocuWare::search()
+$paginatorRequest = DocuWare::searchRequestBuilder()
     ->fileCabinet($id)
     ->perPage(30)
     ->get();
+    
+$paginator = $connector->send($paginatorRequest)->dto();
 
 /**
  * Use the full-text search. You have to activate full-text search in your file
  * cabinet before you can use this feature.
  */
-$paginator = DocuWare::search()
+$paginatorRequest = DocuWare::searchRequestBuilder()
     ->fileCabinet($id)
     ->fulltext('My secret document')
     ->get();
+    
+$paginator = $connector->send($paginatorRequest)->dto();
 
 /**
  * Search documents which are created from the first of march.
  */
-$paginator = DocuWare::search()
+$paginatorRequest = DocuWare::searchRequestBuilder()
     ->fileCabinet($id)
     ->filterDate('DWSTOREDATETIME', '>=', Carbon::create(2021, 3, 1))
     ->get();
+    
+$paginator = $connector->send($paginatorRequest)->dto();
 
 /**
  * Search documents which are created until the first of april.
  */
-$paginator = DocuWare::search()
+$paginatorRequest = DocuWare::searchRequestBuilder()
     ->fileCabinet($id)
     ->filterDate('DWSTOREDATETIME', '<', Carbon::create(2021, 4, 1))
     ->get();
+    
+$paginator = $connector->send($paginatorRequest)->dto();
 
 /**
  * Order the results by field name. Supported values: 'asc', 'desc'
  */
-$paginator = DocuWare::search()
+$paginatorRequest = DocuWare::searchRequestBuilder()
     ->fileCabinet($id)
     ->orderBy('DWSTOREDATETIME', 'desc')
     ->get();
+    
+$paginator = $connector->send($paginatorRequest)->dto();
 
 /**
  * Search documents filtered to the value. You can specify multiple filters.
  */
-$paginator = DocuWare::search()
+$paginatorRequest = DocuWare::searchRequestBuilder()
     ->fileCabinet($id)
     ->filter('TYPE', 'Order')
     ->filter('OTHER_FIELD', 'other')
     ->get();
+    
+$paginator = $connector->send($paginatorRequest)->dto();
     
 /**
  * You can specify the dialog which should be used.
  */
 $dialogId = 'bb42c30a-89fc-4b81-9091-d7e326caba62';
 
-$paginator = DocuWare::search()
+$paginatorRequest = DocuWare::searchRequestBuilder()
     ->fileCabinet($id)
     ->dialog($dialogId)
     ->get();
     
+$paginator = $connector->send($paginatorRequest)->dto();
+    
 /**
  * You can also combine everything.
  */
-$paginator = DocuWare::search()
+$paginatorRequest = DocuWare::searchRequestBuilder()
     ->fileCabinet($id)
     ->page(2)
     ->perPage(30)
@@ -303,6 +332,8 @@ $paginator = DocuWare::search()
     ->orderBy('DWSTOREDATETIME', 'desc')
     ->dialog($dialogId)
     ->get();
+
+$paginator = $connector->send($paginatorRequest)->dto();
 ```
 
 ## 🖼 Make encrypted URL

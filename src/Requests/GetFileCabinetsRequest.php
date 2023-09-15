@@ -13,7 +13,7 @@ use Saloon\Contracts\Response;
 use Saloon\Enums\Method;
 use Saloon\Http\Request;
 
-class GetCabinetsRequest extends Request implements Cacheable
+class GetFileCabinetsRequest extends Request implements Cacheable
 {
     use HasCaching;
 

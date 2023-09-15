@@ -106,8 +106,6 @@ it('can list values for a select list', function () {
         $fieldName,
     ))->dto();
 
-    ray($types);
-
     $this->assertNotCount(0, $types);
     Event::assertDispatched(DocuWareResponseLog::class);
 });

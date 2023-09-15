@@ -40,12 +40,6 @@ class DocuWareSearch
 
     protected array $usedDateOperators = [];
 
-    protected $connection;
-
-    public function __construct(protected ?string $cookie = null)
-    {
-        $this->connection = self::connection();
-    }
 
     public function fileCabinet(string $fileCabinetId): self
     {
@@ -279,12 +273,4 @@ class DocuWareSearch
         };
     }
 
-    protected function connection()
-    {
-        return match (config('docuware.connection')) {
-            ConnectionEnum::WITHOUT_COOKIE => new DocuWareWithoutCookieConnector(),
-            ConnectionEnum::STATIC_COOKIE => new DocuWareStaticCookieConnector($this->cookie),
-            default => throw (UnableToFindConnection::create()),
-        };
-    }
 }

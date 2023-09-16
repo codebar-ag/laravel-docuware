@@ -249,7 +249,6 @@ it('can upload document with index values and delete it', function () {
     Event::assertDispatched(DocuWareResponseLog::class);
 });
 
-
 it('can get all documents', function () {
     Event::fake();
 

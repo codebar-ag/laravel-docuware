@@ -3,10 +3,8 @@
 namespace CodebarAg\DocuWare\Responses\Document;
 
 use CodebarAg\DocuWare\DTO\Document;
-use CodebarAg\DocuWare\DTO\Field;
 use CodebarAg\DocuWare\Events\DocuWareResponseLog;
 use CodebarAg\DocuWare\Support\EnsureValidResponse;
-use CodebarAg\DocuWare\Support\ParseValue;
 use Illuminate\Support\Collection;
 use Saloon\Contracts\Response;
 

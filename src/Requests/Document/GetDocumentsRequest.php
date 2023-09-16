@@ -2,7 +2,6 @@
 
 namespace CodebarAg\DocuWare\Requests\Document;
 
-use CodebarAg\DocuWare\Responses\Document\GetDocumentResponse;
 use CodebarAg\DocuWare\Responses\Document\GetDocumentsResponse;
 use Illuminate\Support\Facades\Cache;
 use Saloon\CachePlugin\Contracts\Cacheable;

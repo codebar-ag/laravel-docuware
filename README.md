@@ -791,8 +791,6 @@ Please review [our security policy](.github/SECURITY.md) on how to report securi
 ## 🙏 Credits
 
 - [Sebastian Fix](https://github.com/StanBarrows)
-- [Faissal Wahabali](https://github.com/faissaloux)
-- [Ruslan Steiger](https://github.com/SuddenlyRust)
 - [Rhys Lees](https://github.com/RhysLees)
 - [All Contributors](../../contributors)
 - [Skeleton Repository from Spatie](https://github.com/spatie/package-skeleton-laravel)

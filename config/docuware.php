@@ -1,18 +1,6 @@
 <?php
 
-use CodebarAg\DocuWare\Enums\ConnectionEnum;
-
 return [
-
-    /*
-    |--------------------------------------------------------------------------
-    | Connection
-    |--------------------------------------------------------------------------
-    | Select a connector to authenticate with. You can choose between: WITHOUT_COOKIE, STATIC_COOKIE
-    |
-    */
-
-    'connection' => ConnectionEnum::WITHOUT_COOKIE,
 
     /*
     |--------------------------------------------------------------------------

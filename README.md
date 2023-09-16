@@ -125,6 +125,11 @@ $values = $connector->send(new GetSelectListRequest($fileCabinetId, $dialogId, $
 $document = $connector->send(new GetDocumentRequest($fileCabinetId, $documentId))->dto();
 
 /**
+ * Return all documents for a file cabinet.
+ */
+$documents = $connector->send(new GetDocumentRequest($fileCabinetId))->dto();
+
+/**
  * Return image preview of a document.
  */
 $content = $connector->send(new GetDocumentPreviewRequest($fileCabinetId, $documentId))->dto();
@@ -718,6 +723,10 @@ return [
             'include_suggestions' => false,
             'additional_result_fields' => [],
         ],
+        'cache' => [
+            'driver' => env('DOCUWARE_CACHE_DRIVER', env('CACHE_DRIVER', 'file')),
+            'lifetime_in_seconds' => env('DOCUWARE_CACHE_LIFETIME_IN_SECONDS', 60),
+        ],
     ],
     
     /*
@@ -753,6 +762,7 @@ Modify environment variables in the phpunit.xml-file:
 <env name="DOCUWARE_PASSPHRASE" value="passphrase"/>
 <env name="DOCUWARE_COOKIES" value="cookies"/>
 <env name="DOCUWARE_TIMEOUT" value="15"/>
+<env name="DOCUWARE_CACHE_LIFETIME_IN_SECONDS" value="0"/> // Disable caching for tests
 
 <env name="DOCUWARE_TESTS_FILE_CABINET_ID" value=""/>
 <env name="DOCUWARE_TESTS_DIALOG_ID" value=""/>

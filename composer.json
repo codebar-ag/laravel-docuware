@@ -1,86 +1,83 @@
 {
-    "name": "codebar-ag/laravel-docuware",
-    "description": "DocuWare integration with Laravel",
-    "keywords": [
-        "laravel",
-        "docuware",
-        "codebar-ag",
-        "laravel-docuware",
-        "codebar Solutions AG",
-        "Ricoh Schweiz AG"
-    ],
-    "homepage": "https://github.com/codebar-ag/laravel-docuware",
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Sebastian Fix",
-            "email": "sebastian.fix@codebar.ch",
-            "homepage": "https://www.codebar.ch",
-            "role": "Sofware-Engineer"
-        },
-        {
-            "name": "Faissal Wahabali",
-            "role": "Software-Developer"
-        },
-        {
-            "name": "Ruslan Steiger",
-            "role": "Software-Developer"
-        }
-    ],
-    "require": {
-        "php": "^8.1",
-        "guzzlehttp/guzzle": "^7.5",
-        "illuminate/contracts": "^9.0|^10.0",
-        "nesbot/carbon": "^2.64.0",
-        "saloonphp/cache-plugin": "^2.0",
-        "sammyjo20/saloon-laravel": "^2.0",
-        "spatie/laravel-package-tools": "^1.14.0"
+  "name": "codebar-ag/laravel-docuware",
+  "description": "DocuWare integration with Laravel",
+  "keywords": [
+    "laravel",
+    "docuware",
+    "codebar-ag",
+    "laravel-docuware",
+    "codebar Solutions AG",
+    "Ricoh Schweiz AG"
+  ],
+  "homepage": "https://github.com/codebar-ag/laravel-docuware",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Sebastian Fix",
+      "email": "sebastian.fix@codebar.ch",
+      "homepage": "https://www.codebar.ch",
+      "role": "Sofware-Engineer"
     },
-    "require-dev": {
-        "laravel/pint": "^1.0",
-        "nunomaduro/larastan": "^2.0.1",
-        "orchestra/testbench": "^7.7|^8.0",
-        "phpstan/extension-installer": "^1.1",
-        "phpstan/phpstan-deprecation-rules": "^1.0",
-        "phpstan/phpstan-phpunit": "^1.0",
-        "spatie/laravel-ray": "^1.26",
-        "pestphp/pest": "^2.0"
-    },
-    "autoload": {
-        "psr-4": {
-            "CodebarAg\\DocuWare\\": "src"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "CodebarAg\\DocuWare\\Tests\\": "tests"
-        }
-    },
-    "scripts": {
-        "post-autoload-dump": "@php ./vendor/bin/testbench package:discover --ansi",
-        "analyse": "vendor/bin/phpstan analyse",
-        "test": "vendor/bin/pest",
-        "test-coverage": "vendor/bin/pest --coverage",
-        "format": "vendor/bin/pint"
-    },
-    "config": {
-        "sort-packages": true,
-        "allow-plugins": {
-            "composer/package-versions-deprecated": true,
-            "phpstan/extension-installer": true,
-            "pestphp/pest-plugin": true
-        }
-    },
-    "extra": {
-        "laravel": {
-            "providers": [
-                "CodebarAg\\DocuWare\\DocuWareServiceProvider"
-            ],
-            "aliases": {
-                "DocuWare": "CodebarAg\\DocuWare\\Facades\\DocuWare"
-            }
-        }
-    },
-    "minimum-stability": "dev",
-    "prefer-stable": true
+    {
+      "name": "Rhys Lees",
+      "role": "Software-Developer"
+    }
+  ],
+  "require": {
+    "php": "^8.1",
+    "guzzlehttp/guzzle": "^7.5",
+    "illuminate/contracts": "^9.0|^10.0",
+    "nesbot/carbon": "^2.64.0",
+    "saloonphp/cache-plugin": "^2.0",
+    "saloonphp/saloon": "^2.0",
+    "saloonphp/laravel-plugin": "^2.0",
+    "spatie/laravel-package-tools": "^1.14.0"
+  },
+  "require-dev": {
+    "laravel/pint": "^1.0",
+    "nunomaduro/larastan": "^2.0.1",
+    "orchestra/testbench": "^7.7|^8.0",
+    "phpstan/extension-installer": "^1.1",
+    "phpstan/phpstan-deprecation-rules": "^1.0",
+    "phpstan/phpstan-phpunit": "^1.0",
+    "spatie/laravel-ray": "^1.26",
+    "pestphp/pest": "^2.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "CodebarAg\\DocuWare\\": "src"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "CodebarAg\\DocuWare\\Tests\\": "tests"
+    }
+  },
+  "scripts": {
+    "post-autoload-dump": "@php ./vendor/bin/testbench package:discover --ansi",
+    "analyse": "vendor/bin/phpstan analyse",
+    "test": "vendor/bin/pest",
+    "test-coverage": "vendor/bin/pest --coverage",
+    "format": "vendor/bin/pint"
+  },
+  "config": {
+    "sort-packages": true,
+    "allow-plugins": {
+      "composer/package-versions-deprecated": true,
+      "phpstan/extension-installer": true,
+      "pestphp/pest-plugin": true
+    }
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "CodebarAg\\DocuWare\\DocuWareServiceProvider"
+      ],
+      "aliases": {
+        "DocuWare": "CodebarAg\\DocuWare\\Facades\\DocuWare"
+      }
+    }
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true
 }

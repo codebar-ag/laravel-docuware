@@ -17,14 +17,14 @@
       "email": "sebastian.fix@codebar.ch",
       "homepage": "https://www.codebar.ch",
       "role": "Sofware-Engineer"
-    },
+    }
     {
       "name": "Rhys Lees",
       "role": "Software-Developer"
     }
   ],
   "require": {
-    "php": "^8.1",
+    "php": "^8.2",
     "guzzlehttp/guzzle": "^7.5",
     "illuminate/contracts": "^9.0|^10.0",
     "nesbot/carbon": "^2.64.0",

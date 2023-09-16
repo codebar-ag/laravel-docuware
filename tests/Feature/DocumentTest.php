@@ -11,6 +11,7 @@ use CodebarAg\DocuWare\Requests\Document\GetDocumentDownloadRequest;
 use CodebarAg\DocuWare\Requests\Document\GetDocumentPreviewRequest;
 use CodebarAg\DocuWare\Requests\Document\GetDocumentRequest;
 use CodebarAg\DocuWare\Requests\Document\GetDocumentsDownloadRequest;
+use CodebarAg\DocuWare\Requests\Document\GetDocumentsRequest;
 use CodebarAg\DocuWare\Requests\Document\PostDocumentRequest;
 use CodebarAg\DocuWare\Requests\Document\PutDocumentFieldsRequest;
 use CodebarAg\DocuWare\Support\EnsureValidCookie;
@@ -245,5 +246,34 @@ it('can upload document with index values and delete it', function () {
         $this->assertSame($field->type, 'String');
         $this->assertSame($field->value, '::text::');
     });
+    Event::assertDispatched(DocuWareResponseLog::class);
+});
+
+it('can get all documents', function () {
+    Event::fake();
+
+    $this->connector->send(new PostDocumentRequest(
+        config('docuware.tests.file_cabinet_id'),
+        '::fake-file-content::',
+        'example.txt'
+    ))->dto();
+    $this->connector->send(new PostDocumentRequest(
+        config('docuware.tests.file_cabinet_id'),
+        '::fake-file-content::',
+        'example.txt'
+    ))->dto();
+
+    $documents = $this->connector->send(new GetDocumentsRequest(
+        config('docuware.tests.file_cabinet_id')
+    ))->dto();
+
+    foreach ($documents as $document) {
+        $this->assertInstanceOf(Document::class, $document);
+        $this->connector->send(new DeleteDocumentRequest(
+            config('docuware.tests.file_cabinet_id'),
+            $document->id,
+        ))->dto();
+    }
+
     Event::assertDispatched(DocuWareResponseLog::class);
 });

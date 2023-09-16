@@ -3,17 +3,22 @@
 namespace CodebarAg\DocuWare\Requests\Document;
 
 use CodebarAg\DocuWare\Exceptions\UnableToUpdateFields;
+use CodebarAg\DocuWare\Responses\Document\PutDocumentFieldsResponse;
 use Saloon\Contracts\Body\HasBody;
+use Saloon\Contracts\Response;
 use Saloon\Enums\Method;
 use Saloon\Http\Request;
 use Saloon\Traits\Body\HasJsonBody;
 
-class PutDocumentFieldRequest extends Request implements HasBody
+class PutDocumentFieldsRequest extends Request implements HasBody
 {
     use HasJsonBody;
 
     protected Method $method = Method::PUT;
 
+    /**
+     * @throws UnableToUpdateFields
+     */
     public function __construct(
         protected readonly string $fileCabinetId,
         protected readonly string $documentId,
@@ -50,5 +55,10 @@ class PutDocumentFieldRequest extends Request implements HasBody
         }
 
         return $content;
+    }
+
+    public function createDtoFromResponse(Response $response): mixed
+    {
+        return PutDocumentFieldsResponse::fromResponse($response);
     }
 }

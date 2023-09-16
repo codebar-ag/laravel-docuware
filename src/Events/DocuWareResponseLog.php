@@ -15,7 +15,8 @@ class DocuWareResponseLog
     use InteractsWithSockets;
     use SerializesModels;
 
-    public function __construct(public Response|SaloonResponse|SaloonContracts $response)
-    {
+    public function __construct(
+        public Response|SaloonResponse|SaloonContracts $response
+    ) {
     }
 }

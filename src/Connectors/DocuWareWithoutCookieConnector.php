@@ -3,6 +3,7 @@
 namespace CodebarAg\DocuWare\Connectors;
 
 use CodebarAg\DocuWare\Support\Auth;
+use CodebarAg\DocuWare\Support\EnsureValidCookie;
 use CodebarAg\DocuWare\Support\EnsureValidCredentials;
 use GuzzleHttp\Cookie\CookieJar;
 use Saloon\Http\Connector;
@@ -14,8 +15,9 @@ class DocuWareWithoutCookieConnector extends Connector
     public function __construct()
     {
         EnsureValidCredentials::check();
+        EnsureValidCookie::check();
 
-        $this->cookieJar = Auth::cookieJar() ?? new CookieJar();
+        $this->cookieJar = Auth::cookieJar() ?? throw new \Exception('No cookie jar found');
     }
 
     /**

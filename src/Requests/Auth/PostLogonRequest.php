@@ -4,10 +4,10 @@ namespace CodebarAg\DocuWare\Requests\Auth;
 
 use Saloon\Contracts\Body\HasBody;
 use Saloon\Enums\Method;
-use Saloon\Http\Request;
+use Saloon\Http\SoloRequest;
 use Saloon\Traits\Body\HasFormBody;
 
-class PostLogonRequest extends Request implements HasBody
+class PostLogonRequest extends SoloRequest implements HasBody
 {
     use HasFormBody;
 
@@ -15,7 +15,7 @@ class PostLogonRequest extends Request implements HasBody
 
     public function resolveEndpoint(): string
     {
-        return '/Account/Logon';
+        return config('docuware.credentials.url').'/DocuWare/Platform/Account/Logon';
     }
 
     protected function defaultBody(): array

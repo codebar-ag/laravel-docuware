@@ -79,52 +79,65 @@ DOCUWARE_PASSPHRASE="a#bcd>2~C1'abc\\#"
 ## 🏗 Usage
 
 ```php
-use CodebarAg\DocuWare\Facades\DocuWare;
+use CodebarAg\DocuWare\Connectors\DocuWareWithoutCookieConnector;
+
+// Will use user credentials to authenticate and store cookie in cache
+$connector = new DocuWareWithoutCookieConnector();
+
+// OR
+
+// Will use the cookie provided
+$connector = new DocuWareWithCookieConnector($cookie);
 
 /**
  * Return an organization.
  */
-$organization = DocuWare::getOrganization(string $organizationId): CodebarAg\DocuWare\DTO\Organization;
+$organization = $connector->send(new GetOrganizationRequest($id))->dto();
 
 /**
  * Return all organizations.
  */
-$organizations = DocuWare::getOrganizations(): Illuminate\Support\Collection;
+$organizations = $connector->send(new GetOrganizationsRequest())->dto();
 
 /**
  * Return all file cabinets.
  */
-$cabinets = DocuWare::getFileCabinets(): Illuminate\Support\Collection|CodebarAg\DocuWare\DTO\FileCabinet[];
+$fileCabinets = $connector->send(new GetCabinetsRequest())->dto();
 
 /**
  * Return all fields of a file cabinet.
  */
-$fields = DocuWare::getFields(string $fileCabinetId): Illuminate\Support\Collection|CodebarAg\DocuWare\DTO\Field[];
+$fields = $connector->send(new GetFieldsRequest($fileCabinetId))->dto();
 
 /**
  * Return all dialogs of a file cabinet.
  */
-$dialogs = DocuWare::getDialogs(string $fileCabinetId): Illuminate\Support\Collection|CodebarAg\DocuWare\DTO\Dialog[];
+$dialogs = $connector->send(new GetDialogsRequest($fileCabinetId))->dto();
 
 /**
  * Return all used values for a specific field.
  */
-$values = DocuWare::getSelectList(string $fileCabinetId, string $dialogId, string $fieldName): array;
+$values = $connector->send(new GetSelectListRequest($fileCabinetId, $dialogId, $fieldName))->dto();
 
 /**
  * Return a document.
  */
-$document = DocuWare::getDocument(string $fileCabinetId, int $documentId): CodebarAg\DocuWare\DTO\Document;
+$document = $connector->send(new GetDocumentRequest($fileCabinetId, $documentId))->dto();
+
+/**
+ * Return all documents for a file cabinet.
+ */
+$documents = $connector->send(new GetDocumentRequest($fileCabinetId))->dto();
 
 /**
  * Return image preview of a document.
  */
-$content = DocuWare::getDocumentPreview(string $fileCabinetId, int $documentId): string;
+$content = $connector->send(new GetDocumentPreviewRequest($fileCabinetId, $documentId))->dto();
 
 /**
  * Download single document.
  */
-$content = DocuWare::downloadDocument(string $fileCabinetId, int $documentId): string;
+$content = $connector->send(new GetDocumentDownloadRequest($fileCabinetId, $documentId))->dto();
 
 /**
  * Download multiple documents.
@@ -134,32 +147,35 @@ $content = DocuWare::downloadDocument(string $fileCabinetId, int $documentId): s
  * 
  * Also note there is a default request timeout of 30 seconds.
  */
-$content = DocuWare::downloadDocuments(string $fileCabinetId, array $documentIds): string;
+$content = $connector->send(new GetDocumentsDownloadRequest($fileCabinetId, $documentIds))->dto();
 
 /**
  * Download a document thumbnail.
  */
-$thumbnail = DocuWare::downloadDocumentThumbnail(string $fileCabinetId, int $documentId, int $section, int $page = 0): CodebarAg\DocuWare\DTO\DocumentThumbnail;
+$thumbnail = $connector->send(new GetDocumentDownloadThumbnailRequest($fileCabinetId, $documentId, $section))->dto();
 
 /**
  * Update value of a indexed field.
  */
-$value = DocuWare::updateDocumentValue(string $fileCabinetId, int $documentId, string $fieldName, string $newValue, bool $forceUpdate = false): null|int|float|Carbon|string;
+$value = $connector->send(new PutDocumentFieldsRequest($fileCabinetId, $documentId, [$fieldName => $newValue]))->dto()[$fieldName];
 
 /**
  * Update multiple values of indexed fields.
  */
-$value = DocuWare::updateDocumentValues(string $fileCabinetId, int $documentId, array $values, bool $forceUpdate = false): null|int|float|Carbon|string;
+$values = $connector->send(new PutDocumentFieldsRequest($fileCabinetId, $documentId, [
+    $fieldName => $newValue,
+    $field2Name => $new2Value,
+]))->dto();
 
 /**
  * Upload new document.
  */
-$document = DocuWare::uploadDocument(string $fileCabinetId, string $fileContent, string $fileName, ?Collection $indexes = null): CodebarAg\DocuWare\DTO\Document;
+$document = $connector->send(new PostDocumentRequest($fileCabinetId, $fileContent, $fileName))->dto();
 
 /**
  * Get total document count.
  */
-$content = DocuWare::documentCount(string $fileCabinetId, string $dialogId): int;
+$content = $connector->send(new GetDocumentCountRequest($fileCabinetId, $dialogId))->dto();
 
 /**
  * Upload new document with index values.
@@ -171,33 +187,38 @@ $indexes = collect([
     DocumentIndex::make('DOCUMENT_NUMBER', 42),
 ]);
 
-$document = DocuWare::uploadDocument(
+$document = $connector->send(new PostDocumentRequest(
     $fileCabinetId,
     $fileContent,
     $fileName,
     $indexes,
-): CodebarAg\DocuWare\DTO\Document;
+))->dto();
 
 /**
  * Delete document.
  */
-DocuWare::deleteDocument($fileCabinetId, $documentId): void;
+$connector->send(new DeleteDocumentRequest($fileCabinetId, $document->id))->dto();
 ```
 
 ## 🔍 Search usage
 
 ```php
 use CodebarAg\DocuWare\Facades\DocuWare;
+use CodebarAg\DocuWare\Connectors\DocuWareWithoutCookieConnector;
+
+$connector = new DocuWareWithoutCookieConnector();
 
 /**
  * Most basic example to search for documents. You only need to provide a valid
  * file cabinet id.
  */
-$id = '87356f8d-e50c-450b-909c-4eaccd318fbf';
+$fileCabinetId = '87356f8d-e50c-450b-909c-4eaccd318fbf';
 
-$paginator = DocuWare::search()
-    ->fileCabinet($id)
+$paginatorRequest = DocuWare::searchRequestBuilder()
+    ->fileCabinet($fileCabinetId)
     ->get();
+    
+$paginator = $connector->send($paginatorRequest)->dto();
 
 /**
  * Search in multiple file cabinets. Provide an array of file cabinet ids.
@@ -207,86 +228,104 @@ $fileCabinetIds = [
     '3f9cb4ff-82f2-44dc-b439-dd648269064f',
 ];
 
-$paginator = DocuWare::search()
+$paginatorRequest = DocuWare::searchRequestBuilder()
     ->fileCabinets($fileCabinetIds)
     ->get();
+    
+$paginator = $connector->send($paginatorRequest)->dto();
 
 /**
  * Find results on the next page. 
  * 
  * Default: 1
  */
-$paginator = DocuWare::search()
+$paginatorRequest = DocuWare::searchRequestBuilder()
     ->fileCabinet($id)
     ->page(2)
     ->get();
+    
+$paginator = $connector->send($paginatorRequest)->dto();
     
 /**
  * Define the number of results which should be shown per page.
  * 
  * Default: 50
  */
-$paginator = DocuWare::search()
+$paginatorRequest = DocuWare::searchRequestBuilder()
     ->fileCabinet($id)
     ->perPage(30)
     ->get();
+    
+$paginator = $connector->send($paginatorRequest)->dto();
 
 /**
  * Use the full-text search. You have to activate full-text search in your file
  * cabinet before you can use this feature.
  */
-$paginator = DocuWare::search()
+$paginatorRequest = DocuWare::searchRequestBuilder()
     ->fileCabinet($id)
     ->fulltext('My secret document')
     ->get();
+    
+$paginator = $connector->send($paginatorRequest)->dto();
 
 /**
  * Search documents which are created from the first of march.
  */
-$paginator = DocuWare::search()
+$paginatorRequest = DocuWare::searchRequestBuilder()
     ->fileCabinet($id)
     ->filterDate('DWSTOREDATETIME', '>=', Carbon::create(2021, 3, 1))
     ->get();
+    
+$paginator = $connector->send($paginatorRequest)->dto();
 
 /**
  * Search documents which are created until the first of april.
  */
-$paginator = DocuWare::search()
+$paginatorRequest = DocuWare::searchRequestBuilder()
     ->fileCabinet($id)
     ->filterDate('DWSTOREDATETIME', '<', Carbon::create(2021, 4, 1))
     ->get();
+    
+$paginator = $connector->send($paginatorRequest)->dto();
 
 /**
  * Order the results by field name. Supported values: 'asc', 'desc'
  */
-$paginator = DocuWare::search()
+$paginatorRequest = DocuWare::searchRequestBuilder()
     ->fileCabinet($id)
     ->orderBy('DWSTOREDATETIME', 'desc')
     ->get();
+    
+$paginator = $connector->send($paginatorRequest)->dto();
 
 /**
  * Search documents filtered to the value. You can specify multiple filters.
  */
-$paginator = DocuWare::search()
+$paginatorRequest = DocuWare::searchRequestBuilder()
     ->fileCabinet($id)
     ->filter('TYPE', 'Order')
     ->filter('OTHER_FIELD', 'other')
     ->get();
+    
+$paginator = $connector->send($paginatorRequest)->dto();
     
 /**
  * You can specify the dialog which should be used.
  */
 $dialogId = 'bb42c30a-89fc-4b81-9091-d7e326caba62';
 
-$paginator = DocuWare::search()
+$paginatorRequest = DocuWare::searchRequestBuilder()
     ->fileCabinet($id)
     ->dialog($dialogId)
     ->get();
     
+$paginator = $connector->send($paginatorRequest)->dto();
+    
 /**
  * You can also combine everything.
  */
-$paginator = DocuWare::search()
+$paginatorRequest = DocuWare::searchRequestBuilder()
     ->fileCabinet($id)
     ->page(2)
     ->perPage(30)
@@ -298,6 +337,8 @@ $paginator = DocuWare::search()
     ->orderBy('DWSTOREDATETIME', 'desc')
     ->dialog($dialogId)
     ->get();
+
+$paginator = $connector->send($paginatorRequest)->dto();
 ```
 
 ## 🖼 Make encrypted URL
@@ -470,11 +511,6 @@ logout with DocuWare:
 use CodebarAg\DocuWare\Facades\DocuWare;
 
 /**
- * If you would like to handle the cookie storage by yourself you can get a fresh cookie with the getCookie() method.
- */
-DocuWare::getCookie();
-
-/**
  * Login with your credentials. You only need to login once. Afterwards the
  * authentication cookie is stored in the cache as `docuware.cookies` and
  * is used for all further requests.
@@ -486,6 +522,18 @@ DocuWare::login();
  */
 DocuWare::logout();
 ```
+
+### Manual authentication
+
+If you want to provide your own authentication cookie you can use the following connector
+to authenticate with the DocuWare REST API:
+
+```php
+use CodebarAg\DocuWare\Connectors\StaticCookieConnector;
+```
+
+
+
 
 ## 💥 Exceptions explained
 
@@ -610,7 +658,7 @@ return [
     |
     */
 
-    'timeout' => env('DOCUWARE_TIMEOUT', 30),
+    'timeout' => env('DOCUWARE_TIMEOUT', 15),
 
     /*
     |--------------------------------------------------------------------------
@@ -675,6 +723,10 @@ return [
             'include_suggestions' => false,
             'additional_result_fields' => [],
         ],
+        'cache' => [
+            'driver' => env('DOCUWARE_CACHE_DRIVER', env('CACHE_DRIVER', 'file')),
+            'lifetime_in_seconds' => env('DOCUWARE_CACHE_LIFETIME_IN_SECONDS', 60),
+        ],
     ],
     
     /*
@@ -687,17 +739,7 @@ return [
         'file_cabinet_id' => env('DOCUWARE_TESTS_FILE_CABINET_ID'),
         'dialog_id' => env('DOCUWARE_TESTS_DIALOG_ID'),
         'basket_id' => env('DOCUWARE_TESTS_BASKET_ID'),
-        'section' => (int) env('DOCUWARE_TESTS_SECTION'),
         'organization_id' => env('DOCUWARE_TESTS_ORGANIZATION_ID'),
-        'document_id' => (int) env('DOCUWARE_TESTS_DOCUMENT_ID'),
-        'document_file_size_preview' => (int) env('DOCUWARE_TESTS_DOCUMENT_FILE_SIZE_PREVIEW'),
-        'document_file_size' => (int) env('DOCUWARE_TESTS_DOCUMENT_FILE_SIZE'),
-        'document_count' => (int) env('DOCUWARE_TESTS_DOCUMENT_COUNT'),
-        'document_thumbnail_file_size' => (int) env('DOCUWARE_TESTS_DOCUMENT_THUMBNAIL_FILE_SIZE'),
-        'document_ids' => json_decode(env('DOCUWARE_TESTS_DOCUMENTS_IDS', '[]')),
-        'documents_file_size' => (int) env('DOCUWARE_TESTS_DOCUMENTS_FILE_SIZE'),
-        'field_name' => env('DOCUWARE_TESTS_FIELD_NAME'),
-        'field_name_2' => env('DOCUWARE_TESTS_FIELD_NAME_2'),
     ],
 ];
 ```
@@ -719,22 +761,13 @@ Modify environment variables in the phpunit.xml-file:
 <env name="DOCUWARE_PASSWORD" value="password"/>
 <env name="DOCUWARE_PASSPHRASE" value="passphrase"/>
 <env name="DOCUWARE_COOKIES" value="cookies"/>
-<env name="DOCUWARE_TIMEOUT" value="30"/>
+<env name="DOCUWARE_TIMEOUT" value="15"/>
+<env name="DOCUWARE_CACHE_LIFETIME_IN_SECONDS" value="0"/> // Disable caching for tests
 
 <env name="DOCUWARE_TESTS_FILE_CABINET_ID" value=""/>
 <env name="DOCUWARE_TESTS_DIALOG_ID" value=""/>
 <env name="DOCUWARE_TESTS_BASKET_ID" value=""/>
-<env name="DOCUWARE_TESTS_SECTION" value=""/>
-<env name="DOCUWARE_TESTS_FIELD_NAME" value="UUID"/>
-<env name="DOCUWARE_TESTS_FIELD_NAME_2" value="DOCUMENT_LABEL"/>
-
-<env name="DOCUWARE_TESTS_DOCUMENT_FILE_SIZE_PREVIEW" value=""/>
-<env name="DOCUWARE_TESTS_DOCUMENT_FILE_SIZE" value=""/>
-<env name="DOCUWARE_TESTS_DOCUMENT_COUNT" value=""/>
-<env name="DOCUWARE_TESTS_DOCUMENT_THUMBNAIL_FILE_SIZE" value=""/>
-<env name="DOCUWARE_TESTS_DOCUMENTS_FILE_SIZE" value=""/>
-<env name="DOCUWARE_TESTS_DOCUMENT_ID" value=""/>
-<env name="DOCUWARE_TESTS_DOCUMENTS_IDS" value="[]"/>
+<env name="DOCUWARE_TESTS_ORGANIZATION_ID" value=""/>
 ```
 
 Run the tests:

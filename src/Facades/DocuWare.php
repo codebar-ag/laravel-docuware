@@ -3,7 +3,7 @@
 namespace CodebarAg\DocuWare\Facades;
 
 use Carbon\Carbon;
-use CodebarAg\DocuWare\DocuWareSearch;
+use CodebarAg\DocuWare\DocuWareSearchRequestBuilder;
 use CodebarAg\DocuWare\DocuWareUrl;
 use CodebarAg\DocuWare\DTO\Dialog;
 use CodebarAg\DocuWare\DTO\Document;
@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Facade;
 /**
  * @see \CodebarAg\DocuWare\DocuWare
  *
- * @method static string getCookie()
+ * @method static self cookie()
  * @method static string login()
  * @method static void logout()
  * @method static Organization getOrganization(string $organizationId)
@@ -37,7 +37,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static Document uploadDocument(string $fileCabinetId, string $fileContent, string $fileName, ?Collection $indexes = null)
  * @method static int documentCount(string $fileCabinetId, string $dialogId)
  * @method static void deleteDocument(string $fileCabinetId, int $documentId)
- * @method static DocuWareSearch search()
+ * @method static DocuWareSearchRequestBuilder search()
  * @method static DocuWareUrl url()
  */
 class DocuWare extends Facade

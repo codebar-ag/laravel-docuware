@@ -3,7 +3,6 @@
 namespace CodebarAg\DocuWare\DTO;
 
 use Illuminate\Support\Arr;
-use Illuminate\Support\Str;
 
 final class Config
 {
@@ -24,6 +23,6 @@ final class Config
         public string $cacheDriver,
         public int $cacheLifetimeInSeconds,
         public string $requestTimeoutInSeconds,
-    )
-    {}
+    ) {
+    }
 }

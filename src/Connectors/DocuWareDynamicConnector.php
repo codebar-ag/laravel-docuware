@@ -5,12 +5,12 @@ namespace CodebarAg\DocuWare\Connectors;
 use CodebarAg\DocuWare\DTO\Config;
 use CodebarAg\DocuWare\Support\Auth;
 use GuzzleHttp\Cookie\CookieJar;
-use Illuminate\Support\Arr;
 use Saloon\Http\Connector;
 
 class DocuWareDynamicConnector extends Connector
 {
     public Config $configuration;
+
     public CookieJar $cookieJar;
 
     public function __construct(Config $config)

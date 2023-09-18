@@ -10,17 +10,17 @@ use Illuminate\Support\Facades\Event;
 uses()->group('docuware');
 
 beforeEach(function () {
-    EnsureValidCookie::check();
+	EnsureValidCookie::check();
 
-    $this->connector = new DocuWareWithoutCookieConnector(config('docuware.cookies'));
+	$this->connector = new DocuWareWithoutCookieConnector(config('docuware.cookies'));
 });
 
 it('can list file cabinets', function () {
-    Event::fake();
+	Event::fake();
 
-    $fileCabinets = $this->connector->send(new GetFileCabinetsRequest())->dto();
+	$fileCabinets = $this->connector->send(new GetFileCabinetsRequest())->dto();
 
-    $this->assertInstanceOf(Collection::class, $fileCabinets);
-    $this->assertNotCount(0, $fileCabinets);
-    Event::assertDispatched(DocuWareResponseLog::class);
-});
+	$this->assertInstanceOf(Collection::class, $fileCabinets);
+	$this->assertNotCount(0, $fileCabinets);
+	Event::assertDispatched(DocuWareResponseLog::class);
+})->only();

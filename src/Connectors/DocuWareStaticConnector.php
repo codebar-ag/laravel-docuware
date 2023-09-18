@@ -8,7 +8,7 @@ use CodebarAg\DocuWare\Support\EnsureValidCredentials;
 use GuzzleHttp\Cookie\CookieJar;
 use Saloon\Http\Connector;
 
-class DocuWareWithoutCookieConnector extends Connector
+class DocuWareStaticConnector extends Connector
 {
     public CookieJar $cookieJar;
 

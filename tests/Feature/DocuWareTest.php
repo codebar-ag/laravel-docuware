@@ -2,8 +2,9 @@
 
 namespace CodebarAg\DocuWare\Tests\Feature;
 
-use CodebarAg\DocuWare\Connectors\DocuWareWithoutCookieConnector;
+use CodebarAg\DocuWare\Connectors\DocuWareStaticConnector;
 use CodebarAg\DocuWare\DocuWare;
+use CodebarAg\DocuWare\DTO\Config;
 use CodebarAg\DocuWare\Support\EnsureValidCookie;
 use Illuminate\Support\Facades\Event;
 
@@ -12,7 +13,15 @@ uses()->group('docuware');
 beforeEach(function () {
     EnsureValidCookie::check();
 
-    $this->connector = new DocuWareWithoutCookieConnector(config('docuware.cookies'));
+    $config = Config::make([
+        'url' => config('docuware.credentials.url'),
+        'cookie' => config('docuware.cookies'),
+        'cache_driver' => config('docuware.configurations.cache.driver'),
+        'cache_lifetime_in_seconds' => config('docuware.configurations.cache.lifetime_in_seconds'),
+        'request_timeout_in_seconds' => config('docuware.timeout'),
+    ]);
+
+    $this->connector = new DocuWareStaticConnector($config);
 });
 
 it('can create encrypted url for a document in a file cabinet', function () {

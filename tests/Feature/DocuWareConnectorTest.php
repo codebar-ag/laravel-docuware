@@ -1,10 +1,10 @@
 <?php
 
-use CodebarAg\DocuWare\Connectors\DocuWareWithoutCookieConnector;
+use CodebarAg\DocuWare\Connectors\DocuWareStaticConnector;
 use Illuminate\Support\Arr;
 
 it('returns the correct default config', function () {
-    $connector = new DocuWareWithoutCookieConnector();
+    $connector = new DocuWareStaticConnector();
 
     $timeout = Arr::get($connector->defaultConfig(), 'timeout');
     //$cookies = Arr::get($connector->defaultConfig(), 'cookies');
@@ -15,13 +15,13 @@ it('returns the correct default config', function () {
 })->group('connector');
 
 it('returns the correct base url', function () {
-    $connector = new DocuWareWithoutCookieConnector();
+    $connector = new DocuWareStaticConnector();
 
     expect($connector->resolveBaseUrl())->toBe(config('docuware.credentials.url').'/DocuWare/Platform');
 })->group('connector');
 
 it('returns the correct default headers', function () {
-    $connector = new DocuWareWithoutCookieConnector();
+    $connector = new DocuWareStaticConnector();
 
     expect($connector->defaultHeaders())->toBe([
         'Accept' => 'application/json',

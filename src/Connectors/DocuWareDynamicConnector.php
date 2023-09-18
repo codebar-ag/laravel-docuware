@@ -2,18 +2,23 @@
 
 namespace CodebarAg\DocuWare\Connectors;
 
+use CodebarAg\DocuWare\DTO\Config;
 use CodebarAg\DocuWare\Support\Auth;
 use GuzzleHttp\Cookie\CookieJar;
+use Illuminate\Support\Arr;
 use Saloon\Http\Connector;
 
-class DocuWareWithCookieConnector extends Connector
+class DocuWareDynamicConnector extends Connector
 {
+    public Config $configuration;
     public CookieJar $cookieJar;
 
-    public function __construct(string $cookie)
+    public function __construct(Config $config)
     {
+        $this->configuration = $config;
+
         $this->cookieJar = CookieJar::fromArray(
-            [Auth::COOKIE_NAME => $cookie],
+            [Auth::COOKIE_NAME => $this->configuration->cookie],
             parse_url(config('docuware.credentials.url'), PHP_URL_HOST)
         );
     }
@@ -23,7 +28,7 @@ class DocuWareWithCookieConnector extends Connector
      */
     public function resolveBaseUrl(): string
     {
-        return config('docuware.credentials.url').'/DocuWare/Platform';
+        return $this->configuration->url.'/DocuWare/Platform';
     }
 
     public function defaultHeaders(): array
@@ -36,7 +41,7 @@ class DocuWareWithCookieConnector extends Connector
     public function defaultConfig(): array
     {
         return [
-            'timeout' => config('docuware.timeout'),
+            'timeout' => $this->configuration->requestTimeoutInSeconds,
             'cookies' => $this->cookieJar,
         ];
     }
@@ -44,5 +49,10 @@ class DocuWareWithCookieConnector extends Connector
     public function getCoookieJar(): CookieJar
     {
         return $this->cookieJar;
+    }
+
+    public function getConfiguration(): Config
+    {
+        return $this->configuration;
     }
 }

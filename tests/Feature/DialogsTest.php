@@ -34,7 +34,6 @@ it('can get a dialog', function () {
 
     $dialog = $this->connector->send(new GetDialogRequest($fileCabinetId, $dialogId))->dto();
 
-
     $this->assertInstanceOf(Dialog::class, $dialog);
 
     Event::assertDispatched(DocuWareResponseLog::class);

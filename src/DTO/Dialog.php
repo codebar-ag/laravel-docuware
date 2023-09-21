@@ -25,8 +25,9 @@ final class Dialog
         public string $label,
         public bool $isDefault,
         public string $fileCabinetId,
-        public null|array $fields,
-    ) {}
+        public ?array $fields,
+    ) {
+    }
 
     public function isSearch(): bool
     {

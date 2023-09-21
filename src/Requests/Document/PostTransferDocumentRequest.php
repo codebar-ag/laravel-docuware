@@ -20,7 +20,8 @@ class PostTransferDocumentRequest extends Request implements HasBody
         protected readonly string $fileCabinetId,
         protected readonly string $destinationFileCabinetId,
         protected readonly string $storeDialogId,
-    ) { }
+    ) {
+    }
 
     public function resolveEndpoint(): string
     {
@@ -43,12 +44,12 @@ class PostTransferDocumentRequest extends Request implements HasBody
             'Documents' => [
                 [
                     'Id' => $this->documentId,
-                    'Field' => null
+                    'Field' => null,
                 ],
             ],
-            "KeepSource" => false,
-            "FillIntellix" => false,
-            "UseDefaultDialog" => false,
+            'KeepSource' => false,
+            'FillIntellix' => false,
+            'UseDefaultDialog' => false,
         ];
     }
 

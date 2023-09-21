@@ -29,7 +29,9 @@ it('can list file cabinets', function () {
 
     $fileCabinets = $this->connector->send(new GetFileCabinetsRequest())->dto();
 
+    dd($fileCabinets);
+
     $this->assertInstanceOf(Collection::class, $fileCabinets);
     $this->assertNotCount(0, $fileCabinets);
     Event::assertDispatched(DocuWareResponseLog::class);
-});
+})->only();

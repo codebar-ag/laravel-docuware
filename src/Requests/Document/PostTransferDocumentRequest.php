@@ -16,10 +16,11 @@ class PostTransferDocumentRequest extends Request implements HasBody
     protected Method $method = Method::POST;
 
     public function __construct(
-        protected readonly string $documentId,
         protected readonly string $fileCabinetId,
         protected readonly string $destinationFileCabinetId,
         protected readonly string $storeDialogId,
+        protected readonly string $documentId,
+        protected readonly array $fields = [],
     ) {
     }
 
@@ -44,7 +45,7 @@ class PostTransferDocumentRequest extends Request implements HasBody
             'Documents' => [
                 [
                     'Id' => $this->documentId,
-                    'Field' => null,
+                    'Fields' => $this->fields,
                 ],
             ],
             'KeepSource' => false,

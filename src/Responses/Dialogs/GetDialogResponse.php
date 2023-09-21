@@ -19,6 +19,8 @@ final class GetDialogResponse
 
         $dialog = $response->throw()->json();
 
+        ray($dialog);
+
         return Dialog::fromJson($dialog);
     }
 }

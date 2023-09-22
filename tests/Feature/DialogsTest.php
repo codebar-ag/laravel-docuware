@@ -37,7 +37,7 @@ it('can get a dialog', function () {
     $this->assertInstanceOf(Dialog::class, $dialog);
 
     Event::assertDispatched(DocuWareResponseLog::class);
-})->only();
+});
 
 it('can list dialogs for a file cabinet', function () {
     Event::fake();

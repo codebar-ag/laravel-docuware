@@ -25,7 +25,7 @@ final class Dialog
         public string $label,
         public bool $isDefault,
         public string $fileCabinetId,
-        public ?array $fields,
+        public ?array $fields = null,
     ) {
     }
 

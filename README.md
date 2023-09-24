@@ -79,15 +79,23 @@ DOCUWARE_PASSPHRASE="a#bcd>2~C1'abc\\#"
 ## 🏗 Usage
 
 ```php
-use CodebarAg\DocuWare\Connectors\DocuWareWithoutCookieConnector;
+use CodebarAg\DocuWare\Connectors\DocuWareStaticConnector;
 
-// Will use user credentials to authenticate and store cookie in cache
-$connector = new DocuWareWithoutCookieConnector();
+// Will use user credentials defined in config to authenticate and store cookie in cache
+$connector = new DocuWareStaticConnector();
 
 // OR
 
-// Will use the cookie provided
-$connector = new DocuWareWithCookieConnector($cookie);
+// Pass in a config manually
+$config = Config::make([
+    'url' => 'https://domain.docuware.cloud',
+    'cookie' => 'cookie',
+    'cache_driver' => 'file',
+    'cache_lifetime_in_seconds' => 60,
+    'request_timeout_in_seconds' => 15,
+]);
+
+$connector = new DocuWareStaticConnector($config);
 
 /**
  * Return an organization.
@@ -204,9 +212,9 @@ $connector->send(new DeleteDocumentRequest($fileCabinetId, $document->id))->dto(
 
 ```php
 use CodebarAg\DocuWare\Facades\DocuWare;
-use CodebarAg\DocuWare\Connectors\DocuWareWithoutCookieConnector;
+use CodebarAg\DocuWare\Connectors\DocuWareStaticConnector;
 
-$connector = new DocuWareWithoutCookieConnector();
+$connector = new DocuWareStaticConnector();
 
 /**
  * Most basic example to search for documents. You only need to provide a valid
@@ -532,7 +540,45 @@ to authenticate with the DocuWare REST API:
 use CodebarAg\DocuWare\Connectors\StaticCookieConnector;
 ```
 
+## 📦 Caching requests
 
+All Get Requests are cachable and will be cached by default.
+
+To determine if the response is cached you can use the following method:
+
+```php 
+$connector = new DocuWareStaticConnector();
+
+$response = $connector->send(new GetDocumentRequest($fileCabinetId, $documentId));
+$response->isCached(); // false
+
+// Next time the request is sent
+
+$response = $connector->send(new GetDocumentRequest($fileCabinetId, $documentId));
+$response->isCached(); // true
+```
+
+To invalidate the cache for a specific request you can use the following method:
+
+```php 
+$connector = new DocuWareStaticConnector();
+
+$request = new GetDocumentRequest($fileCabinetId, $documentId);
+$request->invalidateCache();
+
+$response = $connector->send($request);
+```
+
+To temporarily disable caching for a specific request you can use the following method:
+
+```php 
+$connector = new DocuWareStaticConnector();
+
+$request = new GetDocumentRequest($fileCabinetId, $documentId);
+$request->disableCaching();
+
+$response = $connector->send($request);
+```
 
 
 ## 💥 Exceptions explained

@@ -15,6 +15,7 @@ final class Dialog
             label: Arr::get($data, 'DisplayName'),
             isDefault: Arr::get($data, 'IsDefault'),
             fileCabinetId: Arr::get($data, 'FileCabinetId'),
+            fields: Arr::get($data, 'Fields'),
         );
     }
 
@@ -24,6 +25,7 @@ final class Dialog
         public string $label,
         public bool $isDefault,
         public string $fileCabinetId,
+        public ?array $fields = null,
     ) {
     }
 

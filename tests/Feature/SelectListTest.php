@@ -1,6 +1,7 @@
 <?php
 
-use CodebarAg\DocuWare\Connectors\DocuWareWithoutCookieConnector;
+use CodebarAg\DocuWare\Connectors\DocuWareStaticConnector;
+use CodebarAg\DocuWare\DTO\Config;
 use CodebarAg\DocuWare\DTO\DocumentIndex;
 use CodebarAg\DocuWare\Events\DocuWareResponseLog;
 use CodebarAg\DocuWare\Requests\Document\DeleteDocumentRequest;
@@ -14,7 +15,15 @@ uses()->group('docuware');
 beforeEach(function () {
     EnsureValidCookie::check();
 
-    $this->connector = new DocuWareWithoutCookieConnector(config('docuware.cookies'));
+    $config = Config::make([
+        'url' => config('docuware.credentials.url'),
+        'cookie' => config('docuware.cookies'),
+        'cache_driver' => config('docuware.configurations.cache.driver'),
+        'cache_lifetime_in_seconds' => config('docuware.configurations.cache.lifetime_in_seconds'),
+        'request_timeout_in_seconds' => config('docuware.timeout'),
+    ]);
+
+    $this->connector = new DocuWareStaticConnector($config);
 });
 
 it('can list values for a select list', function () {

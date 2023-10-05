@@ -24,12 +24,10 @@ final class Cookie
             ->reject(fn (array $cookie) => Arr::get($cookie, 'Value') === '')
             ->firstWhere('Name', '.DWPLATFORMAUTH');
 
-        $now = now();
-
         return new self(
             cookie: Arr::get($data, 'Value'),
-            cookie_created_at: $now,
-            cookie_lifetime_until: $now->addSeconds(525600 * 0.75),
+            cookie_created_at: now(),
+            cookie_lifetime_until: now()->addMinutes(525600 * 0.75),
         );
     }
 }

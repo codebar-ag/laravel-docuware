@@ -2,11 +2,15 @@
 
 namespace CodebarAg\DocuWare;
 
+use CodebarAg\DocuWare\DTO\Cookie;
 use CodebarAg\DocuWare\Events\DocuWareResponseLog;
 use CodebarAg\DocuWare\Requests\Auth\GetLogoffRequest;
+use CodebarAg\DocuWare\Requests\Auth\PostLoginRequest;
 use CodebarAg\DocuWare\Support\Auth;
 use CodebarAg\DocuWare\Support\EnsureValidCookie;
 use CodebarAg\DocuWare\Support\EnsureValidCredentials;
+use CodebarAg\DocuWare\Support\EnsureValidResponse;
+use GuzzleHttp\Cookie\CookieJar;
 use Saloon\Exceptions\InvalidResponseClassException;
 use Saloon\Exceptions\PendingRequestException;
 
@@ -18,10 +22,39 @@ class DocuWare
      * @throws \ReflectionException
      * @throws PendingRequestException
      */
+    public function cookie(): Cookie
+    {
+        $cookieJar = new CookieJar();
+
+        $request = new PostLoginRequest(
+            config('docuware.credentials.url'),
+            config('docuware.credentials.username'),
+            config('docuware.credentials.password'),
+            false,
+            false,
+            null);
+
+        $request->config()->add('cookies', $cookieJar);
+
+        $response = $request->send();
+
+        event(new DocuWareResponseLog($response));
+
+        EnsureValidResponse::from($response);
+
+        return Cookie::make($cookieJar, $response);
+
+    }
+
+    /**
+     * @throws InvalidResponseClassException
+     * @throws \Throwable
+     * @throws \ReflectionException
+     * @throws PendingRequestException
+     */
     public function login(): void
     {
         EnsureValidCredentials::check();
-
         // Checks if already logged in, if not, logs in
         EnsureValidCookie::check();
     }

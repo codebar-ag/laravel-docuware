@@ -206,6 +206,21 @@ $document = $connector->send(new PostDocumentRequest(
  * Delete document.
  */
 $connector->send(new DeleteDocumentRequest($fileCabinetId, $document->id))->dto();
+
+
+/**
+ * Login Request
+ */
+$fields = $connector->send(new PostLoginRequest(
+    $username, (string)
+    $password, (string)
+    $rememberMe, (bool)
+    $redirectToMyselfInCaseOfError, (bool)
+    $licenseType, (string)
+))->dto();
+
+
+
 ```
 
 ## 🔍 Search usage

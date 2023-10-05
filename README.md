@@ -580,7 +580,6 @@ $request->disableCaching();
 $response = $connector->send($request);
 ```
 
-
 ## 💥 Exceptions explained
 
 - `CodebarAg\DocuWare\Exceptions\UnableToMakeRequest`

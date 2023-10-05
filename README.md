@@ -206,21 +206,6 @@ $document = $connector->send(new PostDocumentRequest(
  * Delete document.
  */
 $connector->send(new DeleteDocumentRequest($fileCabinetId, $document->id))->dto();
-
-
-/**
- * Login Request
- */
-$fields = $connector->send(new PostLoginRequest(
-    $username, (string)
-    $password, (string)
-    $rememberMe, (bool)
-    $redirectToMyselfInCaseOfError, (bool)
-    $licenseType, (string)
-))->dto();
-
-
-
 ```
 
 ## 🔍 Search usage
@@ -532,6 +517,11 @@ logout with DocuWare:
 
 ```php
 use CodebarAg\DocuWare\Facades\DocuWare;
+
+/**
+ * Receive a cookie
+ */
+DocuWare::cookie(string $url, string $username, string $password);
 
 /**
  * Login with your credentials. You only need to login once. Afterwards the

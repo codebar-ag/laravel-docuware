@@ -22,17 +22,17 @@ class DocuWare
      * @throws \ReflectionException
      * @throws PendingRequestException
      */
-    public function cookie(): Cookie
+    public function cookie(string $url, string $username, string $password, $rememberMe = false, $redirectToMyselfInCaseOfError = false, $licenseType = null): Cookie
     {
         $cookieJar = new CookieJar();
 
         $request = new PostLoginRequest(
-            config('docuware.credentials.url'),
-            config('docuware.credentials.username'),
-            config('docuware.credentials.password'),
-            false,
-            false,
-            null);
+            $url,
+            $username,
+            $password,
+            $rememberMe,
+            $redirectToMyselfInCaseOfError,
+            $licenseType);
 
         $request->config()->add('cookies', $cookieJar);
 

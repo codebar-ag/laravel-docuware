@@ -95,7 +95,7 @@ $config = Config::make([
     'request_timeout_in_seconds' => 15,
 ]);
 
-$connector = new DocuWareStaticConnector($config);
+$connector = new DocuWareDynamicConnector($config);
 
 /**
  * Return an organization.

@@ -42,7 +42,7 @@ class DocuWare
 
         EnsureValidResponse::from($response);
 
-        return Cookie::make($cookieJar, $response);
+        return Cookie::make($cookieJar);
 
     }
 

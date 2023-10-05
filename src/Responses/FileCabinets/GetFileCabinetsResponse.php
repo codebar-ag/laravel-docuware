@@ -17,7 +17,7 @@ final class GetFileCabinetsResponse
 
         EnsureValidResponse::from($response);
 
-        $cabinets = $response->throw()->body('FileCabinet');
+        $cabinets = $response->throw()->body();
 
         return collect($cabinets)->map(fn (array $cabinet) => FileCabinet::fromJson($cabinet));
     }

@@ -5,6 +5,7 @@ namespace CodebarAg\DocuWare\Facades;
 use Carbon\Carbon;
 use CodebarAg\DocuWare\DocuWareSearchRequestBuilder;
 use CodebarAg\DocuWare\DocuWareUrl;
+use CodebarAg\DocuWare\DTO\Cookie;
 use CodebarAg\DocuWare\DTO\Dialog;
 use CodebarAg\DocuWare\DTO\Document;
 use CodebarAg\DocuWare\DTO\DocumentThumbnail;
@@ -18,7 +19,7 @@ use Illuminate\Support\Facades\Facade;
 /**
  * @see \CodebarAg\DocuWare\DocuWare
  *
- * @method static self cookie()
+ * @method static Cookie cookie(string $url, string $username, string $password, $rememberMe = false, $redirectToMyselfInCaseOfError = false, $licenseType = null)
  * @method static string login()
  * @method static void logout()
  * @method static Organization getOrganization(string $organizationId)

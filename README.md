@@ -95,7 +95,7 @@ $config = Config::make([
     'request_timeout_in_seconds' => 15,
 ]);
 
-$connector = new DocuWareStaticConnector($config);
+$connector = new DocuWareDynamicConnector($config);
 
 /**
  * Return an organization.
@@ -519,6 +519,11 @@ logout with DocuWare:
 use CodebarAg\DocuWare\Facades\DocuWare;
 
 /**
+ * Receive a cookie
+ */
+DocuWare::cookie(string $url, string $username, string $password);
+
+/**
  * Login with your credentials. You only need to login once. Afterwards the
  * authentication cookie is stored in the cache as `docuware.cookies` and
  * is used for all further requests.
@@ -579,7 +584,6 @@ $request->disableCaching();
 
 $response = $connector->send($request);
 ```
-
 
 ## 💥 Exceptions explained
 

@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\Facade;
 /**
  * @see \CodebarAg\DocuWare\DocuWare
  *
- * @method static Cookie cookie()
+ * @method static Cookie cookie(string $url, string $username, string $password, $rememberMe = false, $redirectToMyselfInCaseOfError = false, $licenseType = null)
  * @method static string login()
  * @method static void logout()
  * @method static Organization getOrganization(string $organizationId)

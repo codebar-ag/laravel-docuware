@@ -19,7 +19,7 @@ class DocuWareDynamicConnector extends Connector
 
         $this->cookieJar = CookieJar::fromArray(
             [Auth::COOKIE_NAME => $this->configuration->cookie],
-            parse_url(config('docuware.credentials.url'), PHP_URL_HOST)
+            parse_url($config->url, PHP_URL_HOST)
         );
     }
 

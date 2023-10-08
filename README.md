@@ -110,7 +110,7 @@ $organizations = $connector->send(new GetOrganizationsRequest())->dto();
 /**
  * Return all file cabinets.
  */
-$fileCabinets = $connector->send(new GetCabinetsRequest())->dto();
+$fileCabinets = $connector->send(new GetFileCabinetsRequest())->dto();
 
 /**
  * Return all fields of a file cabinet.

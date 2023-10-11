@@ -6,10 +6,10 @@ use CodebarAg\DocuWare\DTO\DocumentIndex;
 use CodebarAg\DocuWare\Responses\Document\PostDocumentResponse;
 use Illuminate\Support\Collection;
 use Saloon\Contracts\Body\HasBody;
-use Saloon\Http\Response;
 use Saloon\Data\MultipartValue;
 use Saloon\Enums\Method;
 use Saloon\Http\Request;
+use Saloon\Http\Response;
 use Saloon\Traits\Body\HasMultipartBody;
 
 class PostDocumentRequest extends Request implements HasBody

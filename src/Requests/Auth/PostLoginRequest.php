@@ -5,7 +5,7 @@ namespace CodebarAg\DocuWare\Requests\Auth;
 use CodebarAg\DocuWare\Events\DocuWareResponseLog;
 use CodebarAg\DocuWare\Support\EnsureValidResponse;
 use Saloon\Contracts\Body\HasBody;
-use Saloon\Contracts\Response;
+use Saloon\Http\Response;
 use Saloon\Enums\Method;
 use Saloon\Http\SoloRequest;
 use Saloon\Traits\Body\HasFormBody;

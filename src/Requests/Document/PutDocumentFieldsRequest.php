@@ -5,7 +5,7 @@ namespace CodebarAg\DocuWare\Requests\Document;
 use CodebarAg\DocuWare\Exceptions\UnableToUpdateFields;
 use CodebarAg\DocuWare\Responses\Document\PutDocumentFieldsResponse;
 use Saloon\Contracts\Body\HasBody;
-use Saloon\Contracts\Response;
+use Saloon\Http\Response;
 use Saloon\Enums\Method;
 use Saloon\Http\Request;
 use Saloon\Traits\Body\HasJsonBody;

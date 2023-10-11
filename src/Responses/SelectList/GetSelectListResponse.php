@@ -4,7 +4,7 @@ namespace CodebarAg\DocuWare\Responses\SelectList;
 
 use CodebarAg\DocuWare\Events\DocuWareResponseLog;
 use CodebarAg\DocuWare\Support\EnsureValidResponse;
-use Saloon\Contracts\Response;
+use Saloon\Http\Response;
 
 final class GetSelectListResponse
 {

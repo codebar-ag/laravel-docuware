@@ -6,7 +6,7 @@ use CodebarAg\DocuWare\Events\DocuWareResponseLog;
 use CodebarAg\DocuWare\Exceptions\UnableToGetDocumentCount;
 use CodebarAg\DocuWare\Support\EnsureValidResponse;
 use Illuminate\Support\Arr;
-use Saloon\Contracts\Response;
+use Saloon\Http\Response;
 
 final class GetDocumentCountResponse
 {

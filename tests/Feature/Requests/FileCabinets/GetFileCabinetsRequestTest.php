@@ -34,4 +34,4 @@ it('can list file cabinets', function () {
     $this->assertNotCount(0, $fileCabinets);
     Event::assertDispatched(DocuWareResponseLog::class);
 
-})->only();
+});

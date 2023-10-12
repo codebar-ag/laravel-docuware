@@ -2,9 +2,7 @@
 
 use CodebarAg\DocuWare\Connectors\DocuWareStaticConnector;
 use CodebarAg\DocuWare\DTO\Config;
-use CodebarAg\DocuWare\DTO\Dialog;
 use CodebarAg\DocuWare\Events\DocuWareResponseLog;
-use CodebarAg\DocuWare\Requests\Dialogs\GetDialogRequest;
 use CodebarAg\DocuWare\Requests\Dialogs\GetDialogsRequest;
 use CodebarAg\DocuWare\Support\EnsureValidCookie;
 use Illuminate\Support\Collection;

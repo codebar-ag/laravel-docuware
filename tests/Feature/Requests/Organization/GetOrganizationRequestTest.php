@@ -5,9 +5,7 @@ use CodebarAg\DocuWare\DTO\Config;
 use CodebarAg\DocuWare\DTO\Organization;
 use CodebarAg\DocuWare\Events\DocuWareResponseLog;
 use CodebarAg\DocuWare\Requests\Organization\GetOrganizationRequest;
-use CodebarAg\DocuWare\Requests\Organization\GetOrganizationsRequest;
 use CodebarAg\DocuWare\Support\EnsureValidCookie;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Event;
 
 uses()->group('docuware');

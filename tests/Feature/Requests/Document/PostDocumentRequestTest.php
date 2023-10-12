@@ -7,14 +7,7 @@ use CodebarAg\DocuWare\DTO\DocumentField;
 use CodebarAg\DocuWare\DTO\DocumentIndex;
 use CodebarAg\DocuWare\Events\DocuWareResponseLog;
 use CodebarAg\DocuWare\Requests\Document\DeleteDocumentRequest;
-use CodebarAg\DocuWare\Requests\Document\GetDocumentCountRequest;
-use CodebarAg\DocuWare\Requests\Document\GetDocumentDownloadRequest;
-use CodebarAg\DocuWare\Requests\Document\GetDocumentPreviewRequest;
-use CodebarAg\DocuWare\Requests\Document\GetDocumentRequest;
-use CodebarAg\DocuWare\Requests\Document\GetDocumentsDownloadRequest;
-use CodebarAg\DocuWare\Requests\Document\GetDocumentsRequest;
 use CodebarAg\DocuWare\Requests\Document\PostDocumentRequest;
-use CodebarAg\DocuWare\Requests\Document\PutDocumentFieldsRequest;
 use CodebarAg\DocuWare\Support\EnsureValidCookie;
 use Illuminate\Support\Facades\Event;
 

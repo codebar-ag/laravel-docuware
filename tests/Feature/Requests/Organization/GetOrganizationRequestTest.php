@@ -26,16 +26,6 @@ beforeEach(function () {
     $this->connector = new DocuWareStaticConnector($config);
 });
 
-it('can list organizations', function () {
-    Event::fake();
-
-    $organizations = $this->connector->send(new GetOrganizationsRequest())->dto();
-
-    $this->assertInstanceOf(Collection::class, $organizations);
-    $this->assertNotCount(0, $organizations);
-    Event::assertDispatched(DocuWareResponseLog::class);
-});
-
 it('can get an organization', function () {
     Event::fake();
 

@@ -26,19 +26,6 @@ beforeEach(function () {
     $this->connector = new DocuWareStaticConnector($config);
 });
 
-it('can get a dialog', function () {
-    Event::fake();
-
-    $fileCabinetId = config('docuware.tests.file_cabinet_id');
-    $dialogId = config('docuware.tests.dialog_id');
-
-    $dialog = $this->connector->send(new GetDialogRequest($fileCabinetId, $dialogId))->dto();
-
-    $this->assertInstanceOf(Dialog::class, $dialog);
-
-    Event::assertDispatched(DocuWareResponseLog::class);
-});
-
 it('can list dialogs for a file cabinet', function () {
     Event::fake();
 

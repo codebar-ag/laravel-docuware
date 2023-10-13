@@ -32,7 +32,7 @@ it('can list organizations', function () {
 
     $this->assertInstanceOf(Collection::class, $organizations);
 
-    foreach ($organizations as $organization){
+    foreach ($organizations as $organization) {
         $this->assertInstanceOf(OrganizationIndex::class, $organization);
     }
 

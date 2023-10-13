@@ -33,7 +33,7 @@ it('can list file cabinets', function () {
 
     $this->assertInstanceOf(Collection::class, $fileCabinets);
 
-    foreach ($fileCabinets as $fileCabinet){
+    foreach ($fileCabinets as $fileCabinet) {
         $this->assertInstanceOf(FileCabinet::class, $fileCabinet);
     }
 

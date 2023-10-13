@@ -34,7 +34,7 @@ it('can list fields for a file cabinet', function () {
 
     $this->assertInstanceOf(Collection::class, $fields);
 
-    foreach ($fields as $field){
+    foreach ($fields as $field) {
         $this->assertInstanceOf(Field::class, $field);
     }
 

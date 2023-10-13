@@ -42,7 +42,11 @@ it('can get a total count of documents', function () {
         $dialogId
     ))->dto();
 
+
+    $this->assertIsInt($count);
+
     $this->assertSame(1, $count);
+
     Event::assertDispatched(DocuWareResponseLog::class);
 
     $this->connector->send(new DeleteDocumentRequest(

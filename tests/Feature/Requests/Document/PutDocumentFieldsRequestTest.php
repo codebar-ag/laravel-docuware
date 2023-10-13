@@ -7,6 +7,7 @@ use CodebarAg\DocuWare\Requests\Document\DeleteDocumentRequest;
 use CodebarAg\DocuWare\Requests\Document\PostDocumentRequest;
 use CodebarAg\DocuWare\Requests\Document\PutDocumentFieldsRequest;
 use CodebarAg\DocuWare\Support\EnsureValidCookie;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Event;
 
 uses()->group('docuware');
@@ -73,6 +74,8 @@ it('can update multiple document values', function () {
         $values,
         true
     ))->dto();
+
+    $this->assertInstanceOf(Collection::class, $response);
 
     $this->assertSame('laravel-docuware', $response['UUID']);
     $this->assertSame('laravel-docuware-2', $response['DOCUMENT_LABEL']);

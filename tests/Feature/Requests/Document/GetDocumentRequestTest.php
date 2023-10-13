@@ -40,6 +40,7 @@ it('can show a document', function () {
     $getdocument = $this->connector->send(new GetDocumentRequest($fileCabinetId, $document->id))->dto();
 
     $this->assertInstanceOf(Document::class, $getdocument);
+
     $this->assertSame($document->id, $getdocument->id);
     $this->assertSame($fileCabinetId, $getdocument->file_cabinet_id);
     Event::assertDispatched(DocuWareResponseLog::class);

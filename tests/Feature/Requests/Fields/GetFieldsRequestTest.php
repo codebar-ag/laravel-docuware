@@ -2,6 +2,7 @@
 
 use CodebarAg\DocuWare\Connectors\DocuWareStaticConnector;
 use CodebarAg\DocuWare\DTO\Config;
+use CodebarAg\DocuWare\DTO\Field;
 use CodebarAg\DocuWare\Events\DocuWareResponseLog;
 use CodebarAg\DocuWare\Requests\Fields\GetFieldsRequest;
 use CodebarAg\DocuWare\Support\EnsureValidCookie;
@@ -32,6 +33,12 @@ it('can list fields for a file cabinet', function () {
     $fields = $this->connector->send(new GetFieldsRequest($fileCabinetId))->dto();
 
     $this->assertInstanceOf(Collection::class, $fields);
+
+    foreach ($fields as $field){
+        $this->assertInstanceOf(Field::class, $field);
+    }
+
     $this->assertNotCount(0, $fields);
+
     Event::assertDispatched(DocuWareResponseLog::class);
 });

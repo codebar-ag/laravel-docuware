@@ -2,6 +2,7 @@
 
 use CodebarAg\DocuWare\Connectors\DocuWareStaticConnector;
 use CodebarAg\DocuWare\DTO\Config;
+use CodebarAg\DocuWare\DTO\OrganizationIndex;
 use CodebarAg\DocuWare\Events\DocuWareResponseLog;
 use CodebarAg\DocuWare\Requests\Organization\GetOrganizationsRequest;
 use CodebarAg\DocuWare\Support\EnsureValidCookie;
@@ -30,6 +31,11 @@ it('can list organizations', function () {
     $organizations = $this->connector->send(new GetOrganizationsRequest())->dto();
 
     $this->assertInstanceOf(Collection::class, $organizations);
+
+    foreach ($organizations as $organization){
+        $this->assertInstanceOf(OrganizationIndex::class, $organization);
+    }
+
     $this->assertNotCount(0, $organizations);
     Event::assertDispatched(DocuWareResponseLog::class);
 });

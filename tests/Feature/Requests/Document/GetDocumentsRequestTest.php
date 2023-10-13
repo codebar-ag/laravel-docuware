@@ -46,6 +46,7 @@ it('can get all documents', function () {
 
     foreach ($documents as $document) {
         $this->assertInstanceOf(Document::class, $document);
+
         $this->connector->send(new DeleteDocumentRequest(
             config('docuware.tests.file_cabinet_id'),
             $document->id,

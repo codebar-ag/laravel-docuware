@@ -2,6 +2,7 @@
 
 use CodebarAg\DocuWare\Connectors\DocuWareStaticConnector;
 use CodebarAg\DocuWare\DTO\Config;
+use CodebarAg\DocuWare\DTO\Dialog;
 use CodebarAg\DocuWare\Events\DocuWareResponseLog;
 use CodebarAg\DocuWare\Requests\Dialogs\GetDialogsRequest;
 use CodebarAg\DocuWare\Support\EnsureValidCookie;
@@ -32,6 +33,12 @@ it('can list dialogs for a file cabinet', function () {
     $dialogs = $this->connector->send(new GetDialogsRequest($fileCabinetId))->dto();
 
     $this->assertInstanceOf(Collection::class, $dialogs);
+
     $this->assertNotCount(0, $dialogs);
+
+    foreach ($dialogs as $dialog) {
+        $this->assertInstanceOf(Dialog::class, $dialog);
+    }
+
     Event::assertDispatched(DocuWareResponseLog::class);
 });

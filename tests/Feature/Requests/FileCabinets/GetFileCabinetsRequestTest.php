@@ -2,6 +2,7 @@
 
 use CodebarAg\DocuWare\Connectors\DocuWareStaticConnector;
 use CodebarAg\DocuWare\DTO\Config;
+use CodebarAg\DocuWare\DTO\FileCabinet;
 use CodebarAg\DocuWare\Events\DocuWareResponseLog;
 use CodebarAg\DocuWare\Requests\FileCabinets\GetFileCabinetsRequest;
 use CodebarAg\DocuWare\Support\EnsureValidCookie;
@@ -31,6 +32,11 @@ it('can list file cabinets', function () {
     $fileCabinets = $this->connector->send(new GetFileCabinetsRequest())->dto();
 
     $this->assertInstanceOf(Collection::class, $fileCabinets);
+
+    foreach ($fileCabinets as $fileCabinet){
+        $this->assertInstanceOf(FileCabinet::class, $fileCabinet);
+    }
+
     $this->assertNotCount(0, $fileCabinets);
     Event::assertDispatched(DocuWareResponseLog::class);
 

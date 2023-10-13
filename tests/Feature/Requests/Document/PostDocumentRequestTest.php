@@ -49,6 +49,7 @@ it('can upload document with index values and delete it', function () {
     ))->dto();
 
     $this->assertInstanceOf(Document::class, $document);
+
     $this->assertSame('example', $document->title);
     tap($document->fields['DOCUMENT_LABEL'], function (DocumentField $field) {
         $this->assertSame($field->name, 'DOCUMENT_LABEL');

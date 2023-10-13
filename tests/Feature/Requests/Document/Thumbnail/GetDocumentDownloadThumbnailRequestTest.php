@@ -2,6 +2,7 @@
 
 use CodebarAg\DocuWare\Connectors\DocuWareStaticConnector;
 use CodebarAg\DocuWare\DTO\Config;
+use CodebarAg\DocuWare\DTO\DocumentThumbnail;
 use CodebarAg\DocuWare\Events\DocuWareResponseLog;
 use CodebarAg\DocuWare\Requests\Document\DeleteDocumentRequest;
 use CodebarAg\DocuWare\Requests\Document\PostDocumentRequest;
@@ -44,6 +45,9 @@ it('can download a document thumbnail', function () {
 
     $this->assertSame('image/png', $contents->mime);
     $this->assertSame(282, strlen($contents->data));
+
+    $this->assertInstanceOf(DocumentThumbnail::class, $contents);
+
     Event::assertDispatched(DocuWareResponseLog::class);
 
     $this->connector->send(new DeleteDocumentRequest(

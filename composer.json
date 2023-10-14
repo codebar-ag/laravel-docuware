@@ -25,12 +25,12 @@
   ],
   "require": {
     "php": "^8.2",
-    "guzzlehttp/guzzle": "^7.5",
+    "guzzlehttp/guzzle": "^7.6",
     "illuminate/contracts": "^9.0|^10.0",
     "nesbot/carbon": "^2.64.0",
-    "saloonphp/cache-plugin": "^2.0",
-    "saloonphp/saloon": "^2.0",
-    "saloonphp/laravel-plugin": "^2.0",
+    "saloonphp/cache-plugin": "^3.0",
+    "saloonphp/saloon": "^3.0",
+    "saloonphp/laravel-plugin": "^3.0",
     "spatie/laravel-package-tools": "^1.14.0"
   },
   "require-dev": {

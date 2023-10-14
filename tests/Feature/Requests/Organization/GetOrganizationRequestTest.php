@@ -2,10 +2,10 @@
 
 use CodebarAg\DocuWare\Connectors\DocuWareStaticConnector;
 use CodebarAg\DocuWare\DTO\Config;
+use CodebarAg\DocuWare\DTO\Organization;
 use CodebarAg\DocuWare\Events\DocuWareResponseLog;
-use CodebarAg\DocuWare\Requests\FileCabinets\GetFileCabinetsRequest;
+use CodebarAg\DocuWare\Requests\Organization\GetOrganizationRequest;
 use CodebarAg\DocuWare\Support\EnsureValidCookie;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Event;
 
 uses()->group('docuware');
@@ -22,16 +22,15 @@ beforeEach(function () {
     ]);
 
     $this->connector = new DocuWareStaticConnector($config);
-
 });
 
-it('can list file cabinets', function () {
+it('can get an organization', function () {
     Event::fake();
 
-    $fileCabinets = $this->connector->send(new GetFileCabinetsRequest())->dto();
+    $orgID = config('docuware.tests.organization_id');
 
-    $this->assertInstanceOf(Collection::class, $fileCabinets);
-    $this->assertNotCount(0, $fileCabinets);
+    $organization = $this->connector->send(new GetOrganizationRequest($orgID))->dto();
+
+    $this->assertInstanceOf(Organization::class, $organization);
     Event::assertDispatched(DocuWareResponseLog::class);
-
-})->only();
+});

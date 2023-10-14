@@ -4,8 +4,8 @@ use CodebarAg\DocuWare\Connectors\DocuWareStaticConnector;
 use CodebarAg\DocuWare\DTO\Config;
 use CodebarAg\DocuWare\Events\DocuWareResponseLog;
 use CodebarAg\DocuWare\Requests\Document\DeleteDocumentRequest;
+use CodebarAg\DocuWare\Requests\Document\GetDocumentDownloadRequest;
 use CodebarAg\DocuWare\Requests\Document\PostDocumentRequest;
-use CodebarAg\DocuWare\Requests\Document\Thumbnail\GetDocumentDownloadThumbnailRequest;
 use CodebarAg\DocuWare\Support\EnsureValidCookie;
 use Illuminate\Support\Facades\Event;
 
@@ -25,7 +25,7 @@ beforeEach(function () {
     $this->connector = new DocuWareStaticConnector($config);
 });
 
-it('can download a document thumbnail', function () {
+it('can download a document', function () {
     Event::fake();
 
     $fileCabinetId = config('docuware.tests.file_cabinet_id');
@@ -36,14 +36,12 @@ it('can download a document thumbnail', function () {
         'example.txt'
     ))->dto();
 
-    $contents = $this->connector->send(new GetDocumentDownloadThumbnailRequest(
+    $contents = $this->connector->send(new GetDocumentDownloadRequest(
         $fileCabinetId,
-        $document->id,
-        $document->id - 1
+        $document->id
     ))->dto();
 
-    $this->assertSame('image/png', $contents->mime);
-    $this->assertSame(282, strlen($contents->data));
+    $this->assertSame(strlen('::fake-file-content::'), strlen($contents));
     Event::assertDispatched(DocuWareResponseLog::class);
 
     $this->connector->send(new DeleteDocumentRequest(

@@ -6,7 +6,7 @@ use CodebarAg\DocuWare\Events\DocuWareResponseLog;
 use CodebarAg\DocuWare\Support\EnsureValidResponse;
 use CodebarAg\DocuWare\Support\ParseValue;
 use Illuminate\Support\Collection;
-use Saloon\Contracts\Response;
+use Saloon\Http\Response;
 
 final class PutDocumentFieldsResponse
 {

@@ -5,7 +5,7 @@ namespace CodebarAg\DocuWare\Responses\Document\Thumbnail;
 use CodebarAg\DocuWare\DTO\DocumentThumbnail;
 use CodebarAg\DocuWare\Events\DocuWareResponseLog;
 use CodebarAg\DocuWare\Support\EnsureValidResponse;
-use Saloon\Contracts\Response;
+use Saloon\Http\Response;
 
 final class GetDocumentDownloadThumbnailResponse
 {

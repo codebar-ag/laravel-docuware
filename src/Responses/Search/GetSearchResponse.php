@@ -6,7 +6,7 @@ use CodebarAg\DocuWare\DTO\DocumentPaginator;
 use CodebarAg\DocuWare\Events\DocuWareResponseLog;
 use CodebarAg\DocuWare\Support\EnsureValidResponse;
 use Exception;
-use Saloon\Contracts\Response;
+use Saloon\Http\Response;
 
 final class GetSearchResponse
 {

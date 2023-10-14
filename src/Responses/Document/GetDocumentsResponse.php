@@ -6,7 +6,7 @@ use CodebarAg\DocuWare\DTO\Document;
 use CodebarAg\DocuWare\Events\DocuWareResponseLog;
 use CodebarAg\DocuWare\Support\EnsureValidResponse;
 use Illuminate\Support\Collection;
-use Saloon\Contracts\Response;
+use Saloon\Http\Response;
 
 final class GetDocumentsResponse
 {

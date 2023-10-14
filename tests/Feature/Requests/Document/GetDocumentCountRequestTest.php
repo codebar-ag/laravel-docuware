@@ -2,12 +2,11 @@
 
 use CodebarAg\DocuWare\Connectors\DocuWareStaticConnector;
 use CodebarAg\DocuWare\DTO\Config;
-use CodebarAg\DocuWare\DTO\Organization;
 use CodebarAg\DocuWare\Events\DocuWareResponseLog;
-use CodebarAg\DocuWare\Requests\Organization\GetOrganizationRequest;
-use CodebarAg\DocuWare\Requests\Organization\GetOrganizationsRequest;
+use CodebarAg\DocuWare\Requests\Document\DeleteDocumentRequest;
+use CodebarAg\DocuWare\Requests\Document\GetDocumentCountRequest;
+use CodebarAg\DocuWare\Requests\Document\PostDocumentRequest;
 use CodebarAg\DocuWare\Support\EnsureValidCookie;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Event;
 
 uses()->group('docuware');
@@ -26,23 +25,31 @@ beforeEach(function () {
     $this->connector = new DocuWareStaticConnector($config);
 });
 
-it('can list organizations', function () {
+it('can get a total count of documents', function () {
     Event::fake();
 
-    $organizations = $this->connector->send(new GetOrganizationsRequest())->dto();
+    $fileCabinetId = config('docuware.tests.file_cabinet_id');
+    $dialogId = config('docuware.tests.dialog_id');
 
-    $this->assertInstanceOf(Collection::class, $organizations);
-    $this->assertNotCount(0, $organizations);
+    $document = $this->connector->send(new PostDocumentRequest(
+        $fileCabinetId,
+        '::fake-file-content::',
+        'example.txt'
+    ))->dto();
+
+    $count = $this->connector->send(new GetDocumentCountRequest(
+        $fileCabinetId,
+        $dialogId
+    ))->dto();
+
+    $this->assertIsInt($count);
+
+    $this->assertSame(1, $count);
+
     Event::assertDispatched(DocuWareResponseLog::class);
-});
 
-it('can get an organization', function () {
-    Event::fake();
-
-    $orgID = config('docuware.tests.organization_id');
-
-    $organization = $this->connector->send(new GetOrganizationRequest($orgID))->dto();
-
-    $this->assertInstanceOf(Organization::class, $organization);
-    Event::assertDispatched(DocuWareResponseLog::class);
+    $this->connector->send(new DeleteDocumentRequest(
+        $fileCabinetId,
+        $document->id
+    ))->dto();
 });

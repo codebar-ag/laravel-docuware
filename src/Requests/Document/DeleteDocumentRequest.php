@@ -3,9 +3,9 @@
 namespace CodebarAg\DocuWare\Requests\Document;
 
 use CodebarAg\DocuWare\Responses\Document\DeleteDocumentResponse;
-use Saloon\Contracts\Response;
 use Saloon\Enums\Method;
 use Saloon\Http\Request;
+use Saloon\Http\Response;
 
 class DeleteDocumentRequest extends Request
 {

@@ -40,12 +40,12 @@ class GetSearchRequest extends Request implements Cacheable, HasBody
 
     public function resolveCacheDriver(): LaravelCacheDriver
     {
-        return new LaravelCacheDriver(Cache::store(config('docuware.configurations.cache.driver')));
+        return new LaravelCacheDriver(Cache::store(config('laravel-docuware.configurations.cache.driver')));
     }
 
     public function cacheExpiryInSeconds(): int
     {
-        return config('docuware.configurations.cache.lifetime_in_seconds', 3600);
+        return config('laravel-docuware.configurations.cache.lifetime_in_seconds', 3600);
     }
 
     public function defaultQuery(): array
@@ -72,10 +72,10 @@ class GetSearchRequest extends Request implements Cacheable, HasBody
                     'Direction' => $this->orderDirection,
                 ],
             ],
-            'Operation' => config('docuware.configurations.search.operation', 'And'),
-            'ForceRefresh' => config('docuware.configurations.search.force_refresh', true),
-            'IncludeSuggestions' => config('docuware.configurations.search.include_suggestions', false),
-            'AdditionalResultFields' => config('docuware.configurations.search.additional_result_fields', []),
+            'Operation' => config('laravel-docuware.configurations.search.operation', 'And'),
+            'ForceRefresh' => config('laravel-docuware.configurations.search.force_refresh', true),
+            'IncludeSuggestions' => config('laravel-docuware.configurations.search.include_suggestions', false),
+            'AdditionalResultFields' => config('laravel-docuware.configurations.search.additional_result_fields', []),
         ];
     }
 

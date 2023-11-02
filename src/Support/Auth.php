@@ -29,7 +29,7 @@ class Auth
                     Arr::get($cookie, 'Name') => Arr::get($cookie, 'Value'),
                     'CreatedAt' => now()->toDateTimeString(),
                 ],
-                now()->addMinutes(config('docuware.cookie_lifetime')),
+                now()->addMinutes(config('laravel-docuware.cookie_lifetime')),
             );
     }
 
@@ -60,11 +60,11 @@ class Auth
     public static function domain(): string
     {
         throw_if(
-            empty(config('docuware.credentials.url')),
+            empty(config('laravel-docuware.credentials.url')),
             UnableToFindUrlCredential::create(),
         );
 
-        return Str::of(config('docuware.credentials.url'))
+        return Str::of(config('laravel-docuware.credentials.url'))
             ->after('//')
             ->beforeLast('/')
             ->__toString();
@@ -77,6 +77,6 @@ class Auth
 
     protected static function cacheDriver(): string
     {
-        return config('docuware.cache_driver', self::FALLBACK_CACHE_DRIVER);
+        return config('laravel-docuware.cache_driver', self::FALLBACK_CACHE_DRIVER);
     }
 }

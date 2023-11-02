@@ -12,7 +12,7 @@ class DocuWareServiceProvider extends PackageServiceProvider
     {
         $package
             ->name('laravel-docuware')
-            ->hasConfigFile()
+            ->hasConfigFile('laravel-docuware')
             ->hasCommand(ListAuthCookie::class);
     }
 }

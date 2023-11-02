@@ -29,12 +29,12 @@ class GetDocumentsRequest extends Request implements Cacheable
 
     public function resolveCacheDriver(): LaravelCacheDriver
     {
-        return new LaravelCacheDriver(Cache::store(config('docuware.configurations.cache.driver')));
+        return new LaravelCacheDriver(Cache::store(config('laravel-docuware.configurations.cache.driver')));
     }
 
     public function cacheExpiryInSeconds(): int
     {
-        return config('docuware.configurations.cache.lifetime_in_seconds', 3600);
+        return config('laravel-docuware.configurations.cache.lifetime_in_seconds', 3600);
     }
 
     public function createDtoFromResponse(Response $response): mixed

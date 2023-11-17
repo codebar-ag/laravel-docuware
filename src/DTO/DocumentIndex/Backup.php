@@ -1,11 +1,11 @@
 <?php
 
-namespace CodebarAg\DocuWare\DTO;
+namespace CodebarAg\DocuWare\DTO\DocumentIndex;
 
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 
-class DocumentIndex
+class Backup
 {
     public string $type;
 
@@ -35,7 +35,7 @@ class DocumentIndex
     {
         $indexContent = (object) [
             'Fields' => $indexes
-                ->map(fn (DocumentIndex $index) => $index->values())
+                ->map(fn (IndexTable $index) => $index->values())
                 ->toArray(),
         ];
 
@@ -46,7 +46,7 @@ class DocumentIndex
     {
         $columnValues = (object) [
             'ColumnValue' => $indexes
-                ->map(fn (DocumentIndex $index) => $index->values())
+                ->map(fn (IndexTable $index) => $index->values())
                 ->toArray(),
         ];
 
@@ -83,11 +83,6 @@ class DocumentIndex
         $rows = collect();
 
         collect($values)->each(function ($item) use ($fields, $rows) {
-
-            if (Arr::get($item, 'LineItemType') != 'NORMAL') {
-                return;
-            }
-
             $rows->push(self::row($fields, $item));
         })->toArray();
 
@@ -117,10 +112,10 @@ class DocumentIndex
             }
 
             if (in_array($type, ['String', 'Integer', 'Decimal', 'Date'])) {
-                $indexes->push(DocumentIndex::make($field, $value));
+                $indexes->push(IndexTable::make($field, $value));
             }
         });
 
-        return DocumentIndex::makeColumnValue($indexes);
+        return IndexTable::makeColumnValue($indexes);
     }
 }

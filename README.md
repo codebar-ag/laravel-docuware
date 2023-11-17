@@ -188,11 +188,11 @@ $content = $connector->send(new GetDocumentCountRequest($fileCabinetId, $dialogI
 /**
  * Upload new document with index values.
  */
-use CodebarAg\DocuWare\DTO\DocumentIndex;
+use CodebarAg\DocuWare\DTO\Index;
  
 $indexes = collect([
-    DocumentIndex::make('DOCUMENT_TEXT', 'Indexed Text'),
-    DocumentIndex::make('DOCUMENT_NUMBER', 42),
+    Index::make('DOCUMENT_TEXT', 'Indexed Text'),
+    Index::make('DOCUMENT_NUMBER', 42),
 ]);
 
 $document = $connector->send(new PostDocumentRequest(

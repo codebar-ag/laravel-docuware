@@ -2,7 +2,7 @@
 
 namespace CodebarAg\DocuWare\Requests\Document;
 
-use CodebarAg\DocuWare\DTO\DocumentIndex\PrepareIndex;
+use CodebarAg\DocuWare\DTO\DocumentIndex\PrepareIndexDTO;
 use CodebarAg\DocuWare\Responses\Document\PostDocumentResponse;
 use Illuminate\Support\Collection;
 use Saloon\Contracts\Body\HasBody;
@@ -36,7 +36,7 @@ class PostDocumentRequest extends Request implements HasBody
         $body = [];
 
         if ($this->indexes) {
-            $indexContent = PrepareIndex::makeContent($this->indexes);
+            $indexContent = PrepareIndexDTO::makeContent($this->indexes);
 
             $body[] = new MultipartValue(name: 'document', value: $indexContent, filename: 'index.json');
         }

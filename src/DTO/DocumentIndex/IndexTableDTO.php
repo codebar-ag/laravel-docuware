@@ -5,7 +5,7 @@ namespace CodebarAg\DocuWare\DTO\DocumentIndex;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 
-class IndexTable
+class IndexTableDTO
 {
     public function __construct(
         public string $name,
@@ -38,7 +38,7 @@ class IndexTable
                 $name = Arr::get($column, 'NAME');
                 $value = Arr::get($column, 'VALUE');
 
-                return PrepareIndexTable::make($name, $value);
+                return PrepareIndexTableDTO::make($name, $value);
             });
 
             return self::makeRowContent($indexes);
@@ -49,7 +49,7 @@ class IndexTable
     {
         $row = (object) [
             'ColumnValue' => $indexes
-                ->map(fn (IndexText|IndexDate|IndexDecimal $index) => $index->values())
+                ->map(fn (IndexTextDTO|IndexDateDTO|IndexDecimalDTO $index) => $index->values())
                 ->filter()
                 ->values()
                 ->toArray(),

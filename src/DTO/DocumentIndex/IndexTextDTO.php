@@ -2,7 +2,7 @@
 
 namespace CodebarAg\DocuWare\DTO\DocumentIndex;
 
-class IndexText
+class IndexTextDTO
 {
     public function __construct(
         public string $name,

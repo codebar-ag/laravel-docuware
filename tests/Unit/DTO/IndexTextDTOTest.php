@@ -1,20 +1,18 @@
 <?php
 
-namespace CodebarAg\DocuWare\Tests\Feature;
+namespace CodebarAg\DocuWare\Tests\Unit\DTO;
 
-use CodebarAg\DocuWare\DTO\DocumentIndex\IndexText;
+use CodebarAg\DocuWare\DTO\DocumentIndex\IndexTextDTO;
 
-uses()->group('dto');
-
-it('create a fake organization', function () {
+it('create prepare index text dto', function () {
 
     $name = 'Name';
     $value = 'String Value';
 
-    $instance = IndexText::make($name, $value);
+    $instance = IndexTextDTO::make($name, $value);
 
     expect($instance)
-        ->toBeInstanceOf(IndexText::class)
+        ->toBeInstanceOf(IndexTextDTO::class)
         ->and($instance->values())
         ->toBeArray()
         ->toMatchArray([
@@ -23,4 +21,4 @@ it('create a fake organization', function () {
             'ItemElementName' => 'String',
         ]);
 
-});
+})->group('dto');

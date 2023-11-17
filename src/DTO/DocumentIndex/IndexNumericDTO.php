@@ -2,7 +2,7 @@
 
 namespace CodebarAg\DocuWare\DTO\DocumentIndex;
 
-class IndexNumeric
+class IndexNumericDTO
 {
     public string $type;
 

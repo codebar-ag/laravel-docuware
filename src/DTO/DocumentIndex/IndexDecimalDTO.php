@@ -2,7 +2,7 @@
 
 namespace CodebarAg\DocuWare\DTO\DocumentIndex;
 
-class IndexDecimal
+class IndexDecimalDTO
 {
     public function __construct(
         public string $name,

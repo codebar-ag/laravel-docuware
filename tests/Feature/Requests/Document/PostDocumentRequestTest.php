@@ -4,7 +4,7 @@ use CodebarAg\DocuWare\Connectors\DocuWareStaticConnector;
 use CodebarAg\DocuWare\DTO\Config;
 use CodebarAg\DocuWare\DTO\Document;
 use CodebarAg\DocuWare\DTO\DocumentField;
-use CodebarAg\DocuWare\DTO\DocumentIndex\IndexText;
+use CodebarAg\DocuWare\DTO\DocumentIndex\IndexTextDTO;
 use CodebarAg\DocuWare\Events\DocuWareResponseLog;
 use CodebarAg\DocuWare\Requests\Document\DeleteDocumentRequest;
 use CodebarAg\DocuWare\Requests\Document\PostDocumentRequest;
@@ -39,7 +39,7 @@ it('can upload document with index values and delete it', function () {
         $fileContent,
         $fileName,
         collect([
-            IndexText::make('DOCUMENT_LABEL', '::text::'),
+            IndexTextDTO::make('DOCUMENT_LABEL', '::text::'),
         ]),
     ))->dto();
 

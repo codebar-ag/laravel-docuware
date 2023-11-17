@@ -11,17 +11,17 @@ class EnsureValidCredentials
     public static function check(): void
     {
         throw_if(
-            empty(config('docuware.credentials.url')),
+            empty(config('laravel-docuware.credentials.url')),
             UnableToFindUrlCredential::create(),
         );
 
         throw_if(
-            empty(config('docuware.credentials.username')),
+            empty(config('laravel-docuware.credentials.username')),
             UnableToFindUserCredential::create(),
         );
 
         throw_if(
-            empty(config('docuware.credentials.password')),
+            empty(config('laravel-docuware.credentials.password')),
             UnableToFindPasswordCredential::create(),
         );
 

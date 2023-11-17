@@ -15,14 +15,14 @@ class PostLogonRequest extends SoloRequest implements HasBody
 
     public function resolveEndpoint(): string
     {
-        return config('docuware.credentials.url').'/DocuWare/Platform/Account/Logon';
+        return config('laravel-docuware.credentials.url').'/DocuWare/Platform/Account/Logon';
     }
 
     protected function defaultBody(): array
     {
         return [
-            'UserName' => config('docuware.credentials.username'),
-            'Password' => config('docuware.credentials.password'),
+            'UserName' => config('laravel-docuware.credentials.username'),
+            'Password' => config('laravel-docuware.credentials.password'),
             'RememberMe' => false,
             'RedirectToMyselfInCaseOfError' => false,
             'LicenseType' => null,

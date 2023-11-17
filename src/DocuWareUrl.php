@@ -52,8 +52,8 @@ class DocuWareUrl
 
         $credentials = sprintf(
             'User=%s\nPwd=%s',
-            config('docuware.credentials.username'),
-            config('docuware.credentials.password'),
+            config('laravel-docuware.credentials.username'),
+            config('laravel-docuware.credentials.password'),
         );
 
         $lc = URL::formatWithBase64($credentials);
@@ -79,7 +79,7 @@ class DocuWareUrl
         }
 
         // Source: https://support.docuware.com/en-US/forums/help-with-technical-problems/ea9618df-c491-e911-80e7-0003ff59a7c6
-        $key = utf8_encode(config('docuware.passphrase'));
+        $key = utf8_encode(config('laravel-docuware.passphrase'));
         $passphrase = hash('sha512', $key, true);
         $encryption_key = substr($passphrase, 0, 32);
         $iv = substr($passphrase, 32, 16);
@@ -93,7 +93,7 @@ class DocuWareUrl
 
         return sprintf(
             '%s/DocuWare/Platform/WebClient/Integration?ep=%s',
-            config('docuware.credentials.url'),
+            config('laravel-docuware.credentials.url'),
             URL::format($encrypted),
         );
     }

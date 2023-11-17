@@ -15,11 +15,11 @@ beforeEach(function () {
     EnsureValidCookie::check();
 
     $config = Config::make([
-        'url' => config('docuware.credentials.url'),
-        'cookie' => config('docuware.cookies'),
-        'cache_driver' => config('docuware.configurations.cache.driver'),
-        'cache_lifetime_in_seconds' => config('docuware.configurations.cache.lifetime_in_seconds'),
-        'request_timeout_in_seconds' => config('docuware.timeout'),
+        'url' => config('laravel-docuware.credentials.url'),
+        'cookie' => config('laravel-docuware.cookies'),
+        'cache_driver' => config('laravel-docuware.configurations.cache.driver'),
+        'cache_lifetime_in_seconds' => config('laravel-docuware.configurations.cache.lifetime_in_seconds'),
+        'request_timeout_in_seconds' => config('laravel-docuware.timeout'),
     ]);
 
     $this->connector = new DocuWareStaticConnector($config);
@@ -28,7 +28,7 @@ beforeEach(function () {
 it('can list dialogs for a file cabinet', function () {
     Event::fake();
 
-    $fileCabinetId = config('docuware.tests.file_cabinet_id');
+    $fileCabinetId = config('laravel-docuware.tests.file_cabinet_id');
 
     $dialogs = $this->connector->send(new GetDialogsRequest($fileCabinetId))->dto();
 

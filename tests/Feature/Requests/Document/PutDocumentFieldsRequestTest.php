@@ -16,11 +16,11 @@ beforeEach(function () {
     EnsureValidCookie::check();
 
     $config = Config::make([
-        'url' => config('docuware.credentials.url'),
-        'cookie' => config('docuware.cookies'),
-        'cache_driver' => config('docuware.configurations.cache.driver'),
-        'cache_lifetime_in_seconds' => config('docuware.configurations.cache.lifetime_in_seconds'),
-        'request_timeout_in_seconds' => config('docuware.timeout'),
+        'url' => config('laravel-docuware.credentials.url'),
+        'cookie' => config('laravel-docuware.cookies'),
+        'cache_driver' => config('laravel-docuware.configurations.cache.driver'),
+        'cache_lifetime_in_seconds' => config('laravel-docuware.configurations.cache.lifetime_in_seconds'),
+        'request_timeout_in_seconds' => config('laravel-docuware.timeout'),
     ]);
 
     $this->connector = new DocuWareStaticConnector($config);
@@ -29,7 +29,7 @@ beforeEach(function () {
 it('can update a document value', function () {
     Event::fake();
 
-    $fileCabinetId = config('docuware.tests.file_cabinet_id');
+    $fileCabinetId = config('laravel-docuware.tests.file_cabinet_id');
     $newValue = 'laravel-docuware';
 
     $document = $this->connector->send(new PostDocumentRequest(
@@ -56,7 +56,7 @@ it('can update a document value', function () {
 it('can update multiple document values', function () {
     Event::fake();
 
-    $fileCabinetId = config('docuware.tests.file_cabinet_id');
+    $fileCabinetId = config('laravel-docuware.tests.file_cabinet_id');
     $values = [
         'UUID' => 'laravel-docuware',
         'DOCUMENT_LABEL' => 'laravel-docuware-2',

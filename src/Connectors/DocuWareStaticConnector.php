@@ -25,7 +25,7 @@ class DocuWareStaticConnector extends Connector
      */
     public function resolveBaseUrl(): string
     {
-        return config('docuware.credentials.url').'/DocuWare/Platform';
+        return config('laravel-docuware.credentials.url').'/DocuWare/Platform';
     }
 
     public function defaultHeaders(): array
@@ -38,7 +38,7 @@ class DocuWareStaticConnector extends Connector
     public function defaultConfig(): array
     {
         return [
-            'timeout' => config('docuware.timeout'),
+            'timeout' => config('laravel-docuware.timeout'),
             'cookies' => $this->cookieJar,
         ];
     }

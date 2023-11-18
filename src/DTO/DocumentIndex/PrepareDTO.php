@@ -4,7 +4,7 @@ namespace CodebarAg\DocuWare\DTO\DocumentIndex;
 
 use Illuminate\Support\Collection;
 
-class PrepareIndexDTO
+class PrepareDTO
 {
     public static function guess(string $name, mixed $value): mixed
     {

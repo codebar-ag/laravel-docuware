@@ -38,7 +38,7 @@ class IndexTableDTO
                 $name = Arr::get($column, 'NAME');
                 $value = Arr::get($column, 'VALUE');
 
-                return PrepareIndexTableDTO::make($name, $value);
+                return PrepareTableDTO::make($name, $value);
             });
 
             return self::makeRowContent($indexes);

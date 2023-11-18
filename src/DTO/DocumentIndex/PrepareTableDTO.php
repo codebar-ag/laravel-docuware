@@ -2,7 +2,7 @@
 
 namespace CodebarAg\DocuWare\DTO\DocumentIndex;
 
-class PrepareIndexTableDTO
+class PrepareTableDTO
 {
     public static function make(string $name, mixed $value): mixed
     {

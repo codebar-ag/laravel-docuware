@@ -3,14 +3,14 @@
 namespace CodebarAg\DocuWare\Tests\Unit\DTO;
 
 use CodebarAg\DocuWare\DTO\DocumentIndex\IndexDateDTO;
-use CodebarAg\DocuWare\DTO\DocumentIndex\PrepareIndexTableDTO;
+use CodebarAg\DocuWare\DTO\DocumentIndex\PrepareDTO;
 
-it('create prepare index table dto', function () {
+it('can guess the index dto', function () {
 
     $name = 'Date';
     $value = now();
 
-    $instance = PrepareIndexTableDTO::make($name, $value);
+    $instance = PrepareDTO::guess($name, $value);
 
     expect($instance)
         ->toBeInstanceOf(IndexDateDTO::class);

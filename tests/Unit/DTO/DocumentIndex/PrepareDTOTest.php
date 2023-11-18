@@ -22,6 +22,6 @@ it('create prepare makeContent dto', function () {
     $indexes = collect([PrepareDTO::guess($name, $value)]);
 
     expect(PrepareDTO::makeContent($indexes))
-        ->toBeJson();
+        ->toBeArray();
 
 })->group('dto');

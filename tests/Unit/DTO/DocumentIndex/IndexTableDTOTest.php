@@ -45,7 +45,6 @@ it('create prepare index text dto', function () {
     expect($instance)
         ->toBeInstanceOf(IndexTableDTO::class);
 
-    ray($instance->values());
     expect($instance->values())
         ->toBeArray()
         ->toMatchArray([
@@ -81,4 +80,4 @@ it('create prepare index text dto', function () {
             'ItemElementName' => 'Table',
         ]);
 
-})->group('dto', 'table');
+})->group('dto');

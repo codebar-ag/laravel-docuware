@@ -3,16 +3,25 @@
 namespace CodebarAg\DocuWare\Tests\Unit\DTO;
 
 use CodebarAg\DocuWare\DTO\DocumentIndex\IndexDateDTO;
+use CodebarAg\DocuWare\DTO\DocumentIndex\IndexTextDTO;
 use CodebarAg\DocuWare\DTO\DocumentIndex\PrepareDTO;
 
-it('can guess the index dto', function () {
+it('create prepare index dto', function () {
+
+    expect(PrepareDTO::guess('String', 'Text'))->toBeInstanceOf(IndexTextDTO::class);
+    expect(PrepareDTO::guess('Numeric', 'Text'))->toBeInstanceOf(IndexTextDTO::class);
+    expect(PrepareDTO::guess('Date', now()))->toBeInstanceOf(IndexDateDTO::class);
+
+})->group('dto');
+
+it('create prepare makeContent dto', function () {
 
     $name = 'Date';
     $value = now();
 
-    $instance = PrepareDTO::guess($name, $value);
+    $indexes = collect([PrepareDTO::guess($name, $value)]);
 
-    expect($instance)
-        ->toBeInstanceOf(IndexDateDTO::class);
+    expect(PrepareDTO::makeContent($indexes))
+        ->toBeJson();
 
 })->group('dto');

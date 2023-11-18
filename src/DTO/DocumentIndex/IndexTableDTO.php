@@ -9,12 +9,12 @@ class IndexTableDTO
 {
     public function __construct(
         public string $name,
-        public array $rows,
+        public Collection|array $rows,
     ) {
 
     }
 
-    public static function make(string $name, array $rows): self
+    public static function make(string $name, Collection|array $rows): self
     {
         return new self($name, $rows);
     }
@@ -25,36 +25,52 @@ class IndexTableDTO
             'FieldName' => $this->name,
             'Item' => [
                 '$type' => 'DocumentIndexFieldTable',
-                'Row' => self::rows(),
+                'Row' => self::rowsCollection(),
             ],
             'ItemElementName' => 'Table',
         ];
     }
 
-    protected function rows(): array
+    protected function rowsCollection(): array
     {
-        return collect($this->rows)->each(function ($row) {
+        return collect($this->rows)->map(function ($row) {
+
             $indexes = collect($row)->map(function ($column) {
+
+                if (! Arr::has($column, ['NAME', 'VALUE'])) {
+                    return null;
+                }
+
                 $name = Arr::get($column, 'NAME');
                 $value = Arr::get($column, 'VALUE');
 
                 return PrepareTableDTO::make($name, $value);
-            });
+
+            })
+                ->filter()
+                ->values();
+
+            if ($indexes->isEmpty()) {
+                return null;
+            }
 
             return self::makeRowContent($indexes);
-        })->filter()->values()->toArray();
+
+        })
+            ->filter()
+            ->values()
+            ->toArray();
+
     }
 
-    public static function makeRowContent(Collection $indexes): object
+    public static function makeRowContent(Collection $indexes): array
     {
-        $row = (object) [
+        return [
             'ColumnValue' => $indexes
                 ->map(fn (IndexTextDTO|IndexDateDTO|IndexDecimalDTO $index) => $index->values())
                 ->filter()
                 ->values()
                 ->toArray(),
         ];
-
-        return $row;
     }
 }

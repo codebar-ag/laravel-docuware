@@ -19,16 +19,13 @@ class PrepareDTO
         };
     }
 
-    public static function makeContent(Collection $indexes): string
+    public static function makeContent(Collection $indexes): array
     {
-        $indexContent = (object) [
+        return [
             'Fields' => $indexes
                 ->map(fn (IndexTextDTO|IndexDateDTO|IndexNumericDTO|IndexDecimalDTO|IndexTableDTO $index) => $index->values())
                 ->filter()
-                ->values()
-                ->toArray(),
+                ->values(),
         ];
-
-        return json_encode($indexContent);
     }
 }

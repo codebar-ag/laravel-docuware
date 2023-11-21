@@ -20,6 +20,12 @@ then optimize the processes that power the core of your business.
 
 ## 🛠 Requirements
 
+### > = v4.0 (alpha)
+
+- PHP: `^8.2``
+- Laravel: `^11.*`
+- DocuWare Cloud Access
+
 ### > = v3.0
 
 - PHP: `^8.2``
@@ -188,11 +194,13 @@ $content = $connector->send(new GetDocumentCountRequest($fileCabinetId, $dialogI
 /**
  * Upload new document with index values.
  */
-use CodebarAg\DocuWare\DTO\Index;
+use CodebarAg\DocuWare\DTO\DocumentIndex\PrepareDTO;
  
 $indexes = collect([
-    Index::make('DOCUMENT_TEXT', 'Indexed Text'),
-    Index::make('DOCUMENT_NUMBER', 42),
+    PrepareDTO::make('FIELD_TEXT', 'Indexed Text'),
+    PrepareDTO::make('FIELD_NUMERIC', 1),
+    PrepareDTO::make('FIELD_DECIMAL', 1.00),
+    PrepareDTO::make('FIELD_DATE', now()),
 ]);
 
 $document = $connector->send(new PostDocumentRequest(
@@ -413,15 +421,15 @@ CodebarAg\DocuWare\DTO\DocumentIndex\IndexDecimalDTO {
 
 ```php
 use CodebarAg\DocuWare\DTO\DocumentIndex\IndexDateDTO {
-  +name: "FIELD_DATE"                                       // string
-  +value: Carbon::class                                    // Carbon
+  +name: "FIELD_DATE"                                      // string
+  +value: now(),                                           // Carbon
 }
 ```
 
 ```php
 use CodebarAg\DocuWare\DTO\DocumentIndex\IndexDateTimeDTO {
   +name: "FIELD_DATETIME"                                     // string
-  +value: Carbon::class                                      // Carbon
+  +value: now(),                                             // Carbon
 }
 ```
 
@@ -443,7 +451,7 @@ use CodebarAg\DocuWare\DTO\DocumentIndex\IndexTableDTO {
             'VALUE' => 1.00,
          ],
       ]
-]);                                                         // Collection|array
+])                                                         // Collection|array
 }
 ```
 

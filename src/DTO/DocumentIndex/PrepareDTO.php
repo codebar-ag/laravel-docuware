@@ -23,7 +23,7 @@ class PrepareDTO
     {
         return [
             'Fields' => $indexes
-                ->map(fn (IndexTextDTO|IndexDateDTO|IndexNumericDTO|IndexDecimalDTO|IndexTableDTO $index) => $index->values())
+                ->map(fn (IndexTextDTO|IndexDateDTO|IndexDateTimeDTO|IndexNumericDTO|IndexDecimalDTO|IndexTableDTO $index) => $index->values())
                 ->filter()
                 ->values(),
         ];

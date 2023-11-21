@@ -43,9 +43,8 @@ it('create prepare index text dto', function () {
     $instance = IndexTableDTO::make($name, $rows);
 
     expect($instance)
-        ->toBeInstanceOf(IndexTableDTO::class);
-
-    expect($instance->values())
+        ->toBeInstanceOf(IndexTableDTO::class)
+        ->and($instance->values())
         ->toBeArray()
         ->toMatchArray([
             'FieldName' => 'TABLE',

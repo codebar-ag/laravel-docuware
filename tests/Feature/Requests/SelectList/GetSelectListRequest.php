@@ -2,7 +2,7 @@
 
 use CodebarAg\DocuWare\Connectors\DocuWareStaticConnector;
 use CodebarAg\DocuWare\DTO\Config;
-use CodebarAg\DocuWare\DTO\Index;
+use CodebarAg\DocuWare\DTO\DocumentIndex\IndexTextDTO;
 use CodebarAg\DocuWare\Events\DocuWareResponseLog;
 use CodebarAg\DocuWare\Requests\Document\DeleteDocumentRequest;
 use CodebarAg\DocuWare\Requests\Document\PostDocumentRequest;
@@ -38,7 +38,7 @@ it('can list values for a select list', function () {
         '::fake-file-content::',
         'example.txt',
         collect([
-            Index::make($fieldName, 'laravel-docuware'),
+            IndexTextDTO::make($fieldName, 'laravel-docuware'),
         ])
     ))->dto();
 

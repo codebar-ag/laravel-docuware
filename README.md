@@ -20,6 +20,12 @@ then optimize the processes that power the core of your business.
 
 ## 🛠 Requirements
 
+### > = v4.0 (alpha)
+
+- PHP: `^8.2``
+- Laravel: `^11.*`
+- DocuWare Cloud Access
+
 ### > = v3.0
 
 - PHP: `^8.2``
@@ -188,11 +194,13 @@ $content = $connector->send(new GetDocumentCountRequest($fileCabinetId, $dialogI
 /**
  * Upload new document with index values.
  */
-use CodebarAg\DocuWare\DTO\DocumentIndex;
+use CodebarAg\DocuWare\DTO\DocumentIndex\PrepareDTO;
  
 $indexes = collect([
-    DocumentIndex::make('DOCUMENT_TEXT', 'Indexed Text'),
-    DocumentIndex::make('DOCUMENT_NUMBER', 42),
+    PrepareDTO::make('FIELD_TEXT', 'Indexed Text'),
+    PrepareDTO::make('FIELD_NUMERIC', 1),
+    PrepareDTO::make('FIELD_DECIMAL', 1.00),
+    PrepareDTO::make('FIELD_DATE', now()),
 ]);
 
 $document = $connector->send(new PostDocumentRequest(
@@ -387,6 +395,65 @@ $url = DocuWare::url()
 ```
 
 Please see [Tests](tests/Feature/DocuWare.php) for more details.
+
+## 🏋️ Document Index Fields DTO showcase
+
+```php
+CodebarAg\DocuWare\DTO\DocumentIndex\IndexTextDTO {
+  +name: "FIELD_TEXT"                               // string
+  +value: "Value"                                   // string
+}
+```
+
+```php
+CodebarAg\DocuWare\DTO\DocumentIndex\IndexNumericDTO {
+  +name: "FIELD_NUMERIC"                                 // string
+  +value: 1                                             // int
+}
+```
+
+```php
+CodebarAg\DocuWare\DTO\DocumentIndex\IndexDecimalDTO {
+  +name: "FIELD_DECIMAL"                                  // string
+  +value: 1.00                                           // int|float
+}
+```
+
+```php
+use CodebarAg\DocuWare\DTO\DocumentIndex\IndexDateDTO {
+  +name: "FIELD_DATE"                                      // string
+  +value: now(),                                           // Carbon
+}
+```
+
+```php
+use CodebarAg\DocuWare\DTO\DocumentIndex\IndexDateTimeDTO {
+  +name: "FIELD_DATETIME"                                     // string
+  +value: now(),                                             // Carbon
+}
+```
+
+```php
+use CodebarAg\DocuWare\DTO\DocumentIndex\IndexTableDTO {
+  +name: "FIELD_TABLE"                                        // string
+  +value: collect([
+      0 => [
+         [
+            'NAME' => 'TABLE_ID',
+            'VALUE' => '1',
+         ],
+         [
+            'NAME' => 'TABLE_DATE',
+            'VALUE' => Carbon::class 
+         ],
+         [
+            'NAME' => 'TABLE_DECIMALE',
+            'VALUE' => 1.00,
+         ],
+      ]
+])                                                         // Collection|array
+}
+```
 
 ## 🏋️ DTO showcase
 

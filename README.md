@@ -401,35 +401,35 @@ Please see [Tests](tests/Feature/DocuWare.php) for more details.
 ```php
 CodebarAg\DocuWare\DTO\DocumentIndex\IndexTextDTO {
   +name: "FIELD_TEXT"                               // string
-  +value: "Value"                                   // string
+  +value: "Value"                                   // null|string
 }
 ```
 
 ```php
 CodebarAg\DocuWare\DTO\DocumentIndex\IndexNumericDTO {
   +name: "FIELD_NUMERIC"                                 // string
-  +value: 1                                             // int
+  +value: 1                                             // null|int
 }
 ```
 
 ```php
 CodebarAg\DocuWare\DTO\DocumentIndex\IndexDecimalDTO {
   +name: "FIELD_DECIMAL"                                  // string
-  +value: 1.00                                           // int|float
+  +value: 1.00                                           // null|int|float
 }
 ```
 
 ```php
 use CodebarAg\DocuWare\DTO\DocumentIndex\IndexDateDTO {
   +name: "FIELD_DATE"                                      // string
-  +value: now(),                                           // Carbon
+  +value: now(),                                           // null|Carbon
 }
 ```
 
 ```php
 use CodebarAg\DocuWare\DTO\DocumentIndex\IndexDateTimeDTO {
   +name: "FIELD_DATETIME"                                     // string
-  +value: now(),                                             // Carbon
+  +value: now(),                                             // null|Carbon
 }
 ```
 
@@ -451,7 +451,7 @@ use CodebarAg\DocuWare\DTO\DocumentIndex\IndexTableDTO {
             'VALUE' => 1.00,
          ],
       ]
-])                                                         // Collection|array
+])                                                         // null|Collection|array
 }
 ```
 

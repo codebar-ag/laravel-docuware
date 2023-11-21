@@ -9,12 +9,12 @@ class IndexTableDTO
 {
     public function __construct(
         public string $name,
-        public Collection|array $rows,
+        public null|Collection|array $rows,
     ) {
 
     }
 
-    public static function make(string $name, Collection|array $rows): self
+    public static function make(string $name, null|Collection|array $rows): self
     {
         return new self($name, $rows);
     }
@@ -33,7 +33,7 @@ class IndexTableDTO
 
     protected function rowsCollection(): array
     {
-        return collect($this->rows)->map(function ($row) {
+        return collect($this->rows ?? [])->map(function ($row) {
 
             $indexes = collect($row)->map(function ($column) {
 

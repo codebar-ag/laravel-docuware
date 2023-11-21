@@ -8,12 +8,12 @@ class IndexDateTimeDTO
 {
     public function __construct(
         public string $name,
-        public Carbon $value,
+        public ?Carbon $value,
     ) {
 
     }
 
-    public static function make(string $name, Carbon $value): self
+    public static function make(string $name, ?Carbon $value): self
     {
         return new self($name, $value);
     }

@@ -171,7 +171,7 @@ $thumbnail = $connector->send(new GetDocumentDownloadThumbnailRequest($fileCabin
 /**
  * Update value of a indexed field.
  */
-$value = $connector->send(new PutDocumentFieldsRequest($fileCabinetId, $documentId, [$fieldName => $newValue]))->dto()[$fieldName];
+$value = $connector->send(new PutDocumentFieldsRequest($fileCabinetId, $documentId, [$fieldName => $newValue]))->dto();
 
 /**
  * Update multiple values of indexed fields.

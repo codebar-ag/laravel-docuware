@@ -222,7 +222,6 @@ it('can search documents with null values', function () {
     Event::assertDispatched(DocuWareResponseLog::class);
 })->group('search');
 
-
 it('can search documents with multiple values', function () {
     Event::fake();
 

@@ -119,6 +119,16 @@ class DocuWareSearchRequestBuilder
         return $this;
     }
 
+    public function filterIn(string $name, mixed $values): self
+    {
+        $builder = $this;
+        foreach ($values as $value) {
+            $builder = $builder->filter($name, $value);
+        }
+
+        return $builder;
+    }
+
     /**
      * @throws \ReflectionException
      * @throws InvalidResponseClassException

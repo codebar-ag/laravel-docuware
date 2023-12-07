@@ -221,3 +221,26 @@ it('can search documents with null values', function () {
     $this->assertInstanceOf(DocumentPaginator::class, $paginator);
     Event::assertDispatched(DocuWareResponseLog::class);
 })->group('search');
+
+
+it('can search documents with multiple values', function () {
+    Event::fake();
+
+    $fileCabinetIds = [
+        config('laravel-docuware.tests.file_cabinet_id'),
+    ];
+
+    $paginatorRequest = (new DocuWare())
+        ->searchRequestBuilder()
+        ->fileCabinets($fileCabinetIds)
+        ->page(null)
+        ->perPage(null)
+        ->fulltext(null)
+        ->filterIn('DOCUMENT_TYPE', ['Abrechnung', 'Rechnung'])
+        ->get();
+
+    $paginator = $this->connector->send($paginatorRequest)->dto();
+
+    $this->assertInstanceOf(DocumentPaginator::class, $paginator);
+    Event::assertDispatched(DocuWareResponseLog::class);
+})->group('search');

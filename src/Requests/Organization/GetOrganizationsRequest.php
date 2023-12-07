@@ -3,6 +3,8 @@
 namespace CodebarAg\DocuWare\Requests\Organization;
 
 use CodebarAg\DocuWare\Responses\Organization\GetOrganizationsResponse;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Enumerable;
 use Illuminate\Support\Facades\Cache;
 use Saloon\CachePlugin\Contracts\Cacheable;
 use Saloon\CachePlugin\Drivers\LaravelCacheDriver;
@@ -32,7 +34,7 @@ class GetOrganizationsRequest extends Request implements Cacheable
         return config('laravel-docuware.configurations.cache.lifetime_in_seconds', 3600);
     }
 
-    public function createDtoFromResponse(Response $response): mixed
+    public function createDtoFromResponse(Response $response): Collection|Enumerable
     {
         return GetOrganizationsResponse::fromResponse($response);
     }

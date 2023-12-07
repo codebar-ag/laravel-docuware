@@ -46,7 +46,7 @@ class GetDocumentDownloadRequest extends Request implements Cacheable
         ];
     }
 
-    public function createDtoFromResponse(Response $response): mixed
+    public function createDtoFromResponse(Response $response): string
     {
         return GetDocumentDownloadResponse::fromResponse($response);
     }

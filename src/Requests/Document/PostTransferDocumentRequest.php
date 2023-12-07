@@ -54,7 +54,7 @@ class PostTransferDocumentRequest extends Request implements HasBody
         ];
     }
 
-    public function createDtoFromResponse(Response $response): mixed
+    public function createDtoFromResponse(Response $response): bool
     {
         return PostTransferDocumentResponse::fromResponse($response);
     }

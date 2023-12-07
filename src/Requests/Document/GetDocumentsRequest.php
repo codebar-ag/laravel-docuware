@@ -3,6 +3,7 @@
 namespace CodebarAg\DocuWare\Requests\Document;
 
 use CodebarAg\DocuWare\Responses\Document\GetDocumentsResponse;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Saloon\CachePlugin\Contracts\Cacheable;
 use Saloon\CachePlugin\Drivers\LaravelCacheDriver;
@@ -37,7 +38,7 @@ class GetDocumentsRequest extends Request implements Cacheable
         return config('laravel-docuware.configurations.cache.lifetime_in_seconds', 3600);
     }
 
-    public function createDtoFromResponse(Response $response): mixed
+    public function createDtoFromResponse(Response $response): Collection
     {
         return GetDocumentsResponse::fromResponse($response);
     }

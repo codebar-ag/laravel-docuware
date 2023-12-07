@@ -31,7 +31,7 @@ class PutDocumentFieldsRequest extends Request implements HasBody
 
     public function resolveEndpoint(): string
     {
-//        return '/FileCabinets/'.$this->fileCabinetId.'/Documents/'.$this->documentId.'/Fields';
+        //        return '/FileCabinets/'.$this->fileCabinetId.'/Documents/'.$this->documentId.'/Fields';
         return 'https://webhook.site/da99a8c2-b18e-4c4a-8826-980a2df1bea6';
     }
 
@@ -41,46 +41,46 @@ class PutDocumentFieldsRequest extends Request implements HasBody
 
         $content = PrepareDTO::makeContent($this->values);
 
-//        $content = [
-//            "Field" => [
-//                [
-//                    "FieldName" => "ITEMS",
-//                    "Item" => [
-//                        "\$type" => "DocumentIndexFieldTable",
-//                        "Row" => [
-//                            [
-//                                "ColumnValue" => [
-//                                    [
-//                                        "FieldName" => "ITEMS_IDENTIFICATION",
-//                                        "Item" => 0,
-//                                        "ItemElementName" => "Decimal"
-//                                    ]
-//                                ]
-//                            ],
-//                            [
-//                                "ColumnValue" => [
-//                                    [
-//                                        "FieldName" => "ITEMS_IDENTIFICATION",
-//                                        "Item" => "test",
-//                                        "ItemElementName" => "String"
-//                                    ]
-//                                ]
-//                            ],
-//                            [
-//                                "ColumnValue" => [
-//                                    [
-//                                        "FieldName" => "ITEMS_IDENTIFICATION",
-//                                        "Item" => 2,
-//                                        "ItemElementName" => "Decimal"
-//                                    ]
-//                                ]
-//                            ]
-//                        ]
-//                    ],
-//                    "ItemElementName" => "Table"
-//                ]
-//            ]
-//        ];
+        //        $content = [
+        //            "Field" => [
+        //                [
+        //                    "FieldName" => "ITEMS",
+        //                    "Item" => [
+        //                        "\$type" => "DocumentIndexFieldTable",
+        //                        "Row" => [
+        //                            [
+        //                                "ColumnValue" => [
+        //                                    [
+        //                                        "FieldName" => "ITEMS_IDENTIFICATION",
+        //                                        "Item" => 0,
+        //                                        "ItemElementName" => "Decimal"
+        //                                    ]
+        //                                ]
+        //                            ],
+        //                            [
+        //                                "ColumnValue" => [
+        //                                    [
+        //                                        "FieldName" => "ITEMS_IDENTIFICATION",
+        //                                        "Item" => "test",
+        //                                        "ItemElementName" => "String"
+        //                                    ]
+        //                                ]
+        //                            ],
+        //                            [
+        //                                "ColumnValue" => [
+        //                                    [
+        //                                        "FieldName" => "ITEMS_IDENTIFICATION",
+        //                                        "Item" => 2,
+        //                                        "ItemElementName" => "Decimal"
+        //                                    ]
+        //                                ]
+        //                            ]
+        //                        ]
+        //                    ],
+        //                    "ItemElementName" => "Table"
+        //                ]
+        //            ]
+        //        ];
 
         if ($this->forceUpdate) {
             $content['ForceUpdate'] = true;

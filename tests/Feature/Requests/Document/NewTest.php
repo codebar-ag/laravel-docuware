@@ -3,16 +3,10 @@
 use CodebarAg\DocuWare\Connectors\DocuWareStaticConnector;
 use CodebarAg\DocuWare\DTO\Config;
 use CodebarAg\DocuWare\DTO\DocumentIndex\IndexTableDTO;
-use CodebarAg\DocuWare\DTO\DocumentIndex\PrepareDTO;
 use CodebarAg\DocuWare\DTO\TableRow;
-use CodebarAg\DocuWare\Events\DocuWareResponseLog;
-use CodebarAg\DocuWare\Requests\Document\DeleteDocumentRequest;
 use CodebarAg\DocuWare\Requests\Document\GetDocumentRequest;
-use CodebarAg\DocuWare\Requests\Document\PostDocumentRequest;
 use CodebarAg\DocuWare\Requests\Document\PutDocumentFieldsRequest;
 use CodebarAg\DocuWare\Support\EnsureValidCookie;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Event;
 
 uses()->group('docuware');
@@ -44,7 +38,7 @@ it('can update a document value', function () {
 
     $items = $document->fields->where('name', 'ITEMS')->first();
 
-    $updatedItems = $items->value->map(function (TableRow $item)  {
+    $updatedItems = $items->value->map(function (TableRow $item) {
         return $item->fields->map(function ($column, $key) {
             $value = $column->value;
 

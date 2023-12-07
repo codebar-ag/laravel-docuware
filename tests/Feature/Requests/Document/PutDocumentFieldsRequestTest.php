@@ -89,7 +89,6 @@ it('can update multiple document values', function () {
     ))->dto();
 });
 
-
 it('can update with table values', function () {
     Event::fake();
 

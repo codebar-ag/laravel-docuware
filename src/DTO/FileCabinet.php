@@ -28,11 +28,11 @@ final class FileCabinet
     }
 
     public static function fake(
-        string $id = null,
-        string $name = null,
-        string $color = null,
-        bool $isBasket = null,
-        string $assignedCabinet = null,
+        ?string $id = null,
+        ?string $name = null,
+        ?string $color = null,
+        ?bool $isBasket = null,
+        ?string $assignedCabinet = null,
     ): self {
         return new self(
             id: $id ?? (string) Str::uuid(),

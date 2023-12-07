@@ -53,6 +53,7 @@ class IndexTableDTO
             if ($indexes->isEmpty()) {
                 return null;
             }
+
             return self::makeRowContent($indexes);
 
         })
@@ -65,6 +66,7 @@ class IndexTableDTO
     public static function makeRowContent(Collection $indexes): array
     {
         ray($indexes, 'makeRowContent');
+
         return [
             'ColumnValue' => $indexes
                 ->map(fn (IndexTextDTO|IndexDateDTO|IndexDecimalDTO $index) => $index->values())

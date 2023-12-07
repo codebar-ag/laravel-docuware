@@ -33,7 +33,7 @@ class IndexTableDTO
 
     protected function rowsCollection(): array
     {
-        return collect($this->rows)->map(function ($row) {
+        $rows = collect($this->rows)->map(function ($row) {
 
             $indexes = collect($row)->map(function ($column) {
 
@@ -47,24 +47,24 @@ class IndexTableDTO
                 return PrepareTableDTO::make($name, $value);
 
             })
-                ->filter()
+//                ->filter()
                 ->values();
 
             if ($indexes->isEmpty()) {
                 return null;
             }
-
             return self::makeRowContent($indexes);
 
         })
-            ->filter()
             ->values()
             ->toArray();
 
+        return $rows;
     }
 
     public static function makeRowContent(Collection $indexes): array
     {
+        ray($indexes, 'makeRowContent');
         return [
             'ColumnValue' => $indexes
                 ->map(fn (IndexTextDTO|IndexDateDTO|IndexDecimalDTO $index) => $index->values())

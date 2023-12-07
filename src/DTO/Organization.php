@@ -28,9 +28,9 @@ final class Organization
     }
 
     public static function fake(
-        string $id = null,
-        string $name = null,
-        string $guid = null,
+        ?string $id = null,
+        ?string $name = null,
+        ?string $guid = null,
         array $additionalInfo = [],
         array $configurationRights = [],
     ): self {

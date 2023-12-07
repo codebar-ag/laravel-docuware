@@ -105,18 +105,18 @@ final class Document
     }
 
     public static function fake(
-        int $id = null,
-        int $file_size = null,
-        int $total_pages = null,
-        string $title = null,
-        string $extension = null,
-        string $content_type = null,
-        string $file_cabinet_id = null,
-        string $intellixTrust = null,
-        Carbon $created_at = null,
-        Carbon $updated_at = null,
-        Collection $fields = null,
-        Collection $suggestions = null,
+        ?int $id = null,
+        ?int $file_size = null,
+        ?int $total_pages = null,
+        ?string $title = null,
+        ?string $extension = null,
+        ?string $content_type = null,
+        ?string $file_cabinet_id = null,
+        ?string $intellixTrust = null,
+        ?Carbon $created_at = null,
+        ?Carbon $updated_at = null,
+        ?Collection $fields = null,
+        ?Collection $suggestions = null,
     ): self {
         return new self(
             id: $id ?? random_int(1, 999999),

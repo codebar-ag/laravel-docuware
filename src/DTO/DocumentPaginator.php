@@ -86,13 +86,13 @@ class DocumentPaginator
     }
 
     public static function fake(
-        int $total = null,
-        int $per_page = null,
-        int $current_page = null,
-        int $last_page = null,
-        int $from = null,
-        int $to = null,
-        Collection $documents = null,
+        ?int $total = null,
+        ?int $per_page = null,
+        ?int $current_page = null,
+        ?int $last_page = null,
+        ?int $from = null,
+        ?int $to = null,
+        ?Collection $documents = null,
     ): self {
         return new self(
             total: $total ?? random_int(10, 100),

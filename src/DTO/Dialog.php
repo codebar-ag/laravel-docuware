@@ -35,11 +35,11 @@ final class Dialog
     }
 
     public static function fake(
-        string $id = null,
-        string $type = null,
-        string $label = null,
-        bool $isDefault = null,
-        string $fileCabinetId = null,
+        ?string $id = null,
+        ?string $type = null,
+        ?string $label = null,
+        ?bool $isDefault = null,
+        ?string $fileCabinetId = null,
     ): self {
         return new self(
             id: $id ?? (string) Str::uuid(),

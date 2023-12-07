@@ -6,12 +6,12 @@ class IndexTextDTO
 {
     public function __construct(
         public string $name,
-        public string $value,
+        public ?string $value,
     ) {
 
     }
 
-    public static function make(string $name, string $value): self
+    public static function make(string $name, ?string $value): self
     {
         return new self($name, $value);
     }

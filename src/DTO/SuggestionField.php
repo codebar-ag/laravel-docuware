@@ -26,9 +26,9 @@ final class SuggestionField
 
     public static function fake(
         array $value = [],
-        string $name = null,
-        string $db_name = null,
-        string $confidence = null,
+        ?string $name = null,
+        ?string $db_name = null,
+        ?string $confidence = null,
     ): self {
         return new self(
             value: $value,

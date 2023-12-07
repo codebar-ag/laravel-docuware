@@ -33,11 +33,11 @@ final class DocumentField
 
     public static function fake(
         ?bool $systemField = false,
-        string $name = null,
-        string $label = null,
+        ?string $name = null,
+        ?string $label = null,
         ?bool $isNull = true,
-        int|float|Carbon|string $value = null,
-        string $type = null,
+        int|float|Carbon|string|null $value = null,
+        ?string $type = null,
     ): self {
         $fakeType = Arr::random(['Int', 'Decimal', 'Text', 'DateTime']);
 

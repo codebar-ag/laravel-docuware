@@ -28,7 +28,7 @@ class TableRow
     }
 
     public static function fake(
-        Collection $fields = null,
+        ?Collection $fields = null,
     ): self {
         return new self(
             fields: $fields ?? collect([

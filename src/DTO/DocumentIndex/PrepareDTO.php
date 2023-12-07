@@ -19,13 +19,24 @@ class PrepareDTO
         };
     }
 
-    public static function makeContent(Collection $indexes): array
+    public static function makeFields(Collection $indexes): array
     {
         return [
             'Fields' => $indexes
                 ->map(fn (IndexTextDTO|IndexDateDTO|IndexDateTimeDTO|IndexNumericDTO|IndexDecimalDTO|IndexTableDTO $index) => $index->values())
                 ->filter()
                 ->values(),
+        ];
+    }
+
+    public static function makeField(Collection $indexes, bool $forceUpdate = false): array
+    {
+        return [
+            'Field' => $indexes
+                ->map(fn (IndexTextDTO|IndexDateDTO|IndexDateTimeDTO|IndexNumericDTO|IndexDecimalDTO|IndexTableDTO $index) => $index->values())
+                ->filter()
+                ->values(),
+            'ForceUpdate' => $forceUpdate,
         ];
     }
 }

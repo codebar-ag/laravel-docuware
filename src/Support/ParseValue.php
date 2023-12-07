@@ -12,7 +12,7 @@ class ParseValue
 {
     public static function field(
         ?array $field,
-        int|float|Carbon|string|Collection $default = null,
+        int|float|Carbon|string|Collection|null $default = null,
     ): null|int|float|Carbon|string|Collection {
         if (! $field || $field['IsNull']) {
             return $default;

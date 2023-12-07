@@ -24,9 +24,9 @@ final class OrganizationIndex
     }
 
     public static function fake(
-        string $id = null,
-        string $name = null,
-        string $guid = null,
+        ?string $id = null,
+        ?string $name = null,
+        ?string $guid = null,
     ): self {
         return new self(
             id: $id ?? (string) Str::uuid(),

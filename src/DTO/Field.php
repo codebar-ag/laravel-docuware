@@ -35,10 +35,10 @@ final class Field
     }
 
     public static function fake(
-        string $name = null,
-        string $label = null,
-        string $type = null,
-        string $scope = null,
+        ?string $name = null,
+        ?string $label = null,
+        ?string $type = null,
+        ?string $scope = null,
     ): self {
         return new self(
             name: $name ?? 'FAKE_FIELD',

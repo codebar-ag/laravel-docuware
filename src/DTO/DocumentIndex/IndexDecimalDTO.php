@@ -6,12 +6,12 @@ class IndexDecimalDTO
 {
     public function __construct(
         public string $name,
-        public int|float $value,
+        public null|int|float $value,
     ) {
 
     }
 
-    public static function make(string $name, int|float $value): self
+    public static function make(string $name, null|int|float $value): self
     {
         return new self($name, $value);
     }

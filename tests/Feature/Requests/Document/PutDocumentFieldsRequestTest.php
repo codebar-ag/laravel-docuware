@@ -2,6 +2,7 @@
 
 use CodebarAg\DocuWare\Connectors\DocuWareStaticConnector;
 use CodebarAg\DocuWare\DTO\Config;
+use CodebarAg\DocuWare\DTO\DocumentIndex\IndexTextDTO;
 use CodebarAg\DocuWare\Events\DocuWareResponseLog;
 use CodebarAg\DocuWare\Requests\Document\DeleteDocumentRequest;
 use CodebarAg\DocuWare\Requests\Document\PostDocumentRequest;
@@ -41,7 +42,9 @@ it('can update a document value', function () {
     $response = $this->connector->send(new PutDocumentFieldsRequest(
         $fileCabinetId,
         $document->id,
-        ['UUID' => $newValue]
+        collect([
+            IndexTextDTO::make('UUID', $newValue),
+        ])
     ))->dto();
 
     $this->assertSame('laravel-docuware', $response['UUID']);
@@ -57,10 +60,6 @@ it('can update multiple document values', function () {
     Event::fake();
 
     $fileCabinetId = config('laravel-docuware.tests.file_cabinet_id');
-    $values = [
-        'UUID' => 'laravel-docuware',
-        'DOCUMENT_LABEL' => 'laravel-docuware-2',
-    ];
 
     $document = $this->connector->send(new PostDocumentRequest(
         $fileCabinetId,
@@ -71,7 +70,10 @@ it('can update multiple document values', function () {
     $response = $this->connector->send(new PutDocumentFieldsRequest(
         $fileCabinetId,
         $document->id,
-        $values,
+        collect([
+            IndexTextDTO::make('UUID', 'laravel-docuware'),
+            IndexTextDTO::make('DOCUMENT_LABEL', 'laravel-docuware-2'),
+        ]),
         true
     ))->dto();
 

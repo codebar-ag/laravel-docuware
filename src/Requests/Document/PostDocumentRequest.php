@@ -36,7 +36,7 @@ class PostDocumentRequest extends Request implements HasBody
         $body = [];
 
         if ($this->indexes) {
-            $indexContent = json_encode(PrepareDTO::makeContent($this->indexes));
+            $indexContent = json_encode(PrepareDTO::makeFields($this->indexes));
             $body[] = new MultipartValue(name: 'document', value: $indexContent, filename: 'index.json');
         }
 

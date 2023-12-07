@@ -2,8 +2,10 @@
 
 namespace CodebarAg\DocuWare\Requests\Document;
 
+use CodebarAg\DocuWare\DTO\DocumentIndex\PrepareDTO;
 use CodebarAg\DocuWare\Exceptions\UnableToUpdateFields;
 use CodebarAg\DocuWare\Responses\Document\PutDocumentFieldsResponse;
+use Illuminate\Support\Collection;
 use Saloon\Contracts\Body\HasBody;
 use Saloon\Enums\Method;
 use Saloon\Http\Request;
@@ -22,7 +24,7 @@ class PutDocumentFieldsRequest extends Request implements HasBody
     public function __construct(
         protected readonly string $fileCabinetId,
         protected readonly string $documentId,
-        protected readonly array $values,
+        protected readonly ?Collection $indexes = null,
         protected readonly bool $forceUpdate = false,
     ) {
     }
@@ -34,27 +36,16 @@ class PutDocumentFieldsRequest extends Request implements HasBody
 
     public function defaultBody(): array
     {
-        throw_unless(count($this->values) > 0, UnableToUpdateFields::noValuesProvided());
+        $body = [];
 
-        $fields = [];
-
-        foreach ($this->values as $key => $value) {
-            throw_unless($value, UnableToUpdateFields::noValuesProvidedForField($key));
-            $fields[] = [
-                'FieldName' => $key,
-                'Item' => $value,
-            ];
+        if ($this->indexes) {
+            $bodyEncode = json_encode(PrepareDTO::makeField($this->indexes));
+            $bodyDecode = json_decode($bodyEncode, true);
+            $body = $bodyDecode;
         }
 
-        $content = [
-            'Field' => $fields,
-        ];
+        return $body;
 
-        if ($this->forceUpdate) {
-            $content['ForceUpdate'] = true;
-        }
-
-        return $content;
     }
 
     public function createDtoFromResponse(Response $response): mixed

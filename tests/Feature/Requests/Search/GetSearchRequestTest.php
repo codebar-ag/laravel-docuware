@@ -4,9 +4,12 @@ use Carbon\Carbon;
 use CodebarAg\DocuWare\Connectors\DocuWareStaticConnector;
 use CodebarAg\DocuWare\DocuWare;
 use CodebarAg\DocuWare\DTO\Config;
+use CodebarAg\DocuWare\DTO\DocumentIndex\IndexTextDTO;
 use CodebarAg\DocuWare\DTO\DocumentPaginator;
 use CodebarAg\DocuWare\Events\DocuWareResponseLog;
 use CodebarAg\DocuWare\Exceptions\UnableToSearch;
+use CodebarAg\DocuWare\Requests\Document\DeleteDocumentRequest;
+use CodebarAg\DocuWare\Requests\Document\PostDocumentRequest;
 use CodebarAg\DocuWare\Support\EnsureValidCookie;
 use Illuminate\Support\Facades\Event;
 
@@ -225,21 +228,68 @@ it('can search documents with null values', function () {
 it('can search documents with multiple values', function () {
     Event::fake();
 
-    $fileCabinetIds = [
-        config('laravel-docuware.tests.file_cabinet_id'),
-    ];
+    $fileCabinetId = config('laravel-docuware.tests.file_cabinet_id');
+    $fileContent = '::fake-file-content::';
+    $fileName = 'example.txt';
 
-    $paginatorRequest = (new DocuWare())
+    $documentOne = $this->connector->send(new PostDocumentRequest(
+        $fileCabinetId,
+        $fileContent,
+        $fileName,
+        collect([
+            IndexTextDTO::make('DOCUMENT_LABEL', '::text::'),
+            IndexTextDTO::make('DOCUMENT_TYPE', 'Abrechnung'),
+        ]),
+    ))->dto();
+
+    $documentTwo = $this->connector->send(new PostDocumentRequest(
+        $fileCabinetId,
+        $fileContent,
+        $fileName,
+        collect([
+            IndexTextDTO::make('DOCUMENT_LABEL', '::text::'),
+            IndexTextDTO::make('DOCUMENT_TYPE', 'Rechnung'),
+        ]),
+    ))->dto();
+
+    $documentThree = $this->connector->send(new PostDocumentRequest(
+        $fileCabinetId,
+        $fileContent,
+        $fileName,
+        collect([
+            IndexTextDTO::make('DOCUMENT_LABEL', '::text::'),
+            IndexTextDTO::make('DOCUMENT_TYPE', 'EtwasAnderes'),
+        ]),
+    ))->dto();
+
+    // Should filter down to documentOne and documentTwo. documentThree should be filtered out.
+    $paginatorRequestBothDocuments = (new DocuWare())
         ->searchRequestBuilder()
-        ->fileCabinets($fileCabinetIds)
+        ->fileCabinets([$fileCabinetId])
         ->page(null)
         ->perPage(null)
         ->fulltext(null)
         ->filterIn('DOCUMENT_TYPE', ['Abrechnung', 'Rechnung'])
         ->get();
 
-    $paginator = $this->connector->send($paginatorRequest)->dto();
+    $paginator = $this->connector->send($paginatorRequestBothDocuments)->dto();
+
+    $this->connector->send(new DeleteDocumentRequest(
+        $fileCabinetId,
+        $documentOne->id,
+    ))->dto();
+
+    $this->connector->send(new DeleteDocumentRequest(
+        $fileCabinetId,
+        $documentTwo->id,
+    ))->dto();
+
+    $this->connector->send(new DeleteDocumentRequest(
+        $fileCabinetId,
+        $documentThree->id,
+    ))->dto();
 
     $this->assertInstanceOf(DocumentPaginator::class, $paginator);
+    $this->assertCount(2, $paginator->documents);
     Event::assertDispatched(DocuWareResponseLog::class);
 })->group('search');

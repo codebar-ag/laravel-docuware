@@ -108,25 +108,35 @@ class DocuWareSearchRequestBuilder
         return $this;
     }
 
-    public function filter(string $name, mixed $value): self
+    private static function prepareValueForFilter(mixed $value): mixed
     {
         if (is_string($value)) {
-            $value = "\"{$value}\"";
+            return "\"{$value}\"";
         }
 
-        $this->filters[$name][] = $value;
+        return $value;
+    }
+
+    public function filter(string $name, mixed $value): self
+    {
+        $this->filters[$name][] = self::prepareValueForFilter($value);
 
         return $this;
     }
 
     public function filterIn(string $name, mixed $values): self
     {
-        $builder = $this;
-        foreach ($values as $value) {
-            $builder = $builder->filter($name, $value);
+        if (is_string($values)) {
+            return $this->filter($name, $values);
         }
 
-        return $builder;
+        $values = collect($values)->map(function ($value) {
+            return self::prepareValueForFilter($value);
+        })->toArray();
+
+        $this->filters[$name][] = implode(' OR ', $values);
+
+        return $this;
     }
 
     /**

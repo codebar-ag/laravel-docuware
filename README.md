@@ -325,6 +325,16 @@ $paginatorRequest = DocuWare::searchRequestBuilder()
     ->get();
     
 $paginator = $connector->send($paginatorRequest)->dto();
+
+/**
+ * Search documents filtered to multiple values.
+ */
+$paginatorRequest = DocuWare::searchRequestBuilder()
+    ->fileCabinet($id)
+    ->filterIn('TYPE', ['Order', 'Invoice'])
+    ->get();
+    
+$paginator = $connector->send($paginatorRequest)->dto();
     
 /**
  * You can specify the dialog which should be used.

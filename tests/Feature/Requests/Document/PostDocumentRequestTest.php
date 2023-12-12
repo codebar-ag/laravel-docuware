@@ -7,12 +7,6 @@ use CodebarAg\DocuWare\Events\DocuWareResponseLog;
 use CodebarAg\DocuWare\Requests\Document\PostDocumentRequest;
 use Illuminate\Support\Facades\Event;
 
-uses()->group('docuware');
-
-beforeEach(function () {
-    $this->connector = getConnector();
-});
-
 it('can upload document without file name and file content and delete it', function () {
     Event::fake();
 

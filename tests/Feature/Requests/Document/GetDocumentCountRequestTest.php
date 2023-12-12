@@ -5,12 +5,6 @@ use CodebarAg\DocuWare\Requests\Document\GetDocumentCountRequest;
 use CodebarAg\DocuWare\Requests\Document\PostDocumentRequest;
 use Illuminate\Support\Facades\Event;
 
-uses()->group('docuware');
-
-beforeEach(function () {
-    $this->connector = getConnector();
-});
-
 it('can get a total count of documents', function () {
     Event::fake();
 

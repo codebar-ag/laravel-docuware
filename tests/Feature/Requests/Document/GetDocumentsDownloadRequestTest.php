@@ -5,12 +5,6 @@ use CodebarAg\DocuWare\Requests\Document\GetDocumentsDownloadRequest;
 use CodebarAg\DocuWare\Requests\Document\PostDocumentRequest;
 use Illuminate\Support\Facades\Event;
 
-uses()->group('docuware');
-
-beforeEach(function () {
-    $this->connector = getConnector();
-});
-
 it('can download multiple documents', function () {
     Event::fake();
 

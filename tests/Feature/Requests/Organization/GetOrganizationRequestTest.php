@@ -5,12 +5,6 @@ use CodebarAg\DocuWare\Events\DocuWareResponseLog;
 use CodebarAg\DocuWare\Requests\Organization\GetOrganizationRequest;
 use Illuminate\Support\Facades\Event;
 
-uses()->group('docuware');
-
-beforeEach(function () {
-    $this->connector = getConnector();
-});
-
 it('can get an organization', function () {
     Event::fake();
 

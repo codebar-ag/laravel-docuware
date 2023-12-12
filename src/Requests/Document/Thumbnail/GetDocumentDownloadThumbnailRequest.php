@@ -19,15 +19,14 @@ class GetDocumentDownloadThumbnailRequest extends Request implements Cacheable
 
     public function __construct(
         protected readonly string $fileCabinetId,
-        protected readonly int $documentId,
-        protected readonly int $section,
+        protected readonly string $thumbnailId,
         protected readonly int $page = 0,
     ) {
     }
 
     public function resolveEndpoint(): string
     {
-        return '/FileCabinets/'.$this->fileCabinetId.'/Rendering/'.$this->documentId.'-'.$this->section.'/Thumbnail';
+        return '/FileCabinets/'.$this->fileCabinetId.'/Rendering/'.$this->thumbnailId.'/Thumbnail';
     }
 
     public function resolveCacheDriver(): LaravelCacheDriver

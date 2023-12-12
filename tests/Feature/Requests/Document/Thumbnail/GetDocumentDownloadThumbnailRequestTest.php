@@ -4,13 +4,8 @@ use CodebarAg\DocuWare\DTO\DocumentThumbnail;
 use CodebarAg\DocuWare\Events\DocuWareResponseLog;
 use CodebarAg\DocuWare\Requests\Document\PostDocumentRequest;
 use CodebarAg\DocuWare\Requests\Document\Thumbnail\GetDocumentDownloadThumbnailRequest;
+use CodebarAg\DocuWare\Requests\Sections\GetSectionsRequest;
 use Illuminate\Support\Facades\Event;
-
-uses()->group('docuware');
-
-beforeEach(function () {
-    $this->connector = getConnector();
-});
 
 it('can download a document thumbnail', function () {
     Event::fake();
@@ -23,10 +18,14 @@ it('can download a document thumbnail', function () {
         'example.txt'
     ))->dto();
 
-    $contents = $this->connector->send(new GetDocumentDownloadThumbnailRequest(
+    $sections = $this->connector->send(new GetSectionsRequest(
         $fileCabinetId,
         $document->id,
-        $document->id - 1
+    ))->dto();
+
+    $contents = $this->connector->send(new GetDocumentDownloadThumbnailRequest(
+        $fileCabinetId,
+        $sections->first()->id,
     ))->dto();
 
     $this->assertSame('image/png', $contents->mime);
@@ -35,5 +34,4 @@ it('can download a document thumbnail', function () {
     $this->assertInstanceOf(DocumentThumbnail::class, $contents);
 
     Event::assertDispatched(DocuWareResponseLog::class);
-
 });

@@ -2,6 +2,7 @@
 
 namespace CodebarAg\DocuWare\Responses\Sections;
 
+use CodebarAg\DocuWare\DTO\Section;
 use CodebarAg\DocuWare\Events\DocuWareResponseLog;
 use CodebarAg\DocuWare\Support\EnsureValidResponse;
 use Illuminate\Support\Collection;
@@ -16,6 +17,14 @@ final class GetSectionsResponse
 
         EnsureValidResponse::from($response);
 
-        return $response->throw()->json('Sections');
+        $res = $response->throw()->json();
+
+        $sections = collect();
+
+        foreach ($res['Section'] as $section) {
+            $sections->push(Section::fromJson($section));
+        }
+
+        return $sections;
     }
 }

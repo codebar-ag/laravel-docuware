@@ -6,12 +6,6 @@ use CodebarAg\DocuWare\Requests\Document\PostDocumentRequest;
 use CodebarAg\DocuWare\Requests\SelectList\GetSelectListRequest;
 use Illuminate\Support\Facades\Event;
 
-uses()->group('docuware');
-
-beforeEach(function () {
-    $this->connector = getConnector();
-});
-
 it('can list values for a select list', function () {
     Event::fake();
 

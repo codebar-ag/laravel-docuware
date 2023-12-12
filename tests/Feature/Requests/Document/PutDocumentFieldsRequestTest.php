@@ -7,12 +7,6 @@ use CodebarAg\DocuWare\Requests\Document\PutDocumentFieldsRequest;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Event;
 
-uses()->group('docuware');
-
-beforeEach(function () {
-    $this->connector = getConnector();
-});
-
 it('can update a document value', function () {
     Event::fake();
 

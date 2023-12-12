@@ -7,11 +7,13 @@ use CodebarAg\DocuWare\Requests\Document\GetDocumentsRequest;
 use CodebarAg\DocuWare\Support\EnsureValidCookie;
 use CodebarAg\DocuWare\Tests\TestCase;
 
-uses(TestCase::class)->in(__DIR__);
+uses(TestCase::class)
+    ->group('docuware')
+    ->in(__DIR__);
 
 uses()
     ->beforeEach(function () {
-        //        $this->connector = getConnector();
+        $this->connector = getConnector();
 
         clearFiles();
     })

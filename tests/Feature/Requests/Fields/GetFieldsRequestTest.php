@@ -6,12 +6,6 @@ use CodebarAg\DocuWare\Requests\Fields\GetFieldsRequest;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Event;
 
-uses()->group('docuware');
-
-beforeEach(function () {
-    $this->connector = getConnector();
-});
-
 it('can list fields for a file cabinet', function () {
     Event::fake();
 

@@ -5,12 +5,6 @@ namespace CodebarAg\DocuWare\Tests\Feature;
 use CodebarAg\DocuWare\DocuWare;
 use Illuminate\Support\Facades\Event;
 
-uses()->group('docuware');
-
-beforeEach(function () {
-    $this->connector = getConnector();
-});
-
 it('can create encrypted url for a document in a file cabinet', function () {
     Event::fake();
 

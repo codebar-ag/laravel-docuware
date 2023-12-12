@@ -6,12 +6,6 @@ use CodebarAg\DocuWare\Requests\FileCabinets\GetFileCabinetsRequest;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Event;
 
-uses()->group('docuware');
-
-beforeEach(function () {
-    $this->connector = getConnector();
-});
-
 it('can list file cabinets', function () {
     Event::fake();
 

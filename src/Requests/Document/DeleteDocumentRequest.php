@@ -22,7 +22,7 @@ class DeleteDocumentRequest extends Request
         return '/FileCabinets/'.$this->fileCabinetId.'/Documents/'.$this->documentId;
     }
 
-    public function createDtoFromResponse(Response $response): mixed
+    public function createDtoFromResponse(Response $response): Response
     {
         return DeleteDocumentResponse::fromResponse($response);
     }

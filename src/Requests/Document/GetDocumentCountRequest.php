@@ -45,7 +45,7 @@ class GetDocumentCountRequest extends Request implements Cacheable
         ];
     }
 
-    public function createDtoFromResponse(Response $response): mixed
+    public function createDtoFromResponse(Response $response): int
     {
         return GetDocumentCountResponse::fromResponse($response);
     }

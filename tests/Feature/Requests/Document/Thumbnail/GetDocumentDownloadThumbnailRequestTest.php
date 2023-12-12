@@ -23,8 +23,6 @@ it('can download a document thumbnail', function () {
         $document->id,
     ))->dto();
 
-    ray($sections);
-
     $contents = $this->connector->send(new GetDocumentDownloadThumbnailRequest(
         $fileCabinetId,
         $sections->first()->id,

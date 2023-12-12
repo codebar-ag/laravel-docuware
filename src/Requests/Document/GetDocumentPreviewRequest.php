@@ -38,7 +38,7 @@ class GetDocumentPreviewRequest extends Request implements Cacheable
         return config('laravel-docuware.configurations.cache.lifetime_in_seconds', 3600);
     }
 
-    public function createDtoFromResponse(Response $response): mixed
+    public function createDtoFromResponse(Response $response): string
     {
         return GetDocumentPreviewResponse::fromResponse($response);
     }

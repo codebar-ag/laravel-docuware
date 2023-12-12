@@ -2,6 +2,7 @@
 
 namespace CodebarAg\DocuWare\Requests\Document;
 
+use CodebarAg\DocuWare\DTO\Document;
 use CodebarAg\DocuWare\DTO\DocumentIndex\PrepareDTO;
 use CodebarAg\DocuWare\Responses\Document\PostDocumentResponse;
 use Illuminate\Support\Collection;
@@ -47,7 +48,7 @@ class PostDocumentRequest extends Request implements HasBody
         return $body;
     }
 
-    public function createDtoFromResponse(Response $response): mixed
+    public function createDtoFromResponse(Response $response): Document
     {
         return PostDocumentResponse::fromResponse($response);
     }

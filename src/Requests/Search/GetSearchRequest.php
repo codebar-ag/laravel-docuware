@@ -2,6 +2,7 @@
 
 namespace CodebarAg\DocuWare\Requests\Search;
 
+use CodebarAg\DocuWare\DTO\DocumentPaginator;
 use CodebarAg\DocuWare\Responses\Search\GetSearchResponse;
 use Illuminate\Support\Facades\Cache;
 use Saloon\CachePlugin\Contracts\Cacheable;
@@ -79,7 +80,7 @@ class GetSearchRequest extends Request implements Cacheable, HasBody
         ];
     }
 
-    public function createDtoFromResponse(Response $response): mixed
+    public function createDtoFromResponse(Response $response): DocumentPaginator
     {
         return GetSearchResponse::fromResponse($response, $this->page, $this->perPage);
     }

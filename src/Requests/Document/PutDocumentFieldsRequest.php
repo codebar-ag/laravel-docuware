@@ -48,7 +48,7 @@ class PutDocumentFieldsRequest extends Request implements HasBody
 
     }
 
-    public function createDtoFromResponse(Response $response): mixed
+    public function createDtoFromResponse(Response $response): Collection
     {
         return PutDocumentFieldsResponse::fromResponse($response);
     }

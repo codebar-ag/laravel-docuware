@@ -164,9 +164,16 @@ $content = $connector->send(new GetDocumentDownloadRequest($fileCabinetId, $docu
 $content = $connector->send(new GetDocumentsDownloadRequest($fileCabinetId, $documentIds))->dto();
 
 /**
- * Download a document thumbnail.
+ * Get sections of a document.
  */
-$thumbnail = $connector->send(new GetDocumentDownloadThumbnailRequest($fileCabinetId, $documentId, $section))->dto();
+$section = $connector->send(new GetSectionsRequest($fileCabinetId, $documentId))->dto();
+
+/**
+ * Download a document thumbnail.
+ * 
+ * You will use $section->id from above as $thumbnailId.
+ */
+$thumbnail = $connector->send(new GetDocumentDownloadThumbnailRequest($fileCabinetId, $thumbnailId, $page = 0))->dto();
 
 /**
  * Update value of a indexed field.
@@ -558,6 +565,20 @@ CodebarAg\DocuWare\DTO\Document {
       1 => CodebarAg\DocuWare\DTO\DocumentField            // DocumentField
     ]
   }
+}
+```
+
+```php
+CodebarAg\DocuWare\DTO\Section {#23784▶
+  +id: "5589-5525"
+  +contentType: "text/plain"
+  +haveMorePages: true
+  +pageCount: 1
+  +fileSize: 32
+  +originalFileName: "example.txt"
+  +contentModified: "/Date(1702395557000)/"
+  +annotationsPreview: false
+  +hasTextAnnotations: null
 }
 ```
 

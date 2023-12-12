@@ -9,16 +9,13 @@ use CodebarAg\DocuWare\Tests\TestCase;
 
 uses(TestCase::class)->in(__DIR__);
 
-
 uses()
     ->beforeEach(function () {
-//        $this->connector = getConnector();
+        //        $this->connector = getConnector();
 
         clearFiles();
     })
     ->in('Feature');
-
-
 
 /**
  * @throws Throwable

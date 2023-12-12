@@ -210,6 +210,26 @@ $document = $connector->send(new PostDocumentRequest(
     $indexes,
 ))->dto();
 
+
+/**
+ * Upload new data entry with index values.
+ */
+use CodebarAg\DocuWare\DTO\DocumentIndex\PrepareDTO;
+ 
+$indexes = collect([
+    PrepareDTO::make('FIELD_TEXT', 'Indexed Text'),
+    PrepareDTO::make('FIELD_NUMERIC', 1),
+    PrepareDTO::make('FIELD_DECIMAL', 1.00),
+    PrepareDTO::make('FIELD_DATE', now()),
+]);
+
+$document = $connector->send(new PostDocumentRequest(
+    $fileCabinetId,
+    null,
+    null,
+    $indexes,
+))->dto();
+
 /**
  * Delete document.
  */

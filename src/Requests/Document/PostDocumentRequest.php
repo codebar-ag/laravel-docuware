@@ -21,8 +21,8 @@ class PostDocumentRequest extends Request implements HasBody
 
     public function __construct(
         protected readonly string $fileCabinetId,
-        protected readonly string $fileContent,
-        protected readonly string $fileName,
+        protected readonly ?string $fileContent,
+        protected readonly ?string $fileName,
         protected readonly ?Collection $indexes = null,
     ) {
     }
@@ -41,7 +41,9 @@ class PostDocumentRequest extends Request implements HasBody
             $body[] = new MultipartValue(name: 'document', value: $indexContent, filename: 'index.json');
         }
 
-        $body[] = new MultipartValue(name: 'file', value: $this->fileContent, filename: $this->fileName);
+        if ($this->fileContent && $this->fileName) {
+            $body[] = new MultipartValue(name: 'file', value: $this->fileContent, filename: $this->fileName);
+        }
 
         return $body;
     }

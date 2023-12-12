@@ -2,8 +2,6 @@
 
 use CodebarAg\DocuWare\Facades\DocuWare;
 
-uses()->group('docuware');
-
 it('cookie method', function () {
 
     $url = config('laravel-docuware.credentials.url');

@@ -27,14 +27,13 @@ it('can search documents', function () {
 
     $paginator = $this->connector->paginate($paginatorRequest);
 
-    $paginator->setPerPageLimit(5);
-    $paginator->getSinglePage(1);
+    $paginator->setPerPageLimit(5)
+        ->setStartPage(1)
+        ->setMaxPages(1);
 
     $documents = collect();
 
     foreach ($paginator as $response) {
-        ray($response->dto());
-
         $this->assertCount(0, $response->dto());
 
         $documents->push($response->dto());
@@ -65,14 +64,13 @@ it('can\'t search documents by more than two dates', function () {
 
     $paginator = $this->connector->paginate($request);
 
-    $paginator->setPerPageLimit(5);
-    $paginator->getSinglePage(1);
+    $paginator->setPerPageLimit(5)
+        ->setStartPage(1)
+        ->setMaxPages(1);
 
     $documents = collect();
 
     foreach ($paginator as $response) {
-        ray($response->dto());
-
         $this->assertCount(2, $response->dto());
 
         $documents->push($response->dto());
@@ -101,14 +99,13 @@ it('can override search documents dates filter by using same operator', function
 
     $paginator = $this->connector->paginate($paginatorRequest);
 
-    $paginator->setPerPageLimit(5);
-    $paginator->getSinglePage(1);
+    $paginator->setPerPageLimit(5)
+        ->setStartPage(1)
+        ->setMaxPages(1);
 
     $documents = collect();
 
     foreach ($paginator as $response) {
-        ray($response->dto());
-
         $this->assertCount(0, $response->dto());
 
         $documents->push($response->dto());
@@ -136,14 +133,13 @@ it('can override search documents dates filter by using equal operator', functio
 
     $paginator = $this->connector->paginate($paginatorRequest);
 
-    $paginator->setPerPageLimit(5);
-    $paginator->getSinglePage(1);
+    $paginator->setPerPageLimit(5)
+        ->setStartPage(1)
+        ->setMaxPages(1);
 
     $documents = collect();
 
     foreach ($paginator as $response) {
-        ray($response->dto());
-
         $this->assertCount(0, $response->dto());
 
         $documents->push($response->dto());
@@ -173,14 +169,13 @@ it('can\'t search documents by diverged date range', function () {
 
     $paginator = $this->connector->paginate($request);
 
-    $paginator->setPerPageLimit(5);
-    $paginator->getSinglePage(1);
+    $paginator->setPerPageLimit(5)
+        ->setStartPage(1)
+        ->setMaxPages(1);
 
     $documents = collect();
 
     foreach ($paginator as $response) {
-        ray($response->dto());
-
         $this->assertCount(2, $response->dto());
 
         $documents->push($response->dto());
@@ -207,14 +202,13 @@ it('can search documents dates filter in future', function () {
 
     $paginator = $this->connector->paginate($paginatorRequest);
 
-    $paginator->setPerPageLimit(5);
-    $paginator->getSinglePage(1);
+    $paginator->setPerPageLimit(5)
+        ->setStartPage(1)
+        ->setMaxPages(1);
 
     $documents = collect();
 
     foreach ($paginator as $response) {
-        ray($response->dto());
-
         $this->assertCount(0, $response->dto());
 
         $documents->push($response->dto());
@@ -241,14 +235,13 @@ it('can search documents dates filter in past', function () {
 
     $paginator = $this->connector->paginate($paginatorRequest);
 
-    $paginator->setPerPageLimit(5);
-    $paginator->getSinglePage(1);
+    $paginator->setPerPageLimit(5)
+        ->setStartPage(1)
+        ->setMaxPages(1);
 
     $documents = collect();
 
     foreach ($paginator as $response) {
-        ray($response->dto());
-
         $this->assertCount(0, $response->dto());
 
         $documents->push($response->dto());
@@ -277,8 +270,6 @@ it('can search documents with null values', function () {
     $documents = collect();
 
     foreach ($paginator as $response) {
-        ray($response->dto());
-
         $this->assertCount(0, $response->dto());
 
         $documents->push($response->dto());
@@ -337,8 +328,6 @@ it('can search documents with multiple values', function () {
     $documents = collect();
 
     foreach ($paginator as $response) {
-        ray($response->dto());
-
         $this->assertCount(2, $response->dto());
 
         $documents->push($response->dto());
@@ -352,8 +341,6 @@ it('can search and get paginated results', function () {
     Event::fake();
 
     $fileCabinetId = config('laravel-docuware.tests.file_cabinet_id');
-    $fileContent = '::fake-file-content::';
-    $fileName = 'example.txt';
 
     for ($i = 0; $i < 4; $i++) {
         $this->connector->send(new PostDocumentRequest(
@@ -376,8 +363,6 @@ it('can search and get paginated results', function () {
     $documents = collect();
 
     foreach ($paginator as $response) {
-        ray($response->dto());
-
         $this->assertCount(2, $response->dto());
 
         $documents->push($response->dto());

@@ -29,13 +29,13 @@ it('can get all documents', function () {
 it('can get all documents paginated', function () {
     Event::fake();
 
-//    for ($i = 0; $i < 10; $i++) {
-//        $this->connector->send(new PostDocumentRequest(
-//            config('laravel-docuware.tests.file_cabinet_id'),
-//            '::fake-file-content::',
-//            'example.txt'
-//        ))->dto();
-//    }
+    //    for ($i = 0; $i < 10; $i++) {
+    //        $this->connector->send(new PostDocumentRequest(
+    //            config('laravel-docuware.tests.file_cabinet_id'),
+    //            '::fake-file-content::',
+    //            'example.txt'
+    //        ))->dto();
+    //    }
 
     $request = new GetDocumentsRequest(
         config('laravel-docuware.tests.file_cabinet_id')
@@ -45,8 +45,8 @@ it('can get all documents paginated', function () {
 
     $paginator->setPerPageLimit(2);
 
-//    $paginator->setStartPage(3);
-//    $paginator->setMaxPages(3);
+    //    $paginator->setStartPage(3);
+    //    $paginator->setMaxPages(3);
     $paginator->getSinglePage(3);
 
     foreach ($paginator->collect() as $collection) {

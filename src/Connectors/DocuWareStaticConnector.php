@@ -8,7 +8,6 @@ use CodebarAg\DocuWare\Support\EnsureValidCredentials;
 use GuzzleHttp\Cookie\CookieJar;
 use Saloon\Http\Connector;
 use Saloon\Http\Request;
-use Saloon\Http\Response;
 use Saloon\PaginationPlugin\Contracts\HasPagination;
 use Saloon\PaginationPlugin\OffsetPaginator;
 

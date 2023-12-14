@@ -12,6 +12,39 @@ DocuWare REST API. It is used to query the most common endpoints.
 [DocuWare REST API](https://developer.docuware.com/rest/index.html).
 See the documentation if you need further functionality. ⚠️
 
+## Table of Contents
+
+<!-- TOC -->
+  * [Table of Contents](#table-of-contents)
+  * [💡 What is DocuWare?](#-what-is-docuware)
+  * [🛠 Requirements](#-requirements)
+  * [SOmething else](#something-else)
+    * [> = v4.0 (alpha)](#---v40-alpha)
+    * [> = v3.0](#---v30)
+    * [> = v2.0](#---v20)
+    * [> = v1.2](#---v12)
+    * [< v1.2](#-v12)
+  * [⚙️ Installation](#-installation)
+  * [🏗 Usage](#-usage)
+  * [Pagination](#pagination)
+  * [🔍 Search usage](#-search-usage)
+  * [🖼 Make encrypted URL](#-make-encrypted-url)
+  * [🏋️ Document Index Fields DTO showcase](#-document-index-fields-dto-showcase)
+  * [🏋️ DTO showcase](#-dto-showcase)
+  * [🔐 Authentication](#-authentication)
+    * [Manual authentication](#manual-authentication)
+  * [📦 Caching requests](#-caching-requests)
+  * [💥 Exceptions explained](#-exceptions-explained)
+  * [✨ Events](#-events)
+  * [🔧 Configuration file](#-configuration-file)
+  * [🚧 Testing](#-testing)
+  * [📝 Changelog](#-changelog)
+  * [✏️ Contributing](#-contributing)
+  * [🧑‍💻 Security Vulnerabilities](#-security-vulnerabilities)
+  * [🙏 Credits](#-credits)
+  * [🎭 License](#-license)
+<!-- TOC -->
+
 ## 💡 What is DocuWare?
 
 DocuWare provides cloud document management and workflow automation software

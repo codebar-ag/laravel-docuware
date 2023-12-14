@@ -3,7 +3,6 @@
 namespace CodebarAg\DocuWare\Requests\Search;
 
 use CodebarAg\DocuWare\DTO\Document;
-use CodebarAg\DocuWare\Responses\Search\GetSearchResponse;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;

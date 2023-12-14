@@ -27,9 +27,9 @@ it('can search documents', function () {
 
     $paginator = $this->connector->paginate($paginatorRequest);
 
-    $paginator->setPerPageLimit(5);
-    $paginator->setStartPage(1);
-    $paginator->setMaxPages(1);
+    $paginator->setPerPageLimit(5)
+        ->setStartPage(1)
+        ->setMaxPages(1);
 
     $documents = collect();
 
@@ -64,9 +64,9 @@ it('can\'t search documents by more than two dates', function () {
 
     $paginator = $this->connector->paginate($request);
 
-    $paginator->setPerPageLimit(5);
-    $paginator->setStartPage(1);
-    $paginator->setMaxPages(1);
+    $paginator->setPerPageLimit(5)
+        ->setStartPage(1)
+        ->setMaxPages(1);
 
     $documents = collect();
 
@@ -99,9 +99,9 @@ it('can override search documents dates filter by using same operator', function
 
     $paginator = $this->connector->paginate($paginatorRequest);
 
-    $paginator->setPerPageLimit(5);
-    $paginator->setStartPage(1);
-    $paginator->setMaxPages(1);
+    $paginator->setPerPageLimit(5)
+        ->setStartPage(1)
+        ->setMaxPages(1);
 
     $documents = collect();
 
@@ -133,9 +133,9 @@ it('can override search documents dates filter by using equal operator', functio
 
     $paginator = $this->connector->paginate($paginatorRequest);
 
-    $paginator->setPerPageLimit(5);
-    $paginator->setStartPage(1);
-    $paginator->setMaxPages(1);
+    $paginator->setPerPageLimit(5)
+        ->setStartPage(1)
+        ->setMaxPages(1);
 
     $documents = collect();
 
@@ -169,9 +169,9 @@ it('can\'t search documents by diverged date range', function () {
 
     $paginator = $this->connector->paginate($request);
 
-    $paginator->setPerPageLimit(5);
-    $paginator->setStartPage(1);
-    $paginator->setMaxPages(1);
+    $paginator->setPerPageLimit(5)
+        ->setStartPage(1)
+        ->setMaxPages(1);
 
     $documents = collect();
 
@@ -202,9 +202,9 @@ it('can search documents dates filter in future', function () {
 
     $paginator = $this->connector->paginate($paginatorRequest);
 
-    $paginator->setPerPageLimit(5);
-    $paginator->setStartPage(1);
-    $paginator->setMaxPages(1);
+    $paginator->setPerPageLimit(5)
+        ->setStartPage(1)
+        ->setMaxPages(1);
 
     $documents = collect();
 
@@ -235,9 +235,9 @@ it('can search documents dates filter in past', function () {
 
     $paginator = $this->connector->paginate($paginatorRequest);
 
-    $paginator->setPerPageLimit(5);
-    $paginator->setStartPage(1);
-    $paginator->setMaxPages(1);
+    $paginator->setPerPageLimit(5)
+        ->setStartPage(1)
+        ->setMaxPages(1);
 
     $documents = collect();
 

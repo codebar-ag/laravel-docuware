@@ -11,8 +11,9 @@ use Saloon\CachePlugin\Traits\HasCaching;
 use Saloon\Enums\Method;
 use Saloon\Http\Request;
 use Saloon\Http\Response;
+use Saloon\PaginationPlugin\Contracts\Paginatable;
 
-class GetDocumentsRequest extends Request implements Cacheable
+class GetDocumentsRequest extends Request implements Cacheable, Paginatable
 {
     use HasCaching;
 

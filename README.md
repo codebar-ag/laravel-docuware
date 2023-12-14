@@ -243,6 +243,44 @@ $document = $connector->send(new PostDocumentRequest(
 $connector->send(new DeleteDocumentRequest($fileCabinetId, $document->id))->dto();
 ```
 
+## Pagination
+
+```php
+    $paginator = $connector->paginate(new GetDocumentsRequest(
+        config('laravel-docuware.tests.file_cabinet_id')
+    ));
+
+    // You can set the per page limit 
+    $paginator->setPerPageLimit(2);
+
+
+
+    // You can set the start page and how many pages you want to get
+
+     $paginator->setStartPage(3);
+     $paginator->setMaxPages(3); // Should be equal or more than the start page
+     
+    // OR
+
+    $paginator->getSinglePage(3);
+    
+    
+    
+    // Get the data from the paginator
+    
+    $data = collect();
+
+    foreach ($paginator->collect() as $collection) {
+        $data->push($collection);
+    }
+    
+    // OR
+
+    foreach ($paginator as $response) {
+        $data->push($response->dto());
+    }
+```
+
 ## 🔍 Search usage
 
 ```php

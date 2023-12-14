@@ -12,11 +12,6 @@ class DocuWareOffsetPaginator extends SaloonOffsetPaginator
 {
     protected ?int $perPageLimit = 10000;
 
-    public function getSinglePage(int $page): Paginator
-    {
-        return $this->setStartPage($page)->setMaxPages($page);
-    }
-
     protected function isLastPage(Response $response): bool
     {
         $count = Arr::get($response->json(), 'Count');

@@ -55,7 +55,7 @@ class DocuWareStaticConnector extends Connector implements HasPagination
 
     public function paginate(Request $request): OffsetPaginator
     {
-//        return new DocuWareOffsetPaginator(connector: $this, request: $request);
+        //        return new DocuWareOffsetPaginator(connector: $this, request: $request);
 
         return new class(connector: $this, request: $request) extends OffsetPaginator
         {

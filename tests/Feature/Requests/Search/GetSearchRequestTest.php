@@ -3,7 +3,6 @@
 use Carbon\Carbon;
 use CodebarAg\DocuWare\DocuWare;
 use CodebarAg\DocuWare\DTO\DocumentIndex\IndexTextDTO;
-use CodebarAg\DocuWare\DTO\DocumentPaginator;
 use CodebarAg\DocuWare\Events\DocuWareResponseLog;
 use CodebarAg\DocuWare\Exceptions\UnableToSearch;
 use CodebarAg\DocuWare\Requests\Document\PostDocumentRequest;

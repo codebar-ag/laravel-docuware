@@ -50,7 +50,6 @@ it('can get all documents paginated', function () {
     foreach ($paginator as $response) {
         $this->assertCount(2, $response->dto());
 
-
         $documents->push($response->dto());
     }
 

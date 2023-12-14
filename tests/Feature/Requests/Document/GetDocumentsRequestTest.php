@@ -4,6 +4,7 @@ use CodebarAg\DocuWare\Events\DocuWareResponseLog;
 use CodebarAg\DocuWare\Requests\Document\GetDocumentsRequest;
 use CodebarAg\DocuWare\Requests\Document\PostDocumentRequest;
 use Illuminate\Support\Facades\Event;
+
 use function PHPUnit\Framework\assertCount;
 
 it('can get all documents', function () {

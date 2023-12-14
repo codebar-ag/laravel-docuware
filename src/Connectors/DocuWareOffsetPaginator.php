@@ -6,7 +6,6 @@ use Illuminate\Support\Arr;
 use Saloon\Http\Request;
 use Saloon\Http\Response;
 use Saloon\PaginationPlugin\OffsetPaginator as SaloonOffsetPaginator;
-use Saloon\PaginationPlugin\Paginator;
 
 class DocuWareOffsetPaginator extends SaloonOffsetPaginator
 {

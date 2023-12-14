@@ -28,7 +28,7 @@ class DocuWareOffsetPaginator extends SaloonOffsetPaginator
     {
         $count = Arr::get($response->json(), 'Count');
 
-        return ceil((Arr::get($count, 'Value') / $this->perPageLimit));
+        return (int) ceil((Arr::get($count, 'Value') / $this->perPageLimit));
     }
 
     protected function getPageItems(Response $response, Request $request): array

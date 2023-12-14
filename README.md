@@ -245,6 +245,19 @@ $connector->send(new DeleteDocumentRequest($fileCabinetId, $document->id))->dto(
 
 ## Pagination
 
+Requests that support pagination:
+
+| Requests                |
+|-------------------------|
+| GetDialogsRequest       |
+| GetDocumentsRequest     |
+| GetFieldsRequest        |
+| GetFileCabinetsRequest  |
+| GetOrganizationsRequest |
+| GetSearchRequest        |
+| GetSectionsRequest      |
+
+
 ```php
     $paginator = $connector->paginate(new GetDocumentsRequest(
         config('laravel-docuware.tests.file_cabinet_id')
@@ -639,27 +652,6 @@ CodebarAg\DocuWare\DTO\TableRow {
       0 => CodebarAg\DocuWare\DTO\DocumentField            // DocumentField
       1 => CodebarAg\DocuWare\DTO\DocumentField            // DocumentField
     ]
-}
-```
-
-```php
-CodebarAg\DocuWare\DTO\DocumentPaginator
-  +total: 39                                  // integer
-  +per_page: 10                               // integer
-  +current_page: 9                            // integer
-  +last_page: 15                              // integer
-  +from: 1                                    // integer
-  +to: 10                                     // integer
-  +documents: Illuminate\Support\Collection { // Collection|Document[]
-    #items: array:2 [
-      0 => CodebarAg\DocuWare\DTO\Document    // Document
-      1 => CodebarAg\DocuWare\DTO\Document    // Document
-    ]
-  }
-  +error: CodebarAg\DocuWare\DTO\ErrorBag {   // ErrorBag|null
-    +code: 422                                // int
-    +message: "'000' is not valid cabinet id" // string
-  }
 }
 ```
 

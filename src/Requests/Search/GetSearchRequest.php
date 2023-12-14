@@ -81,7 +81,6 @@ class GetSearchRequest extends Request implements Cacheable, HasBody, Paginatabl
 
     public function createDtoFromResponse(Response $response): Collection
     {
-        //                return GetSearchResponse::fromResponse($response, $this->page, $this->perPage);
         return collect(Arr::get($response->json(), 'Items'))->map(function (array $document) {
             return Document::fromJson($document);
         });

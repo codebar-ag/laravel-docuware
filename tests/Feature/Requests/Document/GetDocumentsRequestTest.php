@@ -5,8 +5,6 @@ use CodebarAg\DocuWare\Requests\Document\GetDocumentsRequest;
 use CodebarAg\DocuWare\Requests\Document\PostDocumentRequest;
 use Illuminate\Support\Facades\Event;
 
-use function PHPUnit\Framework\assertCount;
-
 it('can get all documents', function () {
     Event::fake();
 
@@ -50,12 +48,13 @@ it('can get all documents paginated', function () {
     $documents = collect();
 
     foreach ($paginator as $response) {
-        assertCount(2, $response->dto());
+        $this->assertCount(2, $response->dto());
+
 
         $documents->push($response->dto());
     }
 
-    assertCount(4, $documents->flatten());
+    $this->assertCount(4, $documents->flatten());
 
     Event::assertDispatched(DocuWareResponseLog::class);
 });

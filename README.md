@@ -279,6 +279,10 @@ $connector->send(new DeleteDocumentRequest($fileCabinetId, $document->id))->dto(
     foreach ($paginator as $response) {
         $data->push($response->dto());
     }
+
+
+
+    $data->flatten()
 ```
 
 ## 🔍 Search usage

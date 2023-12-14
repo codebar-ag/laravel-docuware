@@ -17,10 +17,6 @@ class DocuWareSearchRequestBuilder
 
     protected array $additionalFileCabinetIds = [];
 
-    protected int $page = 1;
-
-    protected int $perPage = 50;
-
     protected ?string $searchTerm = null;
 
     protected string $orderField = 'DWSTOREDATETIME';
@@ -50,28 +46,6 @@ class DocuWareSearchRequestBuilder
     public function dialog(string $dialogId): self
     {
         $this->dialogId = $dialogId;
-
-        return $this;
-    }
-
-    public function page(?int $page): self
-    {
-        if (is_null($page)) {
-            $this->page = 1;
-        } else {
-            $this->page = $page;
-        }
-
-        return $this;
-    }
-
-    public function perPage(?int $perPage): self
-    {
-        if (is_null($perPage)) {
-            $this->perPage = 50;
-        } else {
-            $this->perPage = $perPage;
-        }
 
         return $this;
     }
@@ -174,8 +148,6 @@ class DocuWareSearchRequestBuilder
             fileCabinetId: $this->fileCabinetId,
             dialogId: $this->dialogId,
             additionalFileCabinetIds: $this->additionalFileCabinetIds,
-            page: $this->page,
-            perPage: $this->perPage,
             searchTerm: $this->searchTerm,
             orderField: $this->orderField,
             orderDirection: $this->orderDirection,
@@ -188,16 +160,6 @@ class DocuWareSearchRequestBuilder
         throw_if(
             is_null($this->fileCabinetId),
             UnableToSearch::cabinetNotSet(),
-        );
-
-        throw_if(
-            $this->page <= 0,
-            UnableToSearch::invalidPageNumber($this->page),
-        );
-
-        throw_if(
-            $this->perPage <= 0,
-            UnableToSearch::invalidPerPageNumber($this->perPage),
         );
     }
 

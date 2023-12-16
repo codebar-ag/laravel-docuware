@@ -12,6 +12,39 @@ DocuWare REST API. It is used to query the most common endpoints.
 [DocuWare REST API](https://developer.docuware.com/rest/index.html).
 See the documentation if you need further functionality. ⚠️
 
+## Table of Contents
+
+<!-- TOC -->
+  * [Table of Contents](#table-of-contents)
+  * [💡 What is DocuWare?](#-what-is-docuware)
+  * [🛠 Requirements](#-requirements)
+  * [SOmething else](#something-else)
+    * [> = v4.0 (alpha)](#---v40-alpha)
+    * [> = v3.0](#---v30)
+    * [> = v2.0](#---v20)
+    * [> = v1.2](#---v12)
+    * [< v1.2](#-v12)
+  * [⚙️ Installation](#-installation)
+  * [🏗 Usage](#-usage)
+  * [Pagination](#pagination)
+  * [🔍 Search usage](#-search-usage)
+  * [🖼 Make encrypted URL](#-make-encrypted-url)
+  * [🏋️ Document Index Fields DTO showcase](#-document-index-fields-dto-showcase)
+  * [🏋️ DTO showcase](#-dto-showcase)
+  * [🔐 Authentication](#-authentication)
+    * [Manual authentication](#manual-authentication)
+  * [📦 Caching requests](#-caching-requests)
+  * [💥 Exceptions explained](#-exceptions-explained)
+  * [✨ Events](#-events)
+  * [🔧 Configuration file](#-configuration-file)
+  * [🚧 Testing](#-testing)
+  * [📝 Changelog](#-changelog)
+  * [✏️ Contributing](#-contributing)
+  * [🧑‍💻 Security Vulnerabilities](#-security-vulnerabilities)
+  * [🙏 Credits](#-credits)
+  * [🎭 License](#-license)
+<!-- TOC -->
+
 ## 💡 What is DocuWare?
 
 DocuWare provides cloud document management and workflow automation software
@@ -241,6 +274,61 @@ $document = $connector->send(new PostDocumentRequest(
  * Delete document.
  */
 $connector->send(new DeleteDocumentRequest($fileCabinetId, $document->id))->dto();
+```
+
+## Pagination
+
+Requests that support pagination:
+
+| Requests                |
+|-------------------------|
+| GetDialogsRequest       |
+| GetDocumentsRequest     |
+| GetFieldsRequest        |
+| GetFileCabinetsRequest  |
+| GetOrganizationsRequest |
+| GetSearchRequest        |
+| GetSectionsRequest      |
+
+
+```php
+    $paginator = $connector->paginate(new GetDocumentsRequest(
+        config('laravel-docuware.tests.file_cabinet_id')
+    ));
+
+    // You can set the per page limit 
+    $paginator->setPerPageLimit(2);
+
+
+
+    // You can set the start page and how many pages you want to get
+
+     $paginator->setStartPage(3);
+     $paginator->setMaxPages(3); // Should be equal or more than the start page
+     
+    // OR
+
+    $paginator->getSinglePage(3);
+    
+    
+    
+    // Get the data from the paginator
+    
+    $data = collect();
+
+    foreach ($paginator->collect() as $collection) {
+        $data->push($collection);
+    }
+    
+    // OR
+
+    foreach ($paginator as $response) {
+        $data->push($response->dto());
+    }
+
+
+
+    $data->flatten()
 ```
 
 ## 🔍 Search usage
@@ -597,27 +685,6 @@ CodebarAg\DocuWare\DTO\TableRow {
       0 => CodebarAg\DocuWare\DTO\DocumentField            // DocumentField
       1 => CodebarAg\DocuWare\DTO\DocumentField            // DocumentField
     ]
-}
-```
-
-```php
-CodebarAg\DocuWare\DTO\DocumentPaginator
-  +total: 39                                  // integer
-  +per_page: 10                               // integer
-  +current_page: 9                            // integer
-  +last_page: 15                              // integer
-  +from: 1                                    // integer
-  +to: 10                                     // integer
-  +documents: Illuminate\Support\Collection { // Collection|Document[]
-    #items: array:2 [
-      0 => CodebarAg\DocuWare\DTO\Document    // Document
-      1 => CodebarAg\DocuWare\DTO\Document    // Document
-    ]
-  }
-  +error: CodebarAg\DocuWare\DTO\ErrorBag {   // ErrorBag|null
-    +code: 422                                // int
-    +message: "'000' is not valid cabinet id" // string
-  }
 }
 ```
 

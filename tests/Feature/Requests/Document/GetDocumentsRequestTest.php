@@ -25,3 +25,35 @@ it('can get all documents', function () {
 
     Event::assertDispatched(DocuWareResponseLog::class);
 });
+
+it('can get all documents paginated', function () {
+    Event::fake();
+
+    for ($i = 0; $i < 4; $i++) {
+        $this->connector->send(new PostDocumentRequest(
+            config('laravel-docuware.tests.file_cabinet_id'),
+            '::fake-file-content::',
+            'example.txt'
+        ))->dto();
+    }
+
+    $request = new GetDocumentsRequest(
+        config('laravel-docuware.tests.file_cabinet_id')
+    );
+
+    $paginator = $this->connector->paginate($request);
+
+    $paginator->setPerPageLimit(2);
+
+    $documents = collect();
+
+    foreach ($paginator as $response) {
+        $this->assertCount(2, $response->dto());
+
+        $documents->push($response->dto());
+    }
+
+    $this->assertCount(4, $documents->flatten());
+
+    Event::assertDispatched(DocuWareResponseLog::class);
+});

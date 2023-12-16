@@ -7,8 +7,11 @@ use CodebarAg\DocuWare\Support\EnsureValidCookie;
 use CodebarAg\DocuWare\Support\EnsureValidCredentials;
 use GuzzleHttp\Cookie\CookieJar;
 use Saloon\Http\Connector;
+use Saloon\Http\Request;
+use Saloon\PaginationPlugin\Contracts\HasPagination;
+use Saloon\PaginationPlugin\OffsetPaginator;
 
-class DocuWareStaticConnector extends Connector
+class DocuWareStaticConnector extends Connector implements HasPagination
 {
     public CookieJar $cookieJar;
 
@@ -46,5 +49,10 @@ class DocuWareStaticConnector extends Connector
     public function getCoookieJar(): CookieJar
     {
         return $this->cookieJar;
+    }
+
+    public function paginate(Request $request): OffsetPaginator
+    {
+        return new DocuWareOffsetPaginator(connector: $this, request: $request);
     }
 }

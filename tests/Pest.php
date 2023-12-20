@@ -41,12 +41,12 @@ function clearFiles(): void
 {
     $connector = getConnector();
 
-    $documents = $connector->send(new GetDocumentsRequest(
+    $paginator = $connector->send(new GetDocumentsRequest(
         config('laravel-docuware.tests.file_cabinet_id')
     ))->dto();
 
-    foreach ($documents as $document) {
-        $delete = $connector->send(new DeleteDocumentRequest(
+    foreach ($paginator->documents as $document) {
+        $connector->send(new DeleteDocumentRequest(
             config('laravel-docuware.tests.file_cabinet_id'),
             $document->id,
         ))->dto();

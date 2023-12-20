@@ -3,6 +3,7 @@
 use Carbon\Carbon;
 use CodebarAg\DocuWare\DocuWare;
 use CodebarAg\DocuWare\DTO\DocumentIndex\IndexTextDTO;
+use CodebarAg\DocuWare\DTO\DocumentPaginator;
 use CodebarAg\DocuWare\Events\DocuWareResponseLog;
 use CodebarAg\DocuWare\Exceptions\UnableToSearch;
 use CodebarAg\DocuWare\Requests\Document\PostDocumentRequest;
@@ -18,6 +19,8 @@ it('can search documents', function () {
         ->searchRequestBuilder()
         ->fileCabinet($fileCabinetId)
         ->dialog($dialogId)
+        ->page(1)
+        ->perPage(5)
         ->fulltext('test')
         ->filterDate('DWSTOREDATETIME', '>=', Carbon::create(2021))
         ->filterDate('DWSTOREDATETIME', '<', now())
@@ -25,21 +28,10 @@ it('can search documents', function () {
         ->orderBy('DWSTOREDATETIME', 'desc')
         ->get();
 
-    $paginator = $this->connector->paginate($paginatorRequest);
+    $paginator = $this->connector->send($paginatorRequest)->dto();
 
-    $paginator->setPerPageLimit(5)
-        ->setStartPage(1)
-        ->setMaxPages(1);
-
-    $documents = collect();
-
-    foreach ($paginator as $response) {
-        $this->assertCount(0, $response->dto());
-
-        $documents->push($response->dto());
-    }
-
-    $this->assertCount(0, $documents->flatten());
+    $this->assertInstanceOf(DocumentPaginator::class, $paginator);
+    Event::assertDispatched(DocuWareResponseLog::class);
 })->group('search');
 
 it('can\'t search documents by more than two dates', function () {
@@ -54,6 +46,8 @@ it('can\'t search documents by more than two dates', function () {
         ->searchRequestBuilder()
         ->fileCabinet($fileCabinetId)
         ->dialog($dialogId)
+        ->page(1)
+        ->perPage(5)
         ->fulltext('test')
         ->filterDate('DWSTOREDATETIME', '>=', Carbon::create(2020))
         ->filterDate('DWSTOREDATETIME', '>=', Carbon::create(2021))
@@ -62,21 +56,7 @@ it('can\'t search documents by more than two dates', function () {
         ->orderBy('DWSTOREDATETIME', 'desc')
         ->get();
 
-    $paginator = $this->connector->paginate($request);
-
-    $paginator->setPerPageLimit(5)
-        ->setStartPage(1)
-        ->setMaxPages(1);
-
-    $documents = collect();
-
-    foreach ($paginator as $response) {
-        $this->assertCount(2, $response->dto());
-
-        $documents->push($response->dto());
-    }
-
-    $this->assertCount(4, $documents->flatten());
+    $this->connector->send($request)->dto();
 })->group('search');
 
 it('can override search documents dates filter by using same operator', function () {
@@ -89,6 +69,8 @@ it('can override search documents dates filter by using same operator', function
         ->searchRequestBuilder()
         ->fileCabinet($fileCabinetId)
         ->dialog($dialogId)
+        ->page(1)
+        ->perPage(5)
         ->fulltext('test')
         ->filterDate('DWSTOREDATETIME', '<=', Carbon::create(2022))
         ->filterDate('DWSTOREDATETIME', '>=', Carbon::create(2020))
@@ -97,21 +79,10 @@ it('can override search documents dates filter by using same operator', function
         ->orderBy('DWSTOREDATETIME', 'desc')
         ->get();
 
-    $paginator = $this->connector->paginate($paginatorRequest);
+    $paginator = $this->connector->send($paginatorRequest)->dto();
 
-    $paginator->setPerPageLimit(5)
-        ->setStartPage(1)
-        ->setMaxPages(1);
-
-    $documents = collect();
-
-    foreach ($paginator as $response) {
-        $this->assertCount(0, $response->dto());
-
-        $documents->push($response->dto());
-    }
-
-    $this->assertCount(0, $documents->flatten());
+    $this->assertInstanceOf(DocumentPaginator::class, $paginator);
+    Event::assertDispatched(DocuWareResponseLog::class);
 })->group('search');
 
 it('can override search documents dates filter by using equal operator', function () {
@@ -124,6 +95,8 @@ it('can override search documents dates filter by using equal operator', functio
         ->searchRequestBuilder()
         ->fileCabinet($fileCabinetId)
         ->dialog($dialogId)
+        ->page(1)
+        ->perPage(5)
         ->fulltext('test')
         ->filterDate('DWSTOREDATETIME', '>=', Carbon::create(2020))
         ->filterDate('DWSTOREDATETIME', '=', Carbon::create(2021))
@@ -131,21 +104,10 @@ it('can override search documents dates filter by using equal operator', functio
         ->orderBy('DWSTOREDATETIME', 'desc')
         ->get();
 
-    $paginator = $this->connector->paginate($paginatorRequest);
+    $paginator = $this->connector->send($paginatorRequest)->dto();
 
-    $paginator->setPerPageLimit(5)
-        ->setStartPage(1)
-        ->setMaxPages(1);
-
-    $documents = collect();
-
-    foreach ($paginator as $response) {
-        $this->assertCount(0, $response->dto());
-
-        $documents->push($response->dto());
-    }
-
-    $this->assertCount(0, $documents->flatten());
+    $this->assertInstanceOf(DocumentPaginator::class, $paginator);
+    Event::assertDispatched(DocuWareResponseLog::class);
 })->group('search');
 
 it('can\'t search documents by diverged date range', function () {
@@ -160,6 +122,8 @@ it('can\'t search documents by diverged date range', function () {
         ->searchRequestBuilder()
         ->fileCabinet($fileCabinetId)
         ->dialog($dialogId)
+        ->page(1)
+        ->perPage(5)
         ->fulltext('test')
         ->filterDate('DWSTOREDATETIME', '<=', Carbon::create(2020))
         ->filterDate('DWSTOREDATETIME', '>=', Carbon::create(2021))
@@ -167,21 +131,7 @@ it('can\'t search documents by diverged date range', function () {
         ->orderBy('DWSTOREDATETIME', 'desc')
         ->get();
 
-    $paginator = $this->connector->paginate($request);
-
-    $paginator->setPerPageLimit(5)
-        ->setStartPage(1)
-        ->setMaxPages(1);
-
-    $documents = collect();
-
-    foreach ($paginator as $response) {
-        $this->assertCount(2, $response->dto());
-
-        $documents->push($response->dto());
-    }
-
-    $this->assertCount(4, $documents->flatten());
+    $this->connector->send($request)->dto();
 })->group('search');
 
 it('can search documents dates filter in future', function () {
@@ -194,27 +144,18 @@ it('can search documents dates filter in future', function () {
         ->searchRequestBuilder()
         ->fileCabinet($fileCabinetId)
         ->dialog($dialogId)
+        ->page(1)
+        ->perPage(5)
         ->fulltext('test')
         ->filterDate('DWSTOREDATETIME', '>', Carbon::create(2018))
         ->filter('DOCUMENT_TYPE', 'Abrechnung')
         ->orderBy('DWSTOREDATETIME', 'desc')
         ->get();
 
-    $paginator = $this->connector->paginate($paginatorRequest);
+    $paginator = $this->connector->send($paginatorRequest)->dto();
 
-    $paginator->setPerPageLimit(5)
-        ->setStartPage(1)
-        ->setMaxPages(1);
-
-    $documents = collect();
-
-    foreach ($paginator as $response) {
-        $this->assertCount(0, $response->dto());
-
-        $documents->push($response->dto());
-    }
-
-    $this->assertCount(0, $documents->flatten());
+    $this->assertInstanceOf(DocumentPaginator::class, $paginator);
+    Event::assertDispatched(DocuWareResponseLog::class);
 })->group('search');
 
 it('can search documents dates filter in past', function () {
@@ -227,27 +168,18 @@ it('can search documents dates filter in past', function () {
         ->searchRequestBuilder()
         ->fileCabinet($fileCabinetId)
         ->dialog($dialogId)
+        ->page(1)
+        ->perPage(5)
         ->fulltext('test')
         ->filterDate('DWSTOREDATETIME', '<=', Carbon::create(2020))
         ->filter('DOCUMENT_TYPE', 'Abrechnung')
         ->orderBy('DWSTOREDATETIME', 'desc')
         ->get();
 
-    $paginator = $this->connector->paginate($paginatorRequest);
+    $paginator = $this->connector->send($paginatorRequest)->dto();
 
-    $paginator->setPerPageLimit(5)
-        ->setStartPage(1)
-        ->setMaxPages(1);
-
-    $documents = collect();
-
-    foreach ($paginator as $response) {
-        $this->assertCount(0, $response->dto());
-
-        $documents->push($response->dto());
-    }
-
-    $this->assertCount(0, $documents->flatten());
+    $this->assertInstanceOf(DocumentPaginator::class, $paginator);
+    Event::assertDispatched(DocuWareResponseLog::class);
 })->group('search');
 
 it('can search documents with null values', function () {
@@ -260,22 +192,17 @@ it('can search documents with null values', function () {
     $paginatorRequest = (new DocuWare())
         ->searchRequestBuilder()
         ->fileCabinets($fileCabinetIds)
+        ->page(null)
+        ->perPage(null)
         ->fulltext(null)
         ->filter('DOCUMENT_TYPE', null)
         ->orderBy('DWSTOREDATETIME', null)
         ->get();
 
-    $paginator = $this->connector->paginate($paginatorRequest);
+    $paginator = $this->connector->send($paginatorRequest)->dto();
 
-    $documents = collect();
-
-    foreach ($paginator as $response) {
-        $this->assertCount(0, $response->dto());
-
-        $documents->push($response->dto());
-    }
-
-    $this->assertCount(0, $documents->flatten());
+    $this->assertInstanceOf(DocumentPaginator::class, $paginator);
+    Event::assertDispatched(DocuWareResponseLog::class);
 })->group('search');
 
 it('can search documents with multiple values', function () {
@@ -319,55 +246,15 @@ it('can search documents with multiple values', function () {
     $paginatorRequestBothDocuments = (new DocuWare())
         ->searchRequestBuilder()
         ->fileCabinets([$fileCabinetId])
+        ->page(null)
+        ->perPage(null)
         ->fulltext(null)
         ->filterIn('DOCUMENT_TYPE', ['Abrechnung', 'Rechnung'])
         ->get();
 
-    $paginator = $this->connector->paginate($paginatorRequestBothDocuments);
+    $paginator = $this->connector->send($paginatorRequestBothDocuments)->dto();
 
-    $documents = collect();
-
-    foreach ($paginator as $response) {
-        $this->assertCount(2, $response->dto());
-
-        $documents->push($response->dto());
-    }
-
-    $this->assertCount(2, $documents->flatten());
-    Event::assertDispatched(DocuWareResponseLog::class);
-})->group('search');
-
-it('can search and get paginated results', function () {
-    Event::fake();
-
-    $fileCabinetId = config('laravel-docuware.tests.file_cabinet_id');
-
-    for ($i = 0; $i < 4; $i++) {
-        $this->connector->send(new PostDocumentRequest(
-            config('laravel-docuware.tests.file_cabinet_id'),
-            '::fake-file-content::',
-            'example.txt'
-        ))->dto();
-    }
-
-    $paginatorRequestBothDocuments = (new DocuWare())
-        ->searchRequestBuilder()
-        ->fileCabinets([$fileCabinetId])
-        ->fulltext(null)
-        ->get();
-
-    $paginator = $this->connector->paginate($paginatorRequestBothDocuments);
-
-    $paginator->setPerPageLimit(2);
-
-    $documents = collect();
-
-    foreach ($paginator as $response) {
-        $this->assertCount(2, $response->dto());
-
-        $documents->push($response->dto());
-    }
-
-    $this->assertCount(4, $documents->flatten());
+    $this->assertInstanceOf(DocumentPaginator::class, $paginator);
+    $this->assertCount(2, $paginator->documents);
     Event::assertDispatched(DocuWareResponseLog::class);
 })->group('search');

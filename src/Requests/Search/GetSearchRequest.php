@@ -2,9 +2,8 @@
 
 namespace CodebarAg\DocuWare\Requests\Search;
 
-use CodebarAg\DocuWare\DTO\Document;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Collection;
+use CodebarAg\DocuWare\DTO\DocumentPaginator;
+use CodebarAg\DocuWare\Responses\Search\GetSearchResponse;
 use Illuminate\Support\Facades\Cache;
 use Saloon\CachePlugin\Contracts\Cacheable;
 use Saloon\CachePlugin\Drivers\LaravelCacheDriver;
@@ -13,10 +12,9 @@ use Saloon\Contracts\Body\HasBody;
 use Saloon\Enums\Method;
 use Saloon\Http\Request;
 use Saloon\Http\Response;
-use Saloon\PaginationPlugin\Contracts\Paginatable;
 use Saloon\Traits\Body\HasJsonBody;
 
-class GetSearchRequest extends Request implements Cacheable, HasBody, Paginatable
+class GetSearchRequest extends Request implements Cacheable, HasBody
 {
     use HasCaching;
     use HasJsonBody;
@@ -27,6 +25,8 @@ class GetSearchRequest extends Request implements Cacheable, HasBody, Paginatabl
         protected readonly ?string $fileCabinetId,
         protected readonly ?string $dialogId = null,
         protected readonly array $additionalFileCabinetIds = [],
+        protected readonly int $page = 1,
+        protected readonly int $perPage = 50,
         protected readonly ?string $searchTerm = null,
         protected readonly string $orderField = 'DWSTOREDATETIME',
         protected readonly string $orderDirection = 'asc',
@@ -63,6 +63,8 @@ class GetSearchRequest extends Request implements Cacheable, HasBody, Paginatabl
     public function defaultBody(): array
     {
         return [
+            'Count' => $this->perPage,
+            'Start' => ($this->page - 1) * $this->perPage,
             'Condition' => $this->condition,
             'AdditionalCabinets' => $this->additionalFileCabinetIds,
             'SortOrder' => [
@@ -78,10 +80,8 @@ class GetSearchRequest extends Request implements Cacheable, HasBody, Paginatabl
         ];
     }
 
-    public function createDtoFromResponse(Response $response): Collection
+    public function createDtoFromResponse(Response $response): DocumentPaginator
     {
-        return collect(Arr::get($response->json(), 'Items'))->map(function (array $document) {
-            return Document::fromJson($document);
-        });
+        return GetSearchResponse::fromResponse($response, $this->page, $this->perPage);
     }
 }

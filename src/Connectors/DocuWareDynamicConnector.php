@@ -6,11 +6,8 @@ use CodebarAg\DocuWare\DTO\Config;
 use CodebarAg\DocuWare\Support\Auth;
 use GuzzleHttp\Cookie\CookieJar;
 use Saloon\Http\Connector;
-use Saloon\Http\Request;
-use Saloon\PaginationPlugin\Contracts\HasPagination;
-use Saloon\PaginationPlugin\OffsetPaginator;
 
-class DocuWareDynamicConnector extends Connector implements HasPagination
+class DocuWareDynamicConnector extends Connector
 {
     public Config $configuration;
 
@@ -57,10 +54,5 @@ class DocuWareDynamicConnector extends Connector implements HasPagination
     public function getConfiguration(): Config
     {
         return $this->configuration;
-    }
-
-    public function paginate(Request $request): OffsetPaginator
-    {
-        return new DocuWareOffsetPaginator(connector: $this, request: $request);
     }
 }

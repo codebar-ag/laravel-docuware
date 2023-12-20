@@ -4,7 +4,6 @@ namespace CodebarAg\DocuWare\Requests\Document;
 
 use CodebarAg\DocuWare\DTO\DocumentPaginator;
 use CodebarAg\DocuWare\Responses\Document\GetDocumentsResponse;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Saloon\CachePlugin\Contracts\Cacheable;
 use Saloon\CachePlugin\Drivers\LaravelCacheDriver;

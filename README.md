@@ -141,7 +141,7 @@ $document = $connector->send(new GetDocumentRequest($fileCabinetId, $documentId)
 /**
  * Return all documents for a file cabinet.
  */
-$documents = $connector->send(new GetDocumentRequest($fileCabinetId))->dto();
+$documents = $connector->send(new GetDocumentsRequest($fileCabinetId))->dto();
 
 /**
  * Return image preview of a document.

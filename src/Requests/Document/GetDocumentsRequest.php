@@ -2,8 +2,8 @@
 
 namespace CodebarAg\DocuWare\Requests\Document;
 
+use CodebarAg\DocuWare\DTO\DocumentPaginator;
 use CodebarAg\DocuWare\Responses\Document\GetDocumentsResponse;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Saloon\CachePlugin\Contracts\Cacheable;
 use Saloon\CachePlugin\Drivers\LaravelCacheDriver;
@@ -20,7 +20,17 @@ class GetDocumentsRequest extends Request implements Cacheable
 
     public function __construct(
         protected readonly string $fileCabinetId,
+        protected readonly int $page = 1,
+        protected readonly int $perPage = 50,
     ) {
+    }
+
+    public function defaultQuery(): array
+    {
+        return [
+            'count' => $this->perPage,
+            'start' => ($this->page - 1) * $this->perPage,
+        ];
     }
 
     public function resolveEndpoint(): string
@@ -38,8 +48,8 @@ class GetDocumentsRequest extends Request implements Cacheable
         return config('laravel-docuware.configurations.cache.lifetime_in_seconds', 3600);
     }
 
-    public function createDtoFromResponse(Response $response): Collection
+    public function createDtoFromResponse(Response $response): DocumentPaginator
     {
-        return GetDocumentsResponse::fromResponse($response);
+        return GetDocumentsResponse::fromResponse($response, $this->page, $this->perPage);
     }
 }

@@ -2,22 +2,30 @@
 
 namespace CodebarAg\DocuWare\Responses\Document;
 
-use CodebarAg\DocuWare\DTO\Document;
+use CodebarAg\DocuWare\DTO\DocumentPaginator;
 use CodebarAg\DocuWare\Events\DocuWareResponseLog;
 use CodebarAg\DocuWare\Support\EnsureValidResponse;
-use Illuminate\Support\Collection;
+use Exception;
 use Saloon\Http\Response;
 
 final class GetDocumentsResponse
 {
-    public static function fromResponse(Response $response): Collection
+    public static function fromResponse(Response $response, $page, $perPage): DocumentPaginator
     {
         event(new DocuWareResponseLog($response));
 
-        EnsureValidResponse::from($response);
+        try {
+            EnsureValidResponse::from($response);
 
-        $items = $response->throw()->json('Items');
+            $data = $response->throw()->json();
+        } catch (Exception $e) {
+            return DocumentPaginator::fromFailed($e);
+        }
 
-        return collect($items)->map(fn (array $item) => Document::fromJson($item));
+        return DocumentPaginator::fromJson(
+            $data,
+            $page,
+            $perPage,
+        );
     }
 }

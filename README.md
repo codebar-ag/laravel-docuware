@@ -102,57 +102,89 @@ $config = Config::make([
 ]);
 
 $connector = new DocuWareDynamicConnector($config);
+```
 
+```php
 /**
  * Return an organization.
  */
+ 
 $organization = $connector->send(new GetOrganizationRequest($id))->dto();
+```
 
+```php
 /**
  * Return all organizations.
  */
+ 
 $organizations = $connector->send(new GetOrganizationsRequest())->dto();
+```
 
+```php
 /**
  * Return all file cabinets.
  */
+ 
 $fileCabinets = $connector->send(new GetFileCabinetsRequest())->dto();
+```
 
+```php
 /**
  * Return all fields of a file cabinet.
  */
+ 
 $fields = $connector->send(new GetFieldsRequest($fileCabinetId))->dto();
+```
 
+```php
 /**
  * Return all dialogs of a file cabinet.
  */
+ 
 $dialogs = $connector->send(new GetDialogsRequest($fileCabinetId))->dto();
+```
 
+```php
 /**
  * Return all used values for a specific field.
  */
+ 
 $values = $connector->send(new GetSelectListRequest($fileCabinetId, $dialogId, $fieldName))->dto();
+```
 
+```php
 /**
  * Return a document.
  */
+ 
 $document = $connector->send(new GetDocumentRequest($fileCabinetId, $documentId))->dto();
+```
 
+```php
 /**
  * Return all documents for a file cabinet.
  */
+ 
 $documents = $connector->send(new GetDocumentsRequest($fileCabinetId))->dto();
+```
 
+```php
 /**
  * Return image preview of a document.
  */
+ 
 $content = $connector->send(new GetDocumentPreviewRequest($fileCabinetId, $documentId))->dto();
+```
 
+```php
 /**
  * Download single document.
  */
+ 
 $content = $connector->send(new GetDocumentDownloadRequest($fileCabinetId, $documentId))->dto();
+```
 
+```php
 /**
  * Download multiple documents.
  * 
@@ -161,46 +193,68 @@ $content = $connector->send(new GetDocumentDownloadRequest($fileCabinetId, $docu
  * 
  * Also note there is a default request timeout of 30 seconds.
  */
+ 
 $content = $connector->send(new GetDocumentsDownloadRequest($fileCabinetId, $documentIds))->dto();
+```
 
+```php
 /**
  * Get sections of a document.
  */
+ 
 $section = $connector->send(new GetSectionsRequest($fileCabinetId, $documentId))->dto();
+```
 
+```php
 /**
  * Download a document thumbnail.
  * 
  * You will use $section->id from above as $thumbnailId.
  */
+ 
 $thumbnail = $connector->send(new GetDocumentDownloadThumbnailRequest($fileCabinetId, $thumbnailId, $page = 0))->dto();
+```
 
+```php
 /**
  * Update value of a indexed field.
  */
+ 
 $value = $connector->send(new PutDocumentFieldsRequest($fileCabinetId, $documentId, [$fieldName => $newValue]))->dto();
+```
 
+```php
 /**
  * Update multiple values of indexed fields.
  */
+ 
 $values = $connector->send(new PutDocumentFieldsRequest($fileCabinetId, $documentId, [
     $fieldName => $newValue,
     $field2Name => $new2Value,
 ]))->dto();
+```
 
+```php
 /**
  * Upload new document.
  */
+ 
 $document = $connector->send(new PostDocumentRequest($fileCabinetId, $fileContent, $fileName))->dto();
+```
 
+```php
 /**
  * Get total document count.
  */
+ 
 $content = $connector->send(new GetDocumentCountRequest($fileCabinetId, $dialogId))->dto();
+```
 
+```php
 /**
  * Upload new document with index values.
  */
+ 
 use CodebarAg\DocuWare\DTO\DocumentIndex\PrepareDTO;
  
 $indexes = collect([
@@ -216,11 +270,13 @@ $document = $connector->send(new PostDocumentRequest(
     $fileName,
     $indexes,
 ))->dto();
+```
 
-
+```php
 /**
  * Upload new data entry with index values.
  */
+ 
 use CodebarAg\DocuWare\DTO\DocumentIndex\PrepareDTO;
  
 $indexes = collect([
@@ -236,10 +292,13 @@ $document = $connector->send(new PostDocumentRequest(
     null,
     $indexes,
 ))->dto();
+```
 
+```php
 /**
  * Delete document.
  */
+ 
 $connector->send(new DeleteDocumentRequest($fileCabinetId, $document->id))->dto();
 ```
 
@@ -250,11 +309,14 @@ use CodebarAg\DocuWare\Facades\DocuWare;
 use CodebarAg\DocuWare\Connectors\DocuWareStaticConnector;
 
 $connector = new DocuWareStaticConnector();
+```
 
+```php
 /**
  * Most basic example to search for documents. You only need to provide a valid
  * file cabinet id.
  */
+ 
 $fileCabinetId = '87356f8d-e50c-450b-909c-4eaccd318fbf';
 
 $paginatorRequest = DocuWare::searchRequestBuilder()
@@ -262,10 +324,13 @@ $paginatorRequest = DocuWare::searchRequestBuilder()
     ->get();
     
 $paginator = $connector->send($paginatorRequest)->dto();
+```
 
+```php
 /**
  * Search in multiple file cabinets. Provide an array of file cabinet ids.
  */
+ 
 $fileCabinetIds = [
     '0ee72de3-4258-4353-8020-6a3ff6dd650f',
     '3f9cb4ff-82f2-44dc-b439-dd648269064f',
@@ -276,75 +341,96 @@ $paginatorRequest = DocuWare::searchRequestBuilder()
     ->get();
     
 $paginator = $connector->send($paginatorRequest)->dto();
+```
 
+```php
 /**
  * Find results on the next page. 
  * 
  * Default: 1
  */
+ 
 $paginatorRequest = DocuWare::searchRequestBuilder()
     ->fileCabinet($id)
     ->page(2)
     ->get();
     
 $paginator = $connector->send($paginatorRequest)->dto();
-    
+```
+
+```php
 /**
  * Define the number of results which should be shown per page.
  * 
  * Default: 50
  */
+ 
 $paginatorRequest = DocuWare::searchRequestBuilder()
     ->fileCabinet($id)
     ->perPage(30)
     ->get();
     
 $paginator = $connector->send($paginatorRequest)->dto();
+```
 
+```php
 /**
  * Use the full-text search. You have to activate full-text search in your file
  * cabinet before you can use this feature.
  */
+ 
 $paginatorRequest = DocuWare::searchRequestBuilder()
     ->fileCabinet($id)
     ->fulltext('My secret document')
     ->get();
     
 $paginator = $connector->send($paginatorRequest)->dto();
+```
 
+```php
 /**
  * Search documents which are created from the first of march.
  */
+ 
 $paginatorRequest = DocuWare::searchRequestBuilder()
     ->fileCabinet($id)
     ->filterDate('DWSTOREDATETIME', '>=', Carbon::create(2021, 3, 1))
     ->get();
     
 $paginator = $connector->send($paginatorRequest)->dto();
+```
 
+```php
 /**
  * Search documents which are created until the first of april.
  */
+ 
 $paginatorRequest = DocuWare::searchRequestBuilder()
     ->fileCabinet($id)
     ->filterDate('DWSTOREDATETIME', '<', Carbon::create(2021, 4, 1))
     ->get();
     
 $paginator = $connector->send($paginatorRequest)->dto();
+```
 
+```php
 /**
  * Order the results by field name. Supported values: 'asc', 'desc'
  */
+ 
 $paginatorRequest = DocuWare::searchRequestBuilder()
     ->fileCabinet($id)
     ->orderBy('DWSTOREDATETIME', 'desc')
     ->get();
     
 $paginator = $connector->send($paginatorRequest)->dto();
+```
 
+```php
 /**
  * Search documents filtered to the value. You can specify multiple filters.
  */
+ 
 $paginatorRequest = DocuWare::searchRequestBuilder()
     ->fileCabinet($id)
     ->filter('TYPE', 'Order')
@@ -352,20 +438,26 @@ $paginatorRequest = DocuWare::searchRequestBuilder()
     ->get();
     
 $paginator = $connector->send($paginatorRequest)->dto();
+```
 
+```php
 /**
  * Search documents filtered to multiple values.
  */
+ 
 $paginatorRequest = DocuWare::searchRequestBuilder()
     ->fileCabinet($id)
     ->filterIn('TYPE', ['Order', 'Invoice'])
     ->get();
     
 $paginator = $connector->send($paginatorRequest)->dto();
-    
+```
+
+```php
 /**
  * You can specify the dialog which should be used.
  */
+ 
 $dialogId = 'bb42c30a-89fc-4b81-9091-d7e326caba62';
 
 $paginatorRequest = DocuWare::searchRequestBuilder()
@@ -374,10 +466,13 @@ $paginatorRequest = DocuWare::searchRequestBuilder()
     ->get();
     
 $paginator = $connector->send($paginatorRequest)->dto();
-    
+```
+
+```php  
 /**
  * You can also combine everything.
  */
+ 
 $paginatorRequest = DocuWare::searchRequestBuilder()
     ->fileCabinet($id)
     ->page(2)
@@ -398,10 +493,13 @@ $paginator = $connector->send($paginatorRequest)->dto();
 
 ```php
 use CodebarAg\DocuWare\Facades\DocuWare;
+```
 
+```php
 /**
  * Make encrypted URL for a document in a file cabinet.
  */
+ 
 $fileCabinetId = '87356f8d-e50c-450b-909c-4eaccd318fbf';
 $documentId = 42;
 
@@ -409,21 +507,27 @@ $url = DocuWare::url()
     ->fileCabinet($fileCabinetId)
     ->document($documentId)
     ->make();
+```
 
+```php
 /**
  * Make encrypted URL for a document in a basket.
  */
+ 
 $basketId = 'b_87356f8d-e50c-450b-909c-4eaccd318fbf';
 
 $url = DocuWare::url()
     ->basket($basketId)
     ->document($documentId)
     ->make();
+```
 
+```php
 /**
  * Make encrypted URL valid for a specific amount of time. In the example below
  * the URL is valid for one week. Afterwards the URL is no longer working.
  */
+ 
 $url = DocuWare::url()
     ->fileCabinet($fileCabinetId)
     ->document($documentId)
@@ -635,22 +739,31 @@ logout with DocuWare:
 
 ```php
 use CodebarAg\DocuWare\Facades\DocuWare;
+```
 
+```php
 /**
  * Receive a cookie
  */
+ 
 DocuWare::cookie(string $url, string $username, string $password);
+```
 
+```php
 /**
  * Login with your credentials. You only need to login once. Afterwards the
  * authentication cookie is stored in the cache as `docuware.cookies` and
  * is used for all further requests.
  */
+ 
 DocuWare::login();
+```
 
+```php
 /**
  * Logout your current session. Removes the authentication cookie in the cache.
  */
+ 
 DocuWare::logout();
 ```
 

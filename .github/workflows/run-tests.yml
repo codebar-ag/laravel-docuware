@@ -14,8 +14,8 @@ jobs:
       max-parallel: 1
       matrix:
         os: [ ubuntu-latest, windows-latest ]
-        php: [ 8.2, 8.3 ]
-        laravel: [ 10.* ]
+        php: [ 8.3 ]
+        laravel: [ 11.* ]
         stability: [ prefer-lowest, prefer-stable ]
 
     name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.stability }} - ${{ matrix.os }}

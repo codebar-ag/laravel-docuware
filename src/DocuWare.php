@@ -11,6 +11,7 @@ use CodebarAg\DocuWare\Support\EnsureValidCookie;
 use CodebarAg\DocuWare\Support\EnsureValidCredentials;
 use CodebarAg\DocuWare\Support\EnsureValidResponse;
 use GuzzleHttp\Cookie\CookieJar;
+use Illuminate\Support\Arr;
 use Saloon\Exceptions\InvalidResponseClassException;
 use Saloon\Exceptions\PendingRequestException;
 
@@ -40,10 +41,10 @@ class DocuWare
         EnsureValidResponse::from($response);
 
         $cookies = collect($response->headers()->get('Set-Cookie'))->flatMap(function ($cookie) {
-            $data = explode(';', $cookie)[0];
+            $data = Arr::get(explode(';', $cookie), 0);
             $split = explode('=', $data);
 
-            return [$split[0] => $split[1]];
+            return [Arr::get($split, 0) => Arr::get($split, 1)];
         });
 
         return Cookie::make(CookieJar::fromArray($cookies->toArray(), $url));

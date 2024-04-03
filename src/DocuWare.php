@@ -24,17 +24,14 @@ class DocuWare
      */
     public function cookie(string $url, string $username, string $password, $rememberMe = false, $redirectToMyselfInCaseOfError = false, $licenseType = null): Cookie
     {
-        $cookieJar = new CookieJar();
-
         $request = new PostLoginRequest(
             $url,
             $username,
             $password,
             $rememberMe,
             $redirectToMyselfInCaseOfError,
-            $licenseType);
-
-        $request->config()->add('cookies', $cookieJar);
+            $licenseType
+        );
 
         $response = $request->send();
 
@@ -42,8 +39,14 @@ class DocuWare
 
         EnsureValidResponse::from($response);
 
-        return Cookie::make($cookieJar);
+        $cookies = collect($response->headers()->get('Set-Cookie'))->flatMap(function ($cookie) {
+            $data = explode(';', $cookie)[0];
+            $split = explode('=', $data);
 
+            return [$split[0] => $split[1]];
+        });
+
+        return Cookie::make(CookieJar::fromArray($cookies->toArray(), $url));
     }
 
     /**

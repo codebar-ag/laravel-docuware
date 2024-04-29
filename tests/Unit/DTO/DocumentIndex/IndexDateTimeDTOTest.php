@@ -2,7 +2,7 @@
 
 namespace CodebarAg\DocuWare\Tests\Unit\DTO;
 
-use CodebarAg\DocuWare\DTO\DocumentIndex\IndexDateTimeDTO;
+use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexDateTimeDTO;
 
 it('create index date time dto', function () {
 

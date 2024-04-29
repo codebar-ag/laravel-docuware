@@ -1,14 +1,11 @@
 <?php
 
-use CodebarAg\DocuWare\Connectors\DocuWareStaticConnector;
-use CodebarAg\DocuWare\DTO\Config;
-use CodebarAg\DocuWare\Requests\Document\DeleteDocumentRequest;
-use CodebarAg\DocuWare\Requests\Document\GetDocumentsRequest;
-use CodebarAg\DocuWare\Support\EnsureValidCookie;
+use CodebarAg\DocuWare\Connectors\DocuWareConnector;
+use CodebarAg\DocuWare\Requests\Documents\ModifyDocuments\DeleteDocument;
+use CodebarAg\DocuWare\Requests\FileCabinets\Search\GetDocumentsFromAFileCabinet;
 use CodebarAg\DocuWare\Tests\TestCase;
 
 uses(TestCase::class)
-    ->group('docuware')
     ->in(__DIR__);
 
 uses()
@@ -24,29 +21,23 @@ uses()
  */
 function getConnector(): object
 {
-    EnsureValidCookie::check();
+    if (! env('DOCUWARE_TOKEN')) {
+        throw new Exception('DOCUWARE_TOKEN is not set in the .env file.');
+    }
 
-    $config = Config::make([
-        'url' => config('laravel-docuware.credentials.url'),
-        'cookie' => config('laravel-docuware.cookies'),
-        'cache_driver' => config('laravel-docuware.configurations.cache.driver'),
-        'cache_lifetime_in_seconds' => config('laravel-docuware.configurations.cache.lifetime_in_seconds'),
-        'request_timeout_in_seconds' => config('laravel-docuware.timeout'),
-    ]);
-
-    return new DocuWareStaticConnector($config);
+    return new DocuWareConnector(env('DOCUWARE_TOKEN'));
 }
 
 function clearFiles(): void
 {
     $connector = getConnector();
 
-    $paginator = $connector->send(new GetDocumentsRequest(
+    $paginator = $connector->send(new GetDocumentsFromAFileCabinet(
         config('laravel-docuware.tests.file_cabinet_id')
     ))->dto();
 
     foreach ($paginator->documents as $document) {
-        $connector->send(new DeleteDocumentRequest(
+        $connector->send(new DeleteDocument(
             config('laravel-docuware.tests.file_cabinet_id'),
             $document->id,
         ))->dto();

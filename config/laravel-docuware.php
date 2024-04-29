@@ -14,16 +14,6 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Cookies
-    |--------------------------------------------------------------------------
-    | This variable is optional and only used if you want to set the request cookie manually.
-    |
-    */
-
-    'cookies' => env('DOCUWARE_COOKIES'),
-
-    /*
-    |--------------------------------------------------------------------------
     | Requests timeout
     |--------------------------------------------------------------------------
     | This variable is optional and only used if you want to set the request timeout manually.
@@ -61,19 +51,6 @@ return [
     */
 
     'passphrase' => env('DOCUWARE_PASSPHRASE'),
-
-    /*
-    |--------------------------------------------------------------------------
-    | Authentication Cookie Lifetime
-    |--------------------------------------------------------------------------
-    |
-    | Here you may define the amount of minutes the authentication cookie is
-    | valid. Afterwards it will be removed from the cache and you need to
-    | provide a fresh one. By default, the lifetime lasts for one year.
-    |
-    */
-
-    'cookie_lifetime' => (int) env('DOCUWARE_COOKIE_LIFETIME', 525600),
 
     /*
     |--------------------------------------------------------------------------

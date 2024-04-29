@@ -1,9 +1,9 @@
 <?php
 
-use CodebarAg\DocuWare\DTO\DocumentIndex\IndexTextDTO;
+use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexTextDTO;
 use CodebarAg\DocuWare\Events\DocuWareResponseLog;
-use CodebarAg\DocuWare\Requests\Document\PostDocumentRequest;
-use CodebarAg\DocuWare\Requests\Document\PutDocumentFieldsRequest;
+use CodebarAg\DocuWare\Requests\Documents\UpdateIndexValues\UpdateIndexValues;
+use CodebarAg\DocuWare\Requests\FileCabinets\Upload\CreateDataRecord;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Event;
 
@@ -13,13 +13,13 @@ it('can update a document value', function () {
     $fileCabinetId = config('laravel-docuware.tests.file_cabinet_id');
     $newValue = 'laravel-docuware';
 
-    $document = $this->connector->send(new PostDocumentRequest(
+    $document = $this->connector->send(new CreateDataRecord(
         $fileCabinetId,
         '::fake-file-content::',
         'example.txt'
     ))->dto();
 
-    $response = $this->connector->send(new PutDocumentFieldsRequest(
+    $response = $this->connector->send(new UpdateIndexValues(
         $fileCabinetId,
         $document->id,
         collect([
@@ -37,13 +37,13 @@ it('can update multiple document values', function () {
 
     $fileCabinetId = config('laravel-docuware.tests.file_cabinet_id');
 
-    $document = $this->connector->send(new PostDocumentRequest(
+    $document = $this->connector->send(new CreateDataRecord(
         $fileCabinetId,
         '::fake-file-content::',
         'example.txt'
     ))->dto();
 
-    $response = $this->connector->send(new PutDocumentFieldsRequest(
+    $response = $this->connector->send(new UpdateIndexValues(
         $fileCabinetId,
         $document->id,
         collect([

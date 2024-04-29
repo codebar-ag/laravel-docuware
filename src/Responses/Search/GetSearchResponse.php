@@ -2,7 +2,7 @@
 
 namespace CodebarAg\DocuWare\Responses\Search;
 
-use CodebarAg\DocuWare\DTO\DocumentPaginator;
+use CodebarAg\DocuWare\DTO\Documents\DocumentPaginator;
 use CodebarAg\DocuWare\Events\DocuWareResponseLog;
 use CodebarAg\DocuWare\Support\EnsureValidResponse;
 use Exception;

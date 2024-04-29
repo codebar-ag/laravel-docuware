@@ -2,8 +2,8 @@
 
 namespace CodebarAg\DocuWare\Tests\Unit\DTO;
 
-use CodebarAg\DocuWare\DTO\DocumentIndex\IndexDateDTO;
-use CodebarAg\DocuWare\DTO\DocumentIndex\PrepareTableDTO;
+use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexDateDTO;
+use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\PrepareTableDTO;
 
 it('create prepare index table dto', function () {
 

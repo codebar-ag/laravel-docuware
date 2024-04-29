@@ -1,9 +1,9 @@
 <?php
 
-use CodebarAg\DocuWare\DTO\DocumentThumbnail;
+use CodebarAg\DocuWare\DTO\Documents\DocumentThumbnail;
 use CodebarAg\DocuWare\Events\DocuWareResponseLog;
-use CodebarAg\DocuWare\Requests\Document\PostDocumentRequest;
-use CodebarAg\DocuWare\Requests\Document\Thumbnail\GetDocumentDownloadThumbnailRequest;
+use CodebarAg\DocuWare\Requests\Documents\Download\DownloadThumbnail;
+use CodebarAg\DocuWare\Requests\FileCabinets\Upload\CreateDataRecord;
 use CodebarAg\DocuWare\Requests\Sections\GetSectionsRequest;
 use Illuminate\Support\Facades\Event;
 
@@ -12,7 +12,7 @@ it('can download a document thumbnail', function () {
 
     $fileCabinetId = config('laravel-docuware.tests.file_cabinet_id');
 
-    $document = $this->connector->send(new PostDocumentRequest(
+    $document = $this->connector->send(new CreateDataRecord(
         $fileCabinetId,
         '::fake-file-content::',
         'example.txt'
@@ -23,7 +23,7 @@ it('can download a document thumbnail', function () {
         $document->id,
     ))->dto();
 
-    $contents = $this->connector->send(new GetDocumentDownloadThumbnailRequest(
+    $contents = $this->connector->send(new DownloadThumbnail(
         $fileCabinetId,
         $sections->first()->id,
     ))->dto();

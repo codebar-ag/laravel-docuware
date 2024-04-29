@@ -1,9 +1,9 @@
 <?php
 
-use CodebarAg\DocuWare\DTO\Document;
+use CodebarAg\DocuWare\DTO\Documents\Document;
 use CodebarAg\DocuWare\Events\DocuWareResponseLog;
-use CodebarAg\DocuWare\Requests\Document\GetDocumentRequest;
-use CodebarAg\DocuWare\Requests\Document\PostDocumentRequest;
+use CodebarAg\DocuWare\Requests\FileCabinets\Search\GetASpecificDocumentFromAFileCabinet;
+use CodebarAg\DocuWare\Requests\FileCabinets\Upload\CreateDataRecord;
 use Illuminate\Support\Facades\Event;
 
 it('can show a document', function () {
@@ -11,13 +11,13 @@ it('can show a document', function () {
 
     $fileCabinetId = config('laravel-docuware.tests.file_cabinet_id');
 
-    $document = $this->connector->send(new PostDocumentRequest(
+    $document = $this->connector->send(new CreateDataRecord(
         $fileCabinetId,
         '::fake-file-content::',
         'example.txt'
     ))->dto();
 
-    $getdocument = $this->connector->send(new GetDocumentRequest($fileCabinetId, $document->id))->dto();
+    $getdocument = $this->connector->send(new GetASpecificDocumentFromAFileCabinet($fileCabinetId, $document->id))->dto();
 
     $this->assertInstanceOf(Document::class, $getdocument);
 

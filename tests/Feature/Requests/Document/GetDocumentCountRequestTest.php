@@ -1,8 +1,8 @@
 <?php
 
 use CodebarAg\DocuWare\Events\DocuWareResponseLog;
-use CodebarAg\DocuWare\Requests\Document\GetDocumentCountRequest;
-use CodebarAg\DocuWare\Requests\Document\PostDocumentRequest;
+use CodebarAg\DocuWare\Requests\FileCabinets\General\GetTotalNumberOfDocuments;
+use CodebarAg\DocuWare\Requests\FileCabinets\Upload\CreateDataRecord;
 use Illuminate\Support\Facades\Event;
 
 it('can get a total count of documents', function () {
@@ -11,13 +11,13 @@ it('can get a total count of documents', function () {
     $fileCabinetId = config('laravel-docuware.tests.file_cabinet_id');
     $dialogId = config('laravel-docuware.tests.dialog_id');
 
-    $document = $this->connector->send(new PostDocumentRequest(
+    $document = $this->connector->send(new CreateDataRecord(
         $fileCabinetId,
         '::fake-file-content::',
         'example.txt'
     ))->dto();
 
-    $count = $this->connector->send(new GetDocumentCountRequest(
+    $count = $this->connector->send(new GetTotalNumberOfDocuments(
         $fileCabinetId,
         $dialogId
     ))->dto();

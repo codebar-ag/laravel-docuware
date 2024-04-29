@@ -37,11 +37,11 @@
         <junit outputFile="build/report.junit.xml"/>
     </logging>
     <php>
+        <env name="DOCUWARE_TOKEN" value=""/>
         <env name="DOCUWARE_URL" value="https://domain.docuware.cloud"/>
         <env name="DOCUWARE_USERNAME" value="user@domain.test"/>
         <env name="DOCUWARE_PASSWORD" value="password"/>
         <env name="DOCUWARE_PASSPHRASE" value="passphrase"/>
-        <env name="DOCUWARE_COOKIES" value="cookies"/>
         <env name="DOCUWARE_TIMEOUT" value="30"/>
         <env name="DOCUWARE_CACHE_LIFETIME_IN_SECONDS" value="0"/>
 

@@ -2,7 +2,7 @@
 
 namespace CodebarAg\DocuWare\Tests\Unit\DTO;
 
-use CodebarAg\DocuWare\DTO\DocumentIndex\IndexNumericDTO;
+use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexNumericDTO;
 
 it('create index numeric dto', function () {
 

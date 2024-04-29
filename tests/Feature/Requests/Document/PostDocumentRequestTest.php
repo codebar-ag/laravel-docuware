@@ -1,10 +1,10 @@
 <?php
 
-use CodebarAg\DocuWare\DTO\Document;
-use CodebarAg\DocuWare\DTO\DocumentField;
-use CodebarAg\DocuWare\DTO\DocumentIndex\IndexTextDTO;
+use CodebarAg\DocuWare\DTO\Documents\Document;
+use CodebarAg\DocuWare\DTO\Documents\DocumentField;
+use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexTextDTO;
 use CodebarAg\DocuWare\Events\DocuWareResponseLog;
-use CodebarAg\DocuWare\Requests\Document\PostDocumentRequest;
+use CodebarAg\DocuWare\Requests\FileCabinets\Upload\CreateDataRecord;
 use Illuminate\Support\Facades\Event;
 
 it('can upload document without file name and file content and delete it', function () {
@@ -12,7 +12,7 @@ it('can upload document without file name and file content and delete it', funct
 
     $fileCabinetId = config('laravel-docuware.tests.file_cabinet_id');
 
-    $document = $this->connector->send(new PostDocumentRequest(
+    $document = $this->connector->send(new CreateDataRecord(
         $fileCabinetId,
         null,
         null,
@@ -38,7 +38,7 @@ it('can upload document with index values and delete it', function () {
     $fileContent = '::fake-file-content::';
     $fileName = 'example.txt';
 
-    $document = $this->connector->send(new PostDocumentRequest(
+    $document = $this->connector->send(new CreateDataRecord(
         $fileCabinetId,
         $fileContent,
         $fileName,

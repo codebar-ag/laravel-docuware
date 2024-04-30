@@ -94,7 +94,9 @@ DOCUWARE_PASSPHRASE="a#bcd>2~C1'abc\\#"
 
 ### Getting OAuth Token
 <details>
- <summary>Getting OAuth Token</summary>
+ <summary>Getting Started with OAuth</summary>
+
+> This package automatically handles the generation of OAuth token for you and stores them in cache.
 
 ```php
 use CodebarAg\DocuWare\Connectors\DocuWareConnector;

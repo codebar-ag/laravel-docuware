@@ -25,7 +25,6 @@ class DocuWare
             tokenEndpoint: $identityServiceConfigurationResponse->dto()->tokenEndpoint,
             username: $username,
             password: $password,
-            grantType: $grantType,
             clientId: $clientId,
         ))->send();
 

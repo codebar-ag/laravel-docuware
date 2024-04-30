@@ -48,7 +48,7 @@ it('can authenticate with DocuWare Credentials', function () {
 
     Event::assertDispatched(DocuWareOAuthLog::class);
 
-})->group('authentication')->only();
+})->group('authentication');
 
 it('can authenticate with DocuWare Token', function () {
     Event::fake();
@@ -62,4 +62,4 @@ it('can authenticate with DocuWare Token', function () {
 
     Event::assertDispatched(DocuWareOAuthLog::class);
 
-})->group('authentication')->only();
+})->group('authentication');

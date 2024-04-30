@@ -5,12 +5,10 @@ use CodebarAg\DocuWare\DTO\Authentication\OAuth\IdentityServiceConfiguration;
 use CodebarAg\DocuWare\DTO\Authentication\OAuth\RequestToken;
 use CodebarAg\DocuWare\DTO\Authentication\OAuth\ResponsibleIdentityService;
 use CodebarAg\DocuWare\Events\DocuWareOAuthLog;
-use CodebarAg\DocuWare\Facades\DocuWare;
 use CodebarAg\DocuWare\Requests\Authentication\OAuth\GetIdentityServiceConfiguration;
 use CodebarAg\DocuWare\Requests\Authentication\OAuth\GetResponsibleIdentityService;
 use CodebarAg\DocuWare\Requests\General\Organization\GetLoginToken;
 use CodebarAg\DocuWare\Requests\General\Organization\GetOrganization;
-use Illuminate\Support\Facades\Cache;
 
 it('can get oath responsible identity service', function () {
     $responsibleIdentityServiceResponse = (new GetResponsibleIdentityService())->send();

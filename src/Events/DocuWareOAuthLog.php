@@ -12,11 +12,6 @@ class DocuWareOAuthLog
     use InteractsWithSockets;
     use SerializesModels;
 
-    /**
-     * @param  string  $url
-     * @param  string  $username
-     * @param  string  $message
-     */
     public function __construct(
         public string $url,
         public string $username,

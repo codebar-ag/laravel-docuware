@@ -3,9 +3,7 @@
 namespace CodebarAg\DocuWare\Requests\Authentication\OAuth;
 
 use CodebarAg\DocuWare\DTO\Authentication\OAuth\RequestToken as RequestTokenDto;
-use CodebarAg\DocuWare\Events\DocuWareOAuthLog;
 use CodebarAg\DocuWare\Responses\Authentication\OAuth\RequestTokenResponse;
-use Illuminate\Support\Facades\Cache;
 use Saloon\Contracts\Body\HasBody;
 use Saloon\Enums\Method;
 use Saloon\Http\Response;

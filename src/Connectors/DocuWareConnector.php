@@ -18,9 +18,10 @@ class DocuWareConnector extends Connector
 {
     public Config $configuration;
 
-    public null|string $token = null;
+    public ?string $token = null;
 
-    public function __construct(null|Config $configuration = null, null|string $token = null) {
+    public function __construct(?Config $configuration = null, ?string $token = null)
+    {
         if (empty($configuration)) {
             $this->configuration = new Config(
                 url: config('laravel-docuware.credentials.url'),
@@ -31,7 +32,7 @@ class DocuWareConnector extends Connector
                 cacheLifetimeInSeconds: config('laravel-docuware.configurations.cache.lifetime_in_seconds'),
                 requestTimeoutInSeconds: config('laravel-docuware.configurations.request.timeout_in_seconds'),
             );
-        }else{
+        } else {
             $this->configuration = $configuration;
         }
 
@@ -83,11 +84,11 @@ class DocuWareConnector extends Connector
 
         if (
             $cache->has(key: $cacheKey)
-        ){
+        ) {
             $token = $cache->get(key: $cacheKey);
 
             DocuWareOAuthLog::dispatch($this->configuration->url, $this->configuration->username, 'Token retrieved from cache');
-        }else{
+        } else {
             $token = $this->getNewAuthenticationOAuthTokenWithCredentials($this->configuration->username, $this->configuration->password);
 
             $cache->put(key: $cacheKey, value: $token, ttl: $token->expiresIn);

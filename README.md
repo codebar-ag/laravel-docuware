@@ -98,13 +98,14 @@ DOCUWARE_PASSPHRASE="a#bcd>2~C1'abc\\#"
 
 ```php
 use CodebarAg\DocuWare\Connectors\DocuWareConnector;
+use CodebarAg\DocuWare\DTO\Config;
 
 // Use credentials from your .env file
 $connector = new DocuWareConnector();
 
 // Pass credentials manually
 $connector = new DocuWareConnector(
-    configuration: new CodebarAg\DocuWare\DTO\Config(
+    configuration: new Config(
         url: 'https://your-domain.docuware.cloud',
         username: 'username',
         password: 'password',
@@ -119,6 +120,9 @@ $connector = new DocuWareConnector(
 
 Getting a new token via Organization Token:
 ```php
+use CodebarAg\DocuWare\Connectors\DocuWareConnector;
+use CodebarAg\DocuWare\DTO\Config;
+
 //Step 1: Create a new connector with either method above
 $loginTokenConnector = new DocuWareConnector();
 
@@ -132,7 +136,7 @@ $connector = new DocuWareConnector(
 
 //Step 3.b: Optionally pass a configuration to the new connector
 $connector = new DocuWareConnector(
-    configuration: new CodebarAg\DocuWare\DTO\Config(
+    configuration: new Config(
         url: 'https://your-domain.docuware.cloud',
         username: '',
         password: '',

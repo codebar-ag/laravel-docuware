@@ -1,11 +1,16 @@
 <?php
 
+use CodebarAg\DocuWare\Connectors\DocuWareConnector;
 use CodebarAg\DocuWare\DTO\Authentication\OAuth\IdentityServiceConfiguration;
 use CodebarAg\DocuWare\DTO\Authentication\OAuth\RequestToken;
 use CodebarAg\DocuWare\DTO\Authentication\OAuth\ResponsibleIdentityService;
+use CodebarAg\DocuWare\Events\DocuWareOAuthLog;
 use CodebarAg\DocuWare\Facades\DocuWare;
 use CodebarAg\DocuWare\Requests\Authentication\OAuth\GetIdentityServiceConfiguration;
 use CodebarAg\DocuWare\Requests\Authentication\OAuth\GetResponsibleIdentityService;
+use CodebarAg\DocuWare\Requests\General\Organization\GetLoginToken;
+use CodebarAg\DocuWare\Requests\General\Organization\GetOrganization;
+use Illuminate\Support\Facades\Cache;
 
 it('can get oath responsible identity service', function () {
     $responsibleIdentityServiceResponse = (new GetResponsibleIdentityService())->send();
@@ -30,17 +35,33 @@ it('can get oath request token', function () {
         identityServiceUrl: $responsibleIdentityServiceResponse->dto()->identityServiceUrl
     ))->send();
 
-    $requestTokenResponse = (new \CodebarAg\DocuWare\Requests\Authentication\OAuth\RequestToken(
+    $requestTokenResponse = (new \CodebarAg\DocuWare\Requests\Authentication\OAuth\RequestTokenWithCredentials(
         tokenEndpoint: $identityServiceConfigurationResponse->dto()->tokenEndpoint
     ))->send();
 
     expect($requestTokenResponse->dto())->toBeInstanceOf(RequestToken::class);
 })->group('authentication');
 
-it('can authenticate with DocuWare', function () {
-    $res = DocuWare::getNewAuthenticationOAuthToken();
+it('can authenticate with DocuWare Credentials', function () {
+    Event::fake();
 
-    ray($res);
+    $connector = new DocuWareConnector();
+    $connector->send(new GetOrganization());
 
-    expect($res)->toBeInstanceOf(RequestToken::class);
-})->group('authentication');
+    Event::assertDispatched(DocuWareOAuthLog::class);
+
+})->group('authentication')->only();
+
+it('can authenticate with DocuWare Token', function () {
+    Event::fake();
+
+    $connector = new DocuWareConnector();
+    $token = $connector->send(new GetLoginToken())->dto();
+
+    $connector = new DocuWareConnector(token: $token);
+
+    $connector->send(new GetOrganization());
+
+    Event::assertDispatched(DocuWareOAuthLog::class);
+
+})->group('authentication')->only();

@@ -76,6 +76,9 @@ return [
             'driver' => env('DOCUWARE_CACHE_DRIVER', env('CACHE_DRIVER', 'file')),
             'lifetime_in_seconds' => env('DOCUWARE_CACHE_LIFETIME_IN_SECONDS', 60),
         ],
+        'request' => [
+            'timeout_in_seconds' => env('DOCUWARE_CACHE_TIMEOUT_IN_SECONDS', 60),
+        ],
     ],
 
     /*

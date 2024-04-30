@@ -10,7 +10,7 @@ use Saloon\Http\Response;
 use Saloon\Http\SoloRequest;
 use Saloon\Traits\Body\HasFormBody;
 
-class RequestToken extends SoloRequest implements HasBody
+class RequestTokenWithCredentials extends SoloRequest implements HasBody
 {
     use HasFormBody;
 
@@ -20,7 +20,6 @@ class RequestToken extends SoloRequest implements HasBody
         public readonly mixed $tokenEndpoint,
         public readonly ?string $username = '',
         public readonly ?string $password = '',
-        public readonly string $grantType = 'password',
         public readonly string $clientId = 'docuware.platform.net.client',
     ) {
     }
@@ -41,7 +40,7 @@ class RequestToken extends SoloRequest implements HasBody
     {
         return [
             'scope' => 'docuware.platform',
-            'grant_type' => $this->grantType,
+            'grant_type' => 'password',
             'client_id' => $this->clientId,
             'username' => filled($this->username) ? $this->username : config('laravel-docuware.credentials.username'),
             'password' => filled($this->password) ? $this->password : config('laravel-docuware.credentials.password'),

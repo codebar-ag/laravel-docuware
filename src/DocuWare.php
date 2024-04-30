@@ -5,7 +5,7 @@ namespace CodebarAg\DocuWare;
 use CodebarAg\DocuWare\DTO\Authentication\OAuth\RequestToken as RequestTokenDto;
 use CodebarAg\DocuWare\Requests\Authentication\OAuth\GetIdentityServiceConfiguration;
 use CodebarAg\DocuWare\Requests\Authentication\OAuth\GetResponsibleIdentityService;
-use CodebarAg\DocuWare\Requests\Authentication\OAuth\RequestToken;
+use CodebarAg\DocuWare\Requests\Authentication\OAuth\RequestTokenWithCredentials;
 
 class DocuWare
 {
@@ -21,7 +21,7 @@ class DocuWare
             identityServiceUrl: $responsibleIdentityServiceResponse->dto()->identityServiceUrl
         ))->send();
 
-        $requestTokenResponse = (new RequestToken(
+        $requestTokenResponse = (new RequestTokenWithCredentials(
             tokenEndpoint: $identityServiceConfigurationResponse->dto()->tokenEndpoint,
             username: $username,
             password: $password,

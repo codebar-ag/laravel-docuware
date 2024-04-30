@@ -97,34 +97,52 @@ DOCUWARE_PASSPHRASE="a#bcd>2~C1'abc\\#"
  <summary>Getting OAuth Token</summary>
 
 ```php
-use CodebarAg\DocuWare\Facades\DocuWare;
-
-$tokenResponse = new DocuWare::getNewAuthenticationOAuthToken(
-    username: 'username', // Optional if you need to authenticate with a username different from the one in .env
-    password: 'password', // Optional if you need to authenticate with a password different from the one in .env
-);
-```
-
-$tokenResponse will contain the following properties:
-
-```php
-CodebarAg\DocuWare\DTO\Authentication\OAuth\RequestToken {#3591▶
-  +accessToken: "your_access_token_will_be_here"
-  +tokenType: "Bearer"
-  +scope: "docuware.platform"
-  +expiresIn: 3600
-  +expiresAt: Illuminate\Support\Carbon
-}
-```
-
-> You may use this token once or store it in your cache for future use. take note of the `expiresIn` and/or `expiresAt` property to know when the token will expire.
-
-Once you have your token, you can use it to authenticate your requests: 
-
-```php
 use CodebarAg\DocuWare\Connectors\DocuWareConnector;
 
-$connector = new DocuWareConnector($tokenResponse->accessToken);
+// Use credentials from your .env file
+$connector = new DocuWareConnector();
+
+// Pass credentials manually
+$connector = new DocuWareConnector(
+    configuration: new CodebarAg\DocuWare\DTO\Config(
+        url: 'https://your-domain.docuware.cloud',
+        username: 'username',
+        password: 'password',
+        passphrase: 'passphrase',
+        cacheDriver: 'redis',
+        cacheLifetimeInSeconds: 60,
+        requestTimeoutInSeconds: 60,
+    )
+);
+
+```
+
+Getting a new token via Organization Token:
+```php
+//Step 1: Create a new connector with either method above
+$connector = new DocuWareConnector();
+
+//Step 2: Get the Get Login Token
+$loginToken = $connector->send(new GetLoginToken())->dto();
+
+//Step 3.a: Use the login token in a new connector to fresh the cached access token
+$connector = new DocuWareConnector(
+    token: $loginToken->token
+);
+
+//Step 3.b: Optionally pass a configuration to the new connector
+$connector = new DocuWareConnector(
+    configuration: new CodebarAg\DocuWare\DTO\Config(
+        url: 'https://your-domain.docuware.cloud',
+        username: '',
+        password: '',
+        passphrase: 'passphrase',
+        cacheDriver: 'redis',
+        cacheLifetimeInSeconds: 60,
+        requestTimeoutInSeconds: 60,
+    ),
+    token: $loginToken->token
+);
 ```
 
 </details>

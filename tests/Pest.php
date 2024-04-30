@@ -16,18 +16,6 @@ uses()
     })
     ->in('Feature');
 
-/**
- * @throws Throwable
- */
-function getConnector(): object
-{
-    if (! env('DOCUWARE_TOKEN')) {
-        throw new Exception('DOCUWARE_TOKEN is not set in the .env file.');
-    }
-
-    return new DocuWareConnector(env('DOCUWARE_TOKEN'));
-}
-
 function clearFiles(): void
 {
     $connector = getConnector();
@@ -42,4 +30,12 @@ function clearFiles(): void
             $document->id,
         ))->dto();
     }
+}
+
+/**
+ * @throws Throwable
+ */
+function getConnector(): object
+{
+    return new DocuWareConnector();
 }

@@ -2,7 +2,7 @@
 
 namespace CodebarAg\DocuWare\Support;
 
-use CodebarAg\DocuWare\Events\DocuWareCookieCreatedLog;
+use CodebarAg\DocuWare\Events\DocuWareOAuthLog;
 use CodebarAg\DocuWare\Events\DocuWareResponseLog;
 use CodebarAg\DocuWare\Exceptions\UnableToLogin;
 use CodebarAg\DocuWare\Exceptions\UnableToLoginNoCookies;
@@ -23,7 +23,7 @@ class EnsureValidCookie
 
         EnsureValidCredentials::check();
 
-        event(new DocuWareCookieCreatedLog('Creating new authentication cookie for caching'));
+        event(new DocuWareOAuthLog('Creating new authentication cookie for caching'));
 
         $cookieJar = new CookieJar();
 

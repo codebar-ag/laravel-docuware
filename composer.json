@@ -29,8 +29,8 @@
     "illuminate/contracts": "^11.0",
     "nesbot/carbon": "^2.72",
     "saloonphp/cache-plugin": "^3.0",
-    "saloonphp/saloon": "^3.7",
     "saloonphp/laravel-plugin": "^3.5",
+    "saloonphp/saloon": "^3.7",
     "spatie/laravel-package-tools": "^1.16"
   },
   "require-dev": {

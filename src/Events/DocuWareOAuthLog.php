@@ -6,13 +6,20 @@ use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class DocuWareCookieCreatedLog
+class DocuWareOAuthLog
 {
     use Dispatchable;
     use InteractsWithSockets;
     use SerializesModels;
 
+    /**
+     * @param  string  $url
+     * @param  string  $username
+     * @param  string  $message
+     */
     public function __construct(
+        public string $url,
+        public string $username,
         public string $message
     ) {
     }

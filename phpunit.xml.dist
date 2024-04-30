@@ -43,6 +43,7 @@
         <env name="DOCUWARE_PASSWORD" value="password"/>
         <env name="DOCUWARE_PASSPHRASE" value="passphrase"/>
         <env name="DOCUWARE_TIMEOUT" value="30"/>
+        <env name="DOCUWARE_CACHE_DRIVER" value="array" />
         <env name="DOCUWARE_CACHE_LIFETIME_IN_SECONDS" value="0"/>
 
         <env name="DOCUWARE_TESTS_FILE_CABINET_ID" value=""/>

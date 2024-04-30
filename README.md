@@ -120,10 +120,10 @@ $connector = new DocuWareConnector(
 Getting a new token via Organization Token:
 ```php
 //Step 1: Create a new connector with either method above
-$connector = new DocuWareConnector();
+$loginTokenConnector = new DocuWareConnector();
 
 //Step 2: Get the Get Login Token
-$loginToken = $connector->send(new GetLoginToken())->dto();
+$loginToken = $loginTokenConnector->send(new GetLoginToken())->dto();
 
 //Step 3.a: Use the login token in a new connector to fresh the cached access token
 $connector = new DocuWareConnector(

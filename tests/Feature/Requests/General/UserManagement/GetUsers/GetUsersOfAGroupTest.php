@@ -9,7 +9,7 @@ use CodebarAg\DocuWare\Requests\General\UserManagement\GetUsers\GetUsersOfARole;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Event;
 
-it('can list users of a role', function () {
+it('can list users of a group', function () {
     Event::fake();
 
     $groups = $this->connector->send(new GetGroups())->dto();

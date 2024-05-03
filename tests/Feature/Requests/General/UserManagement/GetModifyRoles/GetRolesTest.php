@@ -1,22 +1,24 @@
 <?php
 
 use CodebarAg\DocuWare\DTO\General\UserManagement\GetModifyGroups\Group;
+use CodebarAg\DocuWare\DTO\General\UserManagement\GetModifyRoles\Role;
 use CodebarAg\DocuWare\Events\DocuWareResponseLog;
 use CodebarAg\DocuWare\Requests\General\UserManagement\GetModifyGroups\GetGroups;
+use CodebarAg\DocuWare\Requests\General\UserManagement\GetModifyRoles\GetRoles;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Event;
 
 it('can list groups', function () {
     Event::fake();
 
-    $groups = $this->connector->send(new GetGroups())->dto();
+    $roles = $this->connector->send(new GetRoles())->dto();
 
-    $this->assertInstanceOf(Collection::class, $groups);
+    $this->assertInstanceOf(Collection::class, $roles);
 
-    foreach ($groups as $group) {
-        $this->assertInstanceOf(Group::class, $group);
+    foreach ($roles as $role) {
+        $this->assertInstanceOf(Role::class, $role);
     }
 
-    $this->assertNotCount(0, $groups);
+    $this->assertNotCount(0, $roles);
     Event::assertDispatched(DocuWareResponseLog::class);
 });

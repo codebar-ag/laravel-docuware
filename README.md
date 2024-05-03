@@ -61,6 +61,108 @@ then optimize the processes that power the core of your business.
 
 </details>
 
+<details>
+ <summary>Current Support</summary>
+
+| Group                               | Request                                                     | Supported |
+|-------------------------------------|-------------------------------------------------------------|-----------|
+| Authentication/OAuth                | 1. Get Responsible Identity Service                         | ✅         |
+| Authentication/OAuth                | 2. Get Identity Service Configuration                       | ✅         |
+| Authentication/OAuth                | 3.a Request Token w/ Username & Password                    | ✅         |
+| Authentication/OAuth                | 3.b Request Token w/ a  DocuWare Token                      | ✅         |
+| Authentication/OAuth                | 3.c Request Token w/ Username & Password (Trusted User)     | ❌         |
+| Authentication/OAuth                | 3.d.1 Obtain Windows Authorization (On Premises Only)       | ❌         |
+| Authentication/OAuth                | 3.d.2 Request Token /w a Windows Account (On Premises Only) | ❌         |
+| General/Organisation                | Get Login Token                                             | ✅         |
+| General/Organisation                | Get Organization                                            | ✅         |
+| General/Organisation                | Get All File Cabinets and Document Trays                    | ✅         |
+| General/UserManagement              | Get Users                                                   | ❌         |
+| General/UserManagement              | Get Users by ID                                             | ❌         |
+| General/UserManagement              | Get Users of a Role                                         | ❌         |
+| General/UserManagement              | Get Users of a Group                                        | ❌         |
+| General/UserManagement              | Create User                                                 | ❌         |
+| General/UserManagement              | Update User                                                 | ❌         |
+| General/UserManagement              | Get Groups                                                  | ❌         |
+| General/UserManagement              | Get All Groups for a Specific User                          | ❌         |
+| General/UserManagement              | Add User to a Group                                         | ❌         |
+| General/UserManagement              | Remove User from a Group                                    | ❌         |
+| General/UserManagement              | Get Roles                                                   | ❌         |
+| General/UserManagement              | Get All Roles for a Specific User                           | ❌         |
+| General/UserManagement              | Add User to a Role                                          | ❌         |
+| General/UserManagement              | Remove User from a Role                                     | ❌         |
+| FileCabinets/General                | Get File Cabinet Information                                | ✅         |
+| FileCabinets/General                | Get Total Number of Documents                               | ✅         |
+| FileCabinets/Dialogs                | Get All Dialogs                                             | ✅         |
+| FileCabinets/Dialogs                | Get a Specific Dialog                                       | ✅         |
+| FileCabinets/Dialogs                | Get Dialogs of a Specific Type                              | ❌         |
+| FileCabinets/Search                 | Get Documents from a File Cabinet                           | ❌         |
+| FileCabinets/Search                 | Get a Specific Document From a File Cabinet                 | ❌         |
+| FileCabinets/Search                 | Search for Documents in a Single File Cabinet               | ❌         |
+| FileCabinets/Search                 | Search for Documents in Multiple File Cabinets              | ❌         |
+| FileCabinets/CheckInCheckOut        | Check-out & Download a Document                             | ❌         |
+| FileCabinets/CheckInCheckOut        | Check-in a Document from the File System                    | ❌         |
+| FileCabinets/CheckInCheckOut        | Undo Check-out                                              | ❌         |
+| FileCabinets/SelectLists            | Get Select Lists                                            | ✅         |
+| FileCabinets/SelectLists            | Get Filtered Select Lists                                   | ❌         |
+| FileCabinets/Upload                 | Create Data Record                                          | ✅         |
+| FileCabinets/Upload                 | Append File(s) to a Data Record                             | ❌         |
+| FileCabinets/Upload                 | Upload a Single File for a Data Record                      | ❌         |
+| FileCabinets/Upload                 | Create a Data Record & Upload File                          | ❌         |
+| FileCabinets/Upload                 | Create Data Record & Upload File Using Store Dialog         | ❌         |
+| FileCabinets/Upload                 | Append a Single PDF to a Document                           | ❌         |
+| FileCabinets/Upload                 | Replace a PDF Document Section                              | ❌         |
+| FileCabinets/BatchIndexFieldsUpdate | Batch Update Index Fields By Id                             | ❌         |
+| FileCabinets/BatchIndexFieldsUpdate | Batch Update Index Fields By Search                         | ❌         |
+| FileCabinets/BatchIndexFieldsUpdate | Batch Append/Update Keyword Fields By Id                    | ❌         |
+| Documents/UpdateIndexValues         | Update Index Values                                         | ✅         |
+| Documents/UpdateIndexValues         | Update Table Field Values                                   | ❌         |
+| Documents/ModifyDocuments           | Transfer Document                                           | ✅         |
+| Documents/ModifyDocuments           | Delete Document                                             | ✅         |
+| Documents/ClipUnclip&StapleUnstaple | Clip                                                        | ❌         |
+| Documents/ClipUnclip&StapleUnstaple | Unclip                                                      | ❌         |
+| Documents/ClipUnclip&StapleUnstaple | Staple                                                      | ❌         |
+| Documents/ClipUnclip&StapleUnstaple | Unstaple                                                    | ❌         |
+| Documents/AnnotationsStamps         | AddStampWithPosition                                        | ❌         |
+| Documents/AnnotationsStamps         | AddStampWithBestPosition                                    | ❌         |
+| Documents/AnnotationsStamps         | AddTextAnnotation                                           | ❌         |
+| Documents/AnnotationsStamps         | AddRectEntryAnnotation                                      | ❌         |
+| Documents/AnnotationsStamps         | AddLineEntryAnnotation                                      | ❌         |
+| Documents/AnnotationsStamps         | AddPolyLineEntryAnnotation                                  | ❌         |
+| Documents/AnnotationsStamps         | DeleteAnnotation                                            | ❌         |
+| Documents/AnnotationsStamps         | UpdateTextAnnotation                                        | ❌         |
+| Documents/AnnotationsStamps         | Get Stamps                                                  | ❌         |
+| Documents/DocumentsTrashBin         | Get Documents                                               | ❌         |
+| Documents/DocumentsTrashBin         | Delete Documents                                            | ❌         |
+| Documents/DocumentsTrashBin         | Restore Documents                                           | ❌         |
+| Documents/ApplicationProperties     | Get Application Properties                                  | ❌         |
+| Documents/ApplicationProperties     | Add Application Properties                                  | ❌         |
+| Documents/ApplicationProperties     | Delete Application Properties                               | ❌         |
+| Documents/ApplicationProperties     | Update Application Properties                               | ❌         |
+| Documents/Sections                  | Get All Sections from a Document                            | ❌         |
+| Documents/Sections                  | Get a Specific Section                                      | ❌         |
+| Documents/Sections                  | Delete Section                                              | ❌         |
+| Documents/Download                  | Download Document                                           | ✅         |
+| Documents/Download                  | Download Section                                            | ❌         |
+| Documents/Download                  | Download Thumbnail                                          | ✅         |
+| Workflow                            | Get Document Workflow History                               | ❌         |
+| Workflow                            | Get Document Workflow History Steps                         | ❌         |
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+</details>
+
+
 ## ⚙️ Installation
 
 You can install the package via composer:

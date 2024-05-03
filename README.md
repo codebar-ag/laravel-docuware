@@ -76,17 +76,17 @@ then optimize the processes that power the core of your business.
 | General/Organisation                | Get Login Token                                             | ✅         |
 | General/Organisation                | Get Organization                                            | ✅         |
 | General/Organisation                | Get All File Cabinets and Document Trays                    | ✅         |
-| General/UserManagement              | Get Users                                                   | ❌         |
-| General/UserManagement              | Get Users by ID                                             | ❌         |
-| General/UserManagement              | Get Users of a Role                                         | ❌         |
-| General/UserManagement              | Get Users of a Group                                        | ❌         |
+| General/UserManagement              | Get Users                                                   | ✅         |
+| General/UserManagement              | Get Users by ID                                             | ✅         |
+| General/UserManagement              | Get Users of a Role                                         | ✅         |
+| General/UserManagement              | Get Users of a Group                                        | ✅         |
 | General/UserManagement              | Create User                                                 | ❌         |
 | General/UserManagement              | Update User                                                 | ❌         |
-| General/UserManagement              | Get Groups                                                  | ❌         |
+| General/UserManagement              | Get Groups                                                  | ✅         |
 | General/UserManagement              | Get All Groups for a Specific User                          | ❌         |
 | General/UserManagement              | Add User to a Group                                         | ❌         |
 | General/UserManagement              | Remove User from a Group                                    | ❌         |
-| General/UserManagement              | Get Roles                                                   | ❌         |
+| General/UserManagement              | Get Roles                                                   | ✅         |
 | General/UserManagement              | Get All Roles for a Specific User                           | ❌         |
 | General/UserManagement              | Add User to a Role                                          | ❌         |
 | General/UserManagement              | Remove User from a Role                                     | ❌         |

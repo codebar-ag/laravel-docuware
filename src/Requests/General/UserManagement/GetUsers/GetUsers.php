@@ -20,8 +20,8 @@ class GetUsers extends Request implements Cacheable
     protected Method $method = Method::GET;
 
     public function __construct(
-        public null|string $name = null,
-        public null|bool $active = null,
+        public ?string $name = null,
+        public ?bool $active = null,
     ) {
     }
 

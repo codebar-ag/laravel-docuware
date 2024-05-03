@@ -20,9 +20,9 @@ class GetRoles extends Request implements Cacheable
     protected Method $method = Method::GET;
 
     public function __construct(
-        public null|string $name = null,
-        public null|bool $active = null,
-        public null|string $type = null,
+        public ?string $name = null,
+        public ?bool $active = null,
+        public ?string $type = null,
     ) {
     }
 

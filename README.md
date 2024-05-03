@@ -83,11 +83,11 @@ then optimize the processes that power the core of your business.
 | General/UserManagement              | Create User                                                 | ❌         |
 | General/UserManagement              | Update User                                                 | ❌         |
 | General/UserManagement              | Get Groups                                                  | ✅         |
-| General/UserManagement              | Get All Groups for a Specific User                          | ❌         |
+| General/UserManagement              | Get All Groups for a Specific User                          | ✅         |
 | General/UserManagement              | Add User to a Group                                         | ❌         |
 | General/UserManagement              | Remove User from a Group                                    | ❌         |
 | General/UserManagement              | Get Roles                                                   | ✅         |
-| General/UserManagement              | Get All Roles for a Specific User                           | ❌         |
+| General/UserManagement              | Get All Roles for a Specific User                           | ✅         |
 | General/UserManagement              | Add User to a Role                                          | ❌         |
 | General/UserManagement              | Remove User from a Role                                     | ❌         |
 | FileCabinets/General                | Get File Cabinet Information                                | ✅         |

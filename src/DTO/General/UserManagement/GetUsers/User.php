@@ -27,15 +27,15 @@ final class User
     public function __construct(
         public string $id,
         public string $name,
-        public null|string $firstName,
-        public null|string $lastName,
+        public ?string $firstName,
+        public ?string $lastName,
         public string $dbName,
         public string $email,
         public bool $active,
         public bool $isHighSecurity,
         public string $defaultWebBasket,
-        public null|OutOfOffice $outOfOffice,
-        public null|RegionalSettings $regionalSettings,
+        public ?OutOfOffice $outOfOffice,
+        public ?RegionalSettings $regionalSettings,
     ) {
     }
 

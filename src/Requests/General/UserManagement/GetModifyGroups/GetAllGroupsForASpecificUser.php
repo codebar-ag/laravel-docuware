@@ -1,8 +1,8 @@
 <?php
 
-namespace CodebarAg\DocuWare\Requests\General\UserManagement\GetUsers;
+namespace CodebarAg\DocuWare\Requests\General\UserManagement\GetModifyGroups;
 
-use CodebarAg\DocuWare\Responses\General\UserManagement\GetUsers\GetUsersResponse;
+use CodebarAg\DocuWare\Responses\General\UserManagement\GetModifyGroups\GetGroupsResponse;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Enumerable;
 use Illuminate\Support\Facades\Cache;
@@ -13,28 +13,30 @@ use Saloon\Enums\Method;
 use Saloon\Http\Request;
 use Saloon\Http\Response;
 
-class GetUsersOfARole extends Request implements Cacheable
+class GetAllGroupsForASpecificUser extends Request implements Cacheable
 {
     use HasCaching;
 
     protected Method $method = Method::GET;
 
     public function __construct(
-        public ?string $roleId = null,
-        public ?bool $includeGroupUsers = null,
+        public string $userId,
+        public ?string $name = null,
+        public ?bool $active = null,
     ) {
     }
 
     public function resolveEndpoint(): string
     {
-        return '/Organization/RoleUsers';
+        return '/Organization/UserGroups';
     }
 
     protected function defaultQuery(): array
     {
         return [
-            'RoleId' => $this->roleId,
-            'IncludeGroupUsers' => $this->includeGroupUsers,
+            'UserId' => $this->userId,
+            'Name' => $this->name,
+            'Active' => $this->active,
         ];
     }
 
@@ -50,6 +52,6 @@ class GetUsersOfARole extends Request implements Cacheable
 
     public function createDtoFromResponse(Response $response): Enumerable|Collection
     {
-        return GetUsersResponse::fromResponse($response);
+        return GetGroupsResponse::fromResponse($response);
     }
 }

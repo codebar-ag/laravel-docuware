@@ -2,7 +2,6 @@
 
 namespace CodebarAg\DocuWare\Responses\General\UserManagement\GetModifyRoles;
 
-use CodebarAg\DocuWare\DTO\General\UserManagement\GetModifyGroups\Group;
 use CodebarAg\DocuWare\DTO\General\UserManagement\GetModifyRoles\Role;
 use CodebarAg\DocuWare\Events\DocuWareResponseLog;
 use CodebarAg\DocuWare\Support\EnsureValidResponse;

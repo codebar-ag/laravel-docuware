@@ -20,7 +20,7 @@ class GetUsersOfAGroup extends Request implements Cacheable
     protected Method $method = Method::GET;
 
     public function __construct(
-        public null|string $groupId = null,
+        public ?string $groupId = null,
     ) {
     }
 

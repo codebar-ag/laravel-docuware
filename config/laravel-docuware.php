@@ -35,6 +35,8 @@ return [
 
     'credentials' => [
         'url' => env('DOCUWARE_URL'),
+        'username' => env('DOCUWARE_USERNAME'),
+        'password' => env('DOCUWARE_PASSWORD'),
     ],
 
     /*

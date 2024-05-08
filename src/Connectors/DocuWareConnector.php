@@ -2,41 +2,26 @@
 
 namespace CodebarAg\DocuWare\Connectors;
 
+use CodebarAg\DocuWare\DTO\Authentication\OAuth\IdentityServiceConfiguration;
 use CodebarAg\DocuWare\DTO\Authentication\OAuth\RequestToken as RequestTokenDto;
-use CodebarAg\DocuWare\DTO\Config;
+use CodebarAg\DocuWare\DTO\Config\ConfigWithCredentials;
+use CodebarAg\DocuWare\DTO\Config\ConfigWithCredentialsTrustedUser;
 use CodebarAg\DocuWare\Events\DocuWareOAuthLog;
 use CodebarAg\DocuWare\Requests\Authentication\OAuth\GetIdentityServiceConfiguration;
 use CodebarAg\DocuWare\Requests\Authentication\OAuth\GetResponsibleIdentityService;
 use CodebarAg\DocuWare\Requests\Authentication\OAuth\RequestTokenWithCredentials;
-use CodebarAg\DocuWare\Requests\Authentication\OAuth\RequestTokenWithToken;
+use CodebarAg\DocuWare\Requests\Authentication\OAuth\RequestTokenWithCredentialsTrustedUser;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Crypt;
 use Psr\SimpleCache\InvalidArgumentException;
 use Saloon\Http\Auth\TokenAuthenticator;
 use Saloon\Http\Connector;
 
 class DocuWareConnector extends Connector
 {
-    public Config $configuration;
-
-    public ?string $token = null;
-
-    public function __construct(?Config $configuration = null, ?string $token = null)
-    {
-        if (empty($configuration)) {
-            $this->configuration = new Config(
-                url: config('laravel-docuware.credentials.url'),
-                username: config('laravel-docuware.credentials.username'),
-                password: config('laravel-docuware.credentials.password'),
-                passphrase: config('laravel-docuware.passphrase'),
-                cacheDriver: config('laravel-docuware.configurations.cache.driver'),
-                cacheLifetimeInSeconds: config('laravel-docuware.configurations.cache.lifetime_in_seconds'),
-                requestTimeoutInSeconds: config('laravel-docuware.configurations.request.timeout_in_seconds'),
-            );
-        } else {
-            $this->configuration = $configuration;
-        }
-
-        $this->token = $token;
+    public function __construct(
+        public ConfigWithCredentials|ConfigWithCredentialsTrustedUser $configuration
+    ) {
     }
 
     /**
@@ -44,7 +29,7 @@ class DocuWareConnector extends Connector
      */
     public function resolveBaseUrl(): string
     {
-        return config('laravel-docuware.credentials.url').'/DocuWare/Platform';
+        return $this->configuration->url.'/DocuWare/Platform';
     }
 
     public function defaultHeaders(): array
@@ -72,68 +57,70 @@ class DocuWareConnector extends Connector
     protected function getOrCreateNewOAuthToken()
     {
         $cache = Cache::store($this->configuration->cacheDriver);
-        $cacheKey = 'docuware.oauth.token.'.$this->configuration->url.'.'.$this->configuration->username;
 
-        if (filled($this->token)) {
-            $token = $this->getNewAuthenticationOAuthTokenWithToken($this->token);
+        // get instance name of $this->configuration as string
+        $instanceName = get_class($this->configuration);
 
-            $cache->put(key: $cacheKey, value: $token, ttl: $token->expiresIn);
+        $cacheKey = 'docuware.oauth.'.$instanceName.'.'.$this->configuration->url.'.'.$this->configuration?->username;
 
-            DocuWareOAuthLog::dispatch($this->configuration->url, $this->configuration->username, 'Token set from token');
-        }
+        $token = null;
 
-        if (
-            $cache->has(key: $cacheKey)
-        ) {
-            $token = $cache->get(key: $cacheKey);
+        if ($cache->has(key: $cacheKey)) {
+            $token = Crypt::decrypt($cache->get(key: $cacheKey));
 
             DocuWareOAuthLog::dispatch($this->configuration->url, $this->configuration->username, 'Token retrieved from cache');
         } else {
-            $token = $this->getNewAuthenticationOAuthTokenWithCredentials($this->configuration->username, $this->configuration->password);
+            if ($this->configuration instanceof ConfigWithCredentials) {
+                $token = $this->getNewOAuthTokenWithCredentials();
 
-            $cache->put(key: $cacheKey, value: $token, ttl: $token->expiresIn);
+                DocuWareOAuthLog::dispatch($this->configuration->url, $this->configuration->username, 'Token retrieved from API');
+            }
 
-            DocuWareOAuthLog::dispatch($this->configuration->url, $this->configuration->username, 'Token retrieved from API');
+            if ($this->configuration instanceof ConfigWithCredentialsTrustedUser) {
+                $token = $this->getNewOAuthTokenWithCredentialsTrustedUser();
+
+                DocuWareOAuthLog::dispatch($this->configuration->url, $this->configuration->username, 'Token retrieved from API');
+            }
+
+            $cache->put(key: $cacheKey, value: Crypt::encrypt($token), ttl: $token->expiresIn);
         }
 
         return $token->accessToken;
     }
 
-    protected function getNewAuthenticationOAuthTokenWithCredentials(
-        ?string $username = '',
-        ?string $password = '',
-        ?string $clientId = 'docuware.platform.net.client'
-    ): RequestTokenDto {
+    protected function getAuthenticationTokenEndpoint(): IdentityServiceConfiguration
+    {
         $responsibleIdentityServiceResponse = (new GetResponsibleIdentityService())->send();
 
         $identityServiceConfigurationResponse = (new GetIdentityServiceConfiguration(
             identityServiceUrl: $responsibleIdentityServiceResponse->dto()->identityServiceUrl
         ))->send();
 
+        return $identityServiceConfigurationResponse->dto();
+    }
+
+    protected function getNewOAuthTokenWithCredentials(): RequestTokenDto
+    {
         $requestTokenResponse = (new RequestTokenWithCredentials(
-            tokenEndpoint: $identityServiceConfigurationResponse->dto()->tokenEndpoint,
-            username: $username,
-            password: $password,
-            clientId: $clientId,
+            tokenEndpoint: $this->getAuthenticationTokenEndpoint()->tokenEndpoint,
+            clientId: $this->configuration->clientId,
+            scope: $this->configuration->scope,
+            username: $this->configuration->username,
+            password: $this->configuration->password,
         ))->send();
 
         return $requestTokenResponse->dto();
     }
 
-    protected function getNewAuthenticationOAuthTokenWithToken(
-        string $token,
-        ?string $clientId = 'docuware.platform.net.client'
-    ): RequestTokenDto {
-        $responsibleIdentityServiceResponse = (new GetResponsibleIdentityService())->send();
-
-        $identityServiceConfigurationResponse = (new GetIdentityServiceConfiguration(
-            identityServiceUrl: $responsibleIdentityServiceResponse->dto()->identityServiceUrl
-        ))->send();
-
-        $requestTokenResponse = (new RequestTokenWithToken(
-            tokenEndpoint: $identityServiceConfigurationResponse->dto()->tokenEndpoint,
-            token: $token,
-            clientId: $clientId,
+    protected function getNewOAuthTokenWithCredentialsTrustedUser(): RequestTokenDto
+    {
+        $requestTokenResponse = (new RequestTokenWithCredentialsTrustedUser(
+            tokenEndpoint: $this->getAuthenticationTokenEndpoint()->tokenEndpoint,
+            clientId: $this->configuration->clientId,
+            scope: $this->configuration->scope,
+            username: $this->configuration->username,
+            password: $this->configuration->password,
+            impersonateName: $this->configuration->impersonatedUsername,
         ))->send();
 
         return $requestTokenResponse->dto();

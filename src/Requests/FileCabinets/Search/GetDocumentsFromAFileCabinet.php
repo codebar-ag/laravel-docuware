@@ -20,6 +20,7 @@ class GetDocumentsFromAFileCabinet extends Request implements Cacheable
 
     public function __construct(
         protected readonly string $fileCabinetId,
+        protected readonly array $fields = [],
         protected readonly int $page = 1,
         protected readonly int $perPage = 50,
     ) {
@@ -28,6 +29,7 @@ class GetDocumentsFromAFileCabinet extends Request implements Cacheable
     public function defaultQuery(): array
     {
         return [
+            'fields' => filled($this->fields) ? implode(',', $this->fields) : null,
             'count' => $this->perPage,
             'start' => ($this->page - 1) * $this->perPage,
         ];

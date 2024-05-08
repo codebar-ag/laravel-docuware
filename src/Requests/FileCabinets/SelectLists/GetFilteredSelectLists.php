@@ -11,7 +11,7 @@ use Saloon\Enums\Method;
 use Saloon\Http\Request;
 use Saloon\Http\Response;
 
-class GetSelectLists extends Request implements Cacheable
+class GetFilteredSelectLists extends Request implements Cacheable
 {
     use HasCaching;
 

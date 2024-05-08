@@ -10,7 +10,7 @@ use Saloon\Http\Response;
 use Saloon\Http\SoloRequest;
 use Saloon\Traits\Body\HasFormBody;
 
-class RequestTokenWithToken extends SoloRequest implements HasBody
+class RequestTokenWithCredentialsTrustedUser extends SoloRequest implements HasBody
 {
     use HasFormBody;
 
@@ -18,8 +18,11 @@ class RequestTokenWithToken extends SoloRequest implements HasBody
 
     public function __construct(
         public readonly mixed $tokenEndpoint,
-        public readonly ?string $token = '',
         public readonly string $clientId = 'docuware.platform.net.client',
+        public readonly string $scope = 'docuware.platform',
+        public readonly string $username = '',
+        public readonly string $password = '',
+        public readonly string $impersonateName = '',
     ) {
     }
 
@@ -38,10 +41,12 @@ class RequestTokenWithToken extends SoloRequest implements HasBody
     public function defaultBody(): array
     {
         return [
-            'scope' => 'docuware.platform',
-            'grant_type' => 'dwtoken',
+            'grant_type' => 'trusted',
+            'scope' => $this->scope,
             'client_id' => $this->clientId,
-            'token' => $this->token,
+            'username' => $this->username,
+            'password' => $this->password,
+            'impersonateName' => $this->impersonateName,
         ];
     }
 

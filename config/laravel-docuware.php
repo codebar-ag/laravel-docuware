@@ -35,8 +35,6 @@ return [
 
     'credentials' => [
         'url' => env('DOCUWARE_URL'),
-        'username' => env('DOCUWARE_USERNAME'),
-        'password' => env('DOCUWARE_PASSWORD'),
     ],
 
     /*
@@ -79,6 +77,9 @@ return [
         'request' => [
             'timeout_in_seconds' => env('DOCUWARE_CACHE_TIMEOUT_IN_SECONDS', 60),
         ],
+
+        'client_id' => env('DOCUWARE_CLIENT_ID', 'docuware.platform.net.client'),
+        'scope' => env('DOCUWARE_SCOPE', 'docuware.platform'),
     ],
 
     /*

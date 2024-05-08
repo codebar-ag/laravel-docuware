@@ -69,7 +69,7 @@ then optimize the processes that power the core of your business.
 | Authentication/OAuth                | 1. Get Responsible Identity Service                         | ✅         |
 | Authentication/OAuth                | 2. Get Identity Service Configuration                       | ✅         |
 | Authentication/OAuth                | 3.a Request Token w/ Username & Password                    | ✅         |
-| Authentication/OAuth                | 3.b Request Token w/ a  DocuWare Token                      | ✅         |
+| Authentication/OAuth                | 3.b Request Token w/ a DocuWare Token                       | ❌         |
 | Authentication/OAuth                | 3.c Request Token w/ Username & Password (Trusted User)     | ❌         |
 | Authentication/OAuth                | 3.d.1 Obtain Windows Authorization (On Premises Only)       | ❌         |
 | Authentication/OAuth                | 3.d.2 Request Token /w a Windows Account (On Premises Only) | ❌         |
@@ -94,9 +94,9 @@ then optimize the processes that power the core of your business.
 | FileCabinets/General                | Get Total Number of Documents                               | ✅         |
 | FileCabinets/Dialogs                | Get All Dialogs                                             | ✅         |
 | FileCabinets/Dialogs                | Get a Specific Dialog                                       | ✅         |
-| FileCabinets/Dialogs                | Get Dialogs of a Specific Type                              | ❌         |
-| FileCabinets/Search                 | Get Documents from a File Cabinet                           | ❌         |
-| FileCabinets/Search                 | Get a Specific Document From a File Cabinet                 | ❌         |
+| FileCabinets/Dialogs                | Get Dialogs of a Specific Type                              | ✅         |
+| FileCabinets/Search                 | Get Documents from a File Cabinet                           | ✅         |
+| FileCabinets/Search                 | Get a Specific Document From a File Cabinet                 | ✅         |
 | FileCabinets/Search                 | Search for Documents in a Single File Cabinet               | ❌         |
 | FileCabinets/Search                 | Search for Documents in Multiple File Cabinets              | ❌         |
 | FileCabinets/CheckInCheckOut        | Check-out & Download a Document                             | ❌         |
@@ -147,19 +147,6 @@ then optimize the processes that power the core of your business.
 | Workflow                            | Get Document Workflow History                               | ❌         |
 | Workflow                            | Get Document Workflow History Steps                         | ❌         |
 
-
-
-
-
-
-
-
-
-
-
-
-  
-
 </details>
 
 
@@ -194,64 +181,79 @@ DOCUWARE_PASSPHRASE="a#bcd>2~C1'abc\\#"
 
 ## 🏗 Usage
 
-### Getting OAuth Token
+### Getting Started with OAuth
 <details>
  <summary>Getting Started with OAuth</summary>
 
 > This package automatically handles the generation of OAuth token for you and stores them in cache.
 
+### Getting a new token via Username & Password:
+
 ```php
 use CodebarAg\DocuWare\Connectors\DocuWareConnector;
-use CodebarAg\DocuWare\DTO\Config;
+use CodebarAg\DocuWare\DTO\Config\ConfigWithCredentials;
 
-// Use credentials from your .env file
-$connector = new DocuWareConnector();
-
-// Pass credentials manually
 $connector = new DocuWareConnector(
-    configuration: new Config(
-        url: 'https://your-domain.docuware.cloud',
+    configuration: new ConfigWithCredentials(
         username: 'username',
         password: 'password',
-        passphrase: 'passphrase',
-        cacheDriver: 'redis',
-        cacheLifetimeInSeconds: 60,
-        requestTimeoutInSeconds: 60,
     )
 );
-
 ```
 
-Getting a new token via Organization Token:
+### Getting a new token via Username & Password (Trusted User):
+
 ```php
 use CodebarAg\DocuWare\Connectors\DocuWareConnector;
-use CodebarAg\DocuWare\DTO\Config;
+use CodebarAg\DocuWare\DTO\Config\ConfigWithCredentialsTrustedUser;
 
-//Step 1: Create a new connector with either method above
-$loginTokenConnector = new DocuWareConnector();
-
-//Step 2: Get the Get Login Token
-$loginToken = $loginTokenConnector->send(new GetLoginToken())->dto();
-
-//Step 3.a: Use the login token in a new connector to fresh the cached access token
 $connector = new DocuWareConnector(
-    token: $loginToken->token
-);
-
-//Step 3.b: Optionally pass a configuration to the new connector
-$connector = new DocuWareConnector(
-    configuration: new Config(
-        url: 'https://your-domain.docuware.cloud',
-        username: '',
-        password: '',
-        passphrase: 'passphrase',
-        cacheDriver: 'redis',
-        cacheLifetimeInSeconds: 60,
-        requestTimeoutInSeconds: 60,
-    ),
-    token: $loginToken->token
+    configuration: new ConfigWithCredentialsTrustedUser(
+        username: 'username',
+        password: 'password',
+        impersonatedUsername: 'impersonatedUsername',
+    )
 );
 ```
+
+### Extending the connector
+
+We understand it may be repetitive to pass the configuration every time you create a new connector. 
+
+You can extend the connector and set the configuration once.
+
+#### Create a new connector
+
+```php
+<?php
+
+namespace App\Connectors;
+
+use CodebarAg\DocuWare\Connectors\DocuWareConnector;
+use CodebarAg\DocuWare\DTO\Config\ConfigWithCredentials;
+
+class CustomDocuWareConnector extends DocuWareConnector
+{
+    public function __construct() {
+        $configuration = new ConfigWithCredentials(
+            username: 'username',
+            password: 'password',
+        );
+    
+        parent::__construct($configuration);
+    }
+}
+```
+
+#### Use the new connector
+
+```php
+use App\Connectors\CustomDocuWareConnector;
+use CodebarAg\DocuWare\DTO\Config\ConfigWithCredentials;
+
+$connector = new CustomDocuWareConnector();
+```
+
 
 </details>
 

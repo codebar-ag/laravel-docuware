@@ -1,8 +1,9 @@
 <?php
 
-namespace CodebarAg\DocuWare\Requests\FileCabinets\SelectLists;
+namespace CodebarAg\DocuWare\Requests\FileCabinets\Dialogs;
 
-use CodebarAg\DocuWare\Responses\FileCabinets\SelectLists\GetSelectListsResponse;
+use CodebarAg\DocuWare\Enums\DialogType;
+use CodebarAg\DocuWare\Responses\FileCabinets\Dialogs\GetAllDialogsResponse;
 use Illuminate\Support\Facades\Cache;
 use Saloon\CachePlugin\Contracts\Cacheable;
 use Saloon\CachePlugin\Drivers\LaravelCacheDriver;
@@ -11,7 +12,7 @@ use Saloon\Enums\Method;
 use Saloon\Http\Request;
 use Saloon\Http\Response;
 
-class GetSelectLists extends Request implements Cacheable
+class GetDialogsOfASpecificType extends Request implements Cacheable
 {
     use HasCaching;
 
@@ -19,21 +20,19 @@ class GetSelectLists extends Request implements Cacheable
 
     public function __construct(
         protected readonly string $fileCabinetId,
-        protected readonly string $dialogId,
-        protected readonly string $fieldName,
+        protected readonly DialogType $dialogType,
     ) {
     }
 
     public function resolveEndpoint(): string
     {
-        return '/FileCabinets/'.$this->fileCabinetId.'/Query/SelectListExpression';
+        return '/FileCabinets/'.$this->fileCabinetId.'/Dialogs';
     }
 
     public function defaultQuery(): array
     {
         return [
-            'DialogId' => $this->dialogId,
-            'FieldName' => $this->fieldName,
+            'DialogType' => $this->dialogType->value,
         ];
     }
 
@@ -49,6 +48,6 @@ class GetSelectLists extends Request implements Cacheable
 
     public function createDtoFromResponse(Response $response): mixed
     {
-        return GetSelectListsResponse::fromResponse($response);
+        return GetAllDialogsResponse::fromResponse($response);
     }
 }

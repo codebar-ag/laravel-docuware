@@ -18,9 +18,10 @@ class RequestTokenWithCredentials extends SoloRequest implements HasBody
 
     public function __construct(
         public readonly mixed $tokenEndpoint,
+        public readonly string $clientId = 'docuware.platform.net.client',
+        public readonly ?string $scope = 'docuware.platform',
         public readonly ?string $username = '',
         public readonly ?string $password = '',
-        public readonly string $clientId = 'docuware.platform.net.client',
     ) {
     }
 
@@ -39,8 +40,8 @@ class RequestTokenWithCredentials extends SoloRequest implements HasBody
     public function defaultBody(): array
     {
         return [
-            'scope' => 'docuware.platform',
             'grant_type' => 'password',
+            'scope' => $this->scope,
             'client_id' => $this->clientId,
             'username' => filled($this->username) ? $this->username : config('laravel-docuware.credentials.username'),
             'password' => filled($this->password) ? $this->password : config('laravel-docuware.credentials.password'),

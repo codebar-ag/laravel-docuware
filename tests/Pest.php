@@ -1,6 +1,7 @@
 <?php
 
 use CodebarAg\DocuWare\Connectors\DocuWareConnector;
+use CodebarAg\DocuWare\DTO\Config\ConfigWithCredentials;
 use CodebarAg\DocuWare\Requests\Documents\ModifyDocuments\DeleteDocument;
 use CodebarAg\DocuWare\Requests\FileCabinets\Search\GetDocumentsFromAFileCabinet;
 use CodebarAg\DocuWare\Tests\TestCase;
@@ -37,5 +38,8 @@ function clearFiles(): void
  */
 function getConnector(): object
 {
-    return new DocuWareConnector();
+    return new DocuWareConnector(new ConfigWithCredentials(
+        username: config('laravel-docuware.credentials.username'),
+        password: config('laravel-docuware.credentials.password'),
+    ));
 }

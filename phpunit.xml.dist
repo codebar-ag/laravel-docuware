@@ -50,5 +50,7 @@
         <env name="DOCUWARE_TESTS_DIALOG_ID" value="5afd9126-6cb1-4c7b-8ab2-2ca0bbbeb7be"/>
         <env name="DOCUWARE_TESTS_BASKET_ID" value="b_ac921d68-983b-4b0f-8a20-34ab05ff19c6"/>
         <env name="DOCUWARE_TESTS_ORGANIZATION_ID" value="1"/>
+        <env name="DOCUWARE_TESTS_GROUP_ID" value="ae49d31e-41ce-46b2-9ebb-64db58e90046"/>
+        <env name="DOCUWARE_TESTS_ROLE_ID" value="2444928d-1312-44db-aa79-101f198ac946"/>
     </php>
 </phpunit>

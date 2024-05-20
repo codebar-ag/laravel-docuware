@@ -84,12 +84,12 @@ then optimize the processes that power the core of your business.
 | General/UserManagement              | Update User                                                 | ✅         |
 | General/UserManagement              | Get Groups                                                  | ✅         |
 | General/UserManagement              | Get All Groups for a Specific User                          | ✅         |
-| General/UserManagement              | Add User to a Group                                         | ❌         |
-| General/UserManagement              | Remove User from a Group                                    | ❌         |
+| General/UserManagement              | Add User to a Group                                         | ✅         |
+| General/UserManagement              | Remove User from a Group                                    | ✅         |
 | General/UserManagement              | Get Roles                                                   | ✅         |
 | General/UserManagement              | Get All Roles for a Specific User                           | ✅         |
-| General/UserManagement              | Add User to a Role                                          | ❌         |
-| General/UserManagement              | Remove User from a Role                                     | ❌         |
+| General/UserManagement              | Add User to a Role                                          | ✅         |
+| General/UserManagement              | Remove User from a Role                                     | ✅         |
 | FileCabinets/General                | Get File Cabinet Information                                | ✅         |
 | FileCabinets/General                | Get Total Number of Documents                               | ✅         |
 | FileCabinets/Dialogs                | Get All Dialogs                                             | ✅         |
@@ -97,8 +97,8 @@ then optimize the processes that power the core of your business.
 | FileCabinets/Dialogs                | Get Dialogs of a Specific Type                              | ✅         |
 | FileCabinets/Search                 | Get Documents from a File Cabinet                           | ✅         |
 | FileCabinets/Search                 | Get a Specific Document From a File Cabinet                 | ✅         |
-| FileCabinets/Search                 | Search for Documents in a Single File Cabinet               | ❌         |
-| FileCabinets/Search                 | Search for Documents in Multiple File Cabinets              | ❌         |
+| FileCabinets/Search                 | Search for Documents in a Single File Cabinet               | ✅         |
+| FileCabinets/Search                 | Search for Documents in Multiple File Cabinets              | ✅         |
 | FileCabinets/CheckInCheckOut        | Check-out & Download a Document                             | ❌         |
 | FileCabinets/CheckInCheckOut        | Check-in a Document from the File System                    | ❌         |
 | FileCabinets/CheckInCheckOut        | Undo Check-out                                              | ❌         |

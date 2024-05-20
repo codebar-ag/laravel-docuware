@@ -44,6 +44,7 @@ final class User
     public static function fake(
         ?string $id = null,
         ?string $name = null,
+        ?string $salutation = null,
         ?string $firstName = null,
         ?string $lastName = null,
         ?string $dbName = null,
@@ -57,6 +58,7 @@ final class User
         return new self(
             id: $id ?? (string) Str::uuid(),
             name: $name ?? (string) 'Fake File Cabinet',
+            salutation: $salutation ?? (string) 'Fake Salutation',
             firstName: $firstName ?? (string) 'Fake First Name',
             lastName: $lastName ?? (string) 'Fake Last Name',
             dbName: $dbName ?? (string) 'Fake DB Name',

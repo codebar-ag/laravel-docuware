@@ -61,7 +61,7 @@ class DocuWareConnector extends Connector
         // get instance name of $this->configuration as string
         $instanceName = get_class($this->configuration);
 
-        $cacheKey = 'docuware.oauth.'.$instanceName.'.'.$this->configuration->url.'.'.$this->configuration?->username;
+        $cacheKey = 'docuware.oauth.'.$instanceName.'.'.$this->configuration->url.'.'.($this->configuration->username ?? '');
 
         $token = null;
 

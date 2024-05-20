@@ -80,8 +80,8 @@ then optimize the processes that power the core of your business.
 | General/UserManagement              | Get Users by ID                                             | ✅         |
 | General/UserManagement              | Get Users of a Role                                         | ✅         |
 | General/UserManagement              | Get Users of a Group                                        | ✅         |
-| General/UserManagement              | Create User                                                 | ❌         |
-| General/UserManagement              | Update User                                                 | ❌         |
+| General/UserManagement              | Create User                                                 | ✅         |
+| General/UserManagement              | Update User                                                 | ✅         |
 | General/UserManagement              | Get Groups                                                  | ✅         |
 | General/UserManagement              | Get All Groups for a Specific User                          | ✅         |
 | General/UserManagement              | Add User to a Group                                         | ❌         |

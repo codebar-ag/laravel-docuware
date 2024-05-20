@@ -12,6 +12,7 @@ final class User
         return new self(
             id: Arr::get($data, 'Id'),
             name: Arr::get($data, 'Name'),
+            salutation: Arr::get($data, 'Salutation'),
             firstName: Arr::get($data, 'FirstName'),
             lastName: Arr::get($data, 'LastName'),
             dbName: Arr::get($data, 'DBName'),
@@ -27,6 +28,7 @@ final class User
     public function __construct(
         public string $id,
         public string $name,
+        public ?string $salutation,
         public ?string $firstName,
         public ?string $lastName,
         public string $dbName,

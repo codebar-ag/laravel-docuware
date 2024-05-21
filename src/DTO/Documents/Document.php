@@ -131,6 +131,7 @@ final class Document
         ?Carbon $created_at = null,
         ?Carbon $updated_at = null,
         ?Collection $fields = null,
+        ?Collection $sections = null,
         ?Collection $suggestions = null,
     ): self {
         return new self(
@@ -148,6 +149,7 @@ final class Document
                 DocumentField::fake(),
                 DocumentField::fake(),
             ]),
+            sections: $sections ?? null,
             suggestions: $suggestions ?? null
         );
     }

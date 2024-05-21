@@ -134,7 +134,7 @@ it('can staple 2 documents', function () {
 
 });
 
-it('can unstaple 2 documents', function ($staple) {
+it('can unstaple a document', function ($staple) {
     Event::fake();
 
     $fileCabinetId = config('laravel-docuware.tests.basket_id');

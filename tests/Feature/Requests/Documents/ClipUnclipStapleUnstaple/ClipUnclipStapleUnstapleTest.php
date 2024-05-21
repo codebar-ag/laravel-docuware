@@ -125,12 +125,19 @@ it('can staple 2 documents', function () {
         ]
     ))->dto();
 
-    expect($staple->title)->toBe($document->title)
-        ->and($staple->total_pages)->toBe($document->total_pages + $document2->total_pages);
+    sleep(5); // Wait for the files to be uploaded and processed
+
+    $stapledDocument = $this->connector->send(new GetASpecificDocumentFromAFileCabinet(
+        $fileCabinetId,
+        $staple->id
+    ))->dto();
+
+    expect($stapledDocument->title)->toBe($document->title)
+        ->and($stapledDocument->total_pages)->toBe($document->total_pages + $document2->total_pages);
 
     Event::assertDispatched(DocuWareResponseLog::class);
 
-    return $staple;
+    return $stapledDocument;
 
 });
 

@@ -118,10 +118,10 @@ then optimize the processes that power the core of your business.
 | Documents/UpdateIndexValues         | Update Table Field Values                                   | ❌         |
 | Documents/ModifyDocuments           | Transfer Document                                           | ✅         |
 | Documents/ModifyDocuments           | Delete Document                                             | ✅         |
-| Documents/ClipUnclip&StapleUnstaple | Clip                                                        | ❌         |
-| Documents/ClipUnclip&StapleUnstaple | Unclip                                                      | ❌         |
-| Documents/ClipUnclip&StapleUnstaple | Staple                                                      | ❌         |
-| Documents/ClipUnclip&StapleUnstaple | Unstaple                                                    | ❌         |
+| Documents/ClipUnclip&StapleUnstaple | Clip                                                        | ✅         |
+| Documents/ClipUnclip&StapleUnstaple | Unclip                                                      | ✅         |
+| Documents/ClipUnclip&StapleUnstaple | Staple                                                      | ✅         |
+| Documents/ClipUnclip&StapleUnstaple | Unstaple                                                    | ✅         |
 | Documents/AnnotationsStamps         | AddStampWithPosition                                        | ❌         |
 | Documents/AnnotationsStamps         | AddStampWithBestPosition                                    | ❌         |
 | Documents/AnnotationsStamps         | AddTextAnnotation                                           | ❌         |

@@ -4,6 +4,8 @@ use CodebarAg\DocuWare\Connectors\DocuWareConnector;
 use CodebarAg\DocuWare\DTO\Config\ConfigWithCredentials;
 use CodebarAg\DocuWare\Requests\Documents\ModifyDocuments\DeleteDocument;
 use CodebarAg\DocuWare\Requests\FileCabinets\Search\GetDocumentsFromAFileCabinet;
+use CodebarAg\DocuWare\Requests\General\UserManagement\CreateUpdateUsers\UpdateUser;
+use CodebarAg\DocuWare\Requests\General\UserManagement\GetUsers\GetUsers;
 use CodebarAg\DocuWare\Tests\TestCase;
 
 uses(TestCase::class)
@@ -14,6 +16,9 @@ uses()
         $this->connector = getConnector();
 
         clearFiles();
+    })
+    ->afterEach(function () {
+        setUsersInactive();
     })
     ->in('Feature');
 
@@ -30,6 +35,23 @@ function clearFiles(): void
             config('laravel-docuware.tests.file_cabinet_id'),
             $document->id,
         ))->dto();
+    }
+}
+
+function setUsersInactive(): void
+{
+    $connector = getConnector();
+
+    $response = $connector->send(new GetUsers());
+
+    $users = $response->dto()->filter(function ($user) {
+        return Str::contains($user->email, 'test@example.test') && $user->active === true;
+    });
+
+    foreach ($users as $user) {
+        $user->active = false;
+
+        $connector->send(new UpdateUser($user));
     }
 }
 

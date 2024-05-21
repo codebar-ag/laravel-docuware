@@ -3,6 +3,7 @@
 namespace CodebarAg\DocuWare\DTO\Documents;
 
 use Carbon\Carbon;
+use CodebarAg\DocuWare\DTO\Section;
 use CodebarAg\DocuWare\DTO\SuggestionField;
 use CodebarAg\DocuWare\Support\ParseValue;
 use Illuminate\Support\Arr;
@@ -13,12 +14,16 @@ final class Document
 {
     public static function fromJson(array $data): self
     {
-        $suggestions = Arr::has($data, 'Suggestions')
-            ? self::convertSuggestions(collect(Arr::get($data, 'Suggestions')))
-            : null;
-
         $fields = Arr::has($data, 'Fields')
             ? self::convertFields(collect(Arr::get($data, 'Fields')))
+            : null;
+
+        $sections = Arr::has($data, 'Sections')
+            ? self::convertSections(collect(Arr::get($data, 'Sections')))
+            : null;
+
+        $suggestions = Arr::has($data, 'Suggestions')
+            ? self::convertSuggestions(collect(Arr::get($data, 'Suggestions')))
             : null;
 
         return new self(
@@ -33,6 +38,7 @@ final class Document
             created_at: ParseValue::date(Arr::get($data, 'CreatedAt')),
             updated_at: ParseValue::date(Arr::get($data, 'LastModified')),
             fields: $fields,
+            sections: $sections,
             suggestions: $suggestions,
         );
     }
@@ -51,6 +57,13 @@ final class Document
         });
     }
 
+    protected static function convertSections(Collection $sections): ?Collection
+    {
+        return $sections->mapWithKeys(function (array $section) {
+            return [$section['Id'] => Section::fromJson($section)];
+        });
+    }
+
     public function __construct(
         public int $id,
         public int $file_size,
@@ -63,6 +76,7 @@ final class Document
         public Carbon $created_at,
         public Carbon $updated_at,
         public ?Collection $fields,
+        public ?Collection $sections,
         public ?Collection $suggestions,
     ) {
     }

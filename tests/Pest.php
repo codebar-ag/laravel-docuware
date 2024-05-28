@@ -3,7 +3,9 @@
 use CodebarAg\DocuWare\Connectors\DocuWareConnector;
 use CodebarAg\DocuWare\DTO\Config\ConfigWithCredentials;
 use CodebarAg\DocuWare\Requests\Documents\ModifyDocuments\DeleteDocument;
+use CodebarAg\DocuWare\Requests\FileCabinets\Search\GetASpecificDocumentFromAFileCabinet;
 use CodebarAg\DocuWare\Requests\FileCabinets\Search\GetDocumentsFromAFileCabinet;
+use CodebarAg\DocuWare\Requests\FileCabinets\Upload\CreateDataRecord;
 use CodebarAg\DocuWare\Requests\General\UserManagement\CreateUpdateUsers\UpdateUser;
 use CodebarAg\DocuWare\Requests\General\UserManagement\GetUsers\GetUsers;
 use CodebarAg\DocuWare\Tests\TestCase;
@@ -64,4 +66,49 @@ function getConnector(): object
         username: config('laravel-docuware.credentials.username'),
         password: config('laravel-docuware.credentials.password'),
     ));
+}
+
+function cleanup($connector, $fileCabinetId): void
+{
+    $paginator = $connector->send(new GetDocumentsFromAFileCabinet(
+        $fileCabinetId
+    ))->dto();
+
+    foreach ($paginator->documents as $document) {
+        $connector->send(new DeleteDocument(
+            $fileCabinetId,
+            $document->id,
+        ))->dto();
+    }
+}
+
+function uploadFiles($connector, $fileCabinetId, $path): array
+{
+    $document = $connector->send(new CreateDataRecord(
+        $fileCabinetId,
+        file_get_contents($path.'/test-1.pdf'),
+        'test-1.pdf',
+    ))->dto();
+
+    $document2 = $connector->send(new CreateDataRecord(
+        $fileCabinetId,
+        file_get_contents($path.'/test-2.pdf'),
+        'test-2.pdf',
+    ))->dto();
+
+    sleep(5); // Wait for the files to be uploaded and processed
+
+    // Have to get document again as returned data is incorrect
+    $document = $connector->send(new GetASpecificDocumentFromAFileCabinet(
+        $fileCabinetId,
+        $document->id
+    ))->dto();
+
+    // Have to get document2 again as returned data is incorrect
+    $document2 = $connector->send(new GetASpecificDocumentFromAFileCabinet(
+        $fileCabinetId,
+        $document2->id
+    ))->dto();
+
+    return [$document, $document2];
 }

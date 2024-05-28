@@ -4,6 +4,7 @@ namespace CodebarAg\DocuWare;
 
 use Carbon\Carbon;
 use CodebarAg\DocuWare\Exceptions\UnableToSearch;
+use CodebarAg\DocuWare\Requests\Documents\DocumentsTrashBin\GetDocuments;
 use CodebarAg\DocuWare\Requests\Search\GetSearchRequest;
 use Illuminate\Support\Str;
 use Saloon\Exceptions\InvalidResponseClassException;
@@ -30,6 +31,15 @@ class DocuWareSearchRequestBuilder
     protected array $filters = [];
 
     protected array $usedDateOperators = [];
+
+    protected bool $trashBin = false;
+
+    public function trashBin(): self
+    {
+        $this->trashBin = true;
+
+        return $this;
+    }
 
     public function fileCabinet(string $fileCabinetId): self
     {
@@ -144,7 +154,7 @@ class DocuWareSearchRequestBuilder
      * @throws InvalidResponseClassException
      * @throws PendingRequestException
      */
-    public function get(): GetSearchRequest
+    public function get(): GetSearchRequest|GetDocuments
     {
         $this->checkDateFilterRangeDivergence();
         $this->restructureMonoDateFilterRange();
@@ -168,6 +178,17 @@ class DocuWareSearchRequestBuilder
                 'DBName' => $name,
                 'Value' => $value,
             ];
+        }
+
+        if ($this->trashBin) {
+            return new GetDocuments(
+                page: $this->page,
+                perPage: $this->perPage,
+                searchTerm: $this->searchTerm,
+                orderField: $this->orderField,
+                orderDirection: $this->orderDirection,
+                condition: $condition,
+            );
         }
 
         return new GetSearchRequest(

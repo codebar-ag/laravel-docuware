@@ -54,3 +54,10 @@ jobs:
           DOCUWARE_USERNAME: ${{ secrets.DOCUWARE_USERNAME }}
           DOCUWARE_PASSWORD: ${{ secrets.DOCUWARE_PASSWORD }}
           DOCUWARE_COOKIES: ${{ secrets.DOCUWARE_COOKIES }}
+
+      - name: Store Log Artifacts
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Store report artifacts
+          path: ./vendor/orchestra/testbench-core/storage/logs

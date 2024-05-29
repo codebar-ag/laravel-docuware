@@ -1,6 +1,5 @@
 <?php
 
-
 use Illuminate\Support\Sleep;
 
 test('sleep', function () {

@@ -60,4 +60,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: Store report artifacts
-          path: ./vendor/orchestra/testbench-core/storage/logs
+          path: ./vendor/orchestra/testbench-core/laravel/storage/logs

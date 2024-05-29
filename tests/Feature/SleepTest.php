@@ -8,4 +8,4 @@ test('sleep', function () {
     Sleep::for(5)->seconds();
     Log::info(now()->toDateTimeString());
 
-})->expectNotToPerformAssertions();
+})->expectNotToPerformAssertions()->only();

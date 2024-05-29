@@ -7,6 +7,7 @@ use CodebarAg\DocuWare\Requests\General\UserManagement\CreateUpdateUsers\CreateU
 use CodebarAg\DocuWare\Requests\General\UserManagement\CreateUpdateUsers\UpdateUser;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Sleep;
 
 it('can create users', function () {
     Event::fake();

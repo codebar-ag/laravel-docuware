@@ -7,6 +7,7 @@ use CodebarAg\DocuWare\Requests\General\UserManagement\GetModifyGroups\AddUserTo
 use CodebarAg\DocuWare\Requests\General\UserManagement\GetModifyGroups\RemoveUserFromAGroup;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Sleep;
 
 it('can add groups to a user', function () {
     Event::fake();

@@ -7,6 +7,7 @@ use CodebarAg\DocuWare\Requests\General\UserManagement\GetModifyRoles\AddUserToA
 use CodebarAg\DocuWare\Requests\General\UserManagement\GetModifyRoles\RemoveUserFromARole;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Sleep;
 
 it('can add roles to a user', function () {
     Event::fake();

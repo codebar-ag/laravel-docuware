@@ -4,6 +4,7 @@ use CodebarAg\DocuWare\Events\DocuWareResponseLog;
 use CodebarAg\DocuWare\Requests\Documents\ClipUnclipStapleUnstaple\Clip;
 use CodebarAg\DocuWare\Requests\Documents\ClipUnclipStapleUnstaple\Unclip;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Sleep;
 
 it('can unclip 2 documents', function () {
     Event::fake();
@@ -23,7 +24,7 @@ it('can unclip 2 documents', function () {
         ]
     ))->dto();
 
-    sleep(5);
+    Sleep::for(5)->seconds();
 
     $unclip = $this->connector->send(new Unclip(
         $fileCabinetId,

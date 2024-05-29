@@ -4,6 +4,7 @@ use CodebarAg\DocuWare\Events\DocuWareResponseLog;
 use CodebarAg\DocuWare\Requests\Documents\ClipUnclipStapleUnstaple\Staple;
 use CodebarAg\DocuWare\Requests\FileCabinets\Search\GetASpecificDocumentFromAFileCabinet;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Sleep;
 
 it('can staple 2 documents', function () {
     Event::fake();
@@ -23,7 +24,7 @@ it('can staple 2 documents', function () {
         ]
     ))->dto();
 
-    sleep(5); // Wait for the files to be uploaded and processed
+    Sleep::for(5)->seconds(); // Wait for the files to be uploaded and processed
 
     $stapledDocument = $this->connector->send(new GetASpecificDocumentFromAFileCabinet(
         $fileCabinetId,

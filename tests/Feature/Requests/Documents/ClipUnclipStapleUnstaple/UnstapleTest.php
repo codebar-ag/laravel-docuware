@@ -4,6 +4,7 @@ use CodebarAg\DocuWare\Events\DocuWareResponseLog;
 use CodebarAg\DocuWare\Requests\Documents\ClipUnclipStapleUnstaple\Staple;
 use CodebarAg\DocuWare\Requests\Documents\ClipUnclipStapleUnstaple\Unstaple;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Sleep;
 
 it('can unstaple a document', function () {
     Event::fake();
@@ -23,7 +24,7 @@ it('can unstaple a document', function () {
         ]
     ))->dto();
 
-    sleep(5);
+    Sleep::for(5)->seconds();
 
     $unclip = $this->connector->send(new Unstaple(
         $fileCabinetId,

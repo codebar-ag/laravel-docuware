@@ -20,7 +20,7 @@ it('can add groups to a user', function () {
         password: 'TESTPASSWORD',
     )))->dto();
 
-    sleep(5);
+    Sleep::for(5)->seconds();
 
     $response = $this->connector->send(new AddUserToAGroup(
         userId: $user->id,
@@ -39,7 +39,7 @@ it('can add groups to a user', function () {
 it('can remove groups to a user', function ($user) {
     Event::fake();
 
-    sleep(5);
+    Sleep::for(5)->seconds();
 
     $response = $this->connector->send(new RemoveUserFromAGroup(
         userId: $user->id,

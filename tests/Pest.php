@@ -9,6 +9,7 @@ use CodebarAg\DocuWare\Requests\FileCabinets\Upload\CreateDataRecord;
 use CodebarAg\DocuWare\Requests\General\UserManagement\CreateUpdateUsers\UpdateUser;
 use CodebarAg\DocuWare\Requests\General\UserManagement\GetUsers\GetUsers;
 use CodebarAg\DocuWare\Tests\TestCase;
+use Illuminate\Support\Sleep;
 
 uses(TestCase::class)
     ->in(__DIR__);
@@ -96,7 +97,7 @@ function uploadFiles($connector, $fileCabinetId, $path): array
         'test-2.pdf',
     ))->dto();
 
-    sleep(5); // Wait for the files to be uploaded and processed
+    Sleep::for(5)->seconds(); // Wait for the files to be uploaded and processed
 
     // Have to get document again as returned data is incorrect
     $document = $connector->send(new GetASpecificDocumentFromAFileCabinet(

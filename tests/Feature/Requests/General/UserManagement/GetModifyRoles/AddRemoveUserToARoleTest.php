@@ -20,7 +20,7 @@ it('can add roles to a user', function () {
         password: 'TESTPASSWORD',
     )))->dto();
 
-    sleep(5);
+    Sleep::for(5)->seconds();
 
     $response = $this->connector->send(new AddUserToARole(
         userId: $user->id,
@@ -39,7 +39,7 @@ it('can add roles to a user', function () {
 it('can remove roles to a user', function ($user) {
     Event::fake();
 
-    sleep(5);
+    Sleep::for(5)->seconds();
 
     $response = $this->connector->send(new RemoveUserFromARole(
         userId: $user->id,

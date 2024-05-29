@@ -30,7 +30,7 @@ it('can create users', function () {
 it('can update users', function ($user) {
     Event::fake();
 
-    sleep(5);
+    Sleep::for(5)->seconds();
 
     $user->name .= ' - Updated';
     $user->active = false;

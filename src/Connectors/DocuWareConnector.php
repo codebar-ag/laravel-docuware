@@ -82,7 +82,7 @@ class DocuWareConnector extends Connector
                 DocuWareOAuthLog::dispatch($this->configuration->url, $this->configuration->username, 'Token retrieved from API');
             }
 
-            $cache->put(key: $cacheKey, value: Crypt::encrypt($token), ttl: $token->expiresIn);
+            $cache->put(key: $cacheKey, value: Crypt::encrypt($token), ttl: $token->expiresIn - 60);
         }
 
         return $token->accessToken;
@@ -91,10 +91,12 @@ class DocuWareConnector extends Connector
     protected function getAuthenticationTokenEndpoint(): IdentityServiceConfiguration
     {
         $responsibleIdentityServiceResponse = (new GetResponsibleIdentityService())->send();
+        ray($responsibleIdentityServiceResponse->isCached())->purple();
 
         $identityServiceConfigurationResponse = (new GetIdentityServiceConfiguration(
             identityServiceUrl: $responsibleIdentityServiceResponse->dto()->identityServiceUrl
         ))->send();
+        ray($identityServiceConfigurationResponse->isCached())->purple();
 
         return $identityServiceConfigurationResponse->dto();
     }

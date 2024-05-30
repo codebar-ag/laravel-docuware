@@ -1,12 +1,12 @@
 <?php
 
 use CodebarAg\DocuWare\DocuWare;
-use CodebarAg\DocuWare\Requests\Documents\DocumentsTrashBin\DeleteDocuments;
+use CodebarAg\DocuWare\Requests\Documents\DocumentsTrashBin\RestoreDocuments;
 use CodebarAg\DocuWare\Requests\Documents\ModifyDocuments\DeleteDocument;
 use CodebarAg\DocuWare\Requests\FileCabinets\Upload\CreateDataRecord;
 use Illuminate\Support\Facades\Event;
 
-it('can delete documents in trash', function () {
+it('can restore documents in trash', function () {
     Event::fake();
 
     $document = $this->connector->send(new CreateDataRecord(
@@ -27,7 +27,7 @@ it('can delete documents in trash', function () {
 
     $paginator = $this->connector->send($paginatorRequest)->dto();
 
-    $delete = $this->connector->send(new DeleteDocuments($paginator->mappedDocuments->pluck('ID')->all()))->dto();
+    $delete = $this->connector->send(new RestoreDocuments($paginator->mappedDocuments->pluck('ID')->all()))->dto();
 
     expect($delete->successCount)->toBe($paginator->total);
-})->group('delete', 'trash');
+})->group('restore', 'trash');

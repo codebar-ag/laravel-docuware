@@ -133,7 +133,7 @@ then optimize the processes that power the core of your business.
 | Documents/AnnotationsStamps         | Get Stamps                                                  | ❌         |
 | Documents/DocumentsTrashBin         | Get Documents                                               | ✅         |
 | Documents/DocumentsTrashBin         | Delete Documents                                            | ✅         |
-| Documents/DocumentsTrashBin         | Restore Documents                                           | ❌         |
+| Documents/DocumentsTrashBin         | Restore Documents                                           | ✅         |
 | Documents/ApplicationProperties     | Get Application Properties                                  | ❌         |
 | Documents/ApplicationProperties     | Add Application Properties                                  | ❌         |
 | Documents/ApplicationProperties     | Delete Application Properties                               | ❌         |

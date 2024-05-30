@@ -42,17 +42,17 @@ function clearFiles(): void
         ))->dto();
     }
 
-    //    $paginatorRequest = (new DocuWare())
-    //        ->searchRequestBuilder()
-    //        ->trashBin()
-    //        ->perPage(1000)
-    //        ->get();
-    //
-    //    $paginator = $connector->send($paginatorRequest)->dto();
-    //
-    //    if ($paginator->total > 0) {
-    //        $connector->send(new DeleteDocuments($paginator->mappedDocuments->pluck('ID')->all()))->dto();
-    //    }
+    $paginatorRequest = (new DocuWare())
+        ->searchRequestBuilder()
+        ->trashBin()
+        ->perPage(1000)
+        ->get();
+
+    $paginator = $connector->send($paginatorRequest)->dto();
+
+    if ($paginator->total > 0) {
+        $connector->send(new DeleteDocuments($paginator->mappedDocuments->pluck('ID')->all()))->dto();
+    }
 }
 
 function setUsersInactive(): void

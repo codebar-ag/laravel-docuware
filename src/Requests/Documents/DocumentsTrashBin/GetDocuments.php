@@ -2,8 +2,8 @@
 
 namespace CodebarAg\DocuWare\Requests\Documents\DocumentsTrashBin;
 
-use CodebarAg\DocuWare\DTO\Documents\DocumentPaginator;
-use CodebarAg\DocuWare\Responses\Search\GetSearchResponse;
+use CodebarAg\DocuWare\DTO\Documents\TrashDocumentPaginator;
+use CodebarAg\DocuWare\Responses\Search\GetTrashSearchResponse;
 use Illuminate\Support\Facades\Cache;
 use Saloon\CachePlugin\Contracts\Cacheable;
 use Saloon\CachePlugin\Drivers\LaravelCacheDriver;
@@ -25,7 +25,7 @@ class GetDocuments extends Request implements Cacheable, HasBody
         protected readonly int $page = 1,
         protected readonly int $perPage = 50,
         protected readonly ?string $searchTerm = null,
-        protected readonly string $orderField = 'DELETEDATETIME',
+        protected readonly ?string $orderField = null,
         protected readonly string $orderDirection = 'desc',
         protected readonly array $condition = [],
         protected readonly ?bool $forceRefresh = true,
@@ -53,12 +53,12 @@ class GetDocuments extends Request implements Cacheable, HasBody
             'Count' => $this->perPage,
             'Start' => ($this->page - 1) * $this->perPage,
             'Condition' => $this->condition,
-            'SortOrder' => [
+            'SortOrder' => $this->orderField ? [
                 [
                     'Field' => $this->orderField,
                     'Direction' => $this->orderDirection,
                 ],
-            ],
+            ] : null,
             'Operation' => config('laravel-docuware.configurations.search.operation', 'And'),
             'ForceRefresh' => config('laravel-docuware.configurations.search.force_refresh', true),
             'IncludeSuggestions' => config('laravel-docuware.configurations.search.include_suggestions', false),
@@ -66,8 +66,8 @@ class GetDocuments extends Request implements Cacheable, HasBody
         ];
     }
 
-    public function createDtoFromResponse(Response $response): DocumentPaginator
+    public function createDtoFromResponse(Response $response): TrashDocumentPaginator
     {
-        return GetSearchResponse::fromResponse($response, $this->page, $this->perPage);
+        return GetTrashSearchResponse::fromResponse($response, $this->page, $this->perPage);
     }
 }

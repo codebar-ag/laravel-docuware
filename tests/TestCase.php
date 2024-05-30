@@ -20,18 +20,18 @@ class TestCase extends Orchestra
             fn (string $modelName) => 'codebar\\DocuWare\\Database\\Factories\\'.class_basename($modelName).'Factory',
         );
 
-        Event::listen(DocuWareResponseLog::class, function (DocuWareResponseLog $event) {
-            Log::info('Docuware response', [
-                $event->response->getPendingRequest()->getUrl(),
-            ]);
-        });
-
-        Event::listen(DocuWareOAuthLog::class, function (DocuWareOAuthLog $event) {
-            Log::info($event->message, [
-                'url' => $event->url,
-                'username' => $event->username,
-            ]);
-        });
+        //        Event::listen(DocuWareResponseLog::class, function (DocuWareResponseLog $event) {
+        //            Log::info('Docuware response', [
+        //                $event->response->getPendingRequest()->getUrl(),
+        //            ]);
+        //        });
+        //
+        //        Event::listen(DocuWareOAuthLog::class, function (DocuWareOAuthLog $event) {
+        //            Log::info($event->message, [
+        //                'url' => $event->url,
+        //                'username' => $event->username,
+        //            ]);
+        //        });
     }
 
     protected function getPackageProviders($app): array

@@ -1,7 +1,9 @@
 <?php
 
 use CodebarAg\DocuWare\Connectors\DocuWareConnector;
+use CodebarAg\DocuWare\DocuWare;
 use CodebarAg\DocuWare\DTO\Config\ConfigWithCredentials;
+use CodebarAg\DocuWare\Requests\Documents\DocumentsTrashBin\DeleteDocuments;
 use CodebarAg\DocuWare\Requests\Documents\ModifyDocuments\DeleteDocument;
 use CodebarAg\DocuWare\Requests\FileCabinets\Search\GetASpecificDocumentFromAFileCabinet;
 use CodebarAg\DocuWare\Requests\FileCabinets\Search\GetDocumentsFromAFileCabinet;
@@ -39,6 +41,18 @@ function clearFiles(): void
             $document->id,
         ))->dto();
     }
+
+    //    $paginatorRequest = (new DocuWare())
+    //        ->searchRequestBuilder()
+    //        ->trashBin()
+    //        ->perPage(1000)
+    //        ->get();
+    //
+    //    $paginator = $connector->send($paginatorRequest)->dto();
+    //
+    //    if ($paginator->total > 0) {
+    //        $connector->send(new DeleteDocuments($paginator->mappedDocuments->pluck('ID')->all()))->dto();
+    //    }
 }
 
 function setUsersInactive(): void

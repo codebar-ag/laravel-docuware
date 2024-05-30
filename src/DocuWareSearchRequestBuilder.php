@@ -207,7 +207,7 @@ class DocuWareSearchRequestBuilder
     protected function guard(): void
     {
         throw_if(
-            is_null($this->fileCabinetId),
+            is_null($this->fileCabinetId) && $this->trashBin === false,
             UnableToSearch::cabinetNotSet(),
         );
 

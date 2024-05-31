@@ -1,16 +1,16 @@
 <?php
 
-use CodebarAg\DocuWare\DTO\Documents\DocumentThumbnail;
 use CodebarAg\DocuWare\Events\DocuWareResponseLog;
-use CodebarAg\DocuWare\Requests\Documents\Download\DownloadThumbnail;
 use CodebarAg\DocuWare\Requests\Documents\Sections\GetAllSectionsFromADocument;
+use CodebarAg\DocuWare\Requests\Documents\Sections\GetASpecificSection;
 use CodebarAg\DocuWare\Requests\FileCabinets\Upload\CreateDataRecord;
 use Illuminate\Support\Facades\Event;
 
-it('can download a document thumbnail', function () {
+it('can get a specific section', function () {
     Event::fake();
 
     $fileCabinetId = config('laravel-docuware.tests.file_cabinet_id');
+    $dialogId = config('laravel-docuware.tests.dialog_id');
 
     $document = $this->connector->send(new CreateDataRecord(
         $fileCabinetId,
@@ -20,18 +20,16 @@ it('can download a document thumbnail', function () {
 
     $sections = $this->connector->send(new GetAllSectionsFromADocument(
         $fileCabinetId,
-        $document->id,
+        $document->id
     ))->dto();
 
-    $contents = $this->connector->send(new DownloadThumbnail(
+    $section = $this->connector->send(new GetASpecificSection(
         $fileCabinetId,
-        $sections->first()->id,
+        $sections->first()->id
     ))->dto();
 
-    $this->assertSame('image/png', $contents->mime);
-    $this->assertSame(282, strlen($contents->data));
-
-    $this->assertInstanceOf(DocumentThumbnail::class, $contents);
+    expect($section->id)->toBe($sections->first()->id);
 
     Event::assertDispatched(DocuWareResponseLog::class);
-});
+
+})->group('requests', 'sections');

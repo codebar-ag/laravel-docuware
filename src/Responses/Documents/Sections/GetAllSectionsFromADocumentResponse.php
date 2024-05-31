@@ -1,6 +1,6 @@
 <?php
 
-namespace CodebarAg\DocuWare\Responses\Sections;
+namespace CodebarAg\DocuWare\Responses\Documents\Sections;
 
 use CodebarAg\DocuWare\DTO\Section;
 use CodebarAg\DocuWare\Events\DocuWareResponseLog;
@@ -9,7 +9,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Enumerable;
 use Saloon\Http\Response;
 
-final class GetSectionsResponse
+final class GetAllSectionsFromADocumentResponse
 {
     public static function fromResponse(Response $response): Collection|Enumerable
     {
@@ -17,14 +17,6 @@ final class GetSectionsResponse
 
         EnsureValidResponse::from($response);
 
-        $res = $response->throw()->json();
-
-        $sections = collect();
-
-        foreach ($res['Section'] as $section) {
-            $sections->push(Section::fromJson($section));
-        }
-
-        return $sections;
+        return collect($response->throw()->json('Section'))->map(fn ($section) => Section::fromJson($section));
     }
 }

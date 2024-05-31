@@ -1,10 +1,8 @@
 <?php
 
-namespace CodebarAg\DocuWare\Requests\Sections;
+namespace CodebarAg\DocuWare\Requests\Documents\Download;
 
-use CodebarAg\DocuWare\Responses\Sections\GetSectionsResponse;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Enumerable;
+use CodebarAg\DocuWare\Responses\Documents\Download\DownloadSectionResponse;
 use Illuminate\Support\Facades\Cache;
 use Saloon\CachePlugin\Contracts\Cacheable;
 use Saloon\CachePlugin\Drivers\LaravelCacheDriver;
@@ -13,7 +11,7 @@ use Saloon\Enums\Method;
 use Saloon\Http\Request;
 use Saloon\Http\Response;
 
-class GetSectionsRequest extends Request implements Cacheable
+class DownloadSection extends Request implements Cacheable
 {
     use HasCaching;
 
@@ -21,20 +19,13 @@ class GetSectionsRequest extends Request implements Cacheable
 
     public function __construct(
         protected readonly string $fileCabinetId,
-        protected readonly int $documentId
+        protected readonly string $sectionId,
     ) {
     }
 
     public function resolveEndpoint(): string
     {
-        return '/FileCabinets/'.$this->fileCabinetId.'/Sections';
-    }
-
-    public function defaultQuery(): array
-    {
-        return [
-            'docid' => $this->documentId,
-        ];
+        return '/FileCabinets/'.$this->fileCabinetId.'/Sections/'.$this->sectionId.'/Data';
     }
 
     public function resolveCacheDriver(): LaravelCacheDriver
@@ -47,8 +38,8 @@ class GetSectionsRequest extends Request implements Cacheable
         return config('laravel-docuware.configurations.cache.lifetime_in_seconds', 3600);
     }
 
-    public function createDtoFromResponse(Response $response): Collection|Enumerable
+    public function createDtoFromResponse(Response $response): mixed
     {
-        return GetSectionsResponse::fromResponse($response);
+        return DownloadSectionResponse::fromResponse($response);
     }
 }

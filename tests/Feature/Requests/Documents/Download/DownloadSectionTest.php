@@ -1,11 +1,12 @@
 <?php
 
 use CodebarAg\DocuWare\Events\DocuWareResponseLog;
-use CodebarAg\DocuWare\Requests\Documents\Download\DownloadDocument;
+use CodebarAg\DocuWare\Requests\Documents\Download\DownloadSection;
+use CodebarAg\DocuWare\Requests\Documents\Sections\GetAllSectionsFromADocument;
 use CodebarAg\DocuWare\Requests\FileCabinets\Upload\CreateDataRecord;
 use Illuminate\Support\Facades\Event;
 
-it('can download a document', function () {
+it('can download a section', function () {
     Event::fake();
 
     $fileCabinetId = config('laravel-docuware.tests.file_cabinet_id');
@@ -16,12 +17,17 @@ it('can download a document', function () {
         'example.txt'
     ))->dto();
 
-    $contents = $this->connector->send(new DownloadDocument(
+    $sections = $this->connector->send(new GetAllSectionsFromADocument(
         $fileCabinetId,
         $document->id
+    ))->dto();
+
+    $contents = $this->connector->send(new DownloadSection(
+        $fileCabinetId,
+        $sections->first()->id
     ))->dto();
 
     $this->assertSame(strlen('::fake-file-content::'), strlen($contents));
     Event::assertDispatched(DocuWareResponseLog::class);
 
-});
+})->group('download');

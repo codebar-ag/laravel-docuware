@@ -1,8 +1,9 @@
 <?php
 
-namespace CodebarAg\DocuWare\Requests\Documents\Download;
+namespace CodebarAg\DocuWare\Requests\Workflow;
 
-use CodebarAg\DocuWare\Responses\Documents\Download\DownloadThumbnailResponse;
+use CodebarAg\DocuWare\DTO\Workflow\InstanceHistory;
+use CodebarAg\DocuWare\Responses\Workflow\GetDocumentWorkflowHistoryStepsResponse;
 use Illuminate\Support\Facades\Cache;
 use Saloon\CachePlugin\Contracts\Cacheable;
 use Saloon\CachePlugin\Drivers\LaravelCacheDriver;
@@ -11,22 +12,21 @@ use Saloon\Enums\Method;
 use Saloon\Http\Request;
 use Saloon\Http\Response;
 
-class DownloadThumbnail extends Request implements Cacheable
+class GetDocumentWorkflowHistorySteps extends Request implements Cacheable
 {
     use HasCaching;
 
     protected Method $method = Method::GET;
 
     public function __construct(
-        protected readonly string $fileCabinetId,
-        protected readonly string $sectionId,
-        protected readonly int $page = 0,
+        protected readonly string $workflowId,
+        protected readonly string $workflowInstanceId,
     ) {
     }
 
     public function resolveEndpoint(): string
     {
-        return '/FileCabinets/'.$this->fileCabinetId.'/Rendering/'.$this->sectionId.'/Thumbnail';
+        return '/Workflows/'.$this->workflowId.'/Instances/'.$this->workflowInstanceId.'/History';
     }
 
     public function resolveCacheDriver(): LaravelCacheDriver
@@ -39,15 +39,8 @@ class DownloadThumbnail extends Request implements Cacheable
         return config('laravel-docuware.configurations.cache.lifetime_in_seconds', 3600);
     }
 
-    public function defaultQuery(): array
+    public function createDtoFromResponse(Response $response): InstanceHistory
     {
-        return [
-            'page' => $this->page,
-        ];
-    }
-
-    public function createDtoFromResponse(Response $response): mixed
-    {
-        return DownloadThumbnailResponse::fromResponse($response);
+        return GetDocumentWorkflowHistoryStepsResponse::fromResponse($response);
     }
 }

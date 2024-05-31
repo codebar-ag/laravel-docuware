@@ -19,7 +19,7 @@ class DownloadDocument extends Request implements Cacheable
 
     public function __construct(
         protected readonly string $fileCabinetId,
-        protected readonly int $documentId,
+        protected readonly string $documentId,
     ) {
     }
 
@@ -46,7 +46,7 @@ class DownloadDocument extends Request implements Cacheable
         ];
     }
 
-    public function createDtoFromResponse(Response $response): string
+    public function createDtoFromResponse(Response $response): mixed
     {
         return DownloadDocumentResponse::fromResponse($response);
     }

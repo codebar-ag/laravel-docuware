@@ -132,10 +132,10 @@ then optimize the processes that power the core of your business.
 | Documents/DocumentsTrashBin         | Get Documents                                               | ✅         |      |
 | Documents/DocumentsTrashBin         | Delete Documents                                            | ✅         |      |
 | Documents/DocumentsTrashBin         | Restore Documents                                           | ✅         |      |
-| Documents/ApplicationProperties     | Get Application Properties                                  | ❓         | -    |
-| Documents/ApplicationProperties     | Add Application Properties                                  | ❌         | -    |
-| Documents/ApplicationProperties     | Delete Application Properties                               | ❌         | -    |
-| Documents/ApplicationProperties     | Update Application Properties                               | ❌         | -    |
+| Documents/ApplicationProperties     | Get Application Properties                                  | ✅         | -    |
+| Documents/ApplicationProperties     | Add Application Properties                                  | ✅         | -    |
+| Documents/ApplicationProperties     | Delete Application Properties                               | ✅         | -    |
+| Documents/ApplicationProperties     | Update Application Properties                               | ✅         | -    |
 | Documents/Sections                  | Get All Sections from a Document                            | ✅         | -    |
 | Documents/Sections                  | Get a Specific Section                                      | ✅         | -    |
 | Documents/Sections                  | Delete Section                                              | ✅         | -    |

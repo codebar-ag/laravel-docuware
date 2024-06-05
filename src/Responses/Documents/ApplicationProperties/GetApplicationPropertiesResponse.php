@@ -14,6 +14,6 @@ final class GetApplicationPropertiesResponse
 
         EnsureValidResponse::from($response);
 
-        return $response->throw()->json();
+        return collect($response->throw()->json('DocumentApplicationProperty'));
     }
 }

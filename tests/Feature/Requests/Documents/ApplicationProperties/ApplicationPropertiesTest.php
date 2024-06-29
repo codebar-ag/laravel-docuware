@@ -84,4 +84,4 @@ it('can add get update delete application properties to a document', function ()
         ->and($properties->first()['Value'])->toBe('Key2 Value');
 
     Event::assertDispatched(DocuWareResponseLog::class);
-})->only();
+})->group('application-properties');

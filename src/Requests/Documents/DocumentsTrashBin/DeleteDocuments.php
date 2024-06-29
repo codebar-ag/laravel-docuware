@@ -19,8 +19,7 @@ class DeleteDocuments extends Request implements HasBody
 
     public function __construct(
         protected readonly array|Collection $ids = [],
-    ) {
-    }
+    ) {}
 
     public function resolveEndpoint(): string
     {

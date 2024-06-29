@@ -23,8 +23,7 @@ class RequestTokenWithCredentialsTrustedUser extends SoloRequest implements HasB
         public readonly string $username = '',
         public readonly string $password = '',
         public readonly string $impersonateName = '',
-    ) {
-    }
+    ) {}
 
     public function resolveEndpoint(): string
     {

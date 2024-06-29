@@ -21,6 +21,5 @@ final class Role
         public string $name,
         public bool $active,
         public string $type,
-    ) {
-    }
+    ) {}
 }

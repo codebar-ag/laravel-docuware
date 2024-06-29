@@ -16,6 +16,5 @@ class DocuWareOAuthLog
         public string $url,
         public string $username,
         public string $message
-    ) {
-    }
+    ) {}
 }

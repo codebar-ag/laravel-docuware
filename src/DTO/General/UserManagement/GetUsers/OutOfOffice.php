@@ -35,6 +35,5 @@ final class OutOfOffice
         public bool $startDateTimeSpecified,
         public ?Carbon $endDateTime,
         public bool $endDateTimeSpecified,
-    ) {
-    }
+    ) {}
 }

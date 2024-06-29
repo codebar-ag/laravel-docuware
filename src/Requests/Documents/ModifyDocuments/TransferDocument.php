@@ -21,8 +21,7 @@ class TransferDocument extends Request implements HasBody
         protected readonly string $storeDialogId,
         protected readonly string $documentId,
         protected readonly array $fields = [],
-    ) {
-    }
+    ) {}
 
     public function resolveEndpoint(): string
     {

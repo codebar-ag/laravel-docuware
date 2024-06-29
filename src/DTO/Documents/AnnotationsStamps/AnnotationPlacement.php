@@ -17,8 +17,7 @@ final class AnnotationPlacement
 
     public function __construct(
         public Collection $items,
-    ) {
-    }
+    ) {}
 
     public function values(): array
     {

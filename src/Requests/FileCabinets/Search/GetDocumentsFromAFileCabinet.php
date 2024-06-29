@@ -23,8 +23,7 @@ class GetDocumentsFromAFileCabinet extends Request implements Cacheable
         protected readonly array $fields = [],
         protected readonly int $page = 1,
         protected readonly int $perPage = 50,
-    ) {
-    }
+    ) {}
 
     public function defaultQuery(): array
     {

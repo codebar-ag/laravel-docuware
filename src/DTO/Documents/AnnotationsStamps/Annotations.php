@@ -22,8 +22,7 @@ final class Annotations
         public ?int $sectionNumber,
         public ?AnnotationPlacement $annotationsPlacement = null,
         public ?Collection $annotation = null,
-    ) {
-    }
+    ) {}
 
     public function values(): array
     {

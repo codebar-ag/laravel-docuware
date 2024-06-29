@@ -24,8 +24,7 @@ class GetAllFileCabinetsAndDocumentTrays extends Request implements Cacheable
      */
     public function __construct(
         public ?string $organizationId = null,
-    ) {
-    }
+    ) {}
 
     public function resolveEndpoint(): string
     {

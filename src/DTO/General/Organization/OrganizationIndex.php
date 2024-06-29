@@ -20,8 +20,7 @@ final class OrganizationIndex
         public string $id,
         public string $name,
         public ?string $guid = null,
-    ) {
-    }
+    ) {}
 
     public static function fake(
         ?string $id = null,

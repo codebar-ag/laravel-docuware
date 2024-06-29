@@ -21,8 +21,7 @@ class GetIdentityServiceConfiguration extends SoloRequest implements Cacheable
 
     public function __construct(
         public string $identityServiceUrl,
-    ) {
-    }
+    ) {}
 
     public function resolveEndpoint(): string
     {

@@ -38,6 +38,5 @@ final class Section
         public ?Carbon $contentModified,
         public bool $annotationsPreview,
         public ?bool $hasTextAnnotations = null,
-    ) {
-    }
+    ) {}
 }

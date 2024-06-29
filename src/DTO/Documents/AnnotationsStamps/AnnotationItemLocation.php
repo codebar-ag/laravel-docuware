@@ -22,8 +22,7 @@ final class AnnotationItemLocation
         public ?string $top = null,
         public ?string $width = null,
         public ?string $height = null,
-    ) {
-    }
+    ) {}
 
     public function values(): array
     {

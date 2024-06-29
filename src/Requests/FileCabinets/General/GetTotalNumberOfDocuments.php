@@ -20,8 +20,7 @@ class GetTotalNumberOfDocuments extends Request implements Cacheable
     public function __construct(
         protected readonly string $fileCabinetId,
         protected readonly string $searchDialogId,
-    ) {
-    }
+    ) {}
 
     public function resolveEndpoint(): string
     {

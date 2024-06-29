@@ -21,8 +21,7 @@ class GetDocumentWorkflowHistorySteps extends Request implements Cacheable
     public function __construct(
         protected readonly string $workflowId,
         protected readonly string $workflowInstanceId,
-    ) {
-    }
+    ) {}
 
     public function resolveEndpoint(): string
     {

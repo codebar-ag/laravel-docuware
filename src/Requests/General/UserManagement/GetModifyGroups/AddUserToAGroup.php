@@ -19,8 +19,7 @@ class AddUserToAGroup extends Request implements HasBody
     public function __construct(
         public string $userId,
         public array $ids
-    ) {
-    }
+    ) {}
 
     public function resolveEndpoint(): string
     {

@@ -10,9 +10,7 @@ class IndexTableDTO
     public function __construct(
         public string $name,
         public null|Collection|array $rows,
-    ) {
-
-    }
+    ) {}
 
     public static function make(string $name, null|Collection|array $rows): self
     {

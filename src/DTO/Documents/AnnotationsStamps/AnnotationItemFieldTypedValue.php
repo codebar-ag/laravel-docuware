@@ -17,8 +17,7 @@ final class AnnotationItemFieldTypedValue
     public function __construct(
         public string $item,
         public string $itemElementName,
-    ) {
-    }
+    ) {}
 
     public function values(): array
     {

@@ -20,8 +20,7 @@ class Clip extends Request implements HasBody
         protected readonly string $documentTrayId,
         protected readonly array $documents,
         protected readonly bool $force = false
-    ) {
-    }
+    ) {}
 
     public function resolveEndpoint(): string
     {

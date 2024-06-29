@@ -2,6 +2,4 @@
 
 namespace CodebarAg\DocuWare\Requests\Documents\AnnotationsStamps;
 
-class AddTextAnnotation extends AddStampWithPosition
-{
-}
+class AddTextAnnotation extends AddStampWithPosition {}

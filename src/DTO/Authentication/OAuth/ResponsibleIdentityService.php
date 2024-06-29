@@ -17,6 +17,5 @@ final class ResponsibleIdentityService
     public function __construct(
         public string $identityServiceUrl,
         public bool $refreshTokenSupported,
-    ) {
-    }
+    ) {}
 }

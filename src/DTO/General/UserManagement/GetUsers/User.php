@@ -38,8 +38,7 @@ final class User
         public string $defaultWebBasket,
         public ?OutOfOffice $outOfOffice,
         public ?RegionalSettings $regionalSettings,
-    ) {
-    }
+    ) {}
 
     public static function fake(
         ?string $id = null,

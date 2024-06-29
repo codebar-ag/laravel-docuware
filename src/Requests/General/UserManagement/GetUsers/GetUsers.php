@@ -22,8 +22,7 @@ class GetUsers extends Request implements Cacheable
     public function __construct(
         public ?string $name = null,
         public ?bool $active = null,
-    ) {
-    }
+    ) {}
 
     public function resolveEndpoint(): string
     {

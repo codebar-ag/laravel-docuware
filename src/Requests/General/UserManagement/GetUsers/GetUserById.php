@@ -20,8 +20,7 @@ class GetUserById extends Request implements Cacheable
 
     public function __construct(
         public string $userId,
-    ) {
-    }
+    ) {}
 
     public function resolveEndpoint(): string
     {

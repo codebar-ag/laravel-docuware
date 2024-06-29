@@ -23,8 +23,7 @@ class UpdateUser extends Request implements Cacheable, HasBody
 
     public function __construct(
         protected readonly User $user,
-    ) {
-    }
+    ) {}
 
     public function resolveEndpoint(): string
     {

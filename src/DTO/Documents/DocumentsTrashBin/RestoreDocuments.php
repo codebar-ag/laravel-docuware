@@ -20,6 +20,5 @@ final class RestoreDocuments
     public function __construct(
         public array $failedItems = [],
         public int $successCount = 0,
-    ) {
-    }
+    ) {}
 }

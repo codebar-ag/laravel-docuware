@@ -21,8 +21,7 @@ class GetUsersOfAGroup extends Request implements Cacheable
 
     public function __construct(
         public ?string $groupId = null,
-    ) {
-    }
+    ) {}
 
     public function resolveEndpoint(): string
     {

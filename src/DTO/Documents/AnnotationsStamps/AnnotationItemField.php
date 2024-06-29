@@ -21,8 +21,7 @@ final class AnnotationItemField
         public AnnotationItemFieldTypedValue $typedValue,
         public string $value,
         public string $textAsString,
-    ) {
-    }
+    ) {}
 
     public function values(): array
     {

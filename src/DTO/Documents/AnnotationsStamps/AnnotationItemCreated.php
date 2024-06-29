@@ -17,8 +17,7 @@ final class AnnotationItemCreated
     public function __construct(
         public string $user,
         public string $time,
-    ) {
-    }
+    ) {}
 
     public function values(): array
     {

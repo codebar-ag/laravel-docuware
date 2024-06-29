@@ -19,8 +19,7 @@ class Unstaple extends Request implements HasBody
     public function __construct(
         protected readonly string $documentTrayId,
         protected readonly string $documentId,
-    ) {
-    }
+    ) {}
 
     public function resolveEndpoint(): string
     {

@@ -26,8 +26,7 @@ class UpdateIndexValues extends Request implements HasBody
         protected readonly string $documentId,
         protected readonly ?Collection $indexes = null,
         protected readonly bool $forceUpdate = false,
-    ) {
-    }
+    ) {}
 
     public function resolveEndpoint(): string
     {

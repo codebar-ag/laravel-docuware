@@ -21,8 +21,7 @@ class DownloadThumbnail extends Request implements Cacheable
         protected readonly string $fileCabinetId,
         protected readonly string $sectionId,
         protected readonly int $page = 0,
-    ) {
-    }
+    ) {}
 
     public function resolveEndpoint(): string
     {

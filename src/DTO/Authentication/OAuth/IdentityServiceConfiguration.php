@@ -81,6 +81,5 @@ final class IdentityServiceConfiguration
         public bool $backchannelUserCodeParameterSupported,
         public array $dpopSigningAlgValuesSupported,
         public string $windowsAuthEndpoint,
-    ) {
-    }
+    ) {}
 }

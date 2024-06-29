@@ -18,8 +18,7 @@ final class AnnotationItemLayer
     public function __construct(
         public string $id,
         public Collection $items,
-    ) {
-    }
+    ) {}
 
     public function values(): array
     {

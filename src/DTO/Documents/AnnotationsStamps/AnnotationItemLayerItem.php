@@ -41,8 +41,7 @@ final class AnnotationItemLayerItem
         public ?AnnotationItemLocation $from = null,
         public ?AnnotationItemLocation $to = null,
         public ?int $id = null,
-    ) {
-    }
+    ) {}
 
     public function values(): array
     {

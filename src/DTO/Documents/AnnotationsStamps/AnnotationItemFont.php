@@ -27,8 +27,7 @@ final class AnnotationItemFont
         public bool $strikeThrough,
         public int $fontSize,
         public int $spacing
-    ) {
-    }
+    ) {}
 
     public function values(): array
     {

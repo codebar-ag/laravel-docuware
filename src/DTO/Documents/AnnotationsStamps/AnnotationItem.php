@@ -63,8 +63,7 @@ final class AnnotationItem
         public ?bool $transparent = null,
         public ?int $strokeWidth = null,
         public ?string $stampId = null,
-    ) {
-    }
+    ) {}
 
     public function values(): array
     {

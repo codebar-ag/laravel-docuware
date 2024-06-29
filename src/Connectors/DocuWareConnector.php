@@ -21,8 +21,7 @@ class DocuWareConnector extends Connector
 {
     public function __construct(
         public ConfigWithCredentials|ConfigWithCredentialsTrustedUser $configuration
-    ) {
-    }
+    ) {}
 
     /**
      * @throws \Exception

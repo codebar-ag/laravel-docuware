@@ -22,8 +22,7 @@ class RequestTokenWithCredentials extends SoloRequest implements HasBody
         public readonly ?string $scope = 'docuware.platform',
         public readonly ?string $username = '',
         public readonly ?string $password = '',
-    ) {
-    }
+    ) {}
 
     public function resolveEndpoint(): string
     {

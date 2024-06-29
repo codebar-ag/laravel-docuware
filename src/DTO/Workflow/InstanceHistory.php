@@ -41,6 +41,5 @@ final class InstanceHistory
         public Carbon $startedAt,
         public string $docId,
         public ?Collection $historySteps = null,
-    ) {
-    }
+    ) {}
 }

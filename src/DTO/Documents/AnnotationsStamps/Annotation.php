@@ -18,8 +18,7 @@ final class Annotation
     public function __construct(
         public ?Collection $items,
         public int $id,
-    ) {
-    }
+    ) {}
 
     public function values(): array
     {

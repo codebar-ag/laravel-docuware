@@ -24,8 +24,7 @@ class GetAllRolesForASpecificUser extends Request implements Cacheable
         public ?string $name = null,
         public ?bool $active = null,
         public ?string $type = null,
-    ) {
-    }
+    ) {}
 
     public function resolveEndpoint(): string
     {

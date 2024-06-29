@@ -28,8 +28,7 @@ final class DocumentField
         public bool $isNull,
         public null|int|float|Carbon|string|Collection $value,
         public string $type,
-    ) {
-    }
+    ) {}
 
     public static function fake(
         ?bool $systemField = false,

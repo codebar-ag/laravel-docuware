@@ -38,8 +38,7 @@ final class FileCabinetInformation
         public bool $addIndexEntriesInUpperCase,
         public bool $documentAuditingEnabled,
         public bool $hasFullTextSupport,
-    ) {
-    }
+    ) {}
 
     public static function fake(
         ?string $color = null,

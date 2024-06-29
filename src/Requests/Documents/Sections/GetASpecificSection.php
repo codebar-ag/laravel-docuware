@@ -21,8 +21,7 @@ class GetASpecificSection extends Request implements Cacheable
     public function __construct(
         protected readonly string $fileCabinetId,
         protected readonly string $sectionId,
-    ) {
-    }
+    ) {}
 
     public function resolveEndpoint(): string
     {

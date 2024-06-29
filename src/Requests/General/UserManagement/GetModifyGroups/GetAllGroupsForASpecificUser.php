@@ -23,8 +23,7 @@ class GetAllGroupsForASpecificUser extends Request implements Cacheable
         public string $userId,
         public ?string $name = null,
         public ?bool $active = null,
-    ) {
-    }
+    ) {}
 
     public function resolveEndpoint(): string
     {

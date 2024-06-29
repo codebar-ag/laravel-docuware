@@ -78,8 +78,7 @@ final class Document
         public ?Collection $fields,
         public ?Collection $sections,
         public ?Collection $suggestions,
-    ) {
-    }
+    ) {}
 
     public function isPdf(): bool
     {

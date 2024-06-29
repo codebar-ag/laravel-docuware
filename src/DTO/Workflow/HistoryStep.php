@@ -33,6 +33,5 @@ final class HistoryStep
         public string $activityName,
         public string $activityType,
         public string $stepType,
-    ) {
-    }
+    ) {}
 }

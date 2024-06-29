@@ -24,8 +24,7 @@ class AddApplicationProperties extends Request implements Cacheable, HasBody
         protected readonly string $fileCabinetId,
         protected readonly string $documentId,
         protected readonly array $properties,
-    ) {
-    }
+    ) {}
 
     public function resolveEndpoint(): string
     {

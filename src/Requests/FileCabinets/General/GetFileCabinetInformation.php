@@ -20,8 +20,7 @@ class GetFileCabinetInformation extends Request implements Cacheable
 
     public function __construct(
         public readonly string $fileCabinetId,
-    ) {
-    }
+    ) {}
 
     public function resolveEndpoint(): string
     {

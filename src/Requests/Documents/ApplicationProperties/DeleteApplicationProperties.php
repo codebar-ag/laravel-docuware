@@ -24,8 +24,7 @@ class DeleteApplicationProperties extends Request implements Cacheable, HasBody
         protected readonly string $fileCabinetId,
         protected readonly string $documentId,
         protected readonly array $propertyNames,
-    ) {
-    }
+    ) {}
 
     public function resolveEndpoint(): string
     {

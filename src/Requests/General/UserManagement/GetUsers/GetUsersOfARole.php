@@ -22,8 +22,7 @@ class GetUsersOfARole extends Request implements Cacheable
     public function __construct(
         public ?string $roleId = null,
         public ?bool $includeGroupUsers = null,
-    ) {
-    }
+    ) {}
 
     public function resolveEndpoint(): string
     {

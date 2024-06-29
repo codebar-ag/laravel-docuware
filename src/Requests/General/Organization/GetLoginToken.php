@@ -24,8 +24,7 @@ class GetLoginToken extends Request implements Cacheable, HasBody
         public array $targetProducts = ['PlatformService'],
         public string $usage = 'Multi',
         public string $lifetime = '1.00:00:00',
-    ) {
-    }
+    ) {}
 
     public function resolveEndpoint(): string
     {

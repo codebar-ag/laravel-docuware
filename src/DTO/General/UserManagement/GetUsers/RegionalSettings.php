@@ -17,6 +17,5 @@ final class RegionalSettings
     public function __construct(
         public ?string $language = null,
         public ?string $culture = null,
-    ) {
-    }
+    ) {}
 }

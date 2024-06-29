@@ -21,8 +21,7 @@ class GetFilteredSelectLists extends Request implements Cacheable
         protected readonly string $fileCabinetId,
         protected readonly string $dialogId,
         protected readonly string $fieldName,
-    ) {
-    }
+    ) {}
 
     public function resolveEndpoint(): string
     {

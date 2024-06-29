@@ -24,6 +24,5 @@ final class RequestToken
         public string $scope,
         public int $expiresIn,
         public Carbon $expiresAt,
-    ) {
-    }
+    ) {}
 }

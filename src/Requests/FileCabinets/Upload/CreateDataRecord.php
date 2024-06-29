@@ -24,8 +24,7 @@ class CreateDataRecord extends Request implements HasBody
         protected readonly ?string $fileContent,
         protected readonly ?string $fileName,
         protected readonly ?Collection $indexes = null,
-    ) {
-    }
+    ) {}
 
     public function resolveEndpoint(): string
     {

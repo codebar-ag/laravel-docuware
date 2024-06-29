@@ -22,8 +22,7 @@ class AddStampWithPosition extends Request implements HasBody
         protected readonly string $fileCabinetId,
         protected readonly string $documentId,
         protected readonly Annotations $annotations,
-    ) {
-    }
+    ) {}
 
     public function resolveEndpoint(): string
     {

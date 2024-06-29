@@ -23,8 +23,7 @@ class TrashDocumentPaginator
         public Collection $documents,
         public Collection $mappedDocuments,
         public ?ErrorBag $error = null,
-    ) {
-    }
+    ) {}
 
     public function showPrev(): bool
     {

@@ -29,8 +29,7 @@ class GetDocuments extends Request implements Cacheable, HasBody
         protected readonly string $orderDirection = 'desc',
         protected readonly array $condition = [],
         protected readonly ?bool $forceRefresh = true,
-    ) {
-    }
+    ) {}
 
     public function resolveEndpoint(): string
     {

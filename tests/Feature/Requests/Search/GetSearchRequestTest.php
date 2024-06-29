@@ -2,11 +2,11 @@
 
 use Carbon\Carbon;
 use CodebarAg\DocuWare\DocuWare;
-use CodebarAg\DocuWare\DTO\DocumentIndex\IndexTextDTO;
-use CodebarAg\DocuWare\DTO\DocumentPaginator;
+use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexTextDTO;
+use CodebarAg\DocuWare\DTO\Documents\DocumentPaginator;
 use CodebarAg\DocuWare\Events\DocuWareResponseLog;
 use CodebarAg\DocuWare\Exceptions\UnableToSearch;
-use CodebarAg\DocuWare\Requests\Document\PostDocumentRequest;
+use CodebarAg\DocuWare\Requests\FileCabinets\Upload\CreateDataRecord;
 use Illuminate\Support\Facades\Event;
 
 it('can search documents', function () {
@@ -212,7 +212,7 @@ it('can search documents with multiple values', function () {
     $fileContent = '::fake-file-content::';
     $fileName = 'example.txt';
 
-    $documentOne = $this->connector->send(new PostDocumentRequest(
+    $documentOne = $this->connector->send(new CreateDataRecord(
         $fileCabinetId,
         $fileContent,
         $fileName,
@@ -222,7 +222,7 @@ it('can search documents with multiple values', function () {
         ]),
     ))->dto();
 
-    $documentTwo = $this->connector->send(new PostDocumentRequest(
+    $documentTwo = $this->connector->send(new CreateDataRecord(
         $fileCabinetId,
         $fileContent,
         $fileName,
@@ -232,7 +232,7 @@ it('can search documents with multiple values', function () {
         ]),
     ))->dto();
 
-    $documentThree = $this->connector->send(new PostDocumentRequest(
+    $documentThree = $this->connector->send(new CreateDataRecord(
         $fileCabinetId,
         $fileContent,
         $fileName,

@@ -1,9 +1,9 @@
 <?php
 
-use CodebarAg\DocuWare\DTO\DocumentIndex\IndexTextDTO;
+use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexTextDTO;
 use CodebarAg\DocuWare\Events\DocuWareResponseLog;
-use CodebarAg\DocuWare\Requests\Document\PostDocumentRequest;
-use CodebarAg\DocuWare\Requests\SelectList\GetSelectListRequest;
+use CodebarAg\DocuWare\Requests\FileCabinets\SelectLists\GetSelectLists;
+use CodebarAg\DocuWare\Requests\FileCabinets\Upload\CreateDataRecord;
 use Illuminate\Support\Facades\Event;
 
 it('can list values for a select list', function () {
@@ -13,7 +13,7 @@ it('can list values for a select list', function () {
     $dialogId = config('laravel-docuware.tests.dialog_id');
     $fieldName = 'UUID';
 
-    $document = $this->connector->send(new PostDocumentRequest(
+    $document = $this->connector->send(new CreateDataRecord(
         $fileCabinetId,
         '::fake-file-content::',
         'example.txt',
@@ -22,7 +22,7 @@ it('can list values for a select list', function () {
         ])
     ))->dto();
 
-    $types = $this->connector->send(new GetSelectListRequest(
+    $types = $this->connector->send(new GetSelectLists(
         $fileCabinetId,
         $dialogId,
         $fieldName,

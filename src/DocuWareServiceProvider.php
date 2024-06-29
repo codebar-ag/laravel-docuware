@@ -2,7 +2,6 @@
 
 namespace CodebarAg\DocuWare;
 
-use CodebarAg\DocuWare\Commands\ListAuthCookie;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
@@ -12,7 +11,6 @@ class DocuWareServiceProvider extends PackageServiceProvider
     {
         $package
             ->name('laravel-docuware')
-            ->hasConfigFile('laravel-docuware')
-            ->hasCommand(ListAuthCookie::class);
+            ->hasConfigFile('laravel-docuware');
     }
 }

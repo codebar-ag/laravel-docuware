@@ -2,7 +2,7 @@
 
 namespace CodebarAg\DocuWare\Responses\Fields;
 
-use CodebarAg\DocuWare\DTO\Field;
+use CodebarAg\DocuWare\DTO\Documents\Field;
 use CodebarAg\DocuWare\Events\DocuWareResponseLog;
 use CodebarAg\DocuWare\Support\EnsureValidResponse;
 use Illuminate\Support\Collection;

@@ -20,36 +20,133 @@ then optimize the processes that power the core of your business.
 
 ## 🛠 Requirements
 
-### > = v4.0 (alpha)
+<details>
+ <summary>Version Support</summary>
+
+### \> = v11.0 (alpha)
+
+- PHP: `^8.2``
+  - Laravel: `^11.*`
+  - DocuWare Cloud Access
+
+### \> = v4.0 (alpha)
 
 - PHP: `^8.2``
 - Laravel: `^11.*`
 - DocuWare Cloud Access
 
-### > = v3.0
+### \> = v3.0
 
 - PHP: `^8.2``
 - Laravel: `^10.*`
 - DocuWare Cloud Access
 
-### > = v2.0
+### \> = v2.0
 
 - PHP: `^8.1` |`^8.2`
 - Laravel: `^9.*` | `^10.*`
 - DocuWare Cloud Access
--
 
-### > = v1.2
+### \> = v1.2
 
 - PHP: `^8.1`
 - Laravel: `^9.*`
 - DocuWare Cloud Access
 
-### < v1.2
+### \< v1.2
 
 - PHP: `^8.0`
 - Laravel: `^8.*`
 - DocuWare Cloud Access
+
+</details>
+
+<details>
+ <summary>Current Support</summary>
+
+| Group                               | Request                                                     | Supported | TODO           |
+|-------------------------------------|-------------------------------------------------------------|-----------|----------------|
+| Authentication/OAuth                | 1. Get Responsible Identity Service                         | ✅         |                |
+| Authentication/OAuth                | 2. Get Identity Service Configuration                       | ✅         |                |
+| Authentication/OAuth                | 3.a Request Token w/ Username & Password                    | ✅         |                |
+| Authentication/OAuth                | 3.b Request Token w/ a DocuWare Token                       | 🕣        |                |
+| Authentication/OAuth                | 3.c Request Token w/ Username & Password (Trusted User)     | 🕣        |                |
+| Authentication/OAuth                | 3.d.1 Obtain Windows Authorization (On Premises Only)       | 🕣        |                |
+| Authentication/OAuth                | 3.d.2 Request Token /w a Windows Account (On Premises Only) | 🕣        |                |
+| General/Organisation                | Get Login Token                                             | ✅         |                |
+| General/Organisation                | Get Organization                                            | ✅         |                |
+| General/Organisation                | Get All File Cabinets and Document Trays                    | ✅         |                |
+| General/UserManagement              | Get Users by ID                                             | ✅         |                |
+| General/UserManagement              | Get Users of a Role                                         | ✅         |                |
+| General/UserManagement              | Get Users of a Group                                        | ✅         |                |
+| General/UserManagement              | Create User                                                 | ✅         |                |
+| General/UserManagement              | Update User                                                 | ✅         |                |
+| General/UserManagement              | Get Groups                                                  | ✅         |                |
+| General/UserManagement              | Get All Groups for a Specific User                          | ✅         |                |
+| General/UserManagement              | Add User to a Group                                         | ✅         |                |
+| General/UserManagement              | Remove User from a Group                                    | ✅         |                |
+| General/UserManagement              | Get Roles                                                   | ✅         |                |
+| General/UserManagement              | Get All Roles for a Specific User                           | ✅         |                |
+| General/UserManagement              | Add User to a Role                                          | ✅         |                |
+| General/UserManagement              | Remove User from a Role                                     | ✅         |                |
+| FileCabinets/General                | Get File Cabinet Information                                | ✅         |                |
+| FileCabinets/General                | Get Total Number of Documents                               | ✅         |                |
+| FileCabinets/Dialogs                | Get All Dialogs                                             | ✅         |                |
+| FileCabinets/Dialogs                | Get a Specific Dialog                                       | ✅         |                |
+| FileCabinets/Dialogs                | Get Dialogs of a Specific Type                              | ✅         |                |
+| FileCabinets/Search                 | Get Documents from a File Cabinet                           | ✅         |                |
+| FileCabinets/Search                 | Get a Specific Document From a File Cabinet                 | ✅         |                |
+| FileCabinets/Search                 | Search for Documents in a Single File Cabinet               | ✅         |                |
+| FileCabinets/Search                 | Search for Documents in Multiple File Cabinets              | ✅         |                |
+| FileCabinets/CheckInCheckOut        | Check-out & Download a Document                             | 🕣        |                |
+| FileCabinets/CheckInCheckOut        | Check-in a Document from the File System                    | 🕣        |                |
+| FileCabinets/CheckInCheckOut        | Undo Check-out                                              | 🕣        |                |
+| FileCabinets/SelectLists            | Get Select Lists & Get Filtered Select Lists                | ✅         |                |
+| FileCabinets/Upload                 | Create Data Record                                          | ✅         |                |
+| FileCabinets/Upload                 | Append File(s) to a Data Record                             | ❌         | -              |
+| FileCabinets/Upload                 | Upload a Single File for a Data Record                      | ❌         | -              |
+| FileCabinets/Upload                 | Create a Data Record & Upload File                          | ❌         | -              |
+| FileCabinets/Upload                 | Create Data Record & Upload File Using Store Dialog         | ❌         | -              |
+| FileCabinets/Upload                 | Append a Single PDF to a Document                           | ❌         | -              |
+| FileCabinets/Upload                 | Replace a PDF Document Section                              | ❌         | -              |
+| FileCabinets/BatchIndexFieldsUpdate | Batch Update Index Fields By Id                             | ❌         | -              |
+| FileCabinets/BatchIndexFieldsUpdate | Batch Update Index Fields By Search                         | ❌         | -              |
+| FileCabinets/BatchIndexFieldsUpdate | Batch Append/Update Keyword Fields By Id                    | ❌         | -              |
+| Documents/UpdateIndexValues         | Update Index Values                                         | ✅         |                |
+| Documents/UpdateIndexValues         | Update Table Field Values                                   | ❌         | - ?            |
+| Documents/ModifyDocuments           | Transfer Document                                           | ✅         | -              |
+| Documents/ModifyDocuments           | Delete Document                                             | ✅         |                |
+| Documents/ClipUnclip&StapleUnstaple | Clip                                                        | ✅         |                |
+| Documents/ClipUnclip&StapleUnstaple | Unclip                                                      | ✅         |                |
+| Documents/ClipUnclip&StapleUnstaple | Staple                                                      | ✅         |                |
+| Documents/ClipUnclip&StapleUnstaple | Unstaple                                                    | ✅         |                |
+| Documents/AnnotationsStamps         | AddStampWithPosition                                        | ❌         | - Better Tests |
+| Documents/AnnotationsStamps         | AddStampWithBestPosition                                    | ❌         | - Better Tests |
+| Documents/AnnotationsStamps         | AddTextAnnotation                                           | ❌         | - Better Tests |
+| Documents/AnnotationsStamps         | AddRectEntryAnnotation                                      | ❌         | - Better Tests |
+| Documents/AnnotationsStamps         | AddLineEntryAnnotation                                      | ❌         | - Better Tests |
+| Documents/AnnotationsStamps         | AddPolyLineEntryAnnotation                                  | ❌         | -              |
+| Documents/AnnotationsStamps         | DeleteAnnotation                                            | ❌         | -              |
+| Documents/AnnotationsStamps         | UpdateTextAnnotation                                        | ❌         | - Better Tests |
+| Documents/AnnotationsStamps         | Get Stamps                                                  | ❌         | -              |
+| Documents/DocumentsTrashBin         | Get Documents                                               | ✅         |                |
+| Documents/DocumentsTrashBin         | Delete Documents                                            | ✅         |                |
+| Documents/DocumentsTrashBin         | Restore Documents                                           | ✅         |                |
+| Documents/ApplicationProperties     | Get Application Properties                                  | ✅         | -              |
+| Documents/ApplicationProperties     | Add Application Properties                                  | ✅         | -              |
+| Documents/ApplicationProperties     | Delete Application Properties                               | ✅         | -              |
+| Documents/ApplicationProperties     | Update Application Properties                               | ✅         | -              |
+| Documents/Sections                  | Get All Sections from a Document                            | ✅         | -              |
+| Documents/Sections                  | Get a Specific Section                                      | ✅         | -              |
+| Documents/Sections                  | Delete Section                                              | ✅         | -              |
+| Documents/Download                  | Download Document                                           | ✅         |                |
+| Documents/Download                  | Download Section                                            | ✅         | -              |
+| Documents/Download                  | Download Thumbnail                                          | ✅         |                |
+| Workflow                            | Get Document Workflow History                               | ✅         | -              |
+| Workflow                            | Get Document Workflow History Steps                         | ✅         | -              |
+
+</details>
+
 
 ## ⚙️ Installation
 
@@ -60,14 +157,12 @@ composer require codebar-ag/laravel-docuware
 ```
 
 Add the following environment variables to your `.env` file:
-The "DOCUWARE_COOKIES" variable is optional and only used if you want to set the request cookie manually.
 
 ```bash
 DOCUWARE_URL=https://domain.docuware.cloud
 DOCUWARE_USERNAME=user@domain.test
 DOCUWARE_PASSWORD=password
 DOCUWARE_PASSPHRASE="passphrase"
-DOCUWARE_COOKIES="cookie"
 ```
 
 With the passphrase we are able to encrypt the URLs.
@@ -84,40 +179,93 @@ DOCUWARE_PASSPHRASE="a#bcd>2~C1'abc\\#"
 
 ## 🏗 Usage
 
+### Getting Started with OAuth
+<details>
+ <summary>Getting Started with OAuth</summary>
+
+> This package automatically handles the generation of OAuth token for you and stores them in cache.
+
+### Getting a new token via Username & Password:
+
 ```php
-use CodebarAg\DocuWare\Connectors\DocuWareStaticConnector;
+use CodebarAg\DocuWare\Connectors\DocuWareConnector;
+use CodebarAg\DocuWare\DTO\Config\ConfigWithCredentials;
 
-// Will use user credentials defined in config to authenticate and store cookie in cache
-$connector = new DocuWareStaticConnector();
-
-// OR
-
-// Pass in a config manually
-$config = Config::make([
-    'url' => 'https://domain.docuware.cloud',
-    'cookie' => 'cookie',
-    'cache_driver' => 'file',
-    'cache_lifetime_in_seconds' => 60,
-    'request_timeout_in_seconds' => 15,
-]);
-
-$connector = new DocuWareDynamicConnector($config);
+$connector = new DocuWareConnector(
+    configuration: new ConfigWithCredentials(
+        username: 'username',
+        password: 'password',
+    )
+);
 ```
+
+### Getting a new token via Username & Password (Trusted User):
+
+```php
+use CodebarAg\DocuWare\Connectors\DocuWareConnector;
+use CodebarAg\DocuWare\DTO\Config\ConfigWithCredentialsTrustedUser;
+
+$connector = new DocuWareConnector(
+    configuration: new ConfigWithCredentialsTrustedUser(
+        username: 'username',
+        password: 'password',
+        impersonatedUsername: 'impersonatedUsername',
+    )
+);
+```
+
+### Extending the connector
+
+We understand it may be repetitive to pass the configuration every time you create a new connector. 
+
+You can extend the connector and set the configuration once.
+
+#### Create a new connector
+
+```php
+<?php
+
+namespace App\Connectors;
+
+use CodebarAg\DocuWare\Connectors\DocuWareConnector;
+use CodebarAg\DocuWare\DTO\Config\ConfigWithCredentials;
+
+class CustomDocuWareConnector extends DocuWareConnector
+{
+    public function __construct() {
+        $configuration = new ConfigWithCredentials(
+            username: 'username',
+            password: 'password',
+        );
+    
+        parent::__construct($configuration);
+    }
+}
+```
+
+#### Use the new connector
+
+```php
+use App\Connectors\CustomDocuWareConnector;
+use CodebarAg\DocuWare\DTO\Config\ConfigWithCredentials;
+
+$connector = new CustomDocuWareConnector();
+```
+
+
+</details>
+
+### Available Requests
+
+<details>
+ <summary>Available Requests</summary>
 
 ```php
 /**
  * Return an organization.
  */
  
-$organization = $connector->send(new GetOrganizationRequest($id))->dto();
-```
-
-```php
-/**
- * Return all organizations.
- */
- 
-$organizations = $connector->send(new GetOrganizationsRequest())->dto();
+$organization = $connector->send(new GetOrganization($id))->dto();
 ```
 
 ```php
@@ -125,7 +273,7 @@ $organizations = $connector->send(new GetOrganizationsRequest())->dto();
  * Return all file cabinets.
  */
  
-$fileCabinets = $connector->send(new GetFileCabinetsRequest())->dto();
+$fileCabinets = $connector->send(new GetAllFileCabinetsAndDocumentTrays())->dto();
 ```
 
 ```php
@@ -141,7 +289,7 @@ $fields = $connector->send(new GetFieldsRequest($fileCabinetId))->dto();
  * Return all dialogs of a file cabinet.
  */
  
-$dialogs = $connector->send(new GetDialogsRequest($fileCabinetId))->dto();
+$dialogs = $connector->send(new GetAllDialogs($fileCabinetId))->dto();
 ```
 
 ```php
@@ -149,7 +297,7 @@ $dialogs = $connector->send(new GetDialogsRequest($fileCabinetId))->dto();
  * Return all used values for a specific field.
  */
  
-$values = $connector->send(new GetSelectListRequest($fileCabinetId, $dialogId, $fieldName))->dto();
+$values = $connector->send(new GetSelectList($fileCabinetId, $dialogId, $fieldName))->dto();
 ```
 
 ```php
@@ -157,7 +305,7 @@ $values = $connector->send(new GetSelectListRequest($fileCabinetId, $dialogId, $
  * Return a document.
  */
  
-$document = $connector->send(new GetDocumentRequest($fileCabinetId, $documentId))->dto();
+$document = $connector->send(new GetASpecificDocumentFromAFileCabinet($fileCabinetId, $documentId))->dto();
 ```
 
 ```php
@@ -165,7 +313,7 @@ $document = $connector->send(new GetDocumentRequest($fileCabinetId, $documentId)
  * Return all documents for a file cabinet.
  */
  
-$documents = $connector->send(new GetDocumentsRequest($fileCabinetId))->dto();
+$documents = $connector->send(new GetDocumentsFromAFileCabinet($fileCabinetId))->dto();
 ```
 
 ```php
@@ -181,20 +329,7 @@ $content = $connector->send(new GetDocumentPreviewRequest($fileCabinetId, $docum
  * Download single document.
  */
  
-$content = $connector->send(new GetDocumentDownloadRequest($fileCabinetId, $documentId))->dto();
-```
-
-```php
-/**
- * Download multiple documents.
- * 
- * Although there are no mentioned limits in the documentation,
- * it is not advisable to download more than 100 documents at once.
- * 
- * Also note there is a default request timeout of 30 seconds.
- */
- 
-$content = $connector->send(new GetDocumentsDownloadRequest($fileCabinetId, $documentIds))->dto();
+$content = $connector->send(new DownloadDocument($fileCabinetId, $documentId))->dto();
 ```
 
 ```php
@@ -212,7 +347,7 @@ $section = $connector->send(new GetSectionsRequest($fileCabinetId, $documentId))
  * You will use $section->id from above as $thumbnailId.
  */
  
-$thumbnail = $connector->send(new GetDocumentDownloadThumbnailRequest($fileCabinetId, $thumbnailId, $page = 0))->dto();
+$thumbnail = $connector->send(new DownloadThumbnail($fileCabinetId, $thumbnailId, $page = 0))->dto();
 ```
 
 ```php
@@ -220,7 +355,7 @@ $thumbnail = $connector->send(new GetDocumentDownloadThumbnailRequest($fileCabin
  * Update value of a indexed field.
  */
  
-$value = $connector->send(new PutDocumentFieldsRequest($fileCabinetId, $documentId, [$fieldName => $newValue]))->dto();
+$value = $connector->send(new UpdateIndexValues($fileCabinetId, $documentId, [$fieldName => $newValue]))->dto();
 ```
 
 ```php
@@ -228,7 +363,7 @@ $value = $connector->send(new PutDocumentFieldsRequest($fileCabinetId, $document
  * Update multiple values of indexed fields.
  */
  
-$values = $connector->send(new PutDocumentFieldsRequest($fileCabinetId, $documentId, [
+$values = $connector->send(new UpdateIndexValues($fileCabinetId, $documentId, [
     $fieldName => $newValue,
     $field2Name => $new2Value,
 ]))->dto();
@@ -239,7 +374,7 @@ $values = $connector->send(new PutDocumentFieldsRequest($fileCabinetId, $documen
  * Upload new document.
  */
  
-$document = $connector->send(new PostDocumentRequest($fileCabinetId, $fileContent, $fileName))->dto();
+$document = $connector->send(new CreateDataRecord($fileCabinetId, $fileContent, $fileName))->dto();
 ```
 
 ```php
@@ -247,7 +382,7 @@ $document = $connector->send(new PostDocumentRequest($fileCabinetId, $fileConten
  * Get total document count.
  */
  
-$content = $connector->send(new GetDocumentCountRequest($fileCabinetId, $dialogId))->dto();
+$content = $connector->send(new GetTotalNumberOfDocuments($fileCabinetId, $dialogId))->dto();
 ```
 
 ```php
@@ -255,7 +390,7 @@ $content = $connector->send(new GetDocumentCountRequest($fileCabinetId, $dialogI
  * Upload new document with index values.
  */
  
-use CodebarAg\DocuWare\DTO\DocumentIndex\PrepareDTO;
+use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\PrepareDTO;
  
 $indexes = collect([
     PrepareDTO::make('FIELD_TEXT', 'Indexed Text'),
@@ -277,7 +412,7 @@ $document = $connector->send(new PostDocumentRequest(
  * Upload new data entry with index values.
  */
  
-use CodebarAg\DocuWare\DTO\DocumentIndex\PrepareDTO;
+use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\PrepareDTO;
  
 $indexes = collect([
     PrepareDTO::make('FIELD_TEXT', 'Indexed Text'),
@@ -302,13 +437,17 @@ $document = $connector->send(new PostDocumentRequest(
 $connector->send(new DeleteDocumentRequest($fileCabinetId, $document->id))->dto();
 ```
 
+</details>
+
 ## 🔍 Search usage
+<details>
+ <summary>Search Usage</summary>
 
 ```php
 use CodebarAg\DocuWare\Facades\DocuWare;
-use CodebarAg\DocuWare\Connectors\DocuWareStaticConnector;
+use CodebarAg\DocuWare\Connectors\DocuWareConnector;
 
-$connector = new DocuWareStaticConnector();
+$connector = new DocuWareConnector();
 ```
 
 ```php
@@ -488,8 +627,12 @@ $paginatorRequest = DocuWare::searchRequestBuilder()
 
 $paginator = $connector->send($paginatorRequest)->dto();
 ```
+</details>
 
 ## 🖼 Make encrypted URL
+
+<details>
+ <summary>Make encrypted URL</summary>
 
 ```php
 use CodebarAg\DocuWare\Facades\DocuWare;
@@ -535,47 +678,50 @@ $url = DocuWare::url()
     ->make();
 ```
 
-Please see [Tests](tests/Feature/DocuWare.php) for more details.
+</details>
 
 ## 🏋️ Document Index Fields DTO showcase
 
+<details>
+ <summary>Document Index Fields DTO showcase</summary>
+
 ```php
-CodebarAg\DocuWare\DTO\DocumentIndex\IndexTextDTO {
+CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexTextDTO {
   +name: "FIELD_TEXT"                               // string
   +value: "Value"                                   // null|string
 }
 ```
 
 ```php
-CodebarAg\DocuWare\DTO\DocumentIndex\IndexNumericDTO {
+CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexNumericDTO {
   +name: "FIELD_NUMERIC"                                 // string
   +value: 1                                             // null|int
 }
 ```
 
 ```php
-CodebarAg\DocuWare\DTO\DocumentIndex\IndexDecimalDTO {
+CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexDecimalDTO {
   +name: "FIELD_DECIMAL"                                  // string
   +value: 1.00                                           // null|int|float
 }
 ```
 
 ```php
-use CodebarAg\DocuWare\DTO\DocumentIndex\IndexDateDTO {
+ {
   +name: "FIELD_DATE"                                      // string
   +value: now(),                                           // null|Carbon
 }
 ```
 
 ```php
-use CodebarAg\DocuWare\DTO\DocumentIndex\IndexDateTimeDTO {
+ {
   +name: "FIELD_DATETIME"                                     // string
   +value: now(),                                             // null|Carbon
 }
 ```
 
 ```php
-use CodebarAg\DocuWare\DTO\DocumentIndex\IndexTableDTO {
+ {
   +name: "FIELD_TABLE"                                        // string
   +value: collect([
       0 => [
@@ -596,7 +742,11 @@ use CodebarAg\DocuWare\DTO\DocumentIndex\IndexTableDTO {
 }
 ```
 
-## 🏋️ DTO showcase
+</details>
+
+## 🏋️ DTO Showcase
+<details>
+ <summary>DTO Showcase</summary>
 
 ```php
 CodebarAg\DocuWare\DTO\OrganizationIndex {
@@ -725,65 +875,20 @@ CodebarAg\DocuWare\DTO\DocumentPaginator
 }
 ```
 
-## 🔐 Authentication
+</details>
 
-You only need to provide correct credentials. Everything else is automatically
-handled from the package. Under the hood we are storing the authentication
-cookie in the cache named *docuware.cookies*.
-
-You can run `php artisan docuware:list-auth-cookie` command to get your auth session that you can use in your `.env`
-file `DOCUWARE_COOKIES` key.
-
-But if you need further control you can use the following methods to login and
-logout with DocuWare:
-
-```php
-use CodebarAg\DocuWare\Facades\DocuWare;
-```
-
-```php
-/**
- * Receive a cookie
- */
- 
-DocuWare::cookie(string $url, string $username, string $password);
-```
-
-```php
-/**
- * Login with your credentials. You only need to login once. Afterwards the
- * authentication cookie is stored in the cache as `docuware.cookies` and
- * is used for all further requests.
- */
- 
-DocuWare::login();
-```
-
-```php
-/**
- * Logout your current session. Removes the authentication cookie in the cache.
- */
- 
-DocuWare::logout();
-```
-
-### Manual authentication
-
-If you want to provide your own authentication cookie you can use the following connector
-to authenticate with the DocuWare REST API:
-
-```php
-use CodebarAg\DocuWare\Connectors\StaticCookieConnector;
-```
 
 ## 📦 Caching requests
+
+<details>
+ <summary>Caching requests</summary>
 
 All Get Requests are cachable and will be cached by default.
 
 To determine if the response is cached you can use the following method:
 
 ```php 
-$connector = new DocuWareStaticConnector();
+$connector = new DocuWareConnector();
 
 $response = $connector->send(new GetDocumentRequest($fileCabinetId, $documentId));
 $response->isCached(); // false
@@ -797,7 +902,7 @@ $response->isCached(); // true
 To invalidate the cache for a specific request you can use the following method:
 
 ```php 
-$connector = new DocuWareStaticConnector();
+$connector = new DocuWareConnector();
 
 $request = new GetDocumentRequest($fileCabinetId, $documentId);
 $request->invalidateCache();
@@ -808,7 +913,7 @@ $response = $connector->send($request);
 To temporarily disable caching for a specific request you can use the following method:
 
 ```php 
-$connector = new DocuWareStaticConnector();
+$connector = new DocuWareConnector();
 
 $request = new GetDocumentRequest($fileCabinetId, $documentId);
 $request->disableCaching();
@@ -816,7 +921,12 @@ $request->disableCaching();
 $response = $connector->send($request);
 ```
 
+</details>
+
 ## 💥 Exceptions explained
+
+<details>
+ <summary>Exceptions explained</summary>
 
 - `CodebarAg\DocuWare\Exceptions\UnableToMakeRequest`
 
@@ -887,6 +997,8 @@ DocuWareResponseLog::class => [
 ],
 ```
 
+</details>
+
 ## 🔧 Configuration file
 
 You can publish the config file with:
@@ -901,15 +1013,6 @@ This is the contents of the published config file:
 <?php
 
 return [
-    /*
-    |--------------------------------------------------------------------------
-    | Connection
-    |--------------------------------------------------------------------------
-    | Select a connector to authenticate with. You can choose between: WITHOUT_COOKIE, STATIC_COOKIE
-    |
-    */
-
-    'connection' => ConnectionEnum::WITHOUT_COOKIE,
 
     /*
     |--------------------------------------------------------------------------
@@ -920,16 +1023,6 @@ return [
     */
 
     'cache_driver' => env('DOCUWARE_CACHE_DRIVER', env('CACHE_DRIVER', 'file')),
-
-    /*
-    |--------------------------------------------------------------------------
-    | Cookies
-    |--------------------------------------------------------------------------
-    | This variable is optional and only used if you want to set the request cookie manually.
-    |
-    */
-
-    'cookies' => env('DOCUWARE_COOKIES'),
 
     /*
     |--------------------------------------------------------------------------
@@ -973,19 +1066,6 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Authentication Cookie Lifetime
-    |--------------------------------------------------------------------------
-    |
-    | Here you may define the amount of minutes the authentication cookie is
-    | valid. Afterwards it will be removed from the cache and you need to
-    | provide a fresh one. By default, the lifetime lasts for one year.
-    |
-    */
-
-    'cookie_lifetime' => (int) env('DOCUWARE_COOKIE_LIFETIME', 525600),
-
-    /*
-    |--------------------------------------------------------------------------
     | Configurations
     |--------------------------------------------------------------------------
     |
@@ -1000,7 +1080,7 @@ return [
              * to false (default) or always a new one is executed when ForceRefresh is set to true.
              */
 
-            'force_refresh' => false,
+            'force_refresh' => true,
             'include_suggestions' => false,
             'additional_result_fields' => [],
         ],
@@ -1009,7 +1089,7 @@ return [
             'lifetime_in_seconds' => env('DOCUWARE_CACHE_LIFETIME_IN_SECONDS', 60),
         ],
     ],
-    
+
     /*
     |--------------------------------------------------------------------------
     | Tests
@@ -1020,7 +1100,18 @@ return [
         'file_cabinet_id' => env('DOCUWARE_TESTS_FILE_CABINET_ID'),
         'dialog_id' => env('DOCUWARE_TESTS_DIALOG_ID'),
         'basket_id' => env('DOCUWARE_TESTS_BASKET_ID'),
+        'section' => (int) env('DOCUWARE_TESTS_SECTION'),
         'organization_id' => env('DOCUWARE_TESTS_ORGANIZATION_ID'),
+        'document_id' => (int) env('DOCUWARE_TESTS_DOCUMENT_ID'),
+        'document_file_size_preview' => (int) env('DOCUWARE_TESTS_DOCUMENT_FILE_SIZE_PREVIEW'),
+        'document_file_size' => (int) env('DOCUWARE_TESTS_DOCUMENT_FILE_SIZE'),
+        'document_count' => (int) env('DOCUWARE_TESTS_DOCUMENT_COUNT'),
+        'document_thumbnail_mime_type' => env('DOCUWARE_TESTS_DOCUMENT_THUMBNAIL_MIME_TYPE'),
+        'document_thumbnail_file_size' => (int) env('DOCUWARE_TESTS_DOCUMENT_THUMBNAIL_FILE_SIZE'),
+        'document_ids' => json_decode(env('DOCUWARE_TESTS_DOCUMENTS_IDS', '[]')),
+        'documents_file_size' => (int) env('DOCUWARE_TESTS_DOCUMENTS_FILE_SIZE'),
+        'field_name' => env('DOCUWARE_TESTS_FIELD_NAME'),
+        'field_name_2' => env('DOCUWARE_TESTS_FIELD_NAME_2'),
     ],
 ];
 ```
@@ -1036,14 +1127,13 @@ cp phpunit.xml.dist phpunit.xml
 Modify environment variables in the phpunit.xml-file:
 
 ```xml
-
+<env name="DOCUWARE_TOKEN" value=""/>
 <env name="DOCUWARE_URL" value="https://domain.docuware.cloud"/>
 <env name="DOCUWARE_USERNAME" value="user@domain.test"/>
 <env name="DOCUWARE_PASSWORD" value="password"/>
 <env name="DOCUWARE_PASSPHRASE" value="passphrase"/>
-<env name="DOCUWARE_COOKIES" value="cookies"/>
-<env name="DOCUWARE_TIMEOUT" value="15"/>
-<env name="DOCUWARE_CACHE_LIFETIME_IN_SECONDS" value="0"/> // Disable caching for tests
+<env name="DOCUWARE_TIMEOUT" value="30"/>
+<env name="DOCUWARE_CACHE_LIFETIME_IN_SECONDS" value="0"/>
 
 <env name="DOCUWARE_TESTS_FILE_CABINET_ID" value=""/>
 <env name="DOCUWARE_TESTS_DIALOG_ID" value=""/>

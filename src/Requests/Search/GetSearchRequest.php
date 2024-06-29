@@ -2,7 +2,7 @@
 
 namespace CodebarAg\DocuWare\Requests\Search;
 
-use CodebarAg\DocuWare\DTO\DocumentPaginator;
+use CodebarAg\DocuWare\DTO\Documents\DocumentPaginator;
 use CodebarAg\DocuWare\Responses\Search\GetSearchResponse;
 use Illuminate\Support\Facades\Cache;
 use Saloon\CachePlugin\Contracts\Cacheable;

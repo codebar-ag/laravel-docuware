@@ -60,7 +60,7 @@ class Auth
     public static function domain(): string
     {
         throw_if(
-            empty(config('laravel-docuware.credentials.url')),
+            blank(config('laravel-docuware.credentials.url')),
             UnableToFindUrlCredential::create(),
         );
 

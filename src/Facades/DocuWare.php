@@ -6,13 +6,13 @@ use Carbon\Carbon;
 use CodebarAg\DocuWare\DocuWareSearchRequestBuilder;
 use CodebarAg\DocuWare\DocuWareUrl;
 use CodebarAg\DocuWare\DTO\Cookie;
-use CodebarAg\DocuWare\DTO\Dialog;
-use CodebarAg\DocuWare\DTO\Document;
-use CodebarAg\DocuWare\DTO\DocumentThumbnail;
-use CodebarAg\DocuWare\DTO\Field;
-use CodebarAg\DocuWare\DTO\FileCabinet;
-use CodebarAg\DocuWare\DTO\Organization;
-use CodebarAg\DocuWare\DTO\OrganizationIndex;
+use CodebarAg\DocuWare\DTO\Documents\Document;
+use CodebarAg\DocuWare\DTO\Documents\DocumentThumbnail;
+use CodebarAg\DocuWare\DTO\Documents\Field;
+use CodebarAg\DocuWare\DTO\FileCabinets\Dialog;
+use CodebarAg\DocuWare\DTO\FileCabinets\General\FileCabinetInformation;
+use CodebarAg\DocuWare\DTO\General\Organization\Organization;
+use CodebarAg\DocuWare\DTO\General\Organization\OrganizationIndex;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Facade;
 
@@ -24,7 +24,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static void logout()
  * @method static Organization getOrganization(string $organizationId)
  * @method static Collection|OrganizationIndex[] getOrganizations()
- * @method static Collection|FileCabinet[] getFileCabinets()
+ * @method static Collection|FileCabinetInformation[] getFileCabinets()
  * @method static Collection|Field[] getFields(string $fileCabinetId)
  * @method static Collection|Dialog[] getDialogs(string $fileCabinetId)
  * @method static array getSelectList(string $fileCabinetId, string $dialogId, string $fieldName)

@@ -9,7 +9,7 @@ class EnsureValidPassphrase
     public static function check(): void
     {
         throw_if(
-            empty(config('laravel-docuware.passphrase')),
+            blank(config('laravel-docuware.passphrase')),
             UnableToFindPassphrase::create(),
         );
     }

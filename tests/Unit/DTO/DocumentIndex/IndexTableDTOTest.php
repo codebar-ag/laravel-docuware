@@ -2,7 +2,7 @@
 
 namespace CodebarAg\DocuWare\Tests\Unit\DTO;
 
-use CodebarAg\DocuWare\DTO\DocumentIndex\IndexTableDTO;
+use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexTableDTO;
 
 it('create prepare index text dto', function () {
 

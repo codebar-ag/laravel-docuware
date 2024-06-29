@@ -3,11 +3,18 @@
 namespace CodebarAg\DocuWare\DTO;
 
 use Illuminate\Support\Arr;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Str;
 
 final class Section
 {
     public static function fromJson(array $data): self
     {
+        if ($contentModifiedDateTime = Arr::get($data, 'ContentModified')) {
+            $contentModifiedDateTime = Str::of($contentModifiedDateTime)->after('(')->before(')');
+            $contentModifiedDateTime = Carbon::createFromTimestamp($contentModifiedDateTime);
+        }
+
         return new self(
             id: Arr::get($data, 'Id'),
             contentType: Arr::get($data, 'ContentType'),
@@ -15,7 +22,7 @@ final class Section
             pageCount: Arr::get($data, 'PageCount'),
             fileSize: Arr::get($data, 'FileSize'),
             originalFileName: Arr::get($data, 'OriginalFileName'),
-            contentModified: Arr::get($data, 'ContentModified'),
+            contentModified: $contentModifiedDateTime,
             annotationsPreview: Arr::get($data, 'AnnotationsPreview'),
             hasTextAnnotations: Arr::get($data, 'HasTextAnnotations'),
         );
@@ -28,7 +35,7 @@ final class Section
         public int $pageCount,
         public int $fileSize,
         public string $originalFileName,
-        public string $contentModified,
+        public ?Carbon $contentModified,
         public bool $annotationsPreview,
         public ?bool $hasTextAnnotations = null,
     ) {

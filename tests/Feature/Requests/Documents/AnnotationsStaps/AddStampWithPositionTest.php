@@ -28,6 +28,7 @@ it('can clip 2 documents', function () {
             items: collect([
                 new AnnotationItem(
                     type: 'StampPlacement',
+                    layer: 1,
                     field: collect([
                         new AnnotationItemField(
                             name: '<#1>',
@@ -39,7 +40,6 @@ it('can clip 2 documents', function () {
                             textAsString: 'Test',
                         ),
                     ]),
-                    layer: 1,
                     location: new AnnotationItemLocation(
                         x: 0.5,
                         y: 0.5,

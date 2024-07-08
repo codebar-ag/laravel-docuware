@@ -21,8 +21,7 @@ final class Field
         public string $label,
         public string $type,
         public string $scope,
-    ) {
-    }
+    ) {}
 
     public function isSystem(): bool
     {

@@ -24,8 +24,7 @@ class TableRow
 
     public function __construct(
         public Collection $fields,
-    ) {
-    }
+    ) {}
 
     public static function fake(
         ?Collection $fields = null,

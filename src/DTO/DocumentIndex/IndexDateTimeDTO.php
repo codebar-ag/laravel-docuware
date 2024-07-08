@@ -9,9 +9,7 @@ class IndexDateTimeDTO
     public function __construct(
         public string $name,
         public null|Carbon|\Carbon\Carbon $value,
-    ) {
-
-    }
+    ) {}
 
     public static function make(string $name, null|Carbon|\Carbon\Carbon $value): self
     {
@@ -30,7 +28,7 @@ class IndexDateTimeDTO
     {
         return [
             'FieldName' => $this->name,
-            'Item' => $this->value->toDateTimeString(),
+            'Item' => $this->value?->toDateTimeString(),
             'ItemElementName' => 'String',
         ];
     }

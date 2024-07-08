@@ -9,9 +9,7 @@ class IndexNumericDTO
     public function __construct(
         public string $name,
         public ?int $value,
-    ) {
-
-    }
+    ) {}
 
     public static function make(string $name, ?int $value): self
     {

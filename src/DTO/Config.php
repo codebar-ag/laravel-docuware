@@ -23,6 +23,5 @@ final class Config
         public string $cacheDriver,
         public int $cacheLifetimeInSeconds,
         public string $requestTimeoutInSeconds,
-    ) {
-    }
+    ) {}
 }

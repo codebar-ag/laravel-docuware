@@ -24,8 +24,7 @@ final class Organization
         public ?string $guid = null,
         public array $additionalInfo = [],
         public array $configurationRights = [],
-    ) {
-    }
+    ) {}
 
     public static function fake(
         ?string $id = null,

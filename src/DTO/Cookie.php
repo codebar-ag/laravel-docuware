@@ -13,8 +13,7 @@ final class Cookie
         public string $cookie,
         public Carbon $cookie_created_at,
         public Carbon $cookie_lifetime_until,
-    ) {
-    }
+    ) {}
 
     public static function make(CookieJar $cookieJar): self
     {

@@ -63,8 +63,7 @@ final class Document
         public Carbon $updated_at,
         public ?Collection $fields,
         public ?Collection $suggestions,
-    ) {
-    }
+    ) {}
 
     public function isPdf(): bool
     {

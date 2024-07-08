@@ -23,8 +23,7 @@ class PostLoginRequest extends SoloRequest implements HasBody
         protected readonly bool $rememberMe = false,
         protected readonly bool $redirectToMyselfInCaseOfError = false,
         protected readonly ?string $licenseType = null,
-    ) {
-    }
+    ) {}
 
     public function resolveEndpoint(): string
     {

@@ -14,8 +14,7 @@ class DeleteDocumentRequest extends Request
     public function __construct(
         protected readonly string $fileCabinetId,
         protected readonly string $documentId,
-    ) {
-    }
+    ) {}
 
     public function resolveEndpoint(): string
     {

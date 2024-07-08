@@ -31,8 +31,7 @@ class GetSearchRequest extends Request implements Cacheable, HasBody
         protected readonly string $orderField = 'DWSTOREDATETIME',
         protected readonly string $orderDirection = 'asc',
         protected readonly array $condition = [],
-    ) {
-    }
+    ) {}
 
     public function resolveEndpoint(): string
     {

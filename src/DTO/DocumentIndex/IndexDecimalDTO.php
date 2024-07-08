@@ -7,9 +7,7 @@ class IndexDecimalDTO
     public function __construct(
         public string $name,
         public null|int|float $value,
-    ) {
-
-    }
+    ) {}
 
     public static function make(string $name, null|int|float $value): self
     {

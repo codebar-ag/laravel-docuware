@@ -22,8 +22,7 @@ class GetDocumentsRequest extends Request implements Cacheable
         protected readonly string $fileCabinetId,
         protected readonly int $page = 1,
         protected readonly int $perPage = 50,
-    ) {
-    }
+    ) {}
 
     public function defaultQuery(): array
     {

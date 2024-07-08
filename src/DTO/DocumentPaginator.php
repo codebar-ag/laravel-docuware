@@ -20,8 +20,7 @@ class DocumentPaginator
         public int $to,
         public Collection $documents,
         public ?ErrorBag $error = null,
-    ) {
-    }
+    ) {}
 
     public function showPrev(): bool
     {

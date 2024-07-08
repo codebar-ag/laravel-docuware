@@ -3,15 +3,12 @@
 namespace CodebarAg\DocuWare\Requests\FileCabinets\Upload;
 
 use CodebarAg\DocuWare\DTO\Documents\Document;
-use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\PrepareDTO;
 use CodebarAg\DocuWare\Responses\FileCabinets\Upload\CreateDataRecordResponse;
 use Illuminate\Support\Collection;
 use Saloon\Contracts\Body\HasBody;
-use Saloon\Data\MultipartValue;
 use Saloon\Enums\Method;
 use Saloon\Http\Request;
 use Saloon\Http\Response;
-use Saloon\Traits\Body\HasFormBody;
 use Saloon\Traits\Body\HasMultipartBody;
 
 class AppendFilesToADataRecord extends Request implements HasBody

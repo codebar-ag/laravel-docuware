@@ -21,8 +21,7 @@ final class SuggestionField
         public ?string $name,
         public ?string $db_name,
         public ?string $confidence,
-    ) {
-    }
+    ) {}
 
     public static function fake(
         array $value = [],

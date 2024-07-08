@@ -24,8 +24,7 @@ final class FileCabinet
         public string $color,
         public bool $isBasket,
         public ?string $assignedCabinet,
-    ) {
-    }
+    ) {}
 
     public static function fake(
         ?string $id = null,

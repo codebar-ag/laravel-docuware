@@ -22,6 +22,5 @@ final class DocumentThumbnail
         public string $mime,
         public string $data,
         public string $base64,
-    ) {
-    }
+    ) {}
 }

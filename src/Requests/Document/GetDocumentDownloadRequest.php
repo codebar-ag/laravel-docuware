@@ -20,8 +20,7 @@ class GetDocumentDownloadRequest extends Request implements Cacheable
     public function __construct(
         protected readonly string $fileCabinetId,
         protected readonly int $documentId,
-    ) {
-    }
+    ) {}
 
     public function resolveEndpoint(): string
     {

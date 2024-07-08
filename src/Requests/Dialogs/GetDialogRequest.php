@@ -20,8 +20,7 @@ class GetDialogRequest extends Request implements Cacheable
     public function __construct(
         protected readonly string $fileCabinetId,
         protected readonly string $dialogId
-    ) {
-    }
+    ) {}
 
     public function resolveEndpoint(): string
     {

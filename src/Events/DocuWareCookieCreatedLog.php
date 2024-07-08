@@ -14,6 +14,5 @@ class DocuWareCookieCreatedLog
 
     public function __construct(
         public string $message
-    ) {
-    }
+    ) {}
 }

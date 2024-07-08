@@ -21,8 +21,7 @@ class GetDocumentDownloadThumbnailRequest extends Request implements Cacheable
         protected readonly string $fileCabinetId,
         protected readonly string $thumbnailId,
         protected readonly int $page = 0,
-    ) {
-    }
+    ) {}
 
     public function resolveEndpoint(): string
     {

@@ -31,6 +31,5 @@ final class Section
         public string $contentModified,
         public bool $annotationsPreview,
         public ?bool $hasTextAnnotations = null,
-    ) {
-    }
+    ) {}
 }

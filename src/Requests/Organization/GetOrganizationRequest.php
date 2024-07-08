@@ -20,8 +20,7 @@ class GetOrganizationRequest extends Request implements Cacheable
 
     public function __construct(
         public string $organizationId,
-    ) {
-    }
+    ) {}
 
     public function resolveEndpoint(): string
     {

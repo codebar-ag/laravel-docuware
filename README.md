@@ -103,7 +103,7 @@ then optimize the processes that power the core of your business.
 | FileCabinets/CheckInCheckOut        | Undo Check-out                                              | 🕣        |                |
 | FileCabinets/SelectLists            | Get Select Lists & Get Filtered Select Lists                | ✅         |                |
 | FileCabinets/Upload                 | Create Data Record                                          | ✅         |                |
-| FileCabinets/Upload                 | Append File(s) to a Data Record                             | ❌         | -              |
+| FileCabinets/Upload                 | Append File(s) to a Data Record                             | ✅         | -              |
 | FileCabinets/Upload                 | Upload a Single File for a Data Record                      | ❌         | -              |
 | FileCabinets/Upload                 | Create a Data Record & Upload File                          | ❌         | -              |
 | FileCabinets/Upload                 | Create Data Record & Upload File Using Store Dialog         | ❌         | -              |

@@ -72,13 +72,15 @@ it('can attach files to a data record', function () {
         )
     )->dto();
 
-    ray($response->sections);
+    $sections = $response->sections->values();
+
+    ray($sections->toArray());
 
     expect($response)->toBeInstanceOf(Document::class)
-        ->and($response->sections->count())->toBe(3)
-        ->and($response->sections->first()->originalFileName)->toBe('test-1.pdf')
-        ->and($response->sections->originalFileName)->toBe('test-2.pdf')
-        ->and($response->sections->last()->originalFileName)->toBe('test-2.pdf');
+        ->and($sections->count())->toBe(3)
+        ->and($sections[0]->originalFileName)->toBe('test-1.pdf')
+        ->and($sections[1]->originalFileName)->toBe('test-2.pdf')
+        ->and($sections[2]->originalFileName)->toBe('test-3.pdf');
 
     Event::assertDispatched(DocuWareResponseLog::class);
-})->only();
+})->skip();

@@ -28,7 +28,7 @@ class IndexDateDTO
     {
         return [
             'FieldName' => $this->name,
-            'Item' => $this->value->toDateString(),
+            'Item' => $this->value?->toDateString(),
             'ItemElementName' => 'String',
         ];
     }

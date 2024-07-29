@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Event;
 it('can get user by id', function () {
     Event::fake();
 
-    $users = $this->connector->send(new GetUsers())->dto();
+    $users = $this->connector->send(new GetUsers)->dto();
 
     $user = $this->connector->send(new GetUserById($users->get(2)->id))->dto();
 

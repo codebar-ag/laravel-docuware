@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Event;
 it('can list users of a group', function () {
     Event::fake();
 
-    $groups = $this->connector->send(new GetGroups())->dto();
+    $groups = $this->connector->send(new GetGroups)->dto();
 
     $users = $this->connector->send(new GetUsersOfAGroup($groups->first()->id))->dto();
 

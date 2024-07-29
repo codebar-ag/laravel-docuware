@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Event;
 it('can search documents in trash', function () {
     Event::fake();
 
-    $paginatorRequest = (new DocuWare())
+    $paginatorRequest = (new DocuWare)
         ->searchRequestBuilder()
         ->trashBin()
         ->page(1)
@@ -33,7 +33,7 @@ it('can\'t search documents by more than two dates in trash', function () {
 
     $this->expectException(UnableToSearch::class);
 
-    $request = (new DocuWare())
+    $request = (new DocuWare)
         ->searchRequestBuilder()
         ->trashBin()
         ->page(1)
@@ -52,7 +52,7 @@ it('can\'t search documents by more than two dates in trash', function () {
 it('can override search documents dates filter by using same operator in trash', function () {
     Event::fake();
 
-    $paginatorRequest = (new DocuWare())
+    $paginatorRequest = (new DocuWare)
         ->searchRequestBuilder()
         ->trashBin()
         ->page(1)
@@ -74,7 +74,7 @@ it('can override search documents dates filter by using same operator in trash',
 it('can override search documents dates filter by using equal operator in trash', function () {
     Event::fake();
 
-    $paginatorRequest = (new DocuWare())
+    $paginatorRequest = (new DocuWare)
         ->searchRequestBuilder()
         ->trashBin()
         ->page(1)
@@ -97,7 +97,7 @@ it('can\'t search documents by diverged date range', function () {
 
     $this->expectException(UnableToSearch::class);
 
-    $request = (new DocuWare())
+    $request = (new DocuWare)
         ->searchRequestBuilder()
         ->trashBin()
         ->page(1)
@@ -115,7 +115,7 @@ it('can\'t search documents by diverged date range', function () {
 it('can search documents dates filter in future in trash', function () {
     Event::fake();
 
-    $paginatorRequest = (new DocuWare())
+    $paginatorRequest = (new DocuWare)
         ->searchRequestBuilder()
         ->trashBin()
         ->page(1)
@@ -135,7 +135,7 @@ it('can search documents dates filter in future in trash', function () {
 it('can search documents dates filter in past in trash', function () {
     Event::fake();
 
-    $paginatorRequest = (new DocuWare())
+    $paginatorRequest = (new DocuWare)
         ->searchRequestBuilder()
         ->trashBin()
         ->page(1)
@@ -155,7 +155,7 @@ it('can search documents dates filter in past in trash', function () {
 it('can search documents with null values in trash', function () {
     Event::fake();
 
-    $paginatorRequest = (new DocuWare())
+    $paginatorRequest = (new DocuWare)
         ->searchRequestBuilder()
         ->trashBin()
         ->page(null)

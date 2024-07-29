@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Event;
 it('can list users of a role', function () {
     Event::fake();
 
-    $roles = $this->connector->send(new GetRoles())->dto();
+    $roles = $this->connector->send(new GetRoles)->dto();
 
     $users = $this->connector->send(new GetUsersOfARole($roles->first()->id))->dto();
 

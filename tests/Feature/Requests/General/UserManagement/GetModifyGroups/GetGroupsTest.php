@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Event;
 it('can list groups', function () {
     Event::fake();
 
-    $groups = $this->connector->send(new GetGroups())->dto();
+    $groups = $this->connector->send(new GetGroups)->dto();
 
     $this->assertInstanceOf(Collection::class, $groups);
 

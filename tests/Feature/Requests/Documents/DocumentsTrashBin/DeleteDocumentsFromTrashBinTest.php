@@ -20,7 +20,7 @@ it('can delete documents in trash', function () {
         $document->id,
     ))->dto();
 
-    $paginatorRequest = (new DocuWare())
+    $paginatorRequest = (new DocuWare)
         ->searchRequestBuilder()
         ->trashBin()
         ->get();

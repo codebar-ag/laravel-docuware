@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Event;
 it('can list users', function () {
     Event::fake();
 
-    $users = $this->connector->send(new GetUsers())->dto();
+    $users = $this->connector->send(new GetUsers)->dto();
 
     $this->assertInstanceOf(Collection::class, $users);
 

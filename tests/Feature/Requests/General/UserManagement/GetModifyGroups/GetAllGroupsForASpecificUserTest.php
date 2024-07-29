@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Event;
 it('can list groups for a specific user', function () {
     Event::fake();
 
-    $users = $this->connector->send(new GetUsers())->dto();
+    $users = $this->connector->send(new GetUsers)->dto();
 
     $groups = $this->connector->send(new GetAllGroupsForASpecificUser($users->get(2)->id))->dto();
 

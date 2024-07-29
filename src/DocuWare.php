@@ -15,7 +15,7 @@ class DocuWare
         ?string $grantType = 'password',
         ?string $clientId = 'docuware.platform.net.client'
     ): RequestTokenDto {
-        $responsibleIdentityServiceResponse = (new GetResponsibleIdentityService())->send();
+        $responsibleIdentityServiceResponse = (new GetResponsibleIdentityService)->send();
 
         $identityServiceConfigurationResponse = (new GetIdentityServiceConfiguration(
             identityServiceUrl: $responsibleIdentityServiceResponse->dto()->identityServiceUrl
@@ -33,11 +33,11 @@ class DocuWare
 
     public function searchRequestBuilder(): DocuWareSearchRequestBuilder
     {
-        return new DocuWareSearchRequestBuilder();
+        return new DocuWareSearchRequestBuilder;
     }
 
     public function url(): DocuWareUrl
     {
-        return new DocuWareUrl();
+        return new DocuWareUrl;
     }
 }

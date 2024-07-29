@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Event;
 it('can list groups', function () {
     Event::fake();
 
-    $users = $this->connector->send(new GetUsers())->dto();
+    $users = $this->connector->send(new GetUsers)->dto();
 
     $roles = $this->connector->send(new GetAllRolesForASpecificUser($users->get(2)->id))->dto();
 

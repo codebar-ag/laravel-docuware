@@ -42,7 +42,7 @@ function clearFiles(): void
         ))->dto();
     }
 
-    $paginatorRequest = (new DocuWare())
+    $paginatorRequest = (new DocuWare)
         ->searchRequestBuilder()
         ->trashBin()
         ->perPage(1000)
@@ -59,7 +59,7 @@ function setUsersInactive(): void
 {
     $connector = getConnector();
 
-    $response = $connector->send(new GetUsers());
+    $response = $connector->send(new GetUsers);
 
     $users = $response->dto()->filter(function ($user) {
         return Str::contains($user->email, 'test@example.test') && $user->active === true;

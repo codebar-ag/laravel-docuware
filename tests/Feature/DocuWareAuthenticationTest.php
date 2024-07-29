@@ -10,13 +10,13 @@ use CodebarAg\DocuWare\Requests\Authentication\OAuth\GetResponsibleIdentityServi
 use CodebarAg\DocuWare\Requests\General\Organization\GetOrganization;
 
 it('can get oath responsible identity service', function () {
-    $responsibleIdentityServiceResponse = (new GetResponsibleIdentityService())->send();
+    $responsibleIdentityServiceResponse = (new GetResponsibleIdentityService)->send();
 
     expect($responsibleIdentityServiceResponse->dto())->toBeInstanceOf(ResponsibleIdentityService::class);
 })->group('authentication');
 
 it('can get oath identity service configuration', function () {
-    $responsibleIdentityServiceResponse = (new GetResponsibleIdentityService())->send();
+    $responsibleIdentityServiceResponse = (new GetResponsibleIdentityService)->send();
 
     $identityServiceConfigurationResponse = (new GetIdentityServiceConfiguration(
         identityServiceUrl: $responsibleIdentityServiceResponse->dto()->identityServiceUrl
@@ -33,7 +33,7 @@ it('can authenticate with DocuWare Credentials', function () {
         password: config('laravel-docuware.credentials.password'),
     ));
 
-    $connector->send(new GetOrganization());
+    $connector->send(new GetOrganization);
 
     Event::assertDispatched(DocuWareOAuthLog::class);
 

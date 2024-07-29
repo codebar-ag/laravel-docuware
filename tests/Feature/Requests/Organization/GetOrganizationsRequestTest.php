@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Event;
 it('can list organizations', function () {
     Event::fake();
 
-    $organizations = $this->connector->send(new GetOrganization())->dto();
+    $organizations = $this->connector->send(new GetOrganization)->dto();
 
     $this->assertInstanceOf(Collection::class, $organizations);
 

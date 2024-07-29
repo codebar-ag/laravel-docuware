@@ -37,17 +37,20 @@
         <junit outputFile="build/report.junit.xml"/>
     </logging>
     <php>
+        <env name="APP_KEY" value="base64:F+mHMDBbavrsp/I3WYA5lDSwDJJI/0wQG4eM3csq/lo="/>
         <env name="DOCUWARE_URL" value="https://domain.docuware.cloud"/>
         <env name="DOCUWARE_USERNAME" value="user@domain.test"/>
         <env name="DOCUWARE_PASSWORD" value="password"/>
         <env name="DOCUWARE_PASSPHRASE" value="passphrase"/>
-        <env name="DOCUWARE_COOKIES" value="cookies"/>
         <env name="DOCUWARE_TIMEOUT" value="30"/>
+        <env name="DOCUWARE_CACHE_DRIVER" value="array" />
         <env name="DOCUWARE_CACHE_LIFETIME_IN_SECONDS" value="0"/>
 
-        <env name="DOCUWARE_TESTS_FILE_CABINET_ID" value=""/>
-        <env name="DOCUWARE_TESTS_DIALOG_ID" value=""/>
-        <env name="DOCUWARE_TESTS_BASKET_ID" value=""/>
-        <env name="DOCUWARE_TESTS_ORGANIZATION_ID" value=""/>
+        <env name="DOCUWARE_TESTS_FILE_CABINET_ID" value="17eaf4ba-41a8-43ec-8be5-80a5f5f1eaf1"/>
+        <env name="DOCUWARE_TESTS_DIALOG_ID" value="5afd9126-6cb1-4c7b-8ab2-2ca0bbbeb7be"/>
+        <env name="DOCUWARE_TESTS_BASKET_ID" value="b_ac921d68-983b-4b0f-8a20-34ab05ff19c6"/>
+        <env name="DOCUWARE_TESTS_ORGANIZATION_ID" value="1"/>
+        <env name="DOCUWARE_TESTS_GROUP_ID" value="ae49d31e-41ce-46b2-9ebb-64db58e90046"/>
+        <env name="DOCUWARE_TESTS_ROLE_ID" value="2444928d-1312-44db-aa79-101f198ac946"/>
     </php>
 </phpunit>

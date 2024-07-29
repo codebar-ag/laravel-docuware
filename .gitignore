@@ -1,5 +1,6 @@
 .idea
 .phpunit.result.cache
+.phpunit.cache
 build
 composer.lock
 coverage
@@ -9,3 +10,13 @@ phpstan.neon
 testbench.yaml
 vendor
 node_modules
+.phpactor.json
+
+
+
+## Annotations
+
+src/DTO/Documents/AnnotationsStamps/*
+src/Requests/Documents/AnnotationsStamps/*
+src/Responses/Documents/AnnotationsStamps/*
+tests/Feature/Requests/Documents/AnnotationsStamps/*

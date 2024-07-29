@@ -2,16 +2,16 @@
 
 namespace CodebarAg\DocuWare\Tests\Feature;
 
-use CodebarAg\DocuWare\DTO\Dialog;
-use CodebarAg\DocuWare\DTO\Document;
-use CodebarAg\DocuWare\DTO\DocumentField;
-use CodebarAg\DocuWare\DTO\DocumentPaginator;
-use CodebarAg\DocuWare\DTO\Field;
-use CodebarAg\DocuWare\DTO\FileCabinet;
-use CodebarAg\DocuWare\DTO\Organization;
-use CodebarAg\DocuWare\DTO\OrganizationIndex;
+use CodebarAg\DocuWare\DTO\Documents\Document;
+use CodebarAg\DocuWare\DTO\Documents\DocumentField;
+use CodebarAg\DocuWare\DTO\Documents\DocumentPaginator;
+use CodebarAg\DocuWare\DTO\Documents\Field;
+use CodebarAg\DocuWare\DTO\Documents\TableRow;
+use CodebarAg\DocuWare\DTO\FileCabinets\Dialog;
+use CodebarAg\DocuWare\DTO\FileCabinets\General\FileCabinetInformation;
+use CodebarAg\DocuWare\DTO\General\Organization\Organization;
+use CodebarAg\DocuWare\DTO\General\Organization\OrganizationIndex;
 use CodebarAg\DocuWare\DTO\SuggestionField;
-use CodebarAg\DocuWare\DTO\TableRow;
 
 uses()->group('dto');
 
@@ -26,8 +26,8 @@ it('create a fake organization index', function () {
 });
 
 it('create a fake file cabinet', function () {
-    $fake = FileCabinet::fake();
-    $this->assertInstanceOf(FileCabinet::class, $fake);
+    $fake = FileCabinetInformation::fake();
+    $this->assertInstanceOf(FileCabinetInformation::class, $fake);
 });
 
 it('create a fake dialog', function () {

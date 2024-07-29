@@ -64,86 +64,86 @@ then optimize the processes that power the core of your business.
 <details>
  <summary>Current Support</summary>
 
-| Group                               | Request                                                     | Supported | TODO           |
-|-------------------------------------|-------------------------------------------------------------|-----------|----------------|
-| Authentication/OAuth                | 1. Get Responsible Identity Service                         | ✅         |                |
-| Authentication/OAuth                | 2. Get Identity Service Configuration                       | ✅         |                |
-| Authentication/OAuth                | 3.a Request Token w/ Username & Password                    | ✅         |                |
-| Authentication/OAuth                | 3.b Request Token w/ a DocuWare Token                       | 🕣        |                |
-| Authentication/OAuth                | 3.c Request Token w/ Username & Password (Trusted User)     | 🕣        |                |
-| Authentication/OAuth                | 3.d.1 Obtain Windows Authorization (On Premises Only)       | 🕣        |                |
-| Authentication/OAuth                | 3.d.2 Request Token /w a Windows Account (On Premises Only) | 🕣        |                |
-| General/Organisation                | Get Login Token                                             | ✅         |                |
-| General/Organisation                | Get Organization                                            | ✅         |                |
-| General/Organisation                | Get All File Cabinets and Document Trays                    | ✅         |                |
-| General/UserManagement              | Get Users by ID                                             | ✅         |                |
-| General/UserManagement              | Get Users of a Role                                         | ✅         |                |
-| General/UserManagement              | Get Users of a Group                                        | ✅         |                |
-| General/UserManagement              | Create User                                                 | ✅         |                |
-| General/UserManagement              | Update User                                                 | ✅         |                |
-| General/UserManagement              | Get Groups                                                  | ✅         |                |
-| General/UserManagement              | Get All Groups for a Specific User                          | ✅         |                |
-| General/UserManagement              | Add User to a Group                                         | ✅         |                |
-| General/UserManagement              | Remove User from a Group                                    | ✅         |                |
-| General/UserManagement              | Get Roles                                                   | ✅         |                |
-| General/UserManagement              | Get All Roles for a Specific User                           | ✅         |                |
-| General/UserManagement              | Add User to a Role                                          | ✅         |                |
-| General/UserManagement              | Remove User from a Role                                     | ✅         |                |
-| FileCabinets/General                | Get File Cabinet Information                                | ✅         |                |
-| FileCabinets/General                | Get Total Number of Documents                               | ✅         |                |
-| FileCabinets/Dialogs                | Get All Dialogs                                             | ✅         |                |
-| FileCabinets/Dialogs                | Get a Specific Dialog                                       | ✅         |                |
-| FileCabinets/Dialogs                | Get Dialogs of a Specific Type                              | ✅         |                |
-| FileCabinets/Search                 | Get Documents from a File Cabinet                           | ✅         |                |
-| FileCabinets/Search                 | Get a Specific Document From a File Cabinet                 | ✅         |                |
-| FileCabinets/Search                 | Search for Documents in a Single File Cabinet               | ✅         |                |
-| FileCabinets/Search                 | Search for Documents in Multiple File Cabinets              | ✅         |                |
-| FileCabinets/CheckInCheckOut        | Check-out & Download a Document                             | 🕣        |                |
-| FileCabinets/CheckInCheckOut        | Check-in a Document from the File System                    | 🕣        |                |
-| FileCabinets/CheckInCheckOut        | Undo Check-out                                              | 🕣        |                |
-| FileCabinets/SelectLists            | Get Select Lists & Get Filtered Select Lists                | ✅         |                |
-| FileCabinets/Upload                 | Create Data Record                                          | ✅         |                |
-| FileCabinets/Upload                 | Append File(s) to a Data Record                             | ✅         | -              |
-| FileCabinets/Upload                 | Upload a Single File for a Data Record                      | ❌         | -              |
-| FileCabinets/Upload                 | Create a Data Record & Upload File                          | ❌         | -              |
-| FileCabinets/Upload                 | Create Data Record & Upload File Using Store Dialog         | ❌         | -              |
-| FileCabinets/Upload                 | Append a Single PDF to a Document                           | ❌         | -              |
-| FileCabinets/Upload                 | Replace a PDF Document Section                              | ❌         | -              |
-| FileCabinets/BatchIndexFieldsUpdate | Batch Update Index Fields By Id                             | ❌         | -              |
-| FileCabinets/BatchIndexFieldsUpdate | Batch Update Index Fields By Search                         | ❌         | -              |
-| FileCabinets/BatchIndexFieldsUpdate | Batch Append/Update Keyword Fields By Id                    | ❌         | -              |
-| Documents/UpdateIndexValues         | Update Index Values                                         | ✅         |                |
-| Documents/UpdateIndexValues         | Update Table Field Values                                   | ❌         | - ?            |
-| Documents/ModifyDocuments           | Transfer Document                                           | ✅         | -              |
-| Documents/ModifyDocuments           | Delete Document                                             | ✅         |                |
-| Documents/ClipUnclip&StapleUnstaple | Clip                                                        | ✅         |                |
-| Documents/ClipUnclip&StapleUnstaple | Unclip                                                      | ✅         |                |
-| Documents/ClipUnclip&StapleUnstaple | Staple                                                      | ✅         |                |
-| Documents/ClipUnclip&StapleUnstaple | Unstaple                                                    | ✅         |                |
-| Documents/AnnotationsStamps         | AddStampWithPosition                                        | ❌         | - Better Tests |
-| Documents/AnnotationsStamps         | AddStampWithBestPosition                                    | ❌         | - Better Tests |
-| Documents/AnnotationsStamps         | AddTextAnnotation                                           | ❌         | - Better Tests |
-| Documents/AnnotationsStamps         | AddRectEntryAnnotation                                      | ❌         | - Better Tests |
-| Documents/AnnotationsStamps         | AddLineEntryAnnotation                                      | ❌         | - Better Tests |
-| Documents/AnnotationsStamps         | AddPolyLineEntryAnnotation                                  | ❌         | -              |
-| Documents/AnnotationsStamps         | DeleteAnnotation                                            | ❌         | -              |
-| Documents/AnnotationsStamps         | UpdateTextAnnotation                                        | ❌         | - Better Tests |
-| Documents/AnnotationsStamps         | Get Stamps                                                  | ❌         | -              |
-| Documents/DocumentsTrashBin         | Get Documents                                               | ✅         |                |
-| Documents/DocumentsTrashBin         | Delete Documents                                            | ✅         |                |
-| Documents/DocumentsTrashBin         | Restore Documents                                           | ✅         |                |
-| Documents/ApplicationProperties     | Get Application Properties                                  | ✅         | -              |
-| Documents/ApplicationProperties     | Add Application Properties                                  | ✅         | -              |
-| Documents/ApplicationProperties     | Delete Application Properties                               | ✅         | -              |
-| Documents/ApplicationProperties     | Update Application Properties                               | ✅         | -              |
-| Documents/Sections                  | Get All Sections from a Document                            | ✅         | -              |
-| Documents/Sections                  | Get a Specific Section                                      | ✅         | -              |
-| Documents/Sections                  | Delete Section                                              | ✅         | -              |
-| Documents/Download                  | Download Document                                           | ✅         |                |
-| Documents/Download                  | Download Section                                            | ✅         | -              |
-| Documents/Download                  | Download Thumbnail                                          | ✅         |                |
-| Workflow                            | Get Document Workflow History                               | ✅         | -              |
-| Workflow                            | Get Document Workflow History Steps                         | ✅         | -              |
+| Group                               | Request                                                     | Supported | TODO |
+|-------------------------------------|-------------------------------------------------------------|-----------|------|
+| Authentication/OAuth                | 1. Get Responsible Identity Service                         | ✅         |      |
+| Authentication/OAuth                | 2. Get Identity Service Configuration                       | ✅         |      |
+| Authentication/OAuth                | 3.a Request Token w/ Username & Password                    | ✅         |      |
+| Authentication/OAuth                | 3.b Request Token w/ a DocuWare Token                       | 🕣        |      |
+| Authentication/OAuth                | 3.c Request Token w/ Username & Password (Trusted User)     | 🕣        |      |
+| Authentication/OAuth                | 3.d.1 Obtain Windows Authorization (On Premises Only)       | 🕣        |      |
+| Authentication/OAuth                | 3.d.2 Request Token /w a Windows Account (On Premises Only) | 🕣        |      |
+| General/Organisation                | Get Login Token                                             | ✅         |      |
+| General/Organisation                | Get Organization                                            | ✅         |      |
+| General/Organisation                | Get All File Cabinets and Document Trays                    | ✅         |      |
+| General/UserManagement              | Get Users by ID                                             | ✅         |      |
+| General/UserManagement              | Get Users of a Role                                         | ✅         |      |
+| General/UserManagement              | Get Users of a Group                                        | ✅         |      |
+| General/UserManagement              | Create User                                                 | ✅         |      |
+| General/UserManagement              | Update User                                                 | ✅         |      |
+| General/UserManagement              | Get Groups                                                  | ✅         |      |
+| General/UserManagement              | Get All Groups for a Specific User                          | ✅         |      |
+| General/UserManagement              | Add User to a Group                                         | ✅         |      |
+| General/UserManagement              | Remove User from a Group                                    | ✅         |      |
+| General/UserManagement              | Get Roles                                                   | ✅         |      |
+| General/UserManagement              | Get All Roles for a Specific User                           | ✅         |      |
+| General/UserManagement              | Add User to a Role                                          | ✅         |      |
+| General/UserManagement              | Remove User from a Role                                     | ✅         |      |
+| FileCabinets/General                | Get File Cabinet Information                                | ✅         |      |
+| FileCabinets/General                | Get Total Number of Documents                               | ✅         |      |
+| FileCabinets/Dialogs                | Get All Dialogs                                             | ✅         |      |
+| FileCabinets/Dialogs                | Get a Specific Dialog                                       | ✅         |      |
+| FileCabinets/Dialogs                | Get Dialogs of a Specific Type                              | ✅         |      |
+| FileCabinets/Search                 | Get Documents from a File Cabinet                           | ✅         |      |
+| FileCabinets/Search                 | Get a Specific Document From a File Cabinet                 | ✅         |      |
+| FileCabinets/Search                 | Search for Documents in a Single File Cabinet               | ✅         |      |
+| FileCabinets/Search                 | Search for Documents in Multiple File Cabinets              | ✅         |      |
+| FileCabinets/CheckInCheckOut        | Check-out & Download a Document                             | 🕣        |      |
+| FileCabinets/CheckInCheckOut        | Check-in a Document from the File System                    | 🕣        |      |
+| FileCabinets/CheckInCheckOut        | Undo Check-out                                              | 🕣        |      |
+| FileCabinets/SelectLists            | Get Select Lists & Get Filtered Select Lists                | ✅         |      |
+| FileCabinets/Upload                 | Create Data Record                                          | ✅         |      |
+| FileCabinets/Upload                 | Append File(s) to a Data Record                             | ✅         |      |
+| FileCabinets/Upload                 | Upload a Single File for a Data Record                      | ❌         | -    |
+| FileCabinets/Upload                 | Create a Data Record & Upload File                          | ❌         | -    |
+| FileCabinets/Upload                 | Create Data Record & Upload File Using Store Dialog         | ❌         | -    |
+| FileCabinets/Upload                 | Append a Single PDF to a Document                           | ❌         | -    |
+| FileCabinets/Upload                 | Replace a PDF Document Section                              | ❌         | -    |
+| FileCabinets/BatchIndexFieldsUpdate | Batch Update Index Fields By Id                             | ❌         | -    |
+| FileCabinets/BatchIndexFieldsUpdate | Batch Update Index Fields By Search                         | ❌         | -    |
+| FileCabinets/BatchIndexFieldsUpdate | Batch Append/Update Keyword Fields By Id                    | ❌         | -    |
+| Documents/UpdateIndexValues         | Update Index Values                                         | ✅         |      |
+| Documents/UpdateIndexValues         | Update Table Field Values                                   | ❌         | - ?  |
+| Documents/ModifyDocuments           | Transfer Document                                           | ✅         |      |
+| Documents/ModifyDocuments           | Delete Document                                             | ✅         |      |
+| Documents/ClipUnclip&StapleUnstaple | Clip                                                        | ✅         |      |
+| Documents/ClipUnclip&StapleUnstaple | Unclip                                                      | ✅         |      |
+| Documents/ClipUnclip&StapleUnstaple | Staple                                                      | ✅         |      |
+| Documents/ClipUnclip&StapleUnstaple | Unstaple                                                    | ✅         |      |
+| Documents/AnnotationsStamps         | AddStampWithPosition                                        | ✅         |      |
+| Documents/AnnotationsStamps         | AddStampWithBestPosition                                    | ✅         |      |
+| Documents/AnnotationsStamps         | AddTextAnnotation                                           | ✅         |      |
+| Documents/AnnotationsStamps         | AddRectEntryAnnotation                                      | ✅         |      |
+| Documents/AnnotationsStamps         | AddLineEntryAnnotation                                      | ✅         |      |
+| Documents/AnnotationsStamps         | AddPolyLineEntryAnnotation                                  | ❌         | -    |
+| Documents/AnnotationsStamps         | DeleteAnnotation                                            | ❌         | -    |
+| Documents/AnnotationsStamps         | UpdateTextAnnotation                                        | ✅         |      |
+| Documents/AnnotationsStamps         | Get Stamps                                                  | ❌         | -    |
+| Documents/DocumentsTrashBin         | Get Documents                                               | ✅         |      |
+| Documents/DocumentsTrashBin         | Delete Documents                                            | ✅         |      |
+| Documents/DocumentsTrashBin         | Restore Documents                                           | ✅         |      |
+| Documents/ApplicationProperties     | Get Application Properties                                  | ✅         |      |
+| Documents/ApplicationProperties     | Add Application Properties                                  | ✅         |      |
+| Documents/ApplicationProperties     | Delete Application Properties                               | ✅         |      |
+| Documents/ApplicationProperties     | Update Application Properties                               | ✅         |      |
+| Documents/Sections                  | Get All Sections from a Document                            | ✅         |      |
+| Documents/Sections                  | Get a Specific Section                                      | ✅         |      |
+| Documents/Sections                  | Delete Section                                              | ✅         |      |
+| Documents/Download                  | Download Document                                           | ✅         |      |
+| Documents/Download                  | Download Section                                            | ✅         |      |
+| Documents/Download                  | Download Thumbnail                                          | ✅         |      |
+| Workflow                            | Get Document Workflow History                               | ✅         |      |
+| Workflow                            | Get Document Workflow History Steps                         | ✅         |      |
 
 </details>
 
@@ -258,183 +258,744 @@ $connector = new CustomDocuWareConnector();
 ### Available Requests
 
 <details>
- <summary>Available Requests</summary>
+ <summary>Documents</summary>
 
+#### Add Line Entry Annotation
 ```php
-/**
- * Return an organization.
- */
- 
-$organization = $connector->send(new GetOrganization($id))->dto();
+use CodebarAg\DocuWare\DTO\Documents\AnnotationsStamps\AnnotationItem;
+use CodebarAg\DocuWare\DTO\Documents\AnnotationsStamps\AnnotationItemLayer;
+use CodebarAg\DocuWare\DTO\Documents\AnnotationsStamps\AnnotationItemLayerItem;
+use CodebarAg\DocuWare\DTO\Documents\AnnotationsStamps\AnnotationItemLocation;
+use CodebarAg\DocuWare\DTO\Documents\AnnotationsStamps\AnnotationPlacement;
+use CodebarAg\DocuWare\DTO\Documents\AnnotationsStamps\Annotations;
+use CodebarAg\DocuWare\Requests\Documents\AnnotationsStamps\AddLineEntryAnnotation;
+
+$annotations = new Annotations(
+    pageNumber: 0,
+    sectionNumber: 0,
+    annotationsPlacement: new AnnotationPlacement(
+        items: collect([
+            new AnnotationItem(
+                type: 'Annotation',
+                layer: collect([
+                    new AnnotationItemLayer(
+                        id: 1,
+                        items: collect([
+                            new AnnotationItemLayerItem(
+                                type: 'LineEntry',
+                                color: 'Cyan',
+                                rotation: 0,
+                                transparent: false,
+                                strokeWidth: 50,
+                                arrow: false,
+                                from: new AnnotationItemLocation(
+                                    x: 100,
+                                    y: 100,
+                                ),
+                                to: new AnnotationItemLocation(
+                                    x: 200,
+                                    y: 200,
+                                ),
+                            ),
+                        ]),
+                    ),
+                ]),
+            ),
+        ]),
+    ),
+);
+
+$stamp = $connector->send(new AddLineEntryAnnotation(
+    $fileCabinetId,
+    $documentId,
+    $annotations,
+))->dto();
 ```
 
+#### Add Rect Entry Annotation
 ```php
-/**
- * Return all file cabinets.
- */
- 
-$fileCabinets = $connector->send(new GetAllFileCabinetsAndDocumentTrays())->dto();
+use CodebarAg\DocuWare\DTO\Documents\AnnotationsStamps\AnnotationItem;
+use CodebarAg\DocuWare\DTO\Documents\AnnotationsStamps\AnnotationItemLayer;
+use CodebarAg\DocuWare\DTO\Documents\AnnotationsStamps\AnnotationItemLayerItem;
+use CodebarAg\DocuWare\DTO\Documents\AnnotationsStamps\AnnotationItemLocation;
+use CodebarAg\DocuWare\DTO\Documents\AnnotationsStamps\AnnotationPlacement;
+use CodebarAg\DocuWare\DTO\Documents\AnnotationsStamps\Annotations;
+use CodebarAg\DocuWare\Requests\Documents\AnnotationsStamps\AddRectEntryAnnotation;
+
+$annotations = new Annotations(
+    pageNumber: 0,
+    sectionNumber: 0,
+    annotationsPlacement: new AnnotationPlacement(
+        items: collect([
+            new AnnotationItem(
+                type: 'Annotation',
+                layer: collect([
+                    new AnnotationItemLayer(
+                        id: 1,
+                        items: collect([
+                            new AnnotationItemLayerItem(
+                                type: 'RectEntry',
+                                color: 'Bisque',
+                                rotation: 0,
+                                transparent: false,
+                                strokeWidth: 50,
+                                filled: true,
+                                ellipse: false,
+                                location: new AnnotationItemLocation(
+                                    left: 100,
+                                    top: 100,
+                                    width: 1500,
+                                    height: 100,
+                                ),
+                            ),
+                        ]),
+                    ),
+                ]),
+            ),
+        ]),
+    ),
+);
+
+$stamp = $connector->send(new AddRectEntryAnnotation(
+    $fileCabinetId,
+    $documentId,
+    $annotations,
+))->dto();
 ```
 
+
+#### Add Stamp With Best Position
 ```php
-/**
- * Return all fields of a file cabinet.
- */
- 
+use CodebarAg\DocuWare\DTO\Documents\AnnotationsStamps\AnnotationItem;
+use CodebarAg\DocuWare\DTO\Documents\AnnotationsStamps\AnnotationItemField;
+use CodebarAg\DocuWare\DTO\Documents\AnnotationsStamps\AnnotationItemFieldTypedValue;
+use CodebarAg\DocuWare\DTO\Documents\AnnotationsStamps\AnnotationPlacement;
+use CodebarAg\DocuWare\DTO\Documents\AnnotationsStamps\Annotations;
+use CodebarAg\DocuWare\Requests\Documents\AnnotationsStamps\AddStampWithBestPosition;
+
+$annotations = new Annotations(
+    pageNumber: 0,
+    sectionNumber: 0,
+    annotationsPlacement: new AnnotationPlacement(
+        items: collect([
+            new AnnotationItem(
+                type: 'StampPlacement',
+                layer: 1,
+                field: collect([
+                    new AnnotationItemField(
+                        name: '<#1>',
+                        typedValue: new AnnotationItemFieldTypedValue(
+                            item: 'Text',
+                            itemElementName: 'String',
+                        ),
+                        value: 'Test',
+                        textAsString: 'Test',
+                    ),
+                ]),
+                stampId: 'e1b3f6cc-ed69-4af2-afa5-6d990c0144c5',
+            ),
+        ]),
+    ),
+);
+
+$stamp = $connector->send(new AddStampWithBestPosition(
+    $fileCabinetId,
+    $documentId,
+    $annotations,
+))->dto();
+```
+
+
+#### Add Stamp With Position
+```php
+use CodebarAg\DocuWare\DTO\Documents\AnnotationsStamps\AnnotationItem;
+use CodebarAg\DocuWare\DTO\Documents\AnnotationsStamps\AnnotationItemField;
+use CodebarAg\DocuWare\DTO\Documents\AnnotationsStamps\AnnotationItemFieldTypedValue;
+use CodebarAg\DocuWare\DTO\Documents\AnnotationsStamps\AnnotationItemLocation;
+use CodebarAg\DocuWare\DTO\Documents\AnnotationsStamps\AnnotationPlacement;
+use CodebarAg\DocuWare\DTO\Documents\AnnotationsStamps\Annotations;
+use CodebarAg\DocuWare\Requests\Documents\AnnotationsStamps\AddStampWithPosition;
+
+$annotations = new Annotations(
+    pageNumber: 0,
+    sectionNumber: 0,
+    annotationsPlacement: new AnnotationPlacement(
+        items: collect([
+            new AnnotationItem(
+                type: 'StampPlacement',
+                layer: 1,
+                field: collect([
+                    new AnnotationItemField(
+                        name: '<#1>',
+                        typedValue: new AnnotationItemFieldTypedValue(
+                            item: 'Text',
+                            itemElementName: 'String',
+                        ),
+                        value: 'Test',
+                        textAsString: 'Test',
+                    ),
+                ]),
+                location: new AnnotationItemLocation(
+                    x: 0.5,
+                    y: 0.5,
+                ),
+                stampId: 'e1b3f6cc-ed69-4af2-afa5-6d990c0144c5',
+            ),
+        ]),
+    ),
+);
+
+$stamp = $connector->send(new AddStampWithPosition(
+    $fileCabinetId,
+    $documentId,
+    $annotations,
+))->dto();
+```
+
+#### Add Text Annotation
+```php
+use CodebarAg\DocuWare\DTO\Documents\AnnotationsStamps\AnnotationItem;
+use CodebarAg\DocuWare\DTO\Documents\AnnotationsStamps\AnnotationItemFont;
+use CodebarAg\DocuWare\DTO\Documents\AnnotationsStamps\AnnotationItemLayer;
+use CodebarAg\DocuWare\DTO\Documents\AnnotationsStamps\AnnotationItemLayerItem;
+use CodebarAg\DocuWare\DTO\Documents\AnnotationsStamps\AnnotationItemLocation;
+use CodebarAg\DocuWare\DTO\Documents\AnnotationsStamps\AnnotationPlacement;
+use CodebarAg\DocuWare\DTO\Documents\AnnotationsStamps\Annotations;
+use CodebarAg\DocuWare\Requests\Documents\AnnotationsStamps\AddTextAnnotation;
+
+$annotations = new Annotations(
+    pageNumber: 0,
+    sectionNumber: 0,
+    annotationsPlacement: new AnnotationPlacement(
+        items: collect([
+            new AnnotationItem(
+                type: 'Annotation',
+                layer: collect([
+                    new AnnotationItemLayer(
+                        id: 1,
+                        items: collect([
+                            new AnnotationItemLayerItem(
+                                type: 'TextEntry',
+                                color: 'Black',
+                                rotation: 0,
+                                transparent: false,
+                                strokeWidth: 50,
+                                value: 'Test',
+                                font: new AnnotationItemFont(
+                                    fontName: 'Arial',
+                                    bold: false,
+                                    italic: false,
+                                    underlined: false,
+                                    strikeThrough: false,
+                                    fontSize: 12,
+                                    spacing: 0,
+                                ),
+                                location: new AnnotationItemLocation(
+                                    left: 100,
+                                    top: 100,
+                                    width: 1500,
+                                    height: 100,
+                                ),
+                            ),
+                        ]),
+                    ),
+                ]),
+            ),
+        ]),
+    ),
+);
+
+$stamp = $connector->send(new AddTextAnnotation(
+    $fileCabinetId,
+    $documentId,
+    $annotations,
+))->dto();
+```
+
+#### Add Application Properties
+```php
+use CodebarAg\DocuWare\Requests\Documents\ApplicationProperties\AddApplicationProperties;
+
+$addProperties = $connector->send(new AddApplicationProperties(
+    $fileCabinetId,
+    $documentId,
+    [
+        [
+            'Name' => 'Key1',
+            'Value' => 'Key1 Value',
+        ],
+        [
+            'Name' => 'Key2',
+            'Value' => 'Key2 Value',
+        ],
+    ],
+))->dto();
+```
+
+#### Update Application Properties
+```php
+use CodebarAg\DocuWare\Requests\Documents\ApplicationProperties\UpdateApplicationProperties;
+
+$updateProperties = $connector->send(new UpdateApplicationProperties(
+    $fileCabinetId,
+    $documentId,
+    [
+        [
+            'Name' => 'Key1',
+            'Value' => 'Key1 Value Updated',
+        ],
+    ],
+))->dto()->sortBy('Name');
+```
+
+#### Delete Application Properties
+```php
+use CodebarAg\DocuWare\Requests\Documents\ApplicationProperties\DeleteApplicationProperties;
+
+$deleteProperties = $connector->send(new DeleteApplicationProperties(
+    $fileCabinetId,
+    $document->id,
+    [
+        'Key1',
+    ],
+))->dto();
+```
+
+#### Get Application Properties
+```php
+use CodebarAg\DocuWare\Requests\Documents\ApplicationProperties\GetApplicationProperties;
+
+$properties = $connector->send(new GetApplicationProperties(
+    $fileCabinetId,
+    $document->id,
+))->dto();
+```
+
+
+#### Clip
+```php
+use CodebarAg\DocuWare\Requests\Documents\ClipUnclipStapleUnstaple\Clip;
+
+$clip = $connector->send(new Clip(
+    $fileCabinetId,
+    [
+        $documentId,
+        $document2Id,
+    ]
+))->dto();
+```
+
+#### Unclip
+```php
+use CodebarAg\DocuWare\Requests\Documents\ClipUnclipStapleUnstaple\Unclip;
+
+$unclip = $connector->send(new Unclip(
+    $fileCabinetId,
+    $clipId
+))->dto();
+```
+
+#### Staple
+```php
+use CodebarAg\DocuWare\Requests\Documents\ClipUnclipStapleUnstaple\Staple;
+
+$staple = $connector->send(new Staple(
+    $fileCabinetId,
+    [
+        $documentId,
+        $document2Id,
+    ]
+))->dto();
+```
+
+#### Unstaple
+```php
+use CodebarAg\DocuWare\Requests\Documents\ClipUnclipStapleUnstaple\Unstaple;
+
+$unclip = $connector->send(new Unstaple(
+    $fileCabinetId,
+    $stapleId
+))->dto();
+```
+
+#### Delete Documents
+```php
+use CodebarAg\DocuWare\Requests\Documents\DocumentsTrashBin\DeleteDocuments;
+
+$delete = $connector->send(new DeleteDocuments([$documentID, $document2ID]))->dto();
+```
+
+#### Restore Documents
+```php
+use CodebarAg\DocuWare\Requests\Documents\DocumentsTrashBin\RestoreDocuments;
+
+$delete = $connector->send(new RestoreDocuments([$documentID, $document2ID]))->dto();
+```
+
+#### Download Document
+```php
+use CodebarAg\DocuWare\Requests\Documents\Download\DownloadDocument;
+
+$contents = $connector->send(new DownloadDocument(
+    $fileCabinetId,
+    $documentId
+))->dto();
+```
+
+#### Download Section
+```php
+use CodebarAg\DocuWare\Requests\Documents\Download\DownloadSection;
+
+$contents = $connector->send(new DownloadSection(
+    $fileCabinetId,
+    $sectionId
+))->dto();
+```
+
+#### Download Thumbnail
+```php
+use CodebarAg\DocuWare\Requests\Documents\Download\DownloadThumbnail;
+
+$contents = $connector->send(new DownloadThumbnail(
+    $fileCabinetId,
+    $sectionId
+))->dto();
+```
+
+#### Delete Section
+```php
+use CodebarAg\DocuWare\Requests\Documents\Sections\DeleteSection;
+
+$deleted = $connector->send(new DeleteSection(
+    $fileCabinetId,
+    $sectionId
+))->dto();
+```
+
+#### Get All Section
+```php
+use CodebarAg\DocuWare\Requests\Documents\Sections\GetAllSectionsFromADocument;
+
+$sections = $connector->send(new GetAllSectionsFromADocument(
+    $fileCabinetId,
+    $documentId
+))->dto();
+```
+
+#### Get Specific Section
+```php
+use CodebarAg\DocuWare\Requests\Documents\Sections\GetASpecificSection;
+
+$section = $connector->send(new GetASpecificSection(
+    $fileCabinetId,
+    $sectionsId
+))->dto();
+```
+
+
+#### Get Total Number Of Documents
+```php
+use CodebarAg\DocuWare\Requests\FileCabinets\General\GetTotalNumberOfDocuments;
+
+$count = $connector->send(new GetTotalNumberOfDocuments(
+    $fileCabinetId,
+    $dialogId
+))->dto();
+```
+
+#### Get Document Preview
+```php
+use CodebarAg\DocuWare\Requests\Documents\GetDocumentPreviewRequest;
+
+$image = $connector->send(new GetDocumentPreviewRequest($fileCabinetId, $documentId))->dto();
+```
+
+#### Create Data Record
+```php
+use CodebarAg\DocuWare\Requests\FileCabinets\Upload\CreateDataRecord;
+
+$document = $connector->send(new CreateDataRecord(
+    $fileCabinetId,
+    null,
+    null,
+    collect([
+        IndexTextDTO::make('DOCUMENT_LABEL', '::data-entry::'),
+    ]),
+))->dto();
+```
+
+#### Update Index Values
+```php
+use CodebarAg\DocuWare\Requests\Documents\UpdateIndexValues\UpdateIndexValues;
+
+$response = $connector->send(new UpdateIndexValues(
+    $fileCabinetId,
+    $documentId,
+    collect([
+        IndexTextDTO::make('DOCUMENT_LABEL', '::new-data-entry::'),
+    ])
+))->dto();
+```
+</details>
+
+
+<details>
+ <summary>Fields</summary>
+
+#### Get Fields
+```php
+use CodebarAg\DocuWare\Requests\Fields\GetFieldsRequest;
+
 $fields = $connector->send(new GetFieldsRequest($fileCabinetId))->dto();
 ```
 
+</details>
+
+<details>
+ <summary>File Cabinets</summary>
+
+#### Get All Dialogs
 ```php
-/**
- * Return all dialogs of a file cabinet.
- */
- 
+use CodebarAg\DocuWare\Requests\FileCabinets\Dialogs\GetAllDialogs;
+
 $dialogs = $connector->send(new GetAllDialogs($fileCabinetId))->dto();
 ```
 
+#### Get Dialogs of a Specific Type
 ```php
-/**
- * Return all used values for a specific field.
- */
- 
-$values = $connector->send(new GetSelectList($fileCabinetId, $dialogId, $fieldName))->dto();
+use CodebarAg\DocuWare\Requests\FileCabinets\Dialogs\GetASpecificDialog;
+
+$dialog = $connector->send(new GetASpecificDialog($fileCabinetId, $dialogId))->dto();
 ```
 
+#### Get Dialogs Of A Specific Type
 ```php
-/**
- * Return a document.
- */
- 
+use CodebarAg\DocuWare\Enums\DialogType;
+use CodebarAg\DocuWare\Requests\FileCabinets\Dialogs\GetDialogsOfASpecificType;
+
+$dialogs = $connector->send(new GetDialogsOfASpecificType($fileCabinetId, DialogType::SEARCH))->dto();
+```
+
+#### Get File Cabinet Information
+```php
+use CodebarAg\DocuWare\Requests\FileCabinets\General\GetFileCabinetInformation;
+
+$fileCabinet = $connector->send(new GetFileCabinetInformation($fileCabinetId))->dto();
+```
+
+#### Get A Specific Document From A File Cabinet
+```php
+use CodebarAg\DocuWare\Requests\FileCabinets\Search\GetASpecificDocumentFromAFileCabinet;
+
 $document = $connector->send(new GetASpecificDocumentFromAFileCabinet($fileCabinetId, $documentId))->dto();
 ```
 
+####  Get Documents From A File Cabinet
 ```php
-/**
- * Return all documents for a file cabinet.
- */
- 
-$documents = $connector->send(new GetDocumentsFromAFileCabinet($fileCabinetId))->dto();
-```
+use CodebarAg\DocuWare\Requests\FileCabinets\Search\GetDocumentsFromAFileCabinet;
 
-```php
-/**
- * Return image preview of a document.
- */
- 
-$content = $connector->send(new GetDocumentPreviewRequest($fileCabinetId, $documentId))->dto();
-```
-
-```php
-/**
- * Download single document.
- */
- 
-$content = $connector->send(new DownloadDocument($fileCabinetId, $documentId))->dto();
-```
-
-```php
-/**
- * Get sections of a document.
- */
- 
-$section = $connector->send(new GetSectionsRequest($fileCabinetId, $documentId))->dto();
-```
-
-```php
-/**
- * Download a document thumbnail.
- * 
- * You will use $section->id from above as $thumbnailId.
- */
- 
-$thumbnail = $connector->send(new DownloadThumbnail($fileCabinetId, $thumbnailId, $page = 0))->dto();
-```
-
-```php
-/**
- * Update value of a indexed field.
- */
- 
-$value = $connector->send(new UpdateIndexValues($fileCabinetId, $documentId, [$fieldName => $newValue]))->dto();
-```
-
-```php
-/**
- * Update multiple values of indexed fields.
- */
- 
-$values = $connector->send(new UpdateIndexValues($fileCabinetId, $documentId, [
-    $fieldName => $newValue,
-    $field2Name => $new2Value,
-]))->dto();
-```
-
-```php
-/**
- * Upload new document.
- */
- 
-$document = $connector->send(new CreateDataRecord($fileCabinetId, $fileContent, $fileName))->dto();
-```
-
-```php
-/**
- * Get total document count.
- */
- 
-$content = $connector->send(new GetTotalNumberOfDocuments($fileCabinetId, $dialogId))->dto();
-```
-
-```php
-/**
- * Upload new document with index values.
- */
- 
-use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\PrepareDTO;
- 
-$indexes = collect([
-    PrepareDTO::make('FIELD_TEXT', 'Indexed Text'),
-    PrepareDTO::make('FIELD_NUMERIC', 1),
-    PrepareDTO::make('FIELD_DECIMAL', 1.00),
-    PrepareDTO::make('FIELD_DATE', now()),
-]);
-
-$document = $connector->send(new PostDocumentRequest(
-    $fileCabinetId,
-    $fileContent,
-    $fileName,
-    $indexes,
+$documents = $connector->send(new GetDocumentsFromAFileCabinet(
+    config('laravel-docuware.tests.file_cabinet_id')
 ))->dto();
 ```
 
+#### Append Files To A Data Record
 ```php
-/**
- * Upload new data entry with index values.
- */
- 
-use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\PrepareDTO;
- 
-$indexes = collect([
-    PrepareDTO::make('FIELD_TEXT', 'Indexed Text'),
-    PrepareDTO::make('FIELD_NUMERIC', 1),
-    PrepareDTO::make('FIELD_DECIMAL', 1.00),
-    PrepareDTO::make('FIELD_DATE', now()),
-]);
+use CodebarAg\DocuWare\Requests\FileCabinets\Upload\AppendFilesToADataRecord;
 
-$document = $connector->send(new PostDocumentRequest(
-    $fileCabinetId,
-    null,
-    null,
-    $indexes,
+$response = $connector->send(
+    new AppendFilesToADataRecord(
+        fileCabinetId: $fileCabinetId,
+        dataRecordId: $document->id,
+        files: collect([
+            new MultipartValue(
+                name: 'File[]',
+                value: file_get_contents(__DIR__.'/../../../../Fixtures/files/test-2.pdf'),
+                filename: 'test-2.pdf',
+            ),
+            new MultipartValue(
+                name: 'File[]',
+                value: file_get_contents(__DIR__.'/../../../../Fixtures/files/test-3.pdf'),
+                filename: 'test-3.pdf',
+            ),
+        ])
+    )
+)->dto();
+```
+</details>
+
+<details>
+ <summary>General</summary>
+
+#### Create User
+```php
+use CodebarAg\DocuWare\Requests\General\UserManagement\CreateUpdateUsers\CreateUser;
+
+$user = $connector->send(new CreateUser(new User(
+    name: $timestamp.' - Test User',
+    dbName: $timestamp,
+    email: $timestamp.'-test@example.test',
+    password: 'TESTPASSWORD',
+)))->dto();
+```
+
+#### Update User
+```php
+use CodebarAg\DocuWare\Requests\General\UserManagement\CreateUpdateUsers\UpdateUser;
+
+$user->name .= ' - Updated';
+$user->active = false;
+
+$user = $connector->send(new UpdateUser($user))->dto();
+```
+
+#### Add User To A Group
+```php
+use CodebarAg\DocuWare\Requests\General\UserManagement\GetModifyGroups\AddUserToAGroup;
+
+$response = $connector->send(new AddUserToAGroup(
+    userId: $userId,
+    ids: [$groupId],
 ))->dto();
 ```
 
+#### Remove User From A Group
 ```php
-/**
- * Delete document.
- */
- 
-$connector->send(new DeleteDocumentRequest($fileCabinetId, $document->id))->dto();
+use CodebarAg\DocuWare\Requests\General\UserManagement\GetModifyGroups\RemoveUserFromAGroup;
+
+$response = $connector->send(new RemoveUserFromAGroup(
+    userId: $userId,
+    ids: [$groupId],
+))->dto();
+```
+
+#### Get All Groups For A Specific User
+```php
+use CodebarAg\DocuWare\Requests\General\UserManagement\GetModifyGroups\GetAllGroupsForASpecificUser;
+
+$groups = $connector->send(new GetAllGroupsForASpecificUser($userId))->dto();
+```
+
+#### Get Groups
+```php
+use CodebarAg\DocuWare\Requests\General\UserManagement\GetModifyGroups\GetGroups;
+
+$groups = $connector->send(new GetGroups())->dto();
+```
+
+#### Add User To A Role
+```php
+use CodebarAg\DocuWare\Requests\General\UserManagement\GetModifyRoles\AddUserToARole;
+
+$response = $connector->send(new AddUserToARole(
+    userId: $userId,
+    ids: [$roleId],
+))->dto();
+```
+
+#### Remove User From A Role
+```php
+use CodebarAg\DocuWare\Requests\General\UserManagement\GetModifyRoles\RemoveUserFromARole;
+
+$response = $connector->send(new RemoveUserFromARole(
+    userId: $userId,
+    ids: [$roleId],
+))->dto();
+```
+
+#### Get All Roles For A Specific User
+```php
+use CodebarAg\DocuWare\Requests\General\UserManagement\GetModifyRoles\GetAllRolesForASpecificUser;
+
+$roles = $connector->send(new GetAllRolesForASpecificUser($userId))->dto();
+```
+
+#### Get Roles
+```php
+use CodebarAg\DocuWare\Requests\General\UserManagement\GetModifyRoles\GetRoles;
+
+$roles = $this->connector->send(new GetRoles())->dto();
+```
+
+#### Get User By Id
+```php
+use CodebarAg\DocuWare\Requests\General\UserManagement\GetUsers\GetUserById;
+
+$user = $this->connector->send(new GetUserById($userId))->dto();
+```
+
+#### Get Users Of A Group
+```php
+use CodebarAg\DocuWare\Requests\General\UserManagement\GetUsers\GetUsersOfAGroup;
+
+$users = $this->connector->send(new GetUsersOfAGroup($groupId))->dto();
+```
+
+#### Get Users Of A Role
+```php
+use CodebarAg\DocuWare\Requests\General\UserManagement\GetUsers\GetUsersOfARole;
+
+$users = $this->connector->send(new GetUsersOfARole($roleId))->dto();
+```
+
+### Get Users
+```php
+use CodebarAg\DocuWare\Requests\General\UserManagement\GetUsers\GetUsers;
+
+$users = $this->connector->send(new GetUsers())->dto();
+```
+
+</details>
+
+<details>
+ <summary>Organization</summary>
+
+#### Get Organization
+```php
+use CodebarAg\DocuWare\Requests\General\Organization\GetOrganization;
+
+$organizations = $this->connector->send(new GetOrganization())->dto();
+```
+
+</details>
+
+<details>
+ <summary>Select List</summary>
+
+#### Get Select Lists
+```php
+use CodebarAg\DocuWare\Requests\FileCabinets\SelectLists\GetSelectLists;
+
+$types = $this->connector->send(new GetSelectLists(
+    $fileCabinetId,
+    $dialogId,
+    $fieldName,
+))->dto();
+```
+
+</details>
+
+<details>
+ <summary>Workflow</summary>
+
+#### Get Document Workflow History
+```php
+use CodebarAg\DocuWare\Requests\Workflow\GetDocumentWorkflowHistory;
+
+$history = $this->connector->send(new GetDocumentWorkflowHistory(
+    $fileCabinetId,
+    $documentId
+))->dto();
+```
+
+#### Get Document Workflow History Steps
+```php
+use CodebarAg\DocuWare\Requests\Workflow\GetDocumentWorkflowHistorySteps;
+
+$historySteps = $this->connector->send(new GetDocumentWorkflowHistorySteps(
+    $workflowId,
+    $historyId,
+))->dto();
 ```
 
 </details>
@@ -628,6 +1189,20 @@ $paginatorRequest = DocuWare::searchRequestBuilder()
 $paginator = $connector->send($paginatorRequest)->dto();
 ```
 </details>
+
+## 🔍 Search usage TrashBin
+<details>
+ <summary>Search Usage</summary>
+
+> You can use the same methods as in the search usage. The only difference is that you have to use the `trashBin` method after the `searchRequestBuilder` method.
+
+```php
+use CodebarAg\DocuWare\DocuWare;
+
+$paginatorRequest = (new DocuWare())
+    ->searchRequestBuilder()
+    ->trashBin()
+```
 
 ## 🖼 Make encrypted URL
 

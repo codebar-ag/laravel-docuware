@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Event;
 it('can update a document value', function () {
     Event::fake();
 
-    $fileCabinetId = config('laravel-docuware.tests.file_cabinet_id');
+    $fileCabinetId = env('DOCUWARE_TESTS_FILE_CABINET_ID');
     $newValue = 'laravel-docuware';
 
     $document = $this->connector->send(new CreateDataRecord(
@@ -35,7 +35,7 @@ it('can update a document value', function () {
 it('can update multiple document values', function () {
     Event::fake();
 
-    $fileCabinetId = config('laravel-docuware.tests.file_cabinet_id');
+    $fileCabinetId = env('DOCUWARE_TESTS_FILE_CABINET_ID');
 
     $document = $this->connector->send(new CreateDataRecord(
         $fileCabinetId,

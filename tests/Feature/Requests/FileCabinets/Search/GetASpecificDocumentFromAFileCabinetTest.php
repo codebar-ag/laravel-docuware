@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Event;
 it('can show a document', function () {
     Event::fake();
 
-    $fileCabinetId = config('laravel-docuware.tests.file_cabinet_id');
+    $fileCabinetId = env('DOCUWARE_TESTS_FILE_CABINET_ID');
 
     $document = $this->connector->send(new CreateDataRecord(
         $fileCabinetId,

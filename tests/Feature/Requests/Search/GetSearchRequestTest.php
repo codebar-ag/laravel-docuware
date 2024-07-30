@@ -12,8 +12,8 @@ use Illuminate\Support\Facades\Event;
 it('can search documents', function () {
     Event::fake();
 
-    $fileCabinetId = config('laravel-docuware.tests.file_cabinet_id');
-    $dialogId = config('laravel-docuware.tests.dialog_id');
+    $fileCabinetId = env('DOCUWARE_TESTS_FILE_CABINET_ID');
+    $dialogId = env('DOCUWARE_TESTS_DIALOG_ID');
 
     $paginatorRequest = (new DocuWare)
         ->searchRequestBuilder()
@@ -37,8 +37,8 @@ it('can search documents', function () {
 it('can\'t search documents by more than two dates', function () {
     Event::fake();
 
-    $fileCabinetId = config('laravel-docuware.tests.file_cabinet_id');
-    $dialogId = config('laravel-docuware.tests.dialog_id');
+    $fileCabinetId = env('DOCUWARE_TESTS_FILE_CABINET_ID');
+    $dialogId = env('DOCUWARE_TESTS_DIALOG_ID');
 
     $this->expectException(UnableToSearch::class);
 
@@ -62,8 +62,8 @@ it('can\'t search documents by more than two dates', function () {
 it('can override search documents dates filter by using same operator', function () {
     Event::fake();
 
-    $fileCabinetId = config('laravel-docuware.tests.file_cabinet_id');
-    $dialogId = config('laravel-docuware.tests.dialog_id');
+    $fileCabinetId = env('DOCUWARE_TESTS_FILE_CABINET_ID');
+    $dialogId = env('DOCUWARE_TESTS_DIALOG_ID');
 
     $paginatorRequest = (new DocuWare)
         ->searchRequestBuilder()
@@ -88,8 +88,8 @@ it('can override search documents dates filter by using same operator', function
 it('can override search documents dates filter by using equal operator', function () {
     Event::fake();
 
-    $fileCabinetId = config('laravel-docuware.tests.file_cabinet_id');
-    $dialogId = config('laravel-docuware.tests.dialog_id');
+    $fileCabinetId = env('DOCUWARE_TESTS_FILE_CABINET_ID');
+    $dialogId = env('DOCUWARE_TESTS_DIALOG_ID');
 
     $paginatorRequest = (new DocuWare)
         ->searchRequestBuilder()
@@ -113,8 +113,8 @@ it('can override search documents dates filter by using equal operator', functio
 it('can\'t search documents by diverged date range', function () {
     Event::fake();
 
-    $fileCabinetId = config('laravel-docuware.tests.file_cabinet_id');
-    $dialogId = config('laravel-docuware.tests.dialog_id');
+    $fileCabinetId = env('DOCUWARE_TESTS_FILE_CABINET_ID');
+    $dialogId = env('DOCUWARE_TESTS_DIALOG_ID');
 
     $this->expectException(UnableToSearch::class);
 
@@ -137,8 +137,8 @@ it('can\'t search documents by diverged date range', function () {
 it('can search documents dates filter in future', function () {
     Event::fake();
 
-    $fileCabinetId = config('laravel-docuware.tests.file_cabinet_id');
-    $dialogId = config('laravel-docuware.tests.dialog_id');
+    $fileCabinetId = env('DOCUWARE_TESTS_FILE_CABINET_ID');
+    $dialogId = env('DOCUWARE_TESTS_DIALOG_ID');
 
     $paginatorRequest = (new DocuWare)
         ->searchRequestBuilder()
@@ -161,8 +161,8 @@ it('can search documents dates filter in future', function () {
 it('can search documents dates filter in past', function () {
     Event::fake();
 
-    $fileCabinetId = config('laravel-docuware.tests.file_cabinet_id');
-    $dialogId = config('laravel-docuware.tests.dialog_id');
+    $fileCabinetId = env('DOCUWARE_TESTS_FILE_CABINET_ID');
+    $dialogId = env('DOCUWARE_TESTS_DIALOG_ID');
 
     $paginatorRequest = (new DocuWare)
         ->searchRequestBuilder()
@@ -186,7 +186,7 @@ it('can search documents with null values', function () {
     Event::fake();
 
     $fileCabinetIds = [
-        config('laravel-docuware.tests.file_cabinet_id'),
+        env('DOCUWARE_TESTS_FILE_CABINET_ID'),
     ];
 
     $paginatorRequest = (new DocuWare)
@@ -208,7 +208,7 @@ it('can search documents with null values', function () {
 it('can search documents with multiple values', function () {
     Event::fake();
 
-    $fileCabinetId = config('laravel-docuware.tests.file_cabinet_id');
+    $fileCabinetId = env('DOCUWARE_TESTS_FILE_CABINET_ID');
     $fileContent = '::fake-file-content::';
     $fileName = 'example.txt';
 

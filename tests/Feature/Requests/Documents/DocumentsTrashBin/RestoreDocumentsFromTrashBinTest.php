@@ -10,13 +10,13 @@ it('can restore documents in trash', function () {
     Event::fake();
 
     $document = $this->connector->send(new CreateDataRecord(
-        config('laravel-docuware.tests.file_cabinet_id'),
+        env('DOCUWARE_TESTS_FILE_CABINET_ID'),
         file_get_contents(__DIR__.'/../../../../Fixtures/files/test-1.pdf'),
         'test-1.pdf',
     ))->dto();
 
     $this->connector->send(new DeleteDocument(
-        config('laravel-docuware.tests.file_cabinet_id'),
+        env('DOCUWARE_TESTS_FILE_CABINET_ID'),
         $document->id,
     ))->dto();
 

@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Event;
 it('can upload document without file name and file content and delete it', function () {
     Event::fake();
 
-    $fileCabinetId = config('laravel-docuware.tests.file_cabinet_id');
+    $fileCabinetId = env('DOCUWARE_TESTS_FILE_CABINET_ID');
 
     $document = $this->connector->send(new CreateDataRecord(
         $fileCabinetId,
@@ -34,7 +34,7 @@ it('can upload document without file name and file content and delete it', funct
 it('can upload document with index values and delete it', function () {
     Event::fake();
 
-    $fileCabinetId = config('laravel-docuware.tests.file_cabinet_id');
+    $fileCabinetId = env('DOCUWARE_TESTS_FILE_CABINET_ID');
     $fileContent = '::fake-file-content::';
     $fileName = 'example.txt';
 

@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Event;
 it('can list fields for a file cabinet', function () {
     Event::fake();
 
-    $fileCabinetId = config('laravel-docuware.tests.file_cabinet_id');
+    $fileCabinetId = env('DOCUWARE_TESTS_FILE_CABINET_ID');
 
     $fields = $this->connector->send(new GetFieldsRequest($fileCabinetId))->dto();
 

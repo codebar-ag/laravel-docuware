@@ -32,12 +32,12 @@ function clearFiles(): void
     $connector = getConnector();
 
     $paginator = $connector->send(new GetDocumentsFromAFileCabinet(
-        config('laravel-docuware.tests.file_cabinet_id')
+        env('DOCUWARE_TESTS_FILE_CABINET_ID')
     ))->dto();
 
     foreach ($paginator->documents as $document) {
         $connector->send(new DeleteDocument(
-            config('laravel-docuware.tests.file_cabinet_id'),
+            env('DOCUWARE_TESTS_FILE_CABINET_ID'),
             $document->id,
         ))->dto();
     }

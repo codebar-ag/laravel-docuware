@@ -9,7 +9,7 @@ use Illuminate\Support\Sleep;
 it('can unclip 2 documents', function () {
     Event::fake();
 
-    $fileCabinetId = config('laravel-docuware.tests.basket_id');
+    $fileCabinetId = env('DOCUWARE_TESTS_BASKET_ID');
     $path = __DIR__.'/../../../../Fixtures/files';
 
     cleanup($this->connector, $fileCabinetId);

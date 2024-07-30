@@ -8,8 +8,8 @@ use Illuminate\Support\Facades\Event;
 it('can get a dialog', function () {
     Event::fake();
 
-    $fileCabinetId = config('laravel-docuware.tests.file_cabinet_id');
-    $dialogId = config('laravel-docuware.tests.dialog_id');
+    $fileCabinetId = env('DOCUWARE_TESTS_FILE_CABINET_ID');
+    $dialogId = env('DOCUWARE_TESTS_DIALOG_ID');
 
     $dialog = $this->connector->send(new GetASpecificDialog($fileCabinetId, $dialogId))->dto();
 

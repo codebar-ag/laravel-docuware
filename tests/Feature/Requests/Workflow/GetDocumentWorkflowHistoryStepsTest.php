@@ -12,7 +12,7 @@ it('can get document workflow history', function () {
     Event::fake();
 
     $document = $this->connector->send(new CreateDataRecord(
-        config('laravel-docuware.tests.file_cabinet_id'),
+        env('DOCUWARE_TESTS_FILE_CABINET_ID'),
         '::fake-file-content::',
         'example.txt'
     ))->dto();
@@ -20,7 +20,7 @@ it('can get document workflow history', function () {
     Sleep::for(5)->seconds();
 
     $history = $this->connector->send(new GetDocumentWorkflowHistory(
-        config('laravel-docuware.tests.file_cabinet_id'),
+        env('DOCUWARE_TESTS_FILE_CABINET_ID'),
         $document->id
     ))->dto();
 

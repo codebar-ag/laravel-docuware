@@ -214,7 +214,7 @@ $connector = new DocuWareConnector(
 );
 ```
 
-### Extending the connector
+### Extending the connector (EXAMPLE)
 
 We understand it may be repetitive to pass the configuration every time you create a new connector.
 
@@ -230,7 +230,7 @@ namespace App\Connectors;
 use CodebarAg\DocuWare\Connectors\DocuWareConnector;
 use CodebarAg\DocuWare\DTO\Config\ConfigWithCredentials;
 
-class CustomDocuWareConnector extends DocuWareConnector
+class YourOwnDocuWareConnector extends DocuWareConnector
 {
     public function __construct() {
         $configuration = new ConfigWithCredentials(
@@ -249,7 +249,7 @@ class CustomDocuWareConnector extends DocuWareConnector
 use App\Connectors\CustomDocuWareConnector;
 use CodebarAg\DocuWare\DTO\Config\ConfigWithCredentials;
 
-$connector = new CustomDocuWareConnector();
+$connector = new YourOwnDocuWareConnector();
 ```
 
 

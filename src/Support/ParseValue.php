@@ -3,7 +3,7 @@
 namespace CodebarAg\DocuWare\Support;
 
 use Carbon\Carbon;
-use CodebarAg\DocuWare\DTO\TableRow;
+use CodebarAg\DocuWare\DTO\Documents\TableRow;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;

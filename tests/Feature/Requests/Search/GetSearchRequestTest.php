@@ -2,11 +2,11 @@
 
 use Carbon\Carbon;
 use CodebarAg\DocuWare\DocuWare;
-use CodebarAg\DocuWare\DTO\DocumentIndex\IndexTextDTO;
-use CodebarAg\DocuWare\DTO\DocumentPaginator;
+use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexTextDTO;
+use CodebarAg\DocuWare\DTO\Documents\DocumentPaginator;
 use CodebarAg\DocuWare\Events\DocuWareResponseLog;
 use CodebarAg\DocuWare\Exceptions\UnableToSearch;
-use CodebarAg\DocuWare\Requests\Document\PostDocumentRequest;
+use CodebarAg\DocuWare\Requests\FileCabinets\Upload\CreateDataRecord;
 use Illuminate\Support\Facades\Event;
 
 it('can search documents', function () {
@@ -15,7 +15,7 @@ it('can search documents', function () {
     $fileCabinetId = config('laravel-docuware.tests.file_cabinet_id');
     $dialogId = config('laravel-docuware.tests.dialog_id');
 
-    $paginatorRequest = (new DocuWare())
+    $paginatorRequest = (new DocuWare)
         ->searchRequestBuilder()
         ->fileCabinet($fileCabinetId)
         ->dialog($dialogId)
@@ -42,7 +42,7 @@ it('can\'t search documents by more than two dates', function () {
 
     $this->expectException(UnableToSearch::class);
 
-    $request = (new DocuWare())
+    $request = (new DocuWare)
         ->searchRequestBuilder()
         ->fileCabinet($fileCabinetId)
         ->dialog($dialogId)
@@ -65,7 +65,7 @@ it('can override search documents dates filter by using same operator', function
     $fileCabinetId = config('laravel-docuware.tests.file_cabinet_id');
     $dialogId = config('laravel-docuware.tests.dialog_id');
 
-    $paginatorRequest = (new DocuWare())
+    $paginatorRequest = (new DocuWare)
         ->searchRequestBuilder()
         ->fileCabinet($fileCabinetId)
         ->dialog($dialogId)
@@ -91,7 +91,7 @@ it('can override search documents dates filter by using equal operator', functio
     $fileCabinetId = config('laravel-docuware.tests.file_cabinet_id');
     $dialogId = config('laravel-docuware.tests.dialog_id');
 
-    $paginatorRequest = (new DocuWare())
+    $paginatorRequest = (new DocuWare)
         ->searchRequestBuilder()
         ->fileCabinet($fileCabinetId)
         ->dialog($dialogId)
@@ -118,7 +118,7 @@ it('can\'t search documents by diverged date range', function () {
 
     $this->expectException(UnableToSearch::class);
 
-    $request = (new DocuWare())
+    $request = (new DocuWare)
         ->searchRequestBuilder()
         ->fileCabinet($fileCabinetId)
         ->dialog($dialogId)
@@ -140,7 +140,7 @@ it('can search documents dates filter in future', function () {
     $fileCabinetId = config('laravel-docuware.tests.file_cabinet_id');
     $dialogId = config('laravel-docuware.tests.dialog_id');
 
-    $paginatorRequest = (new DocuWare())
+    $paginatorRequest = (new DocuWare)
         ->searchRequestBuilder()
         ->fileCabinet($fileCabinetId)
         ->dialog($dialogId)
@@ -164,7 +164,7 @@ it('can search documents dates filter in past', function () {
     $fileCabinetId = config('laravel-docuware.tests.file_cabinet_id');
     $dialogId = config('laravel-docuware.tests.dialog_id');
 
-    $paginatorRequest = (new DocuWare())
+    $paginatorRequest = (new DocuWare)
         ->searchRequestBuilder()
         ->fileCabinet($fileCabinetId)
         ->dialog($dialogId)
@@ -189,7 +189,7 @@ it('can search documents with null values', function () {
         config('laravel-docuware.tests.file_cabinet_id'),
     ];
 
-    $paginatorRequest = (new DocuWare())
+    $paginatorRequest = (new DocuWare)
         ->searchRequestBuilder()
         ->fileCabinets($fileCabinetIds)
         ->page(null)
@@ -212,7 +212,7 @@ it('can search documents with multiple values', function () {
     $fileContent = '::fake-file-content::';
     $fileName = 'example.txt';
 
-    $documentOne = $this->connector->send(new PostDocumentRequest(
+    $documentOne = $this->connector->send(new CreateDataRecord(
         $fileCabinetId,
         $fileContent,
         $fileName,
@@ -222,7 +222,7 @@ it('can search documents with multiple values', function () {
         ]),
     ))->dto();
 
-    $documentTwo = $this->connector->send(new PostDocumentRequest(
+    $documentTwo = $this->connector->send(new CreateDataRecord(
         $fileCabinetId,
         $fileContent,
         $fileName,
@@ -232,7 +232,7 @@ it('can search documents with multiple values', function () {
         ]),
     ))->dto();
 
-    $documentThree = $this->connector->send(new PostDocumentRequest(
+    $documentThree = $this->connector->send(new CreateDataRecord(
         $fileCabinetId,
         $fileContent,
         $fileName,
@@ -243,7 +243,7 @@ it('can search documents with multiple values', function () {
     ))->dto();
 
     // Should filter down to documentOne and documentTwo. documentThree should be filtered out.
-    $paginatorRequestBothDocuments = (new DocuWare())
+    $paginatorRequestBothDocuments = (new DocuWare)
         ->searchRequestBuilder()
         ->fileCabinets([$fileCabinetId])
         ->page(null)

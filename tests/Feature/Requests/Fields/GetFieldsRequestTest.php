@@ -1,6 +1,6 @@
 <?php
 
-use CodebarAg\DocuWare\DTO\Field;
+use CodebarAg\DocuWare\DTO\Documents\Field;
 use CodebarAg\DocuWare\Events\DocuWareResponseLog;
 use CodebarAg\DocuWare\Requests\Fields\GetFieldsRequest;
 use Illuminate\Support\Collection;

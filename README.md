@@ -1216,7 +1216,7 @@ CodebarAg\DocuWare\DTO\Document {
 ```
 
 ```php
-CodebarAg\DocuWare\DTO\Section {#23784▶
+CodebarAg\DocuWare\DTO\Section {
   +id: "5589-5525"
   +contentType: "text/plain"
   +haveMorePages: true

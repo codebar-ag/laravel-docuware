@@ -1095,51 +1095,43 @@ CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexTextDTO {
 
 ```php
 CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexNumericDTO {
-  +name: "FIELD_NUMERIC"                                 // string
-  +value: 1                                             // null|int
+  +name: "FIELD_NUMERIC"                            // string
+  +value: 1                                         // null|int
 }
 ```
 
 ```php
 CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexDecimalDTO {
-  +name: "FIELD_DECIMAL"                                  // string
-  +value: 1.00                                           // null|int|float
+  +name: "FIELD_DECIMAL"                            // string
+  +value: 1.00                                      // null|int|float
 }
 ```
 
 ```php
- {
-  +name: "FIELD_DATE"                                      // string
-  +value: now(),                                           // null|Carbon
+CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexDateDTO {
+  +name: "FIELD_DATE"                               // string
+  +value: now(),                                    // null|Carbon
 }
 ```
 
 ```php
- {
-  +name: "FIELD_DATETIME"                                     // string
-  +value: now(),                                             // null|Carbon
+CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexDateTimeDTO {
+  +name: "FIELD_DATETIME"                           // string
+  +value: now(),                                    // null|Carbon
 }
 ```
 
 ```php
- {
-  +name: "FIELD_TABLE"                                        // string
-  +value: collect([
-      0 => [
-         [
-            'NAME' => 'TABLE_ID',
-            'VALUE' => '1',
-         ],
-         [
-            'NAME' => 'TABLE_DATE',
-            'VALUE' => Carbon::class 
-         ],
-         [
-            'NAME' => 'TABLE_DECIMALE',
-            'VALUE' => 1.00,
-         ],
-      ]
-])                                                         // null|Collection|array
+CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexKeywordDTO {
+  +name: "FIELD_KEYWORD"                            // string
+  +value: "Value"                                   // null|string
+}
+```
+
+```php
+CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexMemoDTO {
+  +name: "FIELD_MEMO"                               // string
+  +value: "Value"                                   // null|string
 }
 ```
 

@@ -42,7 +42,7 @@ class IndexTableDTO
     {
         return [
             'ColumnValue' => $indexes
-                ->map(fn (IndexTextDTO|IndexNumericDTO|IndexDecimalDTO|IndexDateDTO|IndexDateTimeDTO $index) => $index->values())
+                ->map(fn (IndexTextDTO|IndexNumericDTO|IndexDecimalDTO|IndexDateDTO|IndexDateTimeDTO|IndexKeywordDTO|IndexMemoDTO $index) => $index->values())
                 ->filter()
                 ->values()
                 ->toArray(),

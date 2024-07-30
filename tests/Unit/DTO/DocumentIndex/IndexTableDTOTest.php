@@ -2,81 +2,105 @@
 
 namespace CodebarAg\DocuWare\Tests\Unit\DTO;
 
+use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexDateDTO;
+use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexDateTimeDTO;
+use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexDecimalDTO;
+use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexNumericDTO;
 use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexTableDTO;
+use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexTextDTO;
+use Illuminate\Support\Arr;
 
-it('create prepare index text dto', function () {
-
+it('create prepare index text dto using dto', function () {
     $name = 'TABLE';
-    $rows = collect([
-        0 => [
-            [
-                'NAME_WRONG' => 'TABLE_ID',
-                'VALUE_WRONG' => '1',
-            ],
-            [
-                'NAME_WRONG' => 'TABLE_DECIMALE',
-                'VALUE_WRONG' => 1.00,
-            ],
-        ],
-        1 => [
-            [
-                'NAME' => 'TABLE_ID',
-                'VALUE' => '2',
-            ],
-            [
-                'NAME' => 'TABLE_DECIMALE',
-                'VALUE' => 2.00,
-            ],
-        ],
-        2 => [
-            [
-                'NAME' => 'TABLE_ID',
-                'VALUE' => '3',
-            ],
-            [
-                'NAME_WRONG' => 'TABLE_DECIMALE',
-                'VALUE_WRONG' => 3.00,
-            ],
-        ],
+
+    $now = now();
+
+    $dtoRows = collect([
+        collect([
+            IndexTextDTO::make('TEXT', 'project_1'),
+            IndexNumericDTO::make('INT', 1),
+            IndexDecimalDTO::make('DECIMAL', 1.1),
+            IndexDateDTO::make('DATE', $now),
+            IndexDateTimeDTO::make('DATETIME', $now),
+        ]),
+        collect([
+            IndexTextDTO::make('TEXT', 'project_2'),
+            IndexNumericDTO::make('INT', 2),
+            IndexDecimalDTO::make('DECIMAL', 2.2),
+            IndexDateDTO::make('DATE', $now),
+            IndexDateTimeDTO::make('DATETIME', $now),
+        ]),
     ]);
 
-    $instance = IndexTableDTO::make($name, $rows);
+    $field = IndexTableDTO::make($name, $dtoRows)->values();
 
-    expect($instance)
-        ->toBeInstanceOf(IndexTableDTO::class)
-        ->and($instance->values())
+    expect(Arr::get($field, 'FieldName'))
+        ->toBe('TABLE')
+        ->and(Arr::get($field, 'ItemElementName'))
+        ->toBe('Table')
+        ->and(Arr::get($field, 'Item.$type'))
+        ->toBe('DocumentIndexFieldTable')
+        ->and(Arr::get($field, 'Item.Row'))
         ->toBeArray()
-        ->toMatchArray([
-            'FieldName' => 'TABLE',
-            'Item' => [
-                '$type' => 'DocumentIndexFieldTable',
-                'Row' => [
+        ->and(Arr::get($field, 'Item.Row'))
+        ->toBe([
+            [
+                'ColumnValue' => [
                     [
-                        'ColumnValue' => [
-                            [
-                                'FieldName' => 'TABLE_ID',
-                                'Item' => '2',
-                                'ItemElementName' => 'String',
-                            ],
-                            [
-                                'FieldName' => 'TABLE_DECIMALE',
-                                'Item' => (float) 2.0,
-                                'ItemElementName' => 'Decimal',
-                            ],
-                        ],
+                        'FieldName' => 'TEXT',
+                        'Item' => 'project_1',
+                        'ItemElementName' => 'String',
                     ],
                     [
-                        'ColumnValue' => [
-                            [
-                                'FieldName' => 'TABLE_ID',
-                                'Item' => '3',
-                                'ItemElementName' => 'String',
-                            ],
-                        ],
+                        'FieldName' => 'INT',
+                        'Item' => 1,
+                        'ItemElementName' => 'Int',
+                    ],
+                    [
+                        'FieldName' => 'DECIMAL',
+                        'Item' => 1.1,
+                        'ItemElementName' => 'Decimal',
+                    ],
+                    [
+                        'FieldName' => 'DATE',
+                        'Item' => $now->toDateString(),
+                        'ItemElementName' => 'String',
+                    ],
+                    [
+                        'FieldName' => 'DATETIME',
+                        'Item' => $now->toDateTimeString(),
+                        'ItemElementName' => 'String',
                     ],
                 ],
             ],
-            'ItemElementName' => 'Table',
+            [
+                'ColumnValue' => [
+                    [
+                        'FieldName' => 'TEXT',
+                        'Item' => 'project_2',
+                        'ItemElementName' => 'String',
+                    ],
+                    [
+                        'FieldName' => 'INT',
+                        'Item' => 2,
+                        'ItemElementName' => 'Int',
+                    ],
+                    [
+                        'FieldName' => 'DECIMAL',
+                        'Item' => 2.2,
+                        'ItemElementName' => 'Decimal',
+                    ],
+                    [
+                        'FieldName' => 'DATE',
+                        'Item' => $now->toDateString(),
+                        'ItemElementName' => 'String',
+                    ],
+                    [
+                        'FieldName' => 'DATETIME',
+                        'Item' => $now->toDateTimeString(),
+                        'ItemElementName' => 'String',
+                    ],
+                ],
+            ],
         ]);
-
 })->group('dto');

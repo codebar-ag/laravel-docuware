@@ -120,14 +120,14 @@ then optimize the processes that power the core of your business.
 | Documents/ClipUnclip&StapleUnstaple | Unclip                                                      | ✅         |      |
 | Documents/ClipUnclip&StapleUnstaple | Staple                                                      | ✅         |      |
 | Documents/ClipUnclip&StapleUnstaple | Unstaple                                                    | ✅         |      |
-| Documents/AnnotationsStamps         | AddStampWithPosition                                        | ❌         |      |
-| Documents/AnnotationsStamps         | AddStampWithBestPosition                                    | ❌         |      |
-| Documents/AnnotationsStamps         | AddTextAnnotation                                           | ❌         |      |
-| Documents/AnnotationsStamps         | AddRectEntryAnnotation                                      | ❌         |      |
-| Documents/AnnotationsStamps         | AddLineEntryAnnotation                                      | ❌         |      |
+| Documents/AnnotationsStamps         | AddStampWithPosition                                        | 🕣        |      |
+| Documents/AnnotationsStamps         | AddStampWithBestPosition                                    | 🕣        |      |
+| Documents/AnnotationsStamps         | AddTextAnnotation                                           | 🕣        |      |
+| Documents/AnnotationsStamps         | AddRectEntryAnnotation                                      | 🕣        |      |
+| Documents/AnnotationsStamps         | AddLineEntryAnnotation                                      | 🕣        |      |
 | Documents/AnnotationsStamps         | AddPolyLineEntryAnnotation                                  | ❌         | -    |
 | Documents/AnnotationsStamps         | DeleteAnnotation                                            | ❌         | -    |
-| Documents/AnnotationsStamps         | UpdateTextAnnotation                                        | ❌         |      |
+| Documents/AnnotationsStamps         | UpdateTextAnnotation                                        | 🕣        |      |
 | Documents/AnnotationsStamps         | Get Stamps                                                  | ❌         | -    |
 | Documents/DocumentsTrashBin         | Get Documents                                               | ✅         |      |
 | Documents/DocumentsTrashBin         | Delete Documents                                            | ✅         |      |

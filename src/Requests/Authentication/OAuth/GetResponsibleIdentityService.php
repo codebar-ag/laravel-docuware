@@ -18,6 +18,10 @@ class GetResponsibleIdentityService extends SoloRequest implements Cacheable
 
     protected Method $method = Method::GET;
 
+    public function __construct(
+        protected null|string $url = null
+    ) {}
+
     public function resolveEndpoint(): string
     {
         $base = config('laravel-docuware.credentials.url').'/DocuWare/Platform';

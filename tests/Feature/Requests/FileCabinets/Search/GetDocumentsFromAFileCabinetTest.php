@@ -23,5 +23,7 @@ it('can get all documents', function () {
         config('laravel-docuware.tests.file_cabinet_id')
     ))->dto();
 
+    ray($documents);
+
     Event::assertDispatched(DocuWareResponseLog::class);
 });

@@ -2,7 +2,6 @@
 
 namespace CodebarAg\DocuWare\DTO\Documents\DocumentIndex;
 
-use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 
 class IndexTableDTO
@@ -12,7 +11,7 @@ class IndexTableDTO
         public null|Collection|array $rows,
     ) {}
 
-    public static function make(string $name, null|Collection|array $rows): self
+    public static function make(string $name, Collection|array $rows): self
     {
         return new self($name, $rows);
     }
@@ -32,40 +31,18 @@ class IndexTableDTO
     protected function rowsCollection(): array
     {
         return collect($this->rows ?? [])->map(function ($row) {
-
-            $indexes = collect($row)->map(function ($column) {
-
-                if (! Arr::has($column, ['NAME', 'VALUE'])) {
-                    return null;
-                }
-
-                $name = Arr::get($column, 'NAME');
-                $value = Arr::get($column, 'VALUE');
-
-                return PrepareTableDTO::make($name, $value);
-
-            })
-                ->filter()
-                ->values();
-
-            if ($indexes->isEmpty()) {
-                return null;
-            }
-
-            return self::makeRowContent($indexes);
-
+            return self::makeRowContent(collect($row));
         })
             ->filter()
             ->values()
             ->toArray();
-
     }
 
     public static function makeRowContent(Collection $indexes): array
     {
         return [
             'ColumnValue' => $indexes
-                ->map(fn (IndexTextDTO|IndexDateDTO|IndexDecimalDTO $index) => $index->values())
+                ->map(fn (IndexTextDTO|IndexNumericDTO|IndexDecimalDTO|IndexDateDTO|IndexDateTimeDTO|IndexKeywordDTO|IndexMemoDTO $index) => $index->values())
                 ->filter()
                 ->values()
                 ->toArray(),

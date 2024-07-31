@@ -214,7 +214,7 @@ $connector = new DocuWareConnector(
 );
 ```
 
-### Extending the connector
+### Extending the connector (EXAMPLE)
 
 We understand it may be repetitive to pass the configuration every time you create a new connector.
 
@@ -230,7 +230,7 @@ namespace App\Connectors;
 use CodebarAg\DocuWare\Connectors\DocuWareConnector;
 use CodebarAg\DocuWare\DTO\Config\ConfigWithCredentials;
 
-class CustomDocuWareConnector extends DocuWareConnector
+class YourOwnDocuWareConnector extends DocuWareConnector
 {
     public function __construct() {
         $configuration = new ConfigWithCredentials(
@@ -249,7 +249,7 @@ class CustomDocuWareConnector extends DocuWareConnector
 use App\Connectors\CustomDocuWareConnector;
 use CodebarAg\DocuWare\DTO\Config\ConfigWithCredentials;
 
-$connector = new CustomDocuWareConnector();
+$connector = new YourOwnDocuWareConnector();
 ```
 
 
@@ -461,6 +461,7 @@ $image = $connector->send(new GetDocumentPreviewRequest($fileCabinetId, $documen
 #### Create Data Record
 ```php
 use CodebarAg\DocuWare\Requests\FileCabinets\Upload\CreateDataRecord;
+use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexTextDTO;
 
 $document = $connector->send(new CreateDataRecord(
     $fileCabinetId,
@@ -472,9 +473,48 @@ $document = $connector->send(new CreateDataRecord(
 ))->dto();
 ```
 
+#### Create Table Data Record
+```php
+use CodebarAg\DocuWare\Requests\FileCabinets\Upload\CreateDataRecord;
+use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexDateDTO;
+use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexDateTimeDTO;
+use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexDecimalDTO;
+use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexNumericDTO;
+use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexTableDTO;
+use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexTextDTO;
+
+$tableRows = collect([
+    collect([
+        IndexTextDTO::make('TEXT', 'project_1'),
+        IndexNumericDTO::make('INT', 1),
+        IndexDecimalDTO::make('DECIMAL', 1.1),
+        IndexDateDTO::make('DATE', $now),
+        IndexDateTimeDTO::make('DATETIME', $now),
+    ]),
+    collect([
+        IndexTextDTO::make('TEXT', 'project_2'),
+        IndexNumericDTO::make('INT', 2),
+        IndexDecimalDTO::make('DECIMAL', 2.2),
+        IndexDateDTO::make('DATE', $now),
+        IndexDateTimeDTO::make('DATETIME', $now),
+    ]),
+]);
+
+
+$document = $connector->send(new CreateDataRecord(
+    $fileCabinetId,
+    null,
+    null,
+    collect([
+        IndexTableDTO::make('TABLE_NAME', $tableRows)
+    ]),
+))->dto();
+```
+
 #### Update Index Values
 ```php
 use CodebarAg\DocuWare\Requests\Documents\UpdateIndexValues\UpdateIndexValues;
+use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexDateDTO;
 
 $response = $connector->send(new UpdateIndexValues(
     $fileCabinetId,
@@ -482,6 +522,44 @@ $response = $connector->send(new UpdateIndexValues(
     collect([
         IndexTextDTO::make('DOCUMENT_LABEL', '::new-data-entry::'),
     ])
+))->dto();
+```
+
+#### Update Table Data Record
+```php
+use CodebarAg\DocuWare\Requests\Documents\UpdateIndexValues\UpdateIndexValues;
+use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexDateDTO;
+use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexDateTimeDTO;
+use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexDecimalDTO;
+use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexNumericDTO;
+use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexTableDTO;
+use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexTextDTO;
+
+$tableRows = collect([
+    collect([
+        IndexTextDTO::make('TEXT', 'project_1'),
+        IndexNumericDTO::make('INT', 1),
+        IndexDecimalDTO::make('DECIMAL', 1.1),
+        IndexDateDTO::make('DATE', $now),
+        IndexDateTimeDTO::make('DATETIME', $now),
+    ]),
+    collect([
+        IndexTextDTO::make('TEXT', 'project_2'),
+        IndexNumericDTO::make('INT', 2),
+        IndexDecimalDTO::make('DECIMAL', 2.2),
+        IndexDateDTO::make('DATE', $now),
+        IndexDateTimeDTO::make('DATETIME', $now),
+    ]),
+]);
+
+
+$document = $connector->send(new UpdateIndexValues(
+    $fileCabinetId,
+    null,
+    null,
+    collect([
+        IndexTableDTO::make('TABLE_NAME', $tableRows)
+    ]),
 ))->dto();
 ```
 </details>
@@ -1017,51 +1095,43 @@ CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexTextDTO {
 
 ```php
 CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexNumericDTO {
-  +name: "FIELD_NUMERIC"                                 // string
-  +value: 1                                             // null|int
+  +name: "FIELD_NUMERIC"                            // string
+  +value: 1                                         // null|int
 }
 ```
 
 ```php
 CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexDecimalDTO {
-  +name: "FIELD_DECIMAL"                                  // string
-  +value: 1.00                                           // null|int|float
+  +name: "FIELD_DECIMAL"                            // string
+  +value: 1.00                                      // null|int|float
 }
 ```
 
 ```php
- {
-  +name: "FIELD_DATE"                                      // string
-  +value: now(),                                           // null|Carbon
+CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexDateDTO {
+  +name: "FIELD_DATE"                               // string
+  +value: now(),                                    // null|Carbon
 }
 ```
 
 ```php
- {
-  +name: "FIELD_DATETIME"                                     // string
-  +value: now(),                                             // null|Carbon
+CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexDateTimeDTO {
+  +name: "FIELD_DATETIME"                           // string
+  +value: now(),                                    // null|Carbon
 }
 ```
 
 ```php
- {
-  +name: "FIELD_TABLE"                                        // string
-  +value: collect([
-      0 => [
-         [
-            'NAME' => 'TABLE_ID',
-            'VALUE' => '1',
-         ],
-         [
-            'NAME' => 'TABLE_DATE',
-            'VALUE' => Carbon::class 
-         ],
-         [
-            'NAME' => 'TABLE_DECIMALE',
-            'VALUE' => 1.00,
-         ],
-      ]
-])                                                         // null|Collection|array
+CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexKeywordDTO {
+  +name: "FIELD_KEYWORD"                            // string
+  +value: "Value"                                   // null|string
+}
+```
+
+```php
+CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexMemoDTO {
+  +name: "FIELD_MEMO"                               // string
+  +value: "Value"                                   // null|string
 }
 ```
 

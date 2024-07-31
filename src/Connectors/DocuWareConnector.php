@@ -89,7 +89,7 @@ class DocuWareConnector extends Connector
 
     protected function getAuthenticationTokenEndpoint(): IdentityServiceConfiguration
     {
-        $responsibleIdentityServiceResponse = (new GetResponsibleIdentityService)->send();
+        $responsibleIdentityServiceResponse = (new GetResponsibleIdentityService($this->configuration->url))->send();
 
         $identityServiceConfigurationResponse = (new GetIdentityServiceConfiguration(
             identityServiceUrl: $responsibleIdentityServiceResponse->dto()->identityServiceUrl

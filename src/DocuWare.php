@@ -38,8 +38,18 @@ class DocuWare
         return new DocuWareSearchRequestBuilder;
     }
 
-    public function url(null|ConfigWithCredentials|ConfigWithCredentialsTrustedUser $configuration = null): DocuWareUrl
+    public function url(
+        string $url,
+        string $username,
+        string $password,
+        string $passphrase
+    ): DocuWareUrl
     {
-        return new DocuWareUrl($configuration);
+        return new DocuWareUrl(
+            url: $url,
+            username: $username,
+            password: $password,
+            passphrase: $passphrase,
+        );
     }
 }

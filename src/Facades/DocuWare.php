@@ -41,7 +41,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static int documentCount(string $fileCabinetId, string $dialogId)
  * @method static void deleteDocument(string $fileCabinetId, int $documentId)
  * @method static DocuWareSearchRequestBuilder search()
- * @method static DocuWareUrl url(null|ConfigWithCredentials|ConfigWithCredentialsTrustedUser $configuration = null)
+ * @method static DocuWareUrl url(string $url, string $username, string $password, string $passphrase)
  */
 class DocuWare extends Facade
 {

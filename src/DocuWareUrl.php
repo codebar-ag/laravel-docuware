@@ -3,8 +3,6 @@
 namespace CodebarAg\DocuWare;
 
 use Carbon\Carbon;
-use CodebarAg\DocuWare\DTO\Config\ConfigWithCredentials;
-use CodebarAg\DocuWare\DTO\Config\ConfigWithCredentialsTrustedUser;
 use CodebarAg\DocuWare\Exceptions\UnableToMakeUrl;
 use CodebarAg\DocuWare\Support\EnsureValidCredentials;
 use CodebarAg\DocuWare\Support\EnsureValidPassphrase;

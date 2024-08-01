@@ -3,8 +3,6 @@
 namespace CodebarAg\DocuWare;
 
 use CodebarAg\DocuWare\DTO\Authentication\OAuth\RequestToken as RequestTokenDto;
-use CodebarAg\DocuWare\DTO\Config\ConfigWithCredentials;
-use CodebarAg\DocuWare\DTO\Config\ConfigWithCredentialsTrustedUser;
 use CodebarAg\DocuWare\Requests\Authentication\OAuth\GetIdentityServiceConfiguration;
 use CodebarAg\DocuWare\Requests\Authentication\OAuth\GetResponsibleIdentityService;
 use CodebarAg\DocuWare\Requests\Authentication\OAuth\RequestTokenWithCredentials;
@@ -43,8 +41,7 @@ class DocuWare
         string $username,
         string $password,
         string $passphrase
-    ): DocuWareUrl
-    {
+    ): DocuWareUrl {
         return new DocuWareUrl(
             url: $url,
             username: $username,

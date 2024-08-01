@@ -23,9 +23,9 @@ class DocuWare
 
         $requestTokenResponse = (new RequestTokenWithCredentials(
             tokenEndpoint: $identityServiceConfigurationResponse->dto()->tokenEndpoint,
+            clientId: $clientId,
             username: $username,
             password: $password,
-            clientId: $clientId,
         ))->send();
 
         return $requestTokenResponse->dto();
@@ -36,8 +36,17 @@ class DocuWare
         return new DocuWareSearchRequestBuilder;
     }
 
-    public function url(): DocuWareUrl
-    {
-        return new DocuWareUrl;
+    public function url(
+        string $url,
+        string $username,
+        string $password,
+        ?string $passphrase = null
+    ): DocuWareUrl {
+        return new DocuWareUrl(
+            url: $url,
+            username: $username,
+            password: $password,
+            passphrase: $passphrase,
+        );
     }
 }

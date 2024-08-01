@@ -18,6 +18,13 @@ class DocuWareUrl
 
     protected ?Carbon $validUntil = null;
 
+    public function __construct(
+        public string $url,
+        public string $username,
+        public string $password,
+        public ?string $passphrase,
+    ) {}
+
     public function fileCabinet(string $fileCabinetId): self
     {
         $this->fileCabinetId = $fileCabinetId;
@@ -52,8 +59,8 @@ class DocuWareUrl
 
         $credentials = sprintf(
             'User=%s\nPwd=%s',
-            config('laravel-docuware.credentials.username'),
-            config('laravel-docuware.credentials.password'),
+            $this->username,
+            $this->password,
         );
 
         $lc = URL::formatWithBase64($credentials);
@@ -79,7 +86,7 @@ class DocuWareUrl
         }
 
         // Source: https://support.docuware.com/en-US/forums/help-with-technical-problems/ea9618df-c491-e911-80e7-0003ff59a7c6
-        $key = utf8_encode(config('laravel-docuware.passphrase'));
+        $key = utf8_encode($this->passphrase);
         $passphrase = hash('sha512', $key, true);
         $encryption_key = substr($passphrase, 0, 32);
         $iv = substr($passphrase, 32, 16);
@@ -93,7 +100,7 @@ class DocuWareUrl
 
         return sprintf(
             '%s/DocuWare/Platform/WebClient/Integration?ep=%s',
-            config('laravel-docuware.credentials.url'),
+            $this->url,
             URL::format($encrypted),
         );
     }

@@ -36,7 +36,12 @@ it('can create encrypted url for a document in a basket', function () {
     $documentId = config('laravel-docuware.tests.document_id');
 
     $url = (new DocuWare)
-        ->url()
+        ->url(
+            url: config('laravel-docuware.credentials.url'),
+            username: config('laravel-docuware.credentials.username'),
+            password: config('laravel-docuware.credentials.password'),
+            passphrase: config('laravel-docuware.credentials.passphrase'),
+        )
         ->basket($basketId)
         ->document($documentId)
         ->validUntil(now()->addMinute())
@@ -51,4 +56,4 @@ it('can create encrypted url for a document in a basket', function () {
         $endpoint,
         $url,
     );
-});
+})->only();

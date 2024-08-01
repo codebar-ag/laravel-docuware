@@ -22,7 +22,7 @@ class DocuWareUrl
         public string $url,
         public string $username,
         public string $password,
-        public string $passphrase,
+        public ?string $passphrase,
     ) {}
 
     public function fileCabinet(string $fileCabinetId): self

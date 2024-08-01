@@ -5,6 +5,8 @@ namespace CodebarAg\DocuWare\Facades;
 use Carbon\Carbon;
 use CodebarAg\DocuWare\DocuWareSearchRequestBuilder;
 use CodebarAg\DocuWare\DocuWareUrl;
+use CodebarAg\DocuWare\DTO\Config\ConfigWithCredentials;
+use CodebarAg\DocuWare\DTO\Config\ConfigWithCredentialsTrustedUser;
 use CodebarAg\DocuWare\DTO\Cookie;
 use CodebarAg\DocuWare\DTO\Documents\Document;
 use CodebarAg\DocuWare\DTO\Documents\DocumentThumbnail;
@@ -39,7 +41,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static int documentCount(string $fileCabinetId, string $dialogId)
  * @method static void deleteDocument(string $fileCabinetId, int $documentId)
  * @method static DocuWareSearchRequestBuilder search()
- * @method static DocuWareUrl url()
+ * @method static DocuWareUrl url(null|ConfigWithCredentials|ConfigWithCredentialsTrustedUser $configuration)
  */
 class DocuWare extends Facade
 {

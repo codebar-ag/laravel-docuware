@@ -56,4 +56,4 @@ it('can create encrypted url for a document in a basket', function () {
         $endpoint,
         $url,
     );
-})->only();
+});

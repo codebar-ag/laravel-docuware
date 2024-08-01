@@ -12,12 +12,7 @@ DocuWare REST API. It is used to query the most common endpoints.
 [DocuWare REST API](https://developer.docuware.com/rest/index.html).
 See the documentation if you need further functionality. ⚠️
 
-## 💡 What is DocuWare?
-
-DocuWare provides cloud document management and workflow automation software
-that enables you to digitize, secure and work with business documents,
-then optimize the processes that power the core of your business.
-
+## Navigation
 <!-- TOC -->
   * [💡 What is DocuWare?](#-what-is-docuware)
   * [🛠 Requirements](#-requirements)
@@ -43,6 +38,12 @@ then optimize the processes that power the core of your business.
   * [🙏 Credits](#-credits)
   * [🎭 License](#-license)
 <!-- TOC -->
+
+## 💡 What is DocuWare?
+
+DocuWare provides cloud document management and workflow automation software
+that enables you to digitize, secure and work with business documents,
+then optimize the processes that power the core of your business.
 
 ## 🛠 Requirements
 

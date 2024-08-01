@@ -3,6 +3,8 @@
 namespace CodebarAg\DocuWare;
 
 use Carbon\Carbon;
+use CodebarAg\DocuWare\DTO\Config\ConfigWithCredentials;
+use CodebarAg\DocuWare\DTO\Config\ConfigWithCredentialsTrustedUser;
 use CodebarAg\DocuWare\Exceptions\UnableToMakeUrl;
 use CodebarAg\DocuWare\Support\EnsureValidCredentials;
 use CodebarAg\DocuWare\Support\EnsureValidPassphrase;
@@ -17,6 +19,10 @@ class DocuWareUrl
     protected ?int $documentId = null;
 
     protected ?Carbon $validUntil = null;
+
+    public function __construct(
+        public null|ConfigWithCredentials|ConfigWithCredentialsTrustedUser $configuration = null
+    ) {}
 
     public function fileCabinet(string $fileCabinetId): self
     {
@@ -52,8 +58,8 @@ class DocuWareUrl
 
         $credentials = sprintf(
             'User=%s\nPwd=%s',
-            config('laravel-docuware.credentials.username'),
-            config('laravel-docuware.credentials.password'),
+            $this->configuration->username ?? config('laravel-docuware.credentials.username'),
+            $this->configuration->password ?? config('laravel-docuware.credentials.password'),
         );
 
         $lc = URL::formatWithBase64($credentials);
@@ -79,7 +85,7 @@ class DocuWareUrl
         }
 
         // Source: https://support.docuware.com/en-US/forums/help-with-technical-problems/ea9618df-c491-e911-80e7-0003ff59a7c6
-        $key = utf8_encode(config('laravel-docuware.passphrase'));
+        $key = utf8_encode($this->configuration->passphrase ?? config('laravel-docuware.passphrase'));
         $passphrase = hash('sha512', $key, true);
         $encryption_key = substr($passphrase, 0, 32);
         $iv = substr($passphrase, 32, 16);
@@ -93,7 +99,7 @@ class DocuWareUrl
 
         return sprintf(
             '%s/DocuWare/Platform/WebClient/Integration?ep=%s',
-            config('laravel-docuware.credentials.url'),
+            $this->configuration->url ?? config('laravel-docuware.credentials.url'),
             URL::format($encrypted),
         );
     }

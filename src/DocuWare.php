@@ -3,6 +3,8 @@
 namespace CodebarAg\DocuWare;
 
 use CodebarAg\DocuWare\DTO\Authentication\OAuth\RequestToken as RequestTokenDto;
+use CodebarAg\DocuWare\DTO\Config\ConfigWithCredentials;
+use CodebarAg\DocuWare\DTO\Config\ConfigWithCredentialsTrustedUser;
 use CodebarAg\DocuWare\Requests\Authentication\OAuth\GetIdentityServiceConfiguration;
 use CodebarAg\DocuWare\Requests\Authentication\OAuth\GetResponsibleIdentityService;
 use CodebarAg\DocuWare\Requests\Authentication\OAuth\RequestTokenWithCredentials;
@@ -23,9 +25,9 @@ class DocuWare
 
         $requestTokenResponse = (new RequestTokenWithCredentials(
             tokenEndpoint: $identityServiceConfigurationResponse->dto()->tokenEndpoint,
+            clientId: $clientId,
             username: $username,
             password: $password,
-            clientId: $clientId,
         ))->send();
 
         return $requestTokenResponse->dto();
@@ -36,8 +38,8 @@ class DocuWare
         return new DocuWareSearchRequestBuilder;
     }
 
-    public function url(): DocuWareUrl
+    public function url(null|ConfigWithCredentials|ConfigWithCredentialsTrustedUser $configuration = null): DocuWareUrl
     {
-        return new DocuWareUrl;
+        return new DocuWareUrl($configuration);
     }
 }

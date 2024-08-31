@@ -4,8 +4,6 @@ namespace CodebarAg\DocuWare;
 
 use Carbon\Carbon;
 use CodebarAg\DocuWare\Exceptions\UnableToMakeUrl;
-use CodebarAg\DocuWare\Support\EnsureValidCredentials;
-use CodebarAg\DocuWare\Support\EnsureValidPassphrase;
 use CodebarAg\DocuWare\Support\URL;
 
 class DocuWareUrl
@@ -22,7 +20,7 @@ class DocuWareUrl
         public string $url,
         public string $username,
         public string $password,
-        public ?string $passphrase,
+        public string $passphrase,
     ) {}
 
     public function fileCabinet(string $fileCabinetId): self
@@ -107,10 +105,6 @@ class DocuWareUrl
 
     protected function guard(): void
     {
-        EnsureValidCredentials::check();
-
-        EnsureValidPassphrase::check();
-
         throw_if(
             is_null($this->documentId),
             UnableToMakeUrl::documentNotSet(),

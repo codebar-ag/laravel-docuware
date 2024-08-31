@@ -16,7 +16,7 @@ it('can create encrypted url for a document in a file cabinet', function () {
             url: config('laravel-docuware.credentials.url'),
             username: config('laravel-docuware.credentials.username'),
             password: config('laravel-docuware.credentials.password'),
-            passphrase: config('laravel-docuware.credentials.passphrase'),
+            passphrase: config('laravel-docuware.passphrase'),
         )
         ->fileCabinet($fileCabinetId)
         ->document($documentId)
@@ -45,7 +45,7 @@ it('can create encrypted url for a document in a basket', function () {
             url: config('laravel-docuware.credentials.url'),
             username: config('laravel-docuware.credentials.username'),
             password: config('laravel-docuware.credentials.password'),
-            passphrase: config('laravel-docuware.credentials.passphrase'),
+            passphrase: config('laravel-docuware.passphrase'),
         )
         ->basket($basketId)
         ->document($documentId)

@@ -2,8 +2,12 @@
 
 namespace CodebarAg\DocuWare\DTO\Config;
 
+use Illuminate\Support\Facades\Hash;
+
 final class ConfigWithCredentials
 {
+    public string $identifier;
+
     public string $username;
 
     public string $password;
@@ -32,6 +36,7 @@ final class ConfigWithCredentials
         ?int $requestTimeoutInSeconds = null,
         ?string $clientId = null,
         ?string $scope = null,
+        ?string $identifier = null,
     ) {
         $this->username = $username;
         $this->password = $password;
@@ -49,5 +54,7 @@ final class ConfigWithCredentials
         $this->clientId = filled($clientId) ? $clientId : config('laravel-docuware.configurations.client_id');
 
         $this->scope = filled($scope) ? $scope : config('laravel-docuware.configurations.scope');
+
+        $this->identifier = filled($identifier) ? $identifier : Hash::make($this->url.'.'.$this->username.'.'.$this->clientId);
     }
 }

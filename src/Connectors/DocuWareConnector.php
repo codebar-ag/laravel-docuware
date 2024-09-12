@@ -11,6 +11,7 @@ use CodebarAg\DocuWare\Requests\Authentication\OAuth\GetIdentityServiceConfigura
 use CodebarAg\DocuWare\Requests\Authentication\OAuth\GetResponsibleIdentityService;
 use CodebarAg\DocuWare\Requests\Authentication\OAuth\RequestTokenWithCredentials;
 use CodebarAg\DocuWare\Requests\Authentication\OAuth\RequestTokenWithCredentialsTrustedUser;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Crypt;
 use Psr\SimpleCache\InvalidArgumentException;
@@ -57,34 +58,36 @@ class DocuWareConnector extends Connector
     {
         $cache = Cache::store($this->configuration->cacheDriver);
 
-        // get instance name of $this->configuration as string
-        $instanceName = get_class($this->configuration);
+        $cacheKey = 'docuware.oauth.'.$this->configuration->identifier;
 
-        $cacheKey = 'docuware.oauth.'.$instanceName.'.'.$this->configuration->url.'.'.($this->configuration->username ?? '');
-
-        $token = null;
-
-        if ($cache->has(key: $cacheKey)) {
-            $token = Crypt::decrypt($cache->get(key: $cacheKey));
-
+        // Check if the token exists in cache and return it if found
+        if ($cache->has($cacheKey)) {
+            $token = Crypt::decrypt($cache->get($cacheKey));
             DocuWareOAuthLog::dispatch($this->configuration->url, $this->configuration->username, 'Token retrieved from cache');
-        } else {
-            if ($this->configuration instanceof ConfigWithCredentials) {
-                $token = $this->getNewOAuthTokenWithCredentials();
 
-                DocuWareOAuthLog::dispatch($this->configuration->url, $this->configuration->username, 'Token retrieved from API');
-            }
-
-            if ($this->configuration instanceof ConfigWithCredentialsTrustedUser) {
-                $token = $this->getNewOAuthTokenWithCredentialsTrustedUser();
-
-                DocuWareOAuthLog::dispatch($this->configuration->url, $this->configuration->username, 'Token retrieved from API');
-            }
-
-            $cache->put(key: $cacheKey, value: Crypt::encrypt($token), ttl: $token->expiresIn - 60);
+            return $token->accessToken;
         }
 
-        return $token->accessToken;
+        // Handle token retrieval for ConfigWithCredentials
+        if ($this->configuration instanceof ConfigWithCredentials) {
+            $token = $this->getNewOAuthTokenWithCredentials();
+            DocuWareOAuthLog::dispatch($this->configuration->url, $this->configuration->username, 'Token retrieved from API');
+            $cache->put($cacheKey, Crypt::encrypt($token), $token->expiresIn - 60);
+
+            return $token->accessToken;
+        }
+
+        // Handle token retrieval for ConfigWithCredentialsTrustedUser
+        if ($this->configuration instanceof ConfigWithCredentialsTrustedUser) {
+            $token = $this->getNewOAuthTokenWithCredentialsTrustedUser();
+            DocuWareOAuthLog::dispatch($this->configuration->url, $this->configuration->username, 'Token retrieved from API');
+            $cache->put($cacheKey, Crypt::encrypt($token), $token->expiresIn - 60);
+
+            return $token->accessToken;
+        }
+
+        // If configuration type is unsupported, throw an exception
+        throw new \Exception('Unsupported configuration type');
     }
 
     protected function getAuthenticationTokenEndpoint(): IdentityServiceConfiguration
@@ -98,6 +101,10 @@ class DocuWareConnector extends Connector
         return $identityServiceConfigurationResponse->dto();
     }
 
+    /**
+     * @throws \Throwable
+     * @throws \JsonException
+     */
     protected function getNewOAuthTokenWithCredentials(): RequestTokenDto
     {
         $requestTokenResponse = (new RequestTokenWithCredentials(
@@ -108,9 +115,24 @@ class DocuWareConnector extends Connector
             password: $this->configuration->password,
         ))->send();
 
+        throw_if(
+            $requestTokenResponse->failed(),
+            trim(preg_replace('/\s\s+/', ' ', Arr::get(
+                array: $requestTokenResponse->json(),
+                key: 'error_description',
+                default: $requestTokenResponse->body()
+            )))
+        );
+
+        throw_if($requestTokenResponse->dto() == null, 'Token response is null');
+
         return $requestTokenResponse->dto();
     }
 
+    /**
+     * @throws \Throwable
+     * @throws \JsonException
+     */
     protected function getNewOAuthTokenWithCredentialsTrustedUser(): RequestTokenDto
     {
         $requestTokenResponse = (new RequestTokenWithCredentialsTrustedUser(
@@ -121,6 +143,17 @@ class DocuWareConnector extends Connector
             password: $this->configuration->password,
             impersonateName: $this->configuration->impersonatedUsername,
         ))->send();
+
+        throw_if(
+            $requestTokenResponse->failed(),
+            trim(preg_replace('/\s\s+/', ' ', Arr::get(
+                array: $requestTokenResponse->json(),
+                key: 'error_description',
+                default: $requestTokenResponse->body()
+            )))
+        );
+
+        throw_if($requestTokenResponse->dto() == null, 'Token response is null');
 
         return $requestTokenResponse->dto();
     }

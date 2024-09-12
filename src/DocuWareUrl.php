@@ -84,7 +84,7 @@ class DocuWareUrl
         }
 
         // Source: https://support.docuware.com/en-US/forums/help-with-technical-problems/ea9618df-c491-e911-80e7-0003ff59a7c6
-        $key = utf8_encode($this->passphrase);
+        $key = mb_convert_encoding($this->passphrase, 'UTF-8', 'ISO-8859-1');
         $passphrase = hash('sha512', $key, true);
         $encryption_key = substr($passphrase, 0, 32);
         $iv = substr($passphrase, 32, 16);

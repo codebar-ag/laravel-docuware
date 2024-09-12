@@ -85,9 +85,6 @@ class DocuWareConnector extends Connector
 
             return $token->accessToken;
         }
-
-        // If configuration type is unsupported, throw an exception
-        throw new \Exception('Unsupported configuration type');
     }
 
     protected function getAuthenticationTokenEndpoint(): IdentityServiceConfiguration

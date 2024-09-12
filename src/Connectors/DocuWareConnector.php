@@ -53,8 +53,9 @@ class DocuWareConnector extends Connector
 
     /**
      * @throws InvalidArgumentException
+     * @throws \Exception
      */
-    protected function getOrCreateNewOAuthToken()
+    protected function getOrCreateNewOAuthToken(): string
     {
         $cache = Cache::store($this->configuration->cacheDriver);
 

@@ -2,8 +2,13 @@
 
 namespace CodebarAg\DocuWare\DTO\Config;
 
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Hash;
+
 final class ConfigWithCredentialsTrustedUser
 {
+    public string $identifier;
+
     public string $username;
 
     public string $password;
@@ -53,5 +58,7 @@ final class ConfigWithCredentialsTrustedUser
         $this->clientId = filled($clientId) ? $clientId : config('laravel-docuware.configurations.client_id');
 
         $this->scope = filled($scope) ? $scope : config('laravel-docuware.configurations.scope');
+
+        $this->identifier = Hash::make($this->url.$this->username.Crypt::encrypt($this->password));
     }
 }

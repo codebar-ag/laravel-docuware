@@ -59,6 +59,6 @@ final class ConfigWithCredentialsTrustedUser
 
         $this->scope = filled($scope) ? $scope : config('laravel-docuware.configurations.scope');
 
-        $this->identifier = Hash::make($this->url.'.'.$this->username.'.'.Crypt::encrypt($this->password));
+        $this->identifier = Hash::make($this->url.$this->username.Crypt::encrypt($this->password));
     }
 }

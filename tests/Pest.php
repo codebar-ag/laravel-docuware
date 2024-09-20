@@ -21,7 +21,7 @@ uses()
     ->beforeEach(function () {
         $this->connector = getConnector();
 
-        //clearFiles();
+        clearFiles();
     })
     ->afterEach(function () {
         setUsersInactive();

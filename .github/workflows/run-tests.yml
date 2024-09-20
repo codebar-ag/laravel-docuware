@@ -44,9 +44,6 @@ jobs:
       - name: Execute tests
         run: cp phpunit.xml.dist phpunit.xml
 
-      - name: Migrate Config
-        run: vendor/bin/pest --migrate-configuration
-
       - name: Execute tests
         run: vendor/bin/pest
         env:

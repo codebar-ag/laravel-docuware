@@ -139,6 +139,7 @@ then optimize the processes that power the core of your business.
 | Documents/Sections                  | Get All Sections from a Document                            | ✅         |      |
 | Documents/Sections                  | Get a Specific Section                                      | ✅         |      |
 | Documents/Sections                  | Delete Section                                              | ✅         |      |
+| Documents/Sections/Textshot         | Get Textshot for a Specific Section                         | ✅         |      |
 | Documents/Download                  | Download Document                                           | ✅         |      |
 | Documents/Download                  | Download Section                                            | ✅         |      |
 | Documents/Download                  | Download Thumbnail                                          | ✅         |      |

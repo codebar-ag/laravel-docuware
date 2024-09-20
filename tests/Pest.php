@@ -12,6 +12,7 @@ use CodebarAg\DocuWare\Requests\General\UserManagement\CreateUpdateUsers\UpdateU
 use CodebarAg\DocuWare\Requests\General\UserManagement\GetUsers\GetUsers;
 use CodebarAg\DocuWare\Tests\TestCase;
 use Illuminate\Support\Sleep;
+use Illuminate\Support\Str;
 
 uses(TestCase::class)
     ->in(__DIR__);
@@ -20,7 +21,7 @@ uses()
     ->beforeEach(function () {
         $this->connector = getConnector();
 
-        clearFiles();
+        //clearFiles();
     })
     ->afterEach(function () {
         setUsersInactive();

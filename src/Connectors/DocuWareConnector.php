@@ -57,9 +57,13 @@ class DocuWareConnector extends Connector
      */
     protected function getOrCreateNewOAuthToken(): string
     {
+        //ray($this->configuration->identifier);
+
         $cache = Cache::store($this->configuration->cacheDriver);
 
         $cacheKey = 'docuware.oauth.'.$this->configuration->identifier;
+
+        //ray($cache->has($cacheKey),'hasCachkey?');
 
         // Check if the token exists in cache and return it if found
         if ($cache->has($cacheKey)) {

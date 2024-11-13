@@ -12,7 +12,7 @@ final class ConfigWithCredentials
 
     public string $url;
 
-    public string $passphrase;
+    public ?string $passphrase;
 
     public string $cacheDriver;
 

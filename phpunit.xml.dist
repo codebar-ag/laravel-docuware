@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.3/phpunit.xsd" backupGlobals="false"
-         bootstrap="vendor/autoload.php" colors="true" processIsolation="false" stopOnFailure="false"
-         executionOrder="random" failOnWarning="true" failOnRisky="true" failOnEmptyTestSuite="true"
-         beStrictAboutOutputDuringTests="true" cacheDirectory=".phpunit.cache" backupStaticProperties="false">
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.3/phpunit.xsd" backupGlobals="false" bootstrap="vendor/autoload.php" colors="true" processIsolation="false" stopOnFailure="false" executionOrder="random" failOnWarning="true" failOnRisky="true" failOnEmptyTestSuite="true" beStrictAboutOutputDuringTests="true" cacheDirectory=".phpunit.cache" backupStaticProperties="false">
     <testsuites>
         <testsuite name="codebar Test Suite">
             <directory>tests</directory>
@@ -26,8 +22,9 @@
         <env name="DOCUWARE_PASSWORD" value="password"/>
         <env name="DOCUWARE_PASSPHRASE" value="passphrase"/>
         <env name="DOCUWARE_TIMEOUT" value="30"/>
-        <env name="DOCUWARE_CACHE_DRIVER" value="array"/>
+        <env name="DOCUWARE_CACHE_DRIVER" value="file"/>
         <env name="DOCUWARE_CACHE_LIFETIME_IN_SECONDS" value="0"/>
+
         <env name="DOCUWARE_TESTS_FILE_CABINET_ID" value="17eaf4ba-41a8-43ec-8be5-80a5f5f1eaf1"/>
         <env name="DOCUWARE_TESTS_DIALOG_ID" value="5afd9126-6cb1-4c7b-8ab2-2ca0bbbeb7be"/>
         <env name="DOCUWARE_TESTS_BASKET_ID" value="b_ac921d68-983b-4b0f-8a20-34ab05ff19c6"/>

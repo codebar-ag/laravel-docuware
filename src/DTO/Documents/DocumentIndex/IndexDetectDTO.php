@@ -18,6 +18,7 @@ class IndexDetectDTO
             is_int($value) => IndexNumericDTO::make($name, $value),
             is_float($value) => IndexDecimalDTO::make($name, $value),
             $value instanceof Carbon => IndexDateTimeDTO::make($name, $value),
+            $value instanceof \Carbon\Carbon => IndexDateTimeDTO::make($name, $value),
             default => null,
         };
     }

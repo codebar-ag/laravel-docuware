@@ -87,3 +87,15 @@ $response = $connector->send(
     )
 )->dto();
 ```
+
+#### Replace A PDF Document Section
+```php
+use CodebarAg\DocuWare\Requests\FileCabinets\Upload\ReplaceAPDFDocumentSection;
+
+$response = $this->connector->send(new ReplaceAPDFDocumentSection(
+    fileCabinetId: $fileCabinetId,
+    sectionId: $documentWithSections->sections->first()->id,
+    fileContent: file_get_contents(__DIR__.'/../../../../Fixtures/files/test-3.pdf'),
+    fileName: 'test-3.pdf',
+))->dto();
+```

@@ -108,7 +108,7 @@ then optimize the processes that power the core of your business.
 | FileCabinets/Upload                 | Create a Data Record & Upload File                          | ❌         | -    |
 | FileCabinets/Upload                 | Create Data Record & Upload File Using Store Dialog         | ❌         | -    |
 | FileCabinets/Upload                 | Append a Single PDF to a Document                           | ❌         | -    |
-| FileCabinets/Upload                 | Replace a PDF Document Section                              | ❌         | -    |
+| FileCabinets/Upload                 | Replace a PDF Document Section                              | ✅         |      |
 | FileCabinets/BatchIndexFieldsUpdate | Batch Update Index Fields By Id                             | ❌         | -    |
 | FileCabinets/BatchIndexFieldsUpdate | Batch Update Index Fields By Search                         | ❌         | -    |
 | FileCabinets/BatchIndexFieldsUpdate | Batch Append/Update Keyword Fields By Id                    | ❌         | -    |

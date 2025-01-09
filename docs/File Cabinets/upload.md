@@ -67,6 +67,7 @@ $document = $connector->send(new CreateDataRecord(
 #### Append File(s) To A Data Record
 ```php
 use CodebarAg\DocuWare\Requests\FileCabinets\Upload\AppendFilesToADataRecord;
+use Saloon\Data\MultipartValue;
 
 $response = $connector->send(
     new AppendFilesToADataRecord(
@@ -86,6 +87,18 @@ $response = $connector->send(
         ])
     )
 )->dto();
+```
+
+#### Append A Single PDF To A Document
+```php
+use CodebarAg\DocuWare\Requests\FileCabinets\Upload\AppendASinglePDFToADocument;
+
+$response = $this->connector->send(new AppendASinglePDFToADocument(
+    fileCabinetId: $fileCabinetId,
+    documentId: $document->id,
+    fileContent: file_get_contents(__DIR__.'/../../../../Fixtures/files/test-2.pdf'),
+    fileName: 'test-2.pdf',
+))->dto();
 ```
 
 #### Replace A PDF Document Section

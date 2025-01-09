@@ -34,4 +34,4 @@ it('can replace a pdf document section', function () {
         ->and($response->sections->last()->originalFileName)->toBe('test-2.pdf');
 
     Event::assertDispatched(DocuWareResponseLog::class);
-})->only();
+});

@@ -14,6 +14,7 @@ See the documentation if you need further functionality. ⚠️
 
 ## Navigation
 <!-- TOC -->
+  * [Navigation](#navigation)
   * [💡 What is DocuWare?](#-what-is-docuware)
   * [🛠 Requirements](#-requirements)
   * [⚙️ Installation](#-installation)
@@ -22,12 +23,108 @@ See the documentation if you need further functionality. ⚠️
     * [Getting a new token via Username & Password:](#getting-a-new-token-via-username--password)
     * [Getting a new token via Username & Password (Trusted User):](#getting-a-new-token-via-username--password-trusted-user)
     * [Available Requests](#available-requests)
+      * [Organization](#organization)
+        * [Get Organization](#get-organization)
+        * [Get All File Cabinets And Document Trays](#get-all-file-cabinets-and-document-trays)
+      * [User Management](#user-management)
+        * [Get Users](#get-users)
+          * [Get Users](#get-users-1)
+          * [Get User By Id](#get-user-by-id)
+          * [Get Users Of A Role](#get-users-of-a-role)
+          * [Get Users Of A Group](#get-users-of-a-group)
+        * [Create/Update Users](#createupdate-users)
+          * [Create User](#create-user)
+          * [Update User](#update-user)
+        * [Get/Modify Groups](#getmodify-groups)
+          * [Get Groups](#get-groups)
+          * [Get All Groups For A Specific User](#get-all-groups-for-a-specific-user)
+          * [Add User To A Group](#add-user-to-a-group)
+          * [Remove User From A Group](#remove-user-from-a-group)
+        * [Get/Modify Roles](#getmodify-roles)
+          * [Get Roles](#get-roles)
+          * [Get All Roles For A Specific User](#get-all-roles-for-a-specific-user)
+          * [Add User To A Role](#add-user-to-a-role)
+          * [Remove User From A Role](#remove-user-from-a-role)
+      * [File Cabinets](#file-cabinets)
+        * [General](#general)
+          * [Get File Cabinet Information](#get-file-cabinet-information)
+          * [Get Total Number Of Documents](#get-total-number-of-documents)
+        * [Dialogs](#dialogs)
+          * [Get All Dialogs](#get-all-dialogs)
+          * [Get Dialogs of a Specific Type](#get-dialogs-of-a-specific-type)
+          * [Get Dialogs Of A Specific Type](#get-dialogs-of-a-specific-type-1)
+        * [Search](#search)
+          * [Get A Specific Document From A File Cabinet](#get-a-specific-document-from-a-file-cabinet)
+          * [Get Documents From A File Cabinet](#get-documents-from-a-file-cabinet)
+          * [Most basic example to search for documents.](#most-basic-example-to-search-for-documents)
+          * [Search in multiple file cabinets](#search-in-multiple-file-cabinets)
+          * [Find results on the next page](#find-results-on-the-next-page)
+          * [Define the number of results which should be shown per page](#define-the-number-of-results-which-should-be-shown-per-page)
+          * [Use the full-text search](#use-the-full-text-search)
+          * [Search documents which are created from the first of march.](#search-documents-which-are-created-from-the-first-of-march)
+          * [Search documents which are created until the first of april.](#search-documents-which-are-created-until-the-first-of-april)
+          * [Order the results by field name.](#order-the-results-by-field-name)
+          * [Search documents filtered to the value.](#search-documents-filtered-to-the-value)
+          * [Search documents filtered to multiple values.](#search-documents-filtered-to-multiple-values)
+          * [You can specify the dialog which should be used.](#you-can-specify-the-dialog-which-should-be-used)
+          * [You can also combine everything.](#you-can-also-combine-everything)
+        * [Check In Check Out](#check-in-check-out)
+        * [Select Lists](#select-lists)
+          * [Get Select Lists](#get-select-lists)
+        * [Upload](#upload)
+          * [Create Data Record](#create-data-record)
+          * [Create Table Data Record](#create-table-data-record)
+          * [Append File(s) To A Data Record](#append-files-to-a-data-record)
+          * [Append A Single PDF To A Document](#append-a-single-pdf-to-a-document)
+          * [Replace A PDF Document Section](#replace-a-pdf-document-section)
+          * [Batch Index Fields Update](#batch-index-fields-update)
+          * [Get Fields](#get-fields)
+      * [Documents](#documents)
+        * [Update Index Values](#update-index-values)
+          * [Update Table Data Record](#update-table-data-record)
+        * [Modify Documents](#modify-documents)
+          * [Transfer Document](#transfer-document)
+          * [Delete Documents](#delete-documents)
+        * [Clip/Unclip & Staple/Unstaple](#clipunclip--stapleunstaple)
+          * [Clip](#clip)
+          * [Unclip](#unclip)
+          * [Staple](#staple)
+          * [Unstaple](#unstaple)
+        * [Annotations/Stamps](#annotationsstamps)
+          * [Documents Trash Bin](#documents-trash-bin)
+          * [Get Documents](#get-documents)
+          * [Delete Documents](#delete-documents-1)
+          * [Restore Documents](#restore-documents)
+        * [Application Properties](#application-properties)
+          * [Add Application Properties](#add-application-properties)
+          * [Update Application Properties](#update-application-properties)
+          * [Delete Application Properties](#delete-application-properties)
+          * [Get Application Properties](#get-application-properties)
+        * [Sections](#sections)
+          * [Get All Sections](#get-all-sections)
+          * [Get Specific Section](#get-specific-section)
+          * [Delete Section](#delete-section)
+          * [Get Textshot](#get-textshot)
+        * [Download](#download)
+          * [Download Document](#download-document)
+          * [Download Section](#download-section)
+          * [Download Thumbnail](#download-thumbnail)
+      * [Workflow](#workflow)
+        * [Workflow History](#workflow-history)
+          * [Get Document Workflow History](#get-document-workflow-history)
+          * [Get Document Workflow History Steps](#get-document-workflow-history-steps)
   * [Extending the connector (EXAMPLE)](#extending-the-connector-example)
       * [Create a new connector](#create-a-new-connector)
       * [Use the new connector](#use-the-new-connector)
   * [🖼 Make encrypted URLs](#-make-encrypted-urls)
+    * [Make encrypted URL for a document in a file cabinet.](#make-encrypted-url-for-a-document-in-a-file-cabinet)
+    * [Make encrypted URL for a document in a basket.](#make-encrypted-url-for-a-document-in-a-basket)
+    * [Make encrypted URL valid for a specific amount of time.](#make-encrypted-url-valid-for-a-specific-amount-of-time)
   * [🏋️ Document Index Fields DTO showcase](#-document-index-fields-dto-showcase)
   * [📦 Caching requests](#-caching-requests)
+    * [Is Cached](#is-cached)
+    * [Invalidate Cache](#invalidate-cache)
+    * [Disable Caching](#disable-caching)
   * [💥 Exceptions explained](#-exceptions-explained)
   * [✨ Events](#-events)
   * [🔧 Configuration file](#-configuration-file)
@@ -107,8 +204,8 @@ then optimize the processes that power the core of your business.
 | FileCabinets/Upload                 | Upload a Single File for a Data Record                      | ❌         | -    |
 | FileCabinets/Upload                 | Create a Data Record & Upload File                          | ❌         | -    |
 | FileCabinets/Upload                 | Create Data Record & Upload File Using Store Dialog         | ❌         | -    |
-| FileCabinets/Upload                 | Append a Single PDF to a Document                           | ❌         | -    |
-| FileCabinets/Upload                 | Replace a PDF Document Section                              | ❌         | -    |
+| FileCabinets/Upload                 | Append a Single PDF to a Document                           | ✅         | -    |
+| FileCabinets/Upload                 | Replace a PDF Document Section                              | ✅         |      |
 | FileCabinets/BatchIndexFieldsUpdate | Batch Update Index Fields By Id                             | ❌         | -    |
 | FileCabinets/BatchIndexFieldsUpdate | Batch Update Index Fields By Search                         | ❌         | -    |
 | FileCabinets/BatchIndexFieldsUpdate | Batch Append/Update Keyword Fields By Id                    | ❌         | -    |
@@ -240,6 +337,977 @@ $connector = new DocuWareConnector(
   - [Download](docs/Documents/download.md)
 - [Workflow](docs/workflow.md)
 
+#### Organization
+
+| Request                                                     | Supported |
+|-------------------------------------------------------------|-----------|
+| Get Login Token                                             | ✅         |
+| Get Organization                                            | ✅         |
+| Get All File Cabinets and Document Trays                    | ✅         |
+
+
+##### Get Organization
+```php
+use CodebarAg\DocuWare\Requests\General\Organization\GetOrganization;
+
+$organizations = $this->connector->send(new GetOrganization())->dto();
+```
+
+##### Get All File Cabinets And Document Trays
+```php
+use CodebarAg\DocuWare\Requests\General\Organization\GetAllFileCabinetsAndDocumentTrays;
+
+$cabinetsAndTrays = $this->connector->send(new GetAllFileCabinetsAndDocumentTrays())->dto();
+```
+
+#### User Management
+
+##### Get Users
+
+| Request              | Supported |
+|----------------------|-----------|
+| Get Users            | ✅         |
+| Get Users by ID      | ✅         |
+| Get Users of a Role  | ✅         |
+| Get Users of a Group | ✅         |
+
+###### Get Users
+```php
+use CodebarAg\DocuWare\Requests\General\UserManagement\GetUsers\GetUsers;
+
+$users = $this->connector->send(new GetUsers())->dto();
+```
+
+###### Get User By Id
+```php
+use CodebarAg\DocuWare\Requests\General\UserManagement\GetUsers\GetUserById;
+
+$user = $this->connector->send(new GetUserById($userId))->dto();
+```
+
+###### Get Users Of A Role
+```php
+use CodebarAg\DocuWare\Requests\General\UserManagement\GetUsers\GetUsersOfARole;
+
+$users = $this->connector->send(new GetUsersOfARole($roleId))->dto();
+```
+
+###### Get Users Of A Group
+```php
+use CodebarAg\DocuWare\Requests\General\UserManagement\GetUsers\GetUsersOfAGroup;
+
+$users = $this->connector->send(new GetUsersOfAGroup($groupId))->dto();
+```
+
+##### Create/Update Users
+
+| Request     | Supported |
+|-------------|-----------|
+| Create User | ✅         |
+| Update User | ✅         |
+
+###### Create User
+```php
+use CodebarAg\DocuWare\Requests\General\UserManagement\CreateUpdateUsers\CreateUser;
+
+$user = $connector->send(new CreateUser(new User(
+    name: $timestamp.' - Test User',
+    dbName: $timestamp,
+    email: $timestamp.'-test@example.test',
+    password: 'TESTPASSWORD',
+)))->dto();
+```
+
+###### Update User
+```php
+use CodebarAg\DocuWare\Requests\General\UserManagement\CreateUpdateUsers\UpdateUser;
+
+$user->name .= ' - Updated';
+$user->active = false;
+
+$user = $connector->send(new UpdateUser($user))->dto();
+```
+
+##### Get/Modify Groups
+
+| Request                            | Supported |
+|------------------------------------|-----------|
+| Get Groups                         | ✅         |
+| Get All Groups for a Specific User | ✅         |
+| Add User to a Group                | ✅         |
+| Remove User from a Group           | ✅         |
+
+###### Get Groups
+```php
+use CodebarAg\DocuWare\Requests\General\UserManagement\GetModifyGroups\GetGroups;
+
+$groups = $connector->send(new GetGroups())->dto();
+```
+
+###### Get All Groups For A Specific User
+```php
+use CodebarAg\DocuWare\Requests\General\UserManagement\GetModifyGroups\GetAllGroupsForASpecificUser;
+
+$groups = $connector->send(new GetAllGroupsForASpecificUser($userId))->dto();
+```
+
+###### Add User To A Group
+```php
+use CodebarAg\DocuWare\Requests\General\UserManagement\GetModifyGroups\AddUserToAGroup;
+
+$response = $connector->send(new AddUserToAGroup(
+    userId: $userId,
+    ids: [$groupId],
+))->dto();
+```
+
+###### Remove User From A Group
+```php
+use CodebarAg\DocuWare\Requests\General\UserManagement\GetModifyGroups\RemoveUserFromAGroup;
+
+$response = $connector->send(new RemoveUserFromAGroup(
+    userId: $userId,
+    ids: [$groupId],
+))->dto();
+```
+
+##### Get/Modify Roles
+
+| Request                           | Supported |
+|-----------------------------------|-----------|
+| Get Roles                         | ✅         |
+| Get All Roles for a Specific User | ✅         |
+| Add User to a Role                | ✅         |
+| Remove User from a Role           | ✅         |
+
+###### Get Roles
+```php
+use CodebarAg\DocuWare\Requests\General\UserManagement\GetModifyRoles\GetRoles;
+
+$roles = $this->connector->send(new GetRoles())->dto();
+```
+
+###### Get All Roles For A Specific User
+```php
+use CodebarAg\DocuWare\Requests\General\UserManagement\GetModifyRoles\GetAllRolesForASpecificUser;
+
+$roles = $connector->send(new GetAllRolesForASpecificUser($userId))->dto();
+```
+
+###### Add User To A Role
+```php
+use CodebarAg\DocuWare\Requests\General\UserManagement\GetModifyRoles\AddUserToARole;
+
+$response = $connector->send(new AddUserToARole(
+    userId: $userId,
+    ids: [$roleId],
+))->dto();
+```
+
+###### Remove User From A Role
+```php
+use CodebarAg\DocuWare\Requests\General\UserManagement\GetModifyRoles\RemoveUserFromARole;
+
+$response = $connector->send(new RemoveUserFromARole(
+    userId: $userId,
+    ids: [$roleId],
+))->dto();
+```
+
+#### File Cabinets
+
+##### General
+
+| Request                       | Supported |
+|-------------------------------|-----------|
+| Get File Cabinet Information  | ✅         |
+| Get Total Number of Documents | ✅         |
+
+###### Get File Cabinet Information
+```php
+use CodebarAg\DocuWare\Requests\FileCabinets\General\GetFileCabinetInformation;
+
+$fileCabinet = $connector->send(new GetFileCabinetInformation($fileCabinetId))->dto();
+```
+
+###### Get Total Number Of Documents
+```php
+use CodebarAg\DocuWare\Requests\FileCabinets\General\GetTotalNumberOfDocuments;
+
+$count = $connector->send(new GetTotalNumberOfDocuments(
+    $fileCabinetId,
+    $dialogId
+))->dto();
+```
+
+##### Dialogs
+
+| Request                        | Supported |
+|--------------------------------|-----------|
+| Get All Dialogs                | ✅         |
+| Get a Specific Dialog          | ✅         |
+| Get Dialogs of a Specific Type | ✅         |
+
+###### Get All Dialogs
+```php
+use CodebarAg\DocuWare\Requests\FileCabinets\Dialogs\GetAllDialogs;
+
+$dialogs = $connector->send(new GetAllDialogs($fileCabinetId))->dto();
+```
+
+###### Get Dialogs of a Specific Type
+```php
+use CodebarAg\DocuWare\Requests\FileCabinets\Dialogs\GetASpecificDialog;
+
+$dialog = $connector->send(new GetASpecificDialog($fileCabinetId, $dialogId))->dto();
+```
+
+###### Get Dialogs Of A Specific Type
+```php
+use CodebarAg\DocuWare\Enums\DialogType;
+use CodebarAg\DocuWare\Requests\FileCabinets\Dialogs\GetDialogsOfASpecificType;
+
+$dialogs = $connector->send(new GetDialogsOfASpecificType($fileCabinetId, DialogType::SEARCH))->dto();
+```
+
+##### Search
+
+| Description                                    | Implemented |
+|------------------------------------------------|-------------|
+| Get Documents from a File Cabinet              | ✅           |
+| Get a Specific Document From a File Cabinet    | ✅           |
+| Search for Documents in a Single File Cabinet  | ✅           |
+| Search for Documents in Multiple File Cabinets | ✅           |
+
+###### Get A Specific Document From A File Cabinet
+```php
+use CodebarAg\DocuWare\Requests\FileCabinets\Search\GetASpecificDocumentFromAFileCabinet;
+
+$document = $connector->send(new GetASpecificDocumentFromAFileCabinet(
+    $fileCabinetId,
+    $documentId
+))->dto();
+```
+
+######  Get Documents From A File Cabinet
+```php
+use CodebarAg\DocuWare\Requests\FileCabinets\Search\GetDocumentsFromAFileCabinet;
+
+$documents = $connector->send(new GetDocumentsFromAFileCabinet(
+    $fileCabinetId
+))->dto();
+```
+
+###### Most basic example to search for documents.
+> You only need to provide a valid file cabinet id.
+```php
+$fileCabinetId = '87356f8d-e50c-450b-909c-4eaccd318fbf';
+
+$paginatorRequest = DocuWare::searchRequestBuilder()
+    ->fileCabinet($fileCabinetId)
+    ->get();
+    
+$paginator = $connector->send($paginatorRequest)->dto();
+```
+
+###### Search in multiple file cabinets
+> Provide an array of file cabinet ids.
+```php
+$fileCabinetIds = [
+    '0ee72de3-4258-4353-8020-6a3ff6dd650f',
+    '3f9cb4ff-82f2-44dc-b439-dd648269064f',
+];
+
+$paginatorRequest = DocuWare::searchRequestBuilder()
+    ->fileCabinets($fileCabinetIds)
+    ->get();
+    
+$paginator = $connector->send($paginatorRequest)->dto();
+```
+
+###### Find results on the next page
+> Default: 1
+```php
+$paginatorRequest = DocuWare::searchRequestBuilder()
+    ->fileCabinet($id)
+    ->page(2)
+    ->get();
+    
+$paginator = $connector->send($paginatorRequest)->dto();
+```
+
+###### Define the number of results which should be shown per page
+> Default: 50
+```php
+$paginatorRequest = DocuWare::searchRequestBuilder()
+    ->fileCabinet($id)
+    ->perPage(30)
+    ->get();
+    
+$paginator = $connector->send($paginatorRequest)->dto();
+```
+
+###### Use the full-text search
+> You have to activate full-text search in your file cabinet before you can use this feature.
+```php 
+$paginatorRequest = DocuWare::searchRequestBuilder()
+    ->fileCabinet($id)
+    ->fulltext('My secret document')
+    ->get();
+    
+$paginator = $connector->send($paginatorRequest)->dto();
+```
+
+###### Search documents which are created from the first of march.
+```php 
+$paginatorRequest = DocuWare::searchRequestBuilder()
+    ->fileCabinet($id)
+    ->filterDate('DWSTOREDATETIME', '>=', Carbon::create(2021, 3, 1))
+    ->get();
+    
+$paginator = $connector->send($paginatorRequest)->dto();
+```
+
+###### Search documents which are created until the first of april.
+```php 
+$paginatorRequest = DocuWare::searchRequestBuilder()
+    ->fileCabinet($id)
+    ->filterDate('DWSTOREDATETIME', '<', Carbon::create(2021, 4, 1))
+    ->get();
+    
+$paginator = $connector->send($paginatorRequest)->dto();
+```
+
+###### Order the results by field name.
+> Supported values: 'asc', 'desc'
+```php
+$paginatorRequest = DocuWare::searchRequestBuilder()
+    ->fileCabinet($id)
+    ->orderBy('DWSTOREDATETIME', 'desc')
+    ->get();
+    
+$paginator = $connector->send($paginatorRequest)->dto();
+```
+
+###### Search documents filtered to the value.
+> You can specify multiple filters.
+```php 
+$paginatorRequest = DocuWare::searchRequestBuilder()
+    ->fileCabinet($id)
+    ->filter('TYPE', 'Order')
+    ->filter('OTHER_FIELD', 'other')
+    ->get();
+    
+$paginator = $connector->send($paginatorRequest)->dto();
+```
+
+###### Search documents filtered to multiple values.
+```php 
+$paginatorRequest = DocuWare::searchRequestBuilder()
+    ->fileCabinet($id)
+    ->filterIn('TYPE', ['Order', 'Invoice'])
+    ->get();
+    
+$paginator = $connector->send($paginatorRequest)->dto();
+```
+
+###### You can specify the dialog which should be used.
+```php 
+$dialogId = 'bb42c30a-89fc-4b81-9091-d7e326caba62';
+
+$paginatorRequest = DocuWare::searchRequestBuilder()
+    ->fileCabinet($id)
+    ->dialog($dialogId)
+    ->get();
+    
+$paginator = $connector->send($paginatorRequest)->dto();
+```
+
+###### You can also combine everything.
+```php  
+$paginatorRequest = DocuWare::searchRequestBuilder()
+    ->fileCabinet($id)
+    ->page(2)
+    ->perPage(30)
+    ->fulltext('My secret document')
+    ->filterDate('DWSTOREDATETIME', '>=', Carbon::create(2021, 3, 1))
+    ->filterDate('DWSTOREDATETIME','<',Carbon::create(2021, 4, 1))
+    ->filter('TYPE', 'Order')
+    ->filter('OTHER_FIELD', 'other')
+    ->orderBy('DWSTOREDATETIME', 'desc')
+    ->dialog($dialogId)
+    ->get();
+
+$paginator = $connector->send($paginatorRequest)->dto();
+```
+
+
+##### Check In Check Out
+
+| Request                                                     | Supported |
+|-------------------------------------------------------------|-----------|
+| Check-out & Download a Document                             | 🕣        |
+| Check-in a Document from the File System                    | 🕣        |
+| Undo Check-out                                              | 🕣        |
+
+> Not Currently Supported
+
+##### Select Lists
+| Request                                      | Supported |
+|----------------------------------------------|-----------|
+| Get Select Lists & Get Filtered Select Lists | ✅         |
+
+###### Get Select Lists
+```php
+use CodebarAg\DocuWare\Requests\FileCabinets\SelectLists\GetSelectLists;
+
+$types = $this->connector->send(new GetSelectLists(
+    $fileCabinetId,
+    $dialogId,
+    $fieldName,
+))->dto();
+```
+
+##### Upload
+
+| Request                                             | Supported |
+|-----------------------------------------------------|-----------|
+| Create Data Record                                  | ✅         |
+| Append File(s) to a Data Record                     | ✅         |
+| Upload a Single File for a Data Record              | ❌         |
+| Create a Data Record & Upload File                  | ❌         |
+| Create Data Record & Upload File Using Store Dialog | ❌         |
+| Append a Single PDF to a Document                   | ❌         |
+| Replace a PDF Document Section                      | ❌         |
+
+###### Create Data Record
+```php
+use CodebarAg\DocuWare\Requests\FileCabinets\Upload\CreateDataRecord;
+use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexTextDTO;
+
+$document = $connector->send(new CreateDataRecord(
+    $fileCabinetId,
+    null,
+    null,
+    collect([
+        IndexTextDTO::make('DOCUMENT_LABEL', '::data-entry::'),
+    ]),
+))->dto();
+```
+
+###### Create Table Data Record
+```php
+use CodebarAg\DocuWare\Requests\FileCabinets\Upload\CreateDataRecord;
+use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexDateDTO;
+use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexDateTimeDTO;
+use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexDecimalDTO;
+use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexNumericDTO;
+use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexTableDTO;
+use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexTextDTO;
+
+$tableRows = collect([
+    collect([
+        IndexTextDTO::make('TEXT', 'project_1'),
+        IndexNumericDTO::make('INT', 1),
+        IndexDecimalDTO::make('DECIMAL', 1.1),
+        IndexDateDTO::make('DATE', $now),
+        IndexDateTimeDTO::make('DATETIME', $now),
+    ]),
+    collect([
+        IndexTextDTO::make('TEXT', 'project_2'),
+        IndexNumericDTO::make('INT', 2),
+        IndexDecimalDTO::make('DECIMAL', 2.2),
+        IndexDateDTO::make('DATE', $now),
+        IndexDateTimeDTO::make('DATETIME', $now),
+    ]),
+]);
+
+
+$document = $connector->send(new CreateDataRecord(
+    $fileCabinetId,
+    null,
+    null,
+    collect([
+        IndexTableDTO::make('TABLE_NAME', $tableRows)
+    ]),
+))->dto();
+```
+
+###### Append File(s) To A Data Record
+```php
+use CodebarAg\DocuWare\Requests\FileCabinets\Upload\AppendFilesToADataRecord;
+use Saloon\Data\MultipartValue;
+
+$response = $connector->send(
+    new AppendFilesToADataRecord(
+        fileCabinetId: $fileCabinetId,
+        dataRecordId: $document->id,
+        files: collect([
+            new MultipartValue(
+                name: 'File[]',
+                value: file_get_contents(__DIR__.'/../../../../Fixtures/files/test-2.pdf'),
+                filename: 'test-2.pdf',
+            ),
+            new MultipartValue(
+                name: 'File[]',
+                value: file_get_contents(__DIR__.'/../../../../Fixtures/files/test-3.pdf'),
+                filename: 'test-3.pdf',
+            ),
+        ])
+    )
+)->dto();
+```
+
+###### Append A Single PDF To A Document
+```php
+use CodebarAg\DocuWare\Requests\FileCabinets\Upload\AppendASinglePDFToADocument;
+
+$response = $this->connector->send(new AppendASinglePDFToADocument(
+    fileCabinetId: $fileCabinetId,
+    documentId: $document->id,
+    fileContent: file_get_contents(__DIR__.'/../../../../Fixtures/files/test-2.pdf'),
+    fileName: 'test-2.pdf',
+))->dto();
+```
+
+###### Replace A PDF Document Section
+```php
+use CodebarAg\DocuWare\Requests\FileCabinets\Upload\ReplaceAPDFDocumentSection;
+
+$response = $this->connector->send(new ReplaceAPDFDocumentSection(
+    fileCabinetId: $fileCabinetId,
+    sectionId: $documentWithSections->sections->first()->id,
+    fileContent: file_get_contents(__DIR__.'/../../../../Fixtures/files/test-3.pdf'),
+    fileName: 'test-3.pdf',
+))->dto();
+```
+
+###### Batch Index Fields Update
+| Request                                  | Supported |
+|------------------------------------------|-----------|
+| Batch Update Index Fields By Id          | ❌         |
+| Batch Update Index Fields By Search      | ❌         |
+| Batch Append/Update Keyword Fields By Id | ❌         |
+
+> Not Currently Supported
+
+###### Get Fields
+```php
+use CodebarAg\DocuWare\Requests\Fields\GetFieldsRequest;
+
+$fields = $connector->send(new GetFieldsRequest($fileCabinetId))->dto();
+```
+
+#### Documents
+
+##### Update Index Values
+| Request                   | Supported |
+|---------------------------|-----------|
+| Update Index Values       | ✅         |
+| Update Table Index Values | ✅         |
+| Update Table Field Values | ❌         |
+
+
+```php
+use CodebarAg\DocuWare\Requests\Documents\UpdateIndexValues\UpdateIndexValues;
+use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexDateDTO;
+
+$response = $connector->send(new UpdateIndexValues(
+    $fileCabinetId,
+    $documentId,
+    collect([
+        IndexTextDTO::make('DOCUMENT_LABEL', '::new-data-entry::'),
+    ])
+))->dto();
+```
+
+###### Update Table Data Record
+```php
+use CodebarAg\DocuWare\Requests\Documents\UpdateIndexValues\UpdateIndexValues;
+use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexDateDTO;
+use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexDateTimeDTO;
+use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexDecimalDTO;
+use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexNumericDTO;
+use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexTableDTO;
+use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexTextDTO;
+
+$tableRows = collect([
+    collect([
+        IndexTextDTO::make('TEXT', 'project_1'),
+        IndexNumericDTO::make('INT', 1),
+        IndexDecimalDTO::make('DECIMAL', 1.1),
+        IndexDateDTO::make('DATE', $now),
+        IndexDateTimeDTO::make('DATETIME', $now),
+    ]),
+    collect([
+        IndexTextDTO::make('TEXT', 'project_2'),
+        IndexNumericDTO::make('INT', 2),
+        IndexDecimalDTO::make('DECIMAL', 2.2),
+        IndexDateDTO::make('DATE', $now),
+        IndexDateTimeDTO::make('DATETIME', $now),
+    ]),
+]);
+
+
+$document = $connector->send(new UpdateIndexValues(
+    $fileCabinetId,
+    null,
+    null,
+    collect([
+        IndexTableDTO::make('TABLE_NAME', $tableRows)
+    ]),
+))->dto();
+```
+
+##### Modify Documents
+| Request           | Supported |
+|-------------------|-----------|
+| Transfer Document | ✅         |
+| Delete Document   | ✅         |
+
+
+###### Transfer Document
+```php
+use CodebarAg\DocuWare\Requests\Documents\ModifyDocuments\TransferDocument;
+
+$response = $connector->send(new TransferDocument(
+    $fileCabinetId,
+    $destinationFileCabinetId,
+    $storeDialogId,
+    $documentId,
+    $fields,
+))->dto();
+```
+
+###### Delete Documents
+```php
+use CodebarAg\DocuWare\Requests\Documents\ModifyDocuments\DeleteDocument;
+
+$connector->send(new DeleteDocument(
+    $fileCabinetId
+    $documentId,
+))->dto();
+```
+
+##### Clip/Unclip & Staple/Unstaple
+| Request  | Supported |
+|----------|-----------|
+| Clip     | ✅         |
+| Unclip   | ✅         |
+| Staple   | ✅         |
+| Unstaple | ✅         |
+
+###### Clip
+```php
+use CodebarAg\DocuWare\Requests\Documents\ClipUnclipStapleUnstaple\Clip;
+
+$clip = $connector->send(new Clip(
+    $fileCabinetId,
+    [
+        $documentId,
+        $document2Id,
+    ]
+))->dto();
+```
+
+###### Unclip
+```php
+use CodebarAg\DocuWare\Requests\Documents\ClipUnclipStapleUnstaple\Unclip;
+
+$unclip = $connector->send(new Unclip(
+    $fileCabinetId,
+    $clipId
+))->dto();
+```
+
+###### Staple
+```php
+use CodebarAg\DocuWare\Requests\Documents\ClipUnclipStapleUnstaple\Staple;
+
+$staple = $connector->send(new Staple(
+    $fileCabinetId,
+    [
+        $documentId,
+        $document2Id,
+    ]
+))->dto();
+```
+
+###### Unstaple
+```php
+use CodebarAg\DocuWare\Requests\Documents\ClipUnclipStapleUnstaple\Unstaple;
+
+$unclip = $connector->send(new Unstaple(
+    $fileCabinetId,
+    $stapleId
+))->dto();
+```
+
+##### Annotations/Stamps
+| Request                    | Supported |
+|----------------------------|-----------|
+| AddStampWithPosition       | 🕣        |
+| AddStampWithBestPosition   | 🕣        |
+| AddTextAnnotation          | 🕣        |
+| AddRectEntryAnnotation     | 🕣        |
+| AddLineEntryAnnotation     | 🕣        |
+| AddPolyLineEntryAnnotation | ❌         |
+| DeleteAnnotation           | ❌         |
+| UpdateTextAnnotation       | 🕣        |
+| Get Stamps                 | ❌         |
+
+> Not Currently Supported
+
+###### Documents Trash Bin
+| Request           | Supported |
+|-------------------|-----------|
+| Get Documents     | ✅         |
+| Delete Documents  | ✅         |
+| Restore Documents | ✅         |
+
+
+###### Get Documents
+> You can use the same methods as in the search usage. The only difference is that you have to use the `trashBin` method after the `searchRequestBuilder` method.
+```php
+
+
+```php
+use CodebarAg\DocuWare\DocuWare;
+
+$paginatorRequest = (new DocuWare())
+    ->searchRequestBuilder()
+    ->trashBin()
+```
+
+###### Delete Documents
+```php
+use CodebarAg\DocuWare\Requests\Documents\DocumentsTrashBin\DeleteDocuments;
+
+$delete = $connector->send(new DeleteDocuments([$documentID, $document2ID]))->dto();
+```
+
+###### Restore Documents
+```php
+use CodebarAg\DocuWare\Requests\Documents\DocumentsTrashBin\RestoreDocuments;
+
+$delete = $connector->send(new RestoreDocuments([$documentID, $document2ID]))->dto();
+```
+
+##### Application Properties
+| Request                       | Supported |
+|-------------------------------|-----------|
+| Get Application Properties    | ✅         |
+| Add Application Properties    | ✅         |
+| Delete Application Properties | ✅         |
+| Update Application Properties | ✅         |
+
+
+###### Add Application Properties
+```php
+use CodebarAg\DocuWare\Requests\Documents\ApplicationProperties\AddApplicationProperties;
+
+$addProperties = $connector->send(new AddApplicationProperties(
+    $fileCabinetId,
+    $documentId,
+    [
+        [
+            'Name' => 'Key1',
+            'Value' => 'Key1 Value',
+        ],
+        [
+            'Name' => 'Key2',
+            'Value' => 'Key2 Value',
+        ],
+    ],
+))->dto();
+```
+
+###### Update Application Properties
+```php
+use CodebarAg\DocuWare\Requests\Documents\ApplicationProperties\UpdateApplicationProperties;
+
+$updateProperties = $connector->send(new UpdateApplicationProperties(
+    $fileCabinetId,
+    $documentId,
+    [
+        [
+            'Name' => 'Key1',
+            'Value' => 'Key1 Value Updated',
+        ],
+    ],
+))->dto()->sortBy('Name');
+```
+
+###### Delete Application Properties
+```php
+use CodebarAg\DocuWare\Requests\Documents\ApplicationProperties\DeleteApplicationProperties;
+
+$deleteProperties = $connector->send(new DeleteApplicationProperties(
+    $fileCabinetId,
+    $document->id,
+    [
+        'Key1',
+    ],
+))->dto();
+```
+
+###### Get Application Properties
+```php
+use CodebarAg\DocuWare\Requests\Documents\ApplicationProperties\GetApplicationProperties;
+
+$properties = $connector->send(new GetApplicationProperties(
+    $fileCabinetId,
+    $document->id,
+))->dto();
+```
+
+##### Sections
+
+| Request                          | Supported |
+|----------------------------------|-----------|
+| Get All Sections from a Document | ✅         |
+| Get a Specific Section           | ✅         |
+| Delete Section                   | ✅         |
+| Get Textshot                     | ✅         |
+
+###### Get All Sections
+
+```php
+use CodebarAg\DocuWare\Requests\Documents\Sections\GetAllSectionsFromADocument;
+
+$sections = $connector->send(new GetAllSectionsFromADocument(
+    $fileCabinetId,
+    $documentId
+))->dto();
+```
+
+###### Get Specific Section
+
+```php
+use CodebarAg\DocuWare\Requests\Documents\Sections\GetASpecificSection;
+
+$section = $connector->send(new GetASpecificSection(
+    $fileCabinetId,
+    $sectionsId
+))->dto();
+```
+
+###### Delete Section
+
+```php
+use CodebarAg\DocuWare\Requests\Documents\Sections\DeleteSection;
+
+$deleted = $connector->send(new DeleteSection(
+    $fileCabinetId,
+    $sectionId
+))->dto();
+```
+
+###### Get Textshot
+
+```php
+use CodebarAg\DocuWare\Requests\Documents\Sections\GetTextshot;
+
+$deleted = $connector->send(new GetTextshot(
+    $fileCabinetId,
+    $sectionId
+))->dto();
+```
+
+##### Download
+| Request            | Supported |
+|--------------------|-----------|
+| Download Document  | ✅         |
+| Download Section   | ✅         |
+| Download Thumbnail | ✅         |
+
+
+###### Download Document
+```php
+use CodebarAg\DocuWare\Requests\Documents\Download\DownloadDocument;
+
+$contents = $connector->send(new DownloadDocument(
+    $fileCabinetId,
+    $documentId
+))->dto();
+```
+
+###### Download Section
+```php
+use CodebarAg\DocuWare\Requests\Documents\Download\DownloadSection;
+
+$contents = $connector->send(new DownloadSection(
+    $fileCabinetId,
+    $sectionId
+))->dto();
+```
+
+###### Download Thumbnail
+```php
+use CodebarAg\DocuWare\Requests\Documents\Download\DownloadThumbnail;
+
+$contents = $connector->send(new DownloadThumbnail(
+    $fileCabinetId,
+    $sectionId
+))->dto();
+```
+
+#### Workflow
+
+##### Workflow History
+| Request                             | Supported |
+|-------------------------------------|-----------|
+| Get Document Workflow History       | ✅         |
+| Get Document Workflow History Steps | ✅         |
+
+###### Get Document Workflow History
+```php
+use CodebarAg\DocuWare\Requests\Workflow\GetDocumentWorkflowHistory;
+
+$history = $this->connector->send(new GetDocumentWorkflowHistory(
+    $fileCabinetId,
+    $documentId
+))->dto();
+```
+
+###### Get Document Workflow History Steps
+```php
+use CodebarAg\DocuWare\Requests\Workflow\GetDocumentWorkflowHistorySteps;
+
+$historySteps = $this->connector->send(new GetDocumentWorkflowHistorySteps(
+    $workflowId,
+    $historyId,
+))->dto();
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 ## Extending the connector (EXAMPLE)
@@ -282,19 +1350,319 @@ $connector = new YourOwnDocuWareConnector();
 
 ## 🖼 Make encrypted URLs
 
-- [Encrypted URLs](docs/encrypted_urls.md)
+```php
+use CodebarAg\DocuWare\Facades\DocuWare;
+```
+
+### Make encrypted URL for a document in a file cabinet.
+```php 
+$fileCabinetId = '87356f8d-e50c-450b-909c-4eaccd318fbf';
+$documentId = 42;
+
+$url = DocuWare::url()
+    ->fileCabinet($fileCabinetId)
+    ->document($documentId)
+    ->make();
+```
+
+### Make encrypted URL for a document in a basket.
+```php 
+$basketId = 'b_87356f8d-e50c-450b-909c-4eaccd318fbf';
+
+$url = DocuWare::url()
+    ->basket($basketId)
+    ->document($documentId)
+    ->make();
+```
+
+### Make encrypted URL valid for a specific amount of time.
+>  In the example below the URL is valid for one week, afterward the URL is no longer working.
+```php
+$url = DocuWare::url()
+    ->fileCabinet($fileCabinetId)
+    ->document($documentId)
+    ->validUntil(now()->addWeek())
+    ->make();
+```
+
 
 ## 🏋️ Document Index Fields DTO showcase
 
-- [Document Index Fields DTO](docs/dto.md)
+```php
+CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexTextDTO {
+  +name: "FIELD_TEXT"                               // string
+  +value: "Value"                                   // null|string
+}
+```
+
+```php
+CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexNumericDTO {
+  +name: "FIELD_NUMERIC"                            // string
+  +value: 1                                         // null|int
+}
+```
+
+```php
+CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexDecimalDTO {
+  +name: "FIELD_DECIMAL"                            // string
+  +value: 1.00                                      // null|int|float
+}
+```
+
+```php
+CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexDateDTO {
+  +name: "FIELD_DATE"                               // string
+  +value: now(),                                    // null|Carbon
+}
+```
+
+```php
+CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexDateTimeDTO {
+  +name: "FIELD_DATETIME"                           // string
+  +value: now(),                                    // null|Carbon
+}
+```
+
+```php
+CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexKeywordDTO {
+  +name: "FIELD_KEYWORD"                            // string
+  +value: "Value"                                   // null|string
+}
+```
+
+```php
+CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexMemoDTO {
+  +name: "FIELD_MEMO"                               // string
+  +value: "Value"                                   // null|string
+}
+```
+
+```php
+CodebarAg\DocuWare\DTO\OrganizationIndex {
+  +id: "2f071481-095d-4363-abd9-29ef845a8b05"              // string
+  +name: "Fake File Cabinet"                               // string
+  +guid: "1334c006-f095-4ae7-892b-fe59282c8bed"            // string|null
+}
+```
+
+```php
+CodebarAg\DocuWare\DTO\Organization {
+  +id: "2f071481-095d-4363-abd9-29ef845a8b05"              // string
+  +name: "Fake File Cabinet"                               // string
+  +guid: "1334c006-f095-4ae7-892b-fe59282c8bed"            // string|null
+  +additionalInfo: []                                      // array
+  +configurationRights: []                                 // array
+}
+```
+
+```php
+CodebarAg\DocuWare\DTO\FileCabinet {
+  +id: "2f071481-095d-4363-abd9-29ef845a8b05"              // string
+  +name: "Fake File Cabinet"                               // string
+  +color: "Yellow"                                         // string
+  +isBasket: true                                          // bool
+  +assignedCabinet: "889c13cc-c636-4759-a704-1e6500d2d70f" // string
+}
+```
+
+```php
+CodebarAg\DocuWare\DTO\Dialog {
+  +id: "fae3b667-53e9-48dd-9004-34647a26112e"            // string
+  +type: "ResultList"                                    // string
+  +label: "Fake Dialog"                                  // string
+  +isDefault: true                                       // boolean
+  +fileCabinetId: "1334c006-f095-4ae7-892b-fe59282c8bed" // string
+}
+```
+
+```php
+CodebarAg\DocuWare\DTO\Field {
+  +name: "FAKE_FIELD"  // string
+  +label: "Fake Field" // string
+  +type: "Memo"        // string
+  +scope: "User"       // string
+```
+
+```php
+CodebarAg\DocuWare\DTO\Field {
+  +name: "FAKE_FIELD"  // string
+  +label: "Fake Field" // string
+  +type: "Memo"        // string
+  +scope: "User"       // string
+```
+
+```php
+CodebarAg\DocuWare\DTO\Document {
+  +id: 659732                                              // integer
+  +file_size: 765336                                       // integer
+  +total_pages: 100                                        // integer
+  +title: "Fake Title"                                     // string
+  +extension: ".pdf"                                       // string
+  +content_type: "application/pdf"                         // string
+  +file_cabinet_id: "a233b03d-dc63-42dd-b774-25b3ff77548f" // string
+  +created_at: Illuminate\Support\Carbon                   // Carbon
+  +updated_at: Illuminate\Support\Carbon                   // Carbon
+  +fields: Illuminate\Support\Collection {                 // Collection|DocumentField[]
+    #items: array:2 [
+      0 => CodebarAg\DocuWare\DTO\DocumentField            // DocumentField
+      1 => CodebarAg\DocuWare\DTO\DocumentField            // DocumentField
+    ]
+  }
+}
+```
+
+```php
+CodebarAg\DocuWare\DTO\Section {#23784▶
+  +id: "5589-5525"
+  +contentType: "text/plain"
+  +haveMorePages: true
+  +pageCount: 1
+  +fileSize: 32
+  +originalFileName: "example.txt"
+  +contentModified: "/Date(1702395557000)/"
+  +annotationsPreview: false
+  +hasTextAnnotations: null
+}
+```
+
+```php
+CodebarAg\DocuWare\DTO\DocumentThumbnail {
+  +mime: "image/png"                                        // string
+  +data: "somedata"                                         // string
+  +base64: "data:image/png;base64,WXpJNWRGcFhVbWhrUjBVOQ==" // string
+}
+```
+
+```php
+CodebarAg\DocuWare\DTO\TableRow {
+   +fields: Illuminate\Support\Collection {                 // Collection|DocumentField[]
+    #items: array:2 [
+      0 => CodebarAg\DocuWare\DTO\DocumentField            // DocumentField
+      1 => CodebarAg\DocuWare\DTO\DocumentField            // DocumentField
+    ]
+}
+```
+
+```php
+CodebarAg\DocuWare\DTO\DocumentPaginator
+  +total: 39                                  // integer
+  +per_page: 10                               // integer
+  +current_page: 9                            // integer
+  +last_page: 15                              // integer
+  +from: 1                                    // integer
+  +to: 10                                     // integer
+  +documents: Illuminate\Support\Collection { // Collection|Document[]
+    #items: array:2 [
+      0 => CodebarAg\DocuWare\DTO\Document    // Document
+      1 => CodebarAg\DocuWare\DTO\Document    // Document
+    ]
+  }
+  +error: CodebarAg\DocuWare\DTO\ErrorBag {   // ErrorBag|null
+    +code: 422                                // int
+    +message: "'000' is not valid cabinet id" // string
+  }
+}
+```
+
 
 ## 📦 Caching requests
 
-- [Caching Requests](docs/caching.md)
+> All Get Requests are cachable and will be cached by default. To determine if the response is cached you can use the following method:
+
+### Is Cached
+```php 
+$connector = new DocuWareConnector();
+
+$response = $connector->send(new GetDocumentRequest($fileCabinetId, $documentId));
+$response->isCached(); // false
+
+// Next time the request is sent
+
+$response = $connector->send(new GetDocumentRequest($fileCabinetId, $documentId));
+$response->isCached(); // true
+```
+
+
+### Invalidate Cache
+> To invalidate the cache for a specific request you can use the following method:
+```php 
+$connector = new DocuWareConnector();
+
+$request = new GetDocumentRequest($fileCabinetId, $documentId);
+$request->invalidateCache();
+
+$response = $connector->send($request);
+```
+
+### Disable Caching
+> To temporarily disable caching for a specific request you can use the following method:
+```php 
+$connector = new DocuWareConnector();
+
+$request = new GetDocumentRequest($fileCabinetId, $documentId);
+$request->disableCaching();
+
+$response = $connector->send($request);
+```
+
 
 ## 💥 Exceptions explained
 
-- [Exceptions](docs/exceptions.md)
+- `CodebarAg\DocuWare\Exceptions\UnableToMakeRequest`
+
+This is thrown if you are not authorized to make the request.
+
+---
+
+- `CodebarAg\DocuWare\Exceptions\UnableToProcessRequest`
+
+This is thrown if you passed wrong attributes. For example a file cabinet ID
+which does not exist.
+
+---
+
+- `CodebarAg\DocuWare\Exceptions\UnableToLogin`
+
+This exception can only be thrown during the login if the credentials did not
+match.
+
+---
+
+- `CodebarAg\DocuWare\Exceptions\UnableToLoginNoCookies`
+
+This exception can only be thrown during the login if there was no cookies in
+the response from the api.
+
+---
+
+- `CodebarAg\DocuWare\Exceptions\UnableToFindPassphrase`
+
+This exception can only be thrown during the url making if the passphrase
+could not be found.
+
+---
+
+- `CodebarAg\DocuWare\Exceptions\UnableToMakeUrl`
+
+Something is wrong during the URL making.
+
+---
+
+- `CodebarAg\DocuWare\Exceptions\UnableToUpdateFields`
+
+No fields were supplied.
+
+---
+
+- `CodebarAg\DocuWare\Exceptions\UnableToGetDocumentCount`
+
+Something is wrong with the response from getting the document count.
+
+---
+
+- `Illuminate\Http\Client\RequestException`
+
+All other cases if the response is not successfully.
 
 
 ## ✨ Events

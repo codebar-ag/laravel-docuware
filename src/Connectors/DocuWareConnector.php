@@ -24,9 +24,6 @@ class DocuWareConnector extends Connector
         public ConfigWithCredentials|ConfigWithCredentialsTrustedUser $configuration
     ) {}
 
-    /**
-     * @throws \Exception
-     */
     public function resolveBaseUrl(): string
     {
         return $this->configuration->url.'/DocuWare/Platform';
@@ -79,6 +76,7 @@ class DocuWareConnector extends Connector
         }
 
         // Handle token retrieval for ConfigWithCredentialsTrustedUser
+        // @phpstan-ignore-next-line
         if ($this->configuration instanceof ConfigWithCredentialsTrustedUser) {
             $token = $this->getNewOAuthTokenWithCredentialsTrustedUser();
             DocuWareOAuthLog::dispatch($this->configuration->url, $this->configuration->username, 'Token retrieved from API');

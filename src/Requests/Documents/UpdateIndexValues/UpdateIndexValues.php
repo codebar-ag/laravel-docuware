@@ -3,7 +3,6 @@
 namespace CodebarAg\DocuWare\Requests\Documents\UpdateIndexValues;
 
 use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\PrepareDTO;
-use CodebarAg\DocuWare\Exceptions\UnableToUpdateFields;
 use CodebarAg\DocuWare\Responses\Documents\UpdateIndexValues\UpdateIndexValuesResponse;
 use Illuminate\Support\Collection;
 use Saloon\Contracts\Body\HasBody;
@@ -18,9 +17,6 @@ class UpdateIndexValues extends Request implements HasBody
 
     protected Method $method = Method::PUT;
 
-    /**
-     * @throws UnableToUpdateFields
-     */
     public function __construct(
         protected readonly string $fileCabinetId,
         protected readonly string $documentId,

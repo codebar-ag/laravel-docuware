@@ -1,9 +1,11 @@
 <img src="https://banners.beyondco.de/Laravel%20DocuWare.png?theme=light&packageManager=composer+require&packageName=codebar-ag%2Flaravel-docuware&pattern=circuitBoard&style=style_1&description=An+opinionated+way+to+integrate+DocuWare+with+Laravel&md=1&showWatermark=0&fontSize=175px&images=document-report">
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/codebar-ag/laravel-docuware.svg?style=flat-square)](https://packagist.org/packages/codebar-ag/laravel-docuware)
+[![Total Downloads](https://img.shields.io/packagist/dt/codebar-ag/laravel-docuware.svg?style=flat-square)](https://packagist.org/packages/codebar-ag/laravel-docuware)
 [![GitHub-Tests](https://github.com/codebar-ag/laravel-docuware/actions/workflows/run-tests.yml/badge.svg?branch=main)](https://github.com/codebar-ag/laravel-docuware/actions/workflows/run-tests.yml)
 [![GitHub Code Style](https://github.com/codebar-ag/laravel-docuware/actions/workflows/fix-php-code-style-issues.yml/badge.svg?branch=main)](https://github.com/codebar-ag/laravel-docuware/actions/workflows/fix-php-code-style-issues.yml)
-[![Total Downloads](https://img.shields.io/packagist/dt/codebar-ag/laravel-docuware.svg?style=flat-square)](https://packagist.org/packages/codebar-ag/laravel-docuware)
+[![PHPStan](https://github.com/codebar-ag/laravel-docuware/actions/workflows/phpstan.yml/badge.svg)](https://github.com/codebar-ag/laravel-docuware/actions/workflows/phpstan.yml)
+[![Dependency Review](https://github.com/codebar-ag/laravel-docuware/actions/workflows/dependency-review.yml/badge.svg)](https://github.com/codebar-ag/laravel-docuware/actions/workflows/dependency-review.yml)
 
 This package was developed to give you a quick start to communicate with the
 DocuWare REST API. It is used to query the most common endpoints.

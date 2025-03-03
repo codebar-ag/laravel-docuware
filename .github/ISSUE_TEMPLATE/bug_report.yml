@@ -1,7 +1,7 @@
 name: Bug Report
 description: Report an Issue or Bug with the Package
 title: "[Bug]: "
-labels: ["bug"]
+labels: [ "bug" ]
 body:
   - type: markdown
     attributes:
@@ -20,8 +20,8 @@ We're sorry to hear you have a problem. Can you help us solve it by providing th
     attributes:
       label: Package Version
       description: What version of our Package are you running? Please be as specific as possible
-      placeholder: "11.0"
-      value: "11.0"
+      placeholder: "12.0"
+      value: "12.0"
     validations:
       required: true
   - type: input
@@ -29,8 +29,8 @@ We're sorry to hear you have a problem. Can you help us solve it by providing th
     attributes:
       label: PHP Version
       description: What version of PHP are you running? Please be as specific as possible
-      placeholder: "8.3.0"
-      value: "8.3.0"
+      placeholder: "8.4.0"
+      value: "8.4.0"
     validations:
       required: true
   - type: input
@@ -38,8 +38,8 @@ We're sorry to hear you have a problem. Can you help us solve it by providing th
     attributes:
       label: Laravel Version
       description: What version of Laravel are you running? Please be as specific as possible
-      placeholder: "11.0.0"
-      value: "11.0.0"
+      placeholder: "12.0.0"
+      value: "12.0.0"
     validations:
       required: true
   - type: dropdown

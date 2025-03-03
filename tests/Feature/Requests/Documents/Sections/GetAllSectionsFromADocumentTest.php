@@ -11,7 +11,6 @@ it('can get all sections from a document', function () {
     Event::fake();
 
     $fileCabinetId = config('laravel-docuware.tests.file_cabinet_id');
-    $dialogId = config('laravel-docuware.tests.dialog_id');
 
     $document = $this->connector->send(new CreateDataRecord(
         $fileCabinetId,

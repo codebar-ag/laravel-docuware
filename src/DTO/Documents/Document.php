@@ -50,14 +50,14 @@ final class Document
         });
     }
 
-    protected static function convertSuggestions(Collection $suggestions): ?Collection
+    protected static function convertSuggestions(Collection $suggestions): Collection
     {
         return $suggestions->mapWithKeys(function (array $suggestion) {
             return [$suggestion['DBName'] => SuggestionField::fromJson($suggestion)];
         });
     }
 
-    protected static function convertSections(Collection $sections): ?Collection
+    protected static function convertSections(Collection $sections): Collection
     {
         return $sections->mapWithKeys(function (array $section) {
             return [$section['Id'] => Section::fromJson($section)];

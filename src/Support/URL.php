@@ -16,7 +16,7 @@ class URL
      */
     public static function format(string $string): string
     {
-        $padding = Str::substrCount($string, '=');
+        $padding = (string) Str::substrCount($string, '=');
 
         return Str::of($string)
             ->replace('+', '-')

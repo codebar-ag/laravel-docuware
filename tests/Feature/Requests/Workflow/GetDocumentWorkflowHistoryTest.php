@@ -18,7 +18,7 @@ it('can get document workflow history', function () {
 
     Sleep::for(5)->seconds();
 
-    $history = $this->connector->send(new GetDocumentWorkflowHistory(
+    $history = $this->connector->debug()->send(new GetDocumentWorkflowHistory(
         config('laravel-docuware.tests.file_cabinet_id'),
         $document->id
     ))->dto();

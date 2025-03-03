@@ -147,14 +147,15 @@ then optimize the processes that power the core of your business.
 <details>
  <summary>Version Support</summary>
 
-| Version         | PHP Version | Laravel Version | DocuWare Cloud Access |
-|-----------------|-------------|-----------------|-----------------------|
-| > v11.0 (alpha) | ^8.2        | ^11.*           | ✅                     |
-| > v4.0          | ^8.2        | ^11.*           | ✅                     |
-| > v3.0          | ^8.2        | ^10.*           | ✅                     |
-| > v2.0          | ^8.1        | ^9.*            | ✅                     |
-| > v1.2          | ^8.1        | ^9.*            | ✅                     |
-| < v1.2          | ^8.0        | ^8.*            | ✅                     |
+| Version       | PHP Version | Laravel Version | DocuWare Cloud Access |
+|---------------|-------------|-----------------|-----------------------|
+| v12.0         | ^8.2 - ^8.4 | 12.*            | ✅                     |
+| v11.0 (alpha) | ^8.2        | 11.*            | ✅                     |
+| > v4.0        | ^8.2        | 11.*            | ✅                     |
+| > v3.0        | ^8.2        | 10.*            | ✅                     |
+| > v2.0        | ^8.1        | 9.*             | ✅                     |
+| > v1.2        | ^8.1        | 9.*             | ✅                     |
+| < v1.2        | ^8.0        | 8.*             | ✅                     |
 
 </details>
 

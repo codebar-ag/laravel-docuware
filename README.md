@@ -149,13 +149,12 @@ then optimize the processes that power the core of your business.
 
 | Version       | PHP Version | Laravel Version | DocuWare Cloud Access |
 |---------------|-------------|-----------------|-----------------------|
-| v12.0         | ^8.2 - ^8.4 | 12.*            | ✅                     |
-| v11.0 (alpha) | ^8.2        | 11.*            | ✅                     |
-| > v4.0        | ^8.2        | 11.*            | ✅                     |
-| > v3.0        | ^8.2        | 10.*            | ✅                     |
-| > v2.0        | ^8.1        | 9.*             | ✅                     |
-| > v1.2        | ^8.1        | 9.*             | ✅                     |
-| < v1.2        | ^8.0        | 8.*             | ✅                     |
+| v2.0+         | ^8.2 - ^8.4 | 12.*            | ✅                     |
+| v2.0+         | ^8.2        | 11.*            | ✅                     |
+| v2.0+         | ^8.2        | 10.*            | ✅                     |
+| v2.0+         | ^8.1        | 9.*             | ✅                     |
+| v1.2 - v1.3   | ^8.1        | 9.*             | ✅                     |
+| v1.0 - v1.1   | ^8.0        | 8.*             | ✅                     |
 
 </details>
 
@@ -262,6 +261,11 @@ DOCUWARE_URL=https://domain.docuware.cloud
 DOCUWARE_USERNAME=user@domain.test
 DOCUWARE_PASSWORD=password
 DOCUWARE_PASSPHRASE="passphrase"
+DOCUWARE_TIMEOUT=30
+DOCUWARE_CACHE_DRIVER=file
+DOCUWARE_CACHE_LIFETIME_IN_SECONDS=60
+DOCUWARE_CLIENT_ID=docuware.platform.net.client
+DOCUWARE_SCOPE=docuware.platform
 ```
 
 With the passphrase we are able to encrypt the URLs.
@@ -312,31 +316,7 @@ $connector = new DocuWareConnector(
 
 ### Available Requests
 
-- [General](docs/General)
-  - [Organisation](docs/General/organization.md)
-  - [User Management](docs/General/User%20Management)
-    - [Get Users](docs/General/User%20Management/get_users.md)
-    - [Create/Update Users](docs/General/User%20Management/create-update_users.md)
-    - [Get/Modify Groups](docs/General/User%20Management/get-modify_groups.md)
-    - [Get/Modify Roles](docs/General/User%20Management/get-modify_roles.md)
-- [File Cabinets](docs/File%20Cabinets)
-  - [General](docs/File%20Cabinets/general.md)
-  - [Dialogs](docs/File%20Cabinets/dialogs.md)
-  - [Search](docs/File%20Cabinets/search.md)
-  - [Check/In & Check/Out](docs/File%20Cabinets/check-in_check-out.md)
-  - [Select Lists](docs/File%20Cabinets/select_lists.md)
-  - [Upload](docs/File%20Cabinets/upload.md)
-  - [Batch Index Fields Update](docs/File%20Cabinets/batch_index_fields_update.md)
-- [Documents](docs/Documents)
-  - [Update Index Values](docs/Documents/update_index_values.md)
-  - [Modify Documents](docs/Documents/modify_documents.md)
-  - [Clip/Unclip & Staple/Unstaple](docs/Documents/clip-unclicp_and_staple-unstaple.md)
-  - [Annotations & Stamps](docs/Documents/annotations-stamps.md)
-  - [Documents Trash Bin](docs/Documents/documents-trash-bin.md)
-  - [Application Properties](docs/Documents/application_properties.md)
-  - [Sections](docs/Documents/sections.md)
-  - [Download](docs/Documents/download.md)
-- [Workflow](docs/workflow.md)
+The following sections provide examples for each available request type. All functionality is documented inline below with code examples.
 
 #### Organization
 
@@ -1699,6 +1679,7 @@ return [
     | Cache driver
     |--------------------------------------------------------------------------
     | You may like to define a different cache driver than the default Laravel cache driver.
+    | In Laravel 12+, CACHE_STORE is used instead of CACHE_DRIVER.
     |
     */
 
@@ -1768,6 +1749,24 @@ return [
             'driver' => env('DOCUWARE_CACHE_DRIVER', env('CACHE_STORE', env('CACHE_DRIVER', 'file'))),
             'lifetime_in_seconds' => env('DOCUWARE_CACHE_LIFETIME_IN_SECONDS', 60),
         ],
+        'request' => [
+            'timeout_in_seconds' => env('DOCUWARE_TIMEOUT', 60),
+        ],
+
+        'client_id' => env('DOCUWARE_CLIENT_ID', 'docuware.platform.net.client'),
+        'scope' => env('DOCUWARE_SCOPE', 'docuware.platform'),
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Tests
+    |--------------------------------------------------------------------------
+    |
+    */
+    'tests' => [
+        'file_cabinet_id' => env('DOCUWARE_TESTS_FILE_CABINET_ID'),
+        'dialog_id' => env('DOCUWARE_TESTS_DIALOG_ID'),
+        'basket_id' => env('DOCUWARE_TESTS_BASKET_ID'),
     ],
 ];
 ```
@@ -1783,18 +1782,19 @@ cp phpunit.xml.dist phpunit.xml
 Modify environment variables in the phpunit.xml-file:
 
 ```xml
-<env name="DOCUWARE_TOKEN" value=""/>
 <env name="DOCUWARE_URL" value="https://domain.docuware.cloud"/>
 <env name="DOCUWARE_USERNAME" value="user@domain.test"/>
 <env name="DOCUWARE_PASSWORD" value="password"/>
 <env name="DOCUWARE_PASSPHRASE" value="passphrase"/>
 <env name="DOCUWARE_TIMEOUT" value="30"/>
+<env name="DOCUWARE_CACHE_DRIVER" value="file"/>
 <env name="DOCUWARE_CACHE_LIFETIME_IN_SECONDS" value="0"/>
+<env name="DOCUWARE_CLIENT_ID" value="docuware.platform.net.client"/>
+<env name="DOCUWARE_SCOPE" value="docuware.platform"/>
 
 <env name="DOCUWARE_TESTS_FILE_CABINET_ID" value=""/>
 <env name="DOCUWARE_TESTS_DIALOG_ID" value=""/>
 <env name="DOCUWARE_TESTS_BASKET_ID" value=""/>
-<env name="DOCUWARE_TESTS_ORGANIZATION_ID" value=""/>
 ```
 
 Run the tests:
@@ -1817,8 +1817,7 @@ Please review [our security policy](.github/SECURITY.md) on how to report securi
 
 ## 🙏 Credits
 
-- [Sebastian Fix](https://github.com/StanBarrows)
-- [Rhys Lees](https://github.com/RhysLees)
+- [Sebastian Bürgin-Fix](https://github.com/StanBarrows)
 - [All Contributors](../../contributors)
 - [Skeleton Repository from Spatie](https://github.com/spatie/package-skeleton-laravel)
 - [Laravel Package Training from Spatie](https://spatie.be/videos/laravel-package-training)

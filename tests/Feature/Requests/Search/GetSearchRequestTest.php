@@ -8,6 +8,7 @@ use CodebarAg\DocuWare\Events\DocuWareResponseLog;
 use CodebarAg\DocuWare\Exceptions\UnableToSearch;
 use CodebarAg\DocuWare\Requests\FileCabinets\Upload\CreateDataRecord;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Sleep;
 
 it('can search documents', function () {
     Event::fake();
@@ -241,6 +242,8 @@ it('can search documents with multiple values', function () {
             IndexTextDTO::make('DOCUMENT_TYPE', 'EtwasAnderes'),
         ]),
     ))->dto();
+
+    Sleep::for(3)->seconds(); // Wait for the documents to be processed
 
     // Should filter down to documentOne and documentTwo. documentThree should be filtered out.
     $paginatorRequestBothDocuments = (new DocuWare)

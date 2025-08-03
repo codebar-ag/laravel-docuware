@@ -2,7 +2,7 @@
 
 All notable changes to `laravel-docuware` will be documented in this file.
 
-## [Unreleased]
+## [v12.1.0]
 
 ### Laravel 12 Compatibility
 - Updated cache configuration to use `CACHE_STORE` instead of deprecated `CACHE_DRIVER` for Laravel 12 compatibility

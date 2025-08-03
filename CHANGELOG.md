@@ -6,7 +6,7 @@ All notable changes to `laravel-docuware` will be documented in this file.
 
 ### Laravel 12 Compatibility
 - Updated cache configuration to use `CACHE_STORE` instead of deprecated `CACHE_DRIVER` for Laravel 12 compatibility
-- This ensures DocuWare cache uses the same store as the application, preventing MAC invalid errors when using encrypted cache values
+- This ensures DocuWare cache uses the same store as the application, preventing MAC validation errors when using encrypted cache values
 - Maintains backward compatibility with Laravel 9-11 by falling back to `CACHE_DRIVER` if `CACHE_STORE` is not available
 
 ## 2.0.0 pre-release

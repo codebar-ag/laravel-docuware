@@ -1702,7 +1702,7 @@ return [
     |
     */
 
-    'cache_driver' => env('DOCUWARE_CACHE_DRIVER', env('CACHE_DRIVER', 'file')),
+    'cache_driver' => env('DOCUWARE_CACHE_DRIVER', env('CACHE_STORE', env('CACHE_DRIVER', 'file'))),
 
     /*
     |--------------------------------------------------------------------------
@@ -1765,7 +1765,7 @@ return [
             'additional_result_fields' => [],
         ],
         'cache' => [
-            'driver' => env('DOCUWARE_CACHE_DRIVER', env('CACHE_DRIVER', 'file')),
+            'driver' => env('DOCUWARE_CACHE_DRIVER', env('CACHE_STORE', env('CACHE_DRIVER', 'file'))),
             'lifetime_in_seconds' => env('DOCUWARE_CACHE_LIFETIME_IN_SECONDS', 60),
         ],
     ],

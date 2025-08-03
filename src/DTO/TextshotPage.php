@@ -23,7 +23,7 @@ final class TextshotPage
     }
 
     public function __construct(
-        public string $language,
+        public ?string $language,
         public string $content,
     ) {}
 

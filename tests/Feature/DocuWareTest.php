@@ -3,13 +3,23 @@
 namespace CodebarAg\DocuWare\Tests\Feature;
 
 use CodebarAg\DocuWare\DocuWare;
+use CodebarAg\DocuWare\Requests\FileCabinets\Upload\CreateDataRecord;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Sleep;
 
 it('can create encrypted url for a document in a file cabinet', function () {
     Event::fake();
 
     $fileCabinetId = config('laravel-docuware.tests.file_cabinet_id');
-    $documentId = config('laravel-docuware.tests.document_id');
+
+    // Create a document dynamically for testing
+    $document = $this->connector->send(new CreateDataRecord(
+        $fileCabinetId,
+        '::fake-file-content::',
+        'example.txt'
+    ))->dto();
+
+    Sleep::for(2)->seconds(); // Wait for the document to be processed
 
     $url = (new DocuWare)
         ->url(
@@ -19,7 +29,7 @@ it('can create encrypted url for a document in a file cabinet', function () {
             passphrase: config('laravel-docuware.passphrase'),
         )
         ->fileCabinet($fileCabinetId)
-        ->document($documentId)
+        ->document($document->id)
         ->validUntil(now()->addMinute())
         ->make();
 
@@ -38,7 +48,15 @@ it('can create encrypted url for a document in a basket', function () {
     Event::fake();
 
     $basketId = config('laravel-docuware.tests.basket_id');
-    $documentId = config('laravel-docuware.tests.document_id');
+
+    // Create a document dynamically for testing
+    $document = $this->connector->send(new CreateDataRecord(
+        $basketId,
+        '::fake-file-content::',
+        'example.txt'
+    ))->dto();
+
+    Sleep::for(2)->seconds(); // Wait for the document to be processed
 
     $url = (new DocuWare)
         ->url(
@@ -48,7 +66,7 @@ it('can create encrypted url for a document in a basket', function () {
             passphrase: config('laravel-docuware.passphrase'),
         )
         ->basket($basketId)
-        ->document($documentId)
+        ->document($document->id)
         ->validUntil(now()->addMinute())
         ->make();
 

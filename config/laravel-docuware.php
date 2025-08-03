@@ -7,10 +7,11 @@ return [
     | Cache driver
     |--------------------------------------------------------------------------
     | You may like to define a different cache driver than the default Laravel cache driver.
+    | In Laravel 12+, CACHE_STORE is used instead of CACHE_DRIVER.
     |
     */
 
-    'cache_driver' => env('DOCUWARE_CACHE_DRIVER', env('CACHE_DRIVER', 'file')),
+    'cache_driver' => env('DOCUWARE_CACHE_DRIVER', env('CACHE_STORE', 'file')),
 
     /*
     |--------------------------------------------------------------------------
@@ -73,11 +74,11 @@ return [
             'additional_result_fields' => [],
         ],
         'cache' => [
-            'driver' => env('DOCUWARE_CACHE_DRIVER', env('CACHE_DRIVER', 'file')),
+            'driver' => env('DOCUWARE_CACHE_DRIVER', env('CACHE_STORE', 'file')),
             'lifetime_in_seconds' => env('DOCUWARE_CACHE_LIFETIME_IN_SECONDS', 60),
         ],
         'request' => [
-            'timeout_in_seconds' => env('DOCUWARE_CACHE_TIMEOUT_IN_SECONDS', 60),
+            'timeout_in_seconds' => env('DOCUWARE_TIMEOUT', 60),
         ],
 
         'client_id' => env('DOCUWARE_CLIENT_ID', 'docuware.platform.net.client'),
@@ -94,17 +95,5 @@ return [
         'file_cabinet_id' => env('DOCUWARE_TESTS_FILE_CABINET_ID'),
         'dialog_id' => env('DOCUWARE_TESTS_DIALOG_ID'),
         'basket_id' => env('DOCUWARE_TESTS_BASKET_ID'),
-        'section' => (int) env('DOCUWARE_TESTS_SECTION'),
-        'organization_id' => env('DOCUWARE_TESTS_ORGANIZATION_ID'),
-        'document_id' => (int) env('DOCUWARE_TESTS_DOCUMENT_ID'),
-        'document_file_size_preview' => (int) env('DOCUWARE_TESTS_DOCUMENT_FILE_SIZE_PREVIEW'),
-        'document_file_size' => (int) env('DOCUWARE_TESTS_DOCUMENT_FILE_SIZE'),
-        'document_count' => (int) env('DOCUWARE_TESTS_DOCUMENT_COUNT'),
-        'document_thumbnail_mime_type' => env('DOCUWARE_TESTS_DOCUMENT_THUMBNAIL_MIME_TYPE'),
-        'document_thumbnail_file_size' => (int) env('DOCUWARE_TESTS_DOCUMENT_THUMBNAIL_FILE_SIZE'),
-        'document_ids' => json_decode(env('DOCUWARE_TESTS_DOCUMENTS_IDS', '[]')),
-        'documents_file_size' => (int) env('DOCUWARE_TESTS_DOCUMENTS_FILE_SIZE'),
-        'field_name' => env('DOCUWARE_TESTS_FIELD_NAME'),
-        'field_name_2' => env('DOCUWARE_TESTS_FIELD_NAME_2'),
     ],
 ];

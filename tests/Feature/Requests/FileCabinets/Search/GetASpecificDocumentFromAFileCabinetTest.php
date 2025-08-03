@@ -5,6 +5,7 @@ use CodebarAg\DocuWare\Events\DocuWareResponseLog;
 use CodebarAg\DocuWare\Requests\FileCabinets\Search\GetASpecificDocumentFromAFileCabinet;
 use CodebarAg\DocuWare\Requests\FileCabinets\Upload\CreateDataRecord;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Sleep;
 
 it('can show a document', function () {
     Event::fake();
@@ -16,6 +17,8 @@ it('can show a document', function () {
         '::fake-file-content::',
         'example.txt'
     ))->dto();
+
+    Sleep::for(2)->seconds(); // Wait for the document to be processed
 
     $getdocument = $this->connector->send(new GetASpecificDocumentFromAFileCabinet($fileCabinetId, $document->id))->dto();
 

@@ -149,12 +149,13 @@ then optimize the processes that power the core of your business.
 
 | Version       | PHP Version | Laravel Version | DocuWare Cloud Access |
 |---------------|-------------|-----------------|-----------------------|
-| v2.0+         | ^8.2 - ^8.4 | 12.*            | ✅                     |
-| v2.0+         | ^8.2        | 11.*            | ✅                     |
-| v2.0+         | ^8.2        | 10.*            | ✅                     |
-| v2.0+         | ^8.1        | 9.*             | ✅                     |
-| v1.2 - v1.3   | ^8.1        | 9.*             | ✅                     |
-| v1.0 - v1.1   | ^8.0        | 8.*             | ✅                     |
+| v12.0         | ^8.2 - ^8.4 | 12.*            | ✅                     |
+| v11.0 (alpha) | ^8.2        | 11.*            | ✅                     |
+| > v4.0        | ^8.2        | 11.*            | ✅                     |
+| > v3.0        | ^8.2        | 10.*            | ✅                     |
+| > v2.0        | ^8.1        | 9.*             | ✅                     |
+| > v1.2        | ^8.1        | 9.*             | ✅                     |
+| < v1.2        | ^8.0        | 8.*             | ✅                     |
 
 </details>
 
@@ -1683,7 +1684,7 @@ return [
     |
     */
 
-    'cache_driver' => env('DOCUWARE_CACHE_DRIVER', env('CACHE_STORE', env('CACHE_DRIVER', 'file'))),
+    'cache_driver' => env('DOCUWARE_CACHE_DRIVER', env('CACHE_STORE', 'file')),
 
     /*
     |--------------------------------------------------------------------------
@@ -1746,7 +1747,7 @@ return [
             'additional_result_fields' => [],
         ],
         'cache' => [
-            'driver' => env('DOCUWARE_CACHE_DRIVER', env('CACHE_STORE', env('CACHE_DRIVER', 'file'))),
+            'driver' => env('DOCUWARE_CACHE_DRIVER', env('CACHE_STORE', 'file')),
             'lifetime_in_seconds' => env('DOCUWARE_CACHE_LIFETIME_IN_SECONDS', 60),
         ],
         'request' => [

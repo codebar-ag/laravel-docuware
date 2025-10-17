@@ -2,7 +2,9 @@
 
 namespace CodebarAg\DocuWare\Requests\Documents\ModifyDocuments;
 
+use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\PrepareDTO;
 use CodebarAg\DocuWare\Responses\Documents\ModifyDocuments\TransferDocumentResponse;
+use Illuminate\Support\Collection;
 use Saloon\Contracts\Body\HasBody;
 use Saloon\Enums\Method;
 use Saloon\Http\Request;
@@ -18,9 +20,12 @@ class TransferDocument extends Request implements HasBody
     public function __construct(
         protected readonly string $fileCabinetId,
         protected readonly string $destinationFileCabinetId,
-        protected readonly string $storeDialogId,
         protected readonly string $documentId,
-        protected readonly array $fields = [],
+        protected readonly ?string $storeDialogId = null,
+        protected readonly ?Collection $fields = null,
+        protected readonly bool $keepSource = false,
+        protected readonly bool $fillIntellix = false,
+        protected readonly bool $useDefaultDialog = false,
     ) {}
 
     public function resolveEndpoint(): string
@@ -39,18 +44,30 @@ class TransferDocument extends Request implements HasBody
 
     protected function defaultBody(): array
     {
-        return [
+        $body = [
             'SourceFileCabinetId' => $this->fileCabinetId,
             'Documents' => [
                 [
                     'Id' => $this->documentId,
-                    'Fields' => $this->fields,
                 ],
             ],
-            'KeepSource' => false,
-            'FillIntellix' => false,
-            'UseDefaultDialog' => false,
+            'KeepSource' => $this->keepSource,
+            'FillIntellix' => $this->fillIntellix,
+            'UseDefaultDialog' => $this->useDefaultDialog,
         ];
+
+        // Add storeDialogId if provided
+        if ($this->storeDialogId) {
+            $body['StoreDialogId'] = $this->storeDialogId;
+        }
+
+        // Add fields if provided
+        if ($this->fields) {
+            $fieldData = PrepareDTO::makeField($this->fields);
+            $body['Documents'][0]['Fields'] = $fieldData['Field'];
+        }
+
+        return $body;
     }
 
     public function createDtoFromResponse(Response $response): bool

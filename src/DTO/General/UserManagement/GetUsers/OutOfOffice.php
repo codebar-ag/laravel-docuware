@@ -12,14 +12,12 @@ final class OutOfOffice
     {
         if ($startDateTime = Arr::get($data, 'StartDateTime')) {
             $startDateTime = Str::of($startDateTime)->after('(')->before(')');
-            // Extract milliseconds part (ignore optional timezone offset like +0000)
             $milliseconds = (int) (string) $startDateTime;
             $startDateTime = Carbon::createFromTimestampMs($milliseconds, 'UTC');
         }
 
         if ($endDateTime = Arr::get($data, 'EndDateTime')) {
             $endDateTime = Str::of($endDateTime)->after('(')->before(')');
-            // Extract milliseconds part (ignore optional timezone offset like +0000)
             $milliseconds = (int) (string) $endDateTime;
             $endDateTime = Carbon::createFromTimestampMs($milliseconds, 'UTC');
         }

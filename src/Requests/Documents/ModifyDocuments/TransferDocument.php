@@ -56,12 +56,10 @@ class TransferDocument extends Request implements HasBody
             'UseDefaultDialog' => $this->useDefaultDialog,
         ];
 
-        // Add storeDialogId if provided
         if ($this->storeDialogId) {
             $body['StoreDialogId'] = $this->storeDialogId;
         }
 
-        // Add fields if provided
         if ($this->fields) {
             $fieldData = PrepareDTO::makeField($this->fields);
             $body['Documents'][0]['Fields'] = $fieldData['Field'];

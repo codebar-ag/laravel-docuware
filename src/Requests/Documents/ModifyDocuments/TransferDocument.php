@@ -2,6 +2,7 @@
 
 namespace CodebarAg\DocuWare\Requests\Documents\ModifyDocuments;
 
+use Arr;
 use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\PrepareDTO;
 use CodebarAg\DocuWare\Responses\Documents\ModifyDocuments\TransferDocumentResponse;
 use Illuminate\Support\Collection;
@@ -30,7 +31,13 @@ class TransferDocument extends Request implements HasBody
 
     public function resolveEndpoint(): string
     {
-        return '/FileCabinets/'.$this->destinationFileCabinetId.'/Task/Transfer';
+        $endpoint = '/FileCabinets/'.$this->destinationFileCabinetId.'/Task/Transfer';
+
+        if ($this->storeDialogId) {
+            $endpoint .= '?StoreDialogId='.$this->storeDialogId;
+        }
+
+        return $endpoint;
     }
 
     protected function defaultHeaders(): array
@@ -49,21 +56,13 @@ class TransferDocument extends Request implements HasBody
             'Documents' => [
                 [
                     'Id' => $this->documentId,
+                    'Fields' => $this->fields ? Arr::get(PrepareDTO::makeField($this->fields), 'Field') : null,
                 ],
             ],
             'KeepSource' => $this->keepSource,
             'FillIntellix' => $this->fillIntellix,
             'UseDefaultDialog' => $this->useDefaultDialog,
         ];
-
-        if ($this->storeDialogId) {
-            $body['StoreDialogId'] = $this->storeDialogId;
-        }
-
-        if ($this->fields) {
-            $fieldData = PrepareDTO::makeField($this->fields);
-            $body['Documents'][0]['Fields'] = $fieldData['Field'];
-        }
 
         return $body;
     }

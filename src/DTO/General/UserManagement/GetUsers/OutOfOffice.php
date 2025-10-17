@@ -12,10 +12,12 @@ final class OutOfOffice
     {
         $startDateTime = Arr::get($data, 'StartDateTime');
 
+        $timeZone = config('app.timezone', 'UTC');
+
         if (filled($startDateTime)) {
             $startDateTime = Str::of($startDateTime)->after('(')->before(')');
             $milliseconds = (int) (string) $startDateTime;
-            $startDateTime = Carbon::createFromTimestampMs($milliseconds, 'UTC');
+            $startDateTime = Carbon::createFromTimestampMs($milliseconds, $timeZone);
         }
 
         $endDateTime = Arr::get($data, 'EndDateTime');
@@ -23,7 +25,7 @@ final class OutOfOffice
         if (filled($endDateTime)) {
             $endDateTime = Str::of($endDateTime)->after('(')->before(')');
             $milliseconds = (int) (string) $endDateTime;
-            $endDateTime = Carbon::createFromTimestampMs($milliseconds, 'UTC');
+            $endDateTime = Carbon::createFromTimestampMs($milliseconds, $timeZone);
         }
 
         return new self(
@@ -31,7 +33,7 @@ final class OutOfOffice
             startDateTime: $startDateTime,
             startDateTimeSpecified: Arr::get($data, 'StartDateTimeSpecified'),
             endDateTime: $endDateTime,
-            endDateTimeSpecified: Arr::get($data, key: 'EndDateTimeSpecified'),
+            endDateTimeSpecified: Arr::get($data, 'EndDateTimeSpecified'),
         );
     }
 

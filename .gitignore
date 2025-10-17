@@ -10,6 +10,7 @@ vendor
 node_modules
 .phpactor.json
 build
+.phpunit.cache
 
 ## Annotations
 src/DTO/Documents/AnnotationsStamps/*

@@ -315,6 +315,52 @@ $connector = new DocuWareConnector(
 );
 ```
 
+### Enums
+
+The package provides several enums to ensure type safety and consistency when working with DocuWare API values.
+
+#### ConnectionEnum
+
+Represents different connection types for DocuWare authentication:
+
+```php
+use CodebarAg\DocuWare\Enums\ConnectionEnum;
+
+ConnectionEnum::WITHOUT_COOKIE;    
+ConnectionEnum::STATIC_COOKIE; 
+ConnectionEnum::DYNAMIC_COOKIE;
+```
+
+#### DialogType
+
+Represents different types of dialogs in DocuWare:
+
+```php
+use CodebarAg\DocuWare\Enums\DialogType;
+
+DialogType::SEARCH; 
+DialogType::STORE;
+DialogType::RESULT;
+DialogType::INDEX; 
+DialogType::LIST; 
+DialogType::FOLDERS; 
+```
+
+#### DocuWareFieldTypeEnum
+
+Represents different field types used in DocuWare document indexing:
+
+```php
+use CodebarAg\DocuWare\Enums\DocuWareFieldTypeEnum;
+
+DocuWareFieldTypeEnum::STRING;
+DocuWareFieldTypeEnum::INT; 
+DocuWareFieldTypeEnum::DECIMAL;
+DocuWareFieldTypeEnum::DATE;
+DocuWareFieldTypeEnum::DATETIME;
+DocuWareFieldTypeEnum::TABLE;
+```
+
 ### Available Requests
 
 The following sections provide examples for each available request type. All functionality is documented inline below with code examples.

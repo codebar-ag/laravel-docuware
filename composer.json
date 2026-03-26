@@ -15,7 +15,7 @@
     "authors": [
         {
             "name": "Sebastian Bürgin-Fix",
-            "email": "sebastian.buergin@buergin.ch",
+            "email": "helpdesk@codebar.ch",
             "homepage": "https://www.codebar.ch",
             "role": "Software-Engineer"
         }
@@ -25,9 +25,9 @@
         "guzzlehttp/guzzle": "^7.8",
         "illuminate/contracts": "^12.0",
         "nesbot/carbon": "^3.8",
-        "saloonphp/cache-plugin": "^3.0",
-        "saloonphp/laravel-plugin": "^3.5",
-        "saloonphp/saloon": "^3.10.1",
+        "saloonphp/cache-plugin": "^3.1",
+        "saloonphp/laravel-plugin": "^4.0",
+        "saloonphp/saloon": "^4.0",
         "spatie/laravel-package-tools": "^1.19"
     },
     "require-dev": {

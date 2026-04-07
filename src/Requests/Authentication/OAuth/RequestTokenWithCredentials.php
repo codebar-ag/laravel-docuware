@@ -36,6 +36,9 @@ class RequestTokenWithCredentials extends SoloRequest implements HasBody
         ];
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function defaultBody(): array
     {
         return [

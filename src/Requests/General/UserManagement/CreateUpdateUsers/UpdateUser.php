@@ -37,6 +37,9 @@ class UpdateUser extends Request implements Cacheable, HasBody
         ];
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     protected function defaultBody(): array
     {
         return [

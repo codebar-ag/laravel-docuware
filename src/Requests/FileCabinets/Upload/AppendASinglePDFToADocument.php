@@ -37,6 +37,9 @@ class AppendASinglePDFToADocument extends Request implements HasBody
         ];
     }
 
+    /**
+     * @return list<MultipartValue>
+     */
     protected function defaultBody(): array
     {
         return [

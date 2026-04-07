@@ -20,6 +20,9 @@ class AddApplicationProperties extends Request implements Cacheable, HasBody
 
     protected Method $method = Method::POST;
 
+    /**
+     * @param  list<array<string, mixed>>  $properties
+     */
     public function __construct(
         protected readonly string $fileCabinetId,
         protected readonly string $documentId,
@@ -31,7 +34,10 @@ class AddApplicationProperties extends Request implements Cacheable, HasBody
         return '/FileCabinets/'.$this->fileCabinetId.'/Documents/'.$this->documentId.'/DocumentApplicationProperties';
     }
 
-    public function defaultBody()
+    /**
+     * @return array<string, mixed>
+     */
+    public function defaultBody(): array
     {
         return [
             'DocumentApplicationProperty' => $this->properties,

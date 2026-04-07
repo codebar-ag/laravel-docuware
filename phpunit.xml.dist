@@ -5,8 +5,14 @@
          executionOrder="defects" failOnWarning="true" failOnRisky="true" failOnEmptyTestSuite="true"
          beStrictAboutOutputDuringTests="true" cacheDirectory=".phpunit.cache" backupStaticProperties="false">
 <testsuites>
-    <testsuite name="codebar Solutions AG Test Suite">
-        <directory>tests</directory>
+    <testsuite name="default">
+        <directory>tests/Unit</directory>
+        <directory>tests/Core</directory>
+        <directory>tests/Feature</directory>
+        <directory>tests/Manual</directory>
+    </testsuite>
+    <testsuite name="integration">
+        <directory>tests/Integration</directory>
     </testsuite>
 </testsuites>
 <coverage>
@@ -22,6 +28,7 @@
 <php>
     <env name="APP_KEY" value="base64:F+mHMDBbavrsp/I3WYA5lDSwDJJI/0wQG4eM3csq/lo="/>
     <env name="DOCUWARE_URL" value="https://laravel.docuware.cloud"/>
+    <env name="DOCUWARE_PLATFORM_PATH" value="DocuWare/Platform"/>
     <env name="DOCUWARE_USERNAME" value="username"/>
     <env name="DOCUWARE_PASSWORD" value="password"/>
     <env name="DOCUWARE_PASSPHRASE" value="passphrase"/>

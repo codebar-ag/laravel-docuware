@@ -3,6 +3,14 @@
 namespace CodebarAg\DocuWare\Requests\FileCabinets\Upload;
 
 use CodebarAg\DocuWare\DTO\Documents\Document;
+use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexDateDTO;
+use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexDateTimeDTO;
+use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexDecimalDTO;
+use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexKeywordDTO;
+use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexMemoDTO;
+use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexNumericDTO;
+use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexTableDTO;
+use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexTextDTO;
 use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\PrepareDTO;
 use CodebarAg\DocuWare\Responses\FileCabinets\Upload\CreateDataRecordResponse;
 use Illuminate\Support\Collection;
@@ -19,18 +27,31 @@ class CreateDataRecord extends Request implements HasBody
 
     protected Method $method = Method::POST;
 
+    /**
+     * @param  Collection<int, IndexTextDTO|IndexDateDTO|IndexDateTimeDTO|IndexNumericDTO|IndexDecimalDTO|IndexTableDTO|IndexKeywordDTO|IndexMemoDTO>|null  $indexes
+     */
     public function __construct(
         protected readonly string $fileCabinetId,
         protected readonly ?string $fileContent,
         protected readonly ?string $fileName,
         protected readonly ?Collection $indexes = null,
+        protected readonly ?string $storeDialogId = null,
     ) {}
 
     public function resolveEndpoint(): string
     {
-        return '/FileCabinets/'.$this->fileCabinetId.'/Documents';
+        $path = '/FileCabinets/'.$this->fileCabinetId.'/Documents';
+
+        if ($this->storeDialogId !== null && $this->storeDialogId !== '') {
+            $path .= '?StoreDialogId='.rawurlencode($this->storeDialogId);
+        }
+
+        return $path;
     }
 
+    /**
+     * @return list<MultipartValue>
+     */
     protected function defaultBody(): array
     {
         $body = [];

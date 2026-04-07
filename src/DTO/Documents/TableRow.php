@@ -2,6 +2,7 @@
 
 namespace CodebarAg\DocuWare\DTO\Documents;
 
+use CodebarAg\DocuWare\Support\JsonArrays;
 use Illuminate\Support\Collection;
 
 class TableRow
@@ -11,14 +12,7 @@ class TableRow
      */
     public static function fromJson(array $data): self
     {
-        $fieldList = [];
-        foreach (array_values($data) as $item) {
-            if (is_array($item)) {
-                $fieldList[] = $item;
-            }
-        }
-
-        $fields = self::convertFields(collect($fieldList));
+        $fields = self::convertFields(collect(JsonArrays::listOfRecords($data)));
 
         return new self(
             fields: $fields,

@@ -2,9 +2,9 @@
 
 namespace CodebarAg\DocuWare\Requests\General\UserManagement\GetUsers;
 
+use CodebarAg\DocuWare\DTO\General\UserManagement\GetUsers\User;
 use CodebarAg\DocuWare\Responses\General\UserManagement\GetUsers\GetUsersResponse;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Enumerable;
 use Illuminate\Support\Facades\Cache;
 use Saloon\CachePlugin\Contracts\Cacheable;
 use Saloon\CachePlugin\Drivers\LaravelCacheDriver;
@@ -45,7 +45,10 @@ class GetUsersOfAGroup extends Request implements Cacheable
         return config('laravel-docuware.configurations.cache.lifetime_in_seconds', 3600);
     }
 
-    public function createDtoFromResponse(Response $response): Enumerable|Collection
+    /**
+     * @return Collection<int, User>
+     */
+    public function createDtoFromResponse(Response $response): Collection
     {
         return GetUsersResponse::fromResponse($response);
     }

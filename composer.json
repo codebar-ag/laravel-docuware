@@ -56,8 +56,10 @@
     "scripts": {
         "post-autoload-dump": "@php ./vendor/bin/testbench package:discover --ansi",
         "analyse": "vendor/bin/phpstan analyse",
-        "test": "vendor/bin/pest --no-coverage",
-        "test-coverage": "vendor/bin/pest --coverage",
+        "test": "vendor/bin/pest --no-coverage --testsuite=default",
+        "test:live": "vendor/bin/pest --no-coverage --testsuite=integration",
+        "test:manual": "vendor/bin/pest --no-coverage tests/Manual",
+        "test-coverage": "vendor/bin/pest --coverage --testsuite=default",
         "format": "vendor/bin/pint"
     },
     "config": {

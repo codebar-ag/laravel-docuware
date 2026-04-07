@@ -3,19 +3,20 @@
 namespace CodebarAg\DocuWare\DTO\Documents;
 
 use CodebarAg\DocuWare\DTO\ErrorBag;
+use CodebarAg\DocuWare\Support\JsonArrays;
 use Exception;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 
 /**
- * @property Collection<int, array<mixed>> $documents
+ * @property Collection<int, array<string, mixed>> $documents
  */
 class TrashDocumentPaginator
 {
     /**
-     * @param  Collection<int|string, array<mixed>>  $headers
-     * @param  Collection<int, array<mixed>>  $documents
-     * @param  Collection<int, Collection<int|string, mixed>>  $mappedDocuments
+     * @param  Collection<string, array<string, mixed>>  $headers
+     * @param  Collection<int, array<string, mixed>>  $documents
+     * @param  Collection<int, Collection<string, mixed>>  $mappedDocuments
      */
     public function __construct(
         public int $total,
@@ -71,33 +72,20 @@ class TrashDocumentPaginator
         if (is_array($headersRaw)) {
             foreach ($headersRaw as $key => $value) {
                 if (is_array($value)) {
-                    $headerMap[$key] = $value;
+                    $headerMap[(string) $key] = JsonArrays::associativeRow($value);
                 }
             }
         }
         $headers = collect($headerMap);
 
         $rowsRaw = Arr::get($data, 'Rows', []);
-        $rowList = [];
-        if (is_array($rowsRaw)) {
-            foreach (array_values($rowsRaw) as $row) {
-                if (is_array($row)) {
-                    $rowList[] = $row;
-                }
-            }
+        $documents = collect(JsonArrays::listOfRecords(is_array($rowsRaw) ? $rowsRaw : []));
+
+        $mappedList = [];
+        foreach ($documents as $document) {
+            $mappedList[] = self::mapDocumentRowToFields($document, $headers);
         }
-        $documents = collect($rowList);
-
-        $mappedDocuments = $documents->map(function (array $document) use ($headers): Collection {
-            $document = collect($document);
-
-            return $document->mapWithKeys(function (mixed $value, int|string $key) use ($headers): array {
-                $headerRaw = $headers->get($key);
-                $header = collect(is_array($headerRaw) ? $headerRaw : []);
-
-                return $header->has('FieldName') ? [$header->get('FieldName') => $value] : [];
-            })->filter();
-        });
+        $mappedDocuments = collect($mappedList);
 
         return new self(
             total: $total,
@@ -110,6 +98,27 @@ class TrashDocumentPaginator
             documents: $documents,
             mappedDocuments: $mappedDocuments,
         );
+    }
+
+    /**
+     * @param  array<string, mixed>  $document
+     * @param  Collection<string, array<string, mixed>>  $headers
+     * @return Collection<string, mixed>
+     */
+    protected static function mapDocumentRowToFields(array $document, Collection $headers): Collection
+    {
+        $row = collect(JsonArrays::associativeRow($document));
+
+        return $row->mapWithKeys(function (mixed $value, int|string $key) use ($headers): array {
+            $headerRaw = $headers->get((string) $key);
+            $header = collect(is_array($headerRaw) ? JsonArrays::associativeRow($headerRaw) : []);
+
+            $fieldName = $header->get('FieldName');
+
+            return $header->has('FieldName') && (is_string($fieldName) || is_int($fieldName))
+                ? [(string) $fieldName => $value]
+                : [];
+        })->filter();
     }
 
     public static function fromFailed(Exception $e): self
@@ -129,9 +138,9 @@ class TrashDocumentPaginator
     }
 
     /**
-     * @param  Collection<int|string, array<mixed>>|null  $headers
-     * @param  Collection<int, array<mixed>>|null  $documents
-     * @param  Collection<int, Collection<int|string, mixed>>|null  $mappedDocuments
+     * @param  Collection<string, array<string, mixed>>|null  $headers
+     * @param  Collection<int, array<string, mixed>>|null  $documents
+     * @param  Collection<int, Collection<string, mixed>>|null  $mappedDocuments
      */
     public static function fake(
         ?int $total = null,
@@ -151,9 +160,9 @@ class TrashDocumentPaginator
             last_page: $last_page ?? random_int(10, 20),
             from: $from ?? 1,
             to: $to ?? 10,
-            headers: $headers,
-            documents: $documents,
-            mappedDocuments: $mappedDocuments,
+            headers: $headers ?? collect(),
+            documents: $documents ?? collect(),
+            mappedDocuments: $mappedDocuments ?? collect(),
         );
     }
 }

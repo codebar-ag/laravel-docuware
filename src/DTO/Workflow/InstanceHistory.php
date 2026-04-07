@@ -2,6 +2,7 @@
 
 namespace CodebarAg\DocuWare\DTO\Workflow;
 
+use CodebarAg\DocuWare\Support\JsonArrays;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
@@ -9,6 +10,9 @@ use Illuminate\Support\Str;
 
 final class InstanceHistory
 {
+    /**
+     * @param  array<string, mixed>  $data
+     */
     public static function fromJson(array $data): self
     {
         if ($startDateTime = Arr::get($data, 'StartedAt')) {
@@ -16,8 +20,11 @@ final class InstanceHistory
             $startDateTime = Carbon::createFromTimestamp($startDateTime);
         }
 
-        if ($historySteps = Arr::get($data, 'HistorySteps')) {
-            $historySteps = collect($historySteps)->map(fn (array $historyStep) => HistoryStep::fromJson($historyStep));
+        $historySteps = null;
+        $stepsRaw = Arr::get($data, 'HistorySteps');
+        if (is_array($stepsRaw)) {
+            $historySteps = collect(JsonArrays::listOfRecords($stepsRaw))
+                ->map(fn (array $historyStep) => HistoryStep::fromJson($historyStep));
         }
 
         return new self(
@@ -32,6 +39,9 @@ final class InstanceHistory
         );
     }
 
+    /**
+     * @param  Collection<int, HistoryStep>|null  $historySteps
+     */
     public function __construct(
         public string $id,
         public string $workflowId,

@@ -6,6 +6,9 @@ use Illuminate\Support\Arr;
 
 final class ResponsibleIdentityService
 {
+    /**
+     * @param  array<string, mixed>  $data
+     */
     public static function make(array $data): self
     {
         return new self(

@@ -100,18 +100,13 @@ class DocuWareSearchRequestBuilder
         return $this;
     }
 
-    public function filterDate(string $name, string $operator, ?Carbon $date): self
+    public function filterDate(string $name, string $operator, Carbon $date): self
     {
-        if ($date === null) {
-            throw new \InvalidArgumentException('A date is required for date filters.');
-        }
-
         $date = $this->exactDateTime($date, $operator);
 
         $this->makeSureFilterDateRangeIsCorrect($name, $operator);
 
         $this->filters[$name][] = $date;
-        $this->filters[$name] = array_values($this->filters[$name]);
 
         return $this;
     }

@@ -25,6 +25,18 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Platform path
+    |--------------------------------------------------------------------------
+    |
+    | Postman variable {{Platform}} is usually "DocuWare/Platform". Base URL is
+    | rtrim(DOCUWARE_URL,'/').'/'.platform_path
+    |
+    */
+
+    'platform_path' => env('DOCUWARE_PLATFORM_PATH', 'DocuWare/Platform'),
+
+    /*
+    |--------------------------------------------------------------------------
     | DocuWare Credentials
     |--------------------------------------------------------------------------
     |
@@ -95,5 +107,9 @@ return [
         'file_cabinet_id' => env('DOCUWARE_TESTS_FILE_CABINET_ID'),
         'dialog_id' => env('DOCUWARE_TESTS_DIALOG_ID'),
         'basket_id' => env('DOCUWARE_TESTS_BASKET_ID'),
+        'org_id' => env('DOCUWARE_TESTS_ORG_ID', env('DOCUWARE_TESTS_ORGANIZATION_ID')),
+        'search_dialog_id' => env('DOCUWARE_TESTS_SEARCH_DIALOG_ID'),
+        'store_dialog_id' => env('DOCUWARE_TESTS_STORE_DIALOG_ID'),
+        'document_id' => env('DOCUWARE_TESTS_DOCUMENT_ID'),
     ],
 ];

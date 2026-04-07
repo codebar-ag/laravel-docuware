@@ -19,6 +19,7 @@ uses(TestCase::class)
     ->in(__DIR__);
 
 uses()
+    ->group('live')
     ->beforeEach(function () {
         $this->connector = getConnector();
 
@@ -27,7 +28,7 @@ uses()
     ->afterEach(function () {
         setUsersInactive($this->connector);
     })
-    ->in('Feature');
+    ->in('Integration');
 
 function clearFiles(DocuWareConnector $connector): void
 {

@@ -4,6 +4,7 @@ namespace CodebarAg\DocuWare\Tests;
 
 use CodebarAg\DocuWare\DocuWareServiceProvider;
 use Orchestra\Testbench\TestCase as Orchestra;
+use Saloon\MockConfig;
 
 class TestCase extends Orchestra
 {
@@ -22,5 +23,7 @@ class TestCase extends Orchestra
             'database' => ':memory:',
             'prefix' => '',
         ]);
+
+        MockConfig::setFixturePath(__DIR__.'/Fixtures/saloon');
     }
 }

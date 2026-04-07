@@ -96,9 +96,12 @@ class DocuWareUrl
             iv: $iv,
         );
 
+        $platform = trim(config('laravel-docuware.platform_path', 'DocuWare/Platform'), '/');
+
         return sprintf(
-            '%s/DocuWare/Platform/WebClient/Integration?ep=%s',
-            $this->url,
+            '%s/%s/WebClient/Integration?ep=%s',
+            rtrim($this->url, '/'),
+            $platform,
             URL::format($encrypted),
         );
     }

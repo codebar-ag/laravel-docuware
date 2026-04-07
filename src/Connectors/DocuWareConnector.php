@@ -27,7 +27,10 @@ class DocuWareConnector extends Connector
 
     public function resolveBaseUrl(): string
     {
-        return $this->configuration->url.'/DocuWare/Platform';
+        $base = rtrim($this->configuration->url, '/');
+        $platform = trim(config('laravel-docuware.platform_path', 'DocuWare/Platform'), '/');
+
+        return $base.'/'.$platform;
     }
 
     public function defaultHeaders(): array

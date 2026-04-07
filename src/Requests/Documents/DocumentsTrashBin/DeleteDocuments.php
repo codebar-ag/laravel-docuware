@@ -17,6 +17,9 @@ class DeleteDocuments extends Request implements HasBody
 
     protected Method $method = Method::POST;
 
+    /**
+     * @param  array<int, string>|Collection<int, string>  $ids
+     */
     public function __construct(
         protected readonly array|Collection $ids = [],
     ) {}
@@ -26,6 +29,9 @@ class DeleteDocuments extends Request implements HasBody
         return '/TrashBin/BatchDelete';
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function defaultBody(): array
     {
         return [

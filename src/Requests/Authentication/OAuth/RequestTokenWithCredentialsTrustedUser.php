@@ -37,6 +37,9 @@ class RequestTokenWithCredentialsTrustedUser extends SoloRequest implements HasB
         ];
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function defaultBody(): array
     {
         return [

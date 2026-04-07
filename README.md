@@ -130,6 +130,7 @@ See the documentation if you need further functionality. ⚠️
   * [💥 Exceptions explained](#-exceptions-explained)
   * [✨ Events](#-events)
   * [🔧 Configuration file](#-configuration-file)
+  * [Postman collection parity & Saloon fixtures](#postman-collection-parity--saloon-fixtures)
   * [🚧 Testing](#-testing)
   * [📝 Changelog](#-changelog)
   * [✏️ Contributing](#-contributing)
@@ -198,20 +199,20 @@ then optimize the processes that power the core of your business.
 | FileCabinets/Search                 | Get a Specific Document From a File Cabinet                 | ✅         |      |
 | FileCabinets/Search                 | Search for Documents in a Single File Cabinet               | ✅         |      |
 | FileCabinets/Search                 | Search for Documents in Multiple File Cabinets              | ✅         |      |
-| FileCabinets/CheckInCheckOut        | Check-out & Download a Document                             | 🕣        |      |
-| FileCabinets/CheckInCheckOut        | Check-in a Document from the File System                    | 🕣        |      |
-| FileCabinets/CheckInCheckOut        | Undo Check-out                                              | 🕣        |      |
+| FileCabinets/CheckInCheckOut        | Check-out & Download a Document                             | ✅         | `CheckoutDocumentToFileSystem` |
+| FileCabinets/CheckInCheckOut        | Check-in a Document from the File System                    | ✅         | `CheckInDocumentFromFileSystem` |
+| FileCabinets/CheckInCheckOut        | Undo Check-out                                              | ✅         | `UndoDocumentCheckout` |
 | FileCabinets/SelectLists            | Get Select Lists & Get Filtered Select Lists                | ✅         |      |
 | FileCabinets/Upload                 | Create Data Record                                          | ✅         |      |
 | FileCabinets/Upload                 | Append File(s) to a Data Record                             | ✅         |      |
 | FileCabinets/Upload                 | Upload a Single File for a Data Record                      | ❌         | -    |
 | FileCabinets/Upload                 | Create a Data Record & Upload File                          | ❌         | -    |
-| FileCabinets/Upload                 | Create Data Record & Upload File Using Store Dialog         | ❌         | -    |
+| FileCabinets/Upload                 | Create Data Record & Upload File Using Store Dialog         | ✅         | `CreateDataRecord` + `storeDialogId` |
 | FileCabinets/Upload                 | Append a Single PDF to a Document                           | ✅         | -    |
 | FileCabinets/Upload                 | Replace a PDF Document Section                              | ✅         |      |
-| FileCabinets/BatchIndexFieldsUpdate | Batch Update Index Fields By Id                             | ❌         | -    |
-| FileCabinets/BatchIndexFieldsUpdate | Batch Update Index Fields By Search                         | ❌         | -    |
-| FileCabinets/BatchIndexFieldsUpdate | Batch Append/Update Keyword Fields By Id                    | ❌         | -    |
+| FileCabinets/BatchIndexFieldsUpdate | Batch Update Index Fields By Id                             | ✅         | `BatchDocumentsUpdateFields` |
+| FileCabinets/BatchIndexFieldsUpdate | Batch Update Index Fields By Search                         | ✅         | `BatchDocumentsUpdateFields` |
+| FileCabinets/BatchIndexFieldsUpdate | Batch Append/Update Keyword Fields By Id                    | ✅         | `BatchDocumentsUpdateFields` |
 | Documents/UpdateIndexValues         | Update Index Values                                         | ✅         |      |
 | Documents/UpdateIndexValues         | Update Table Field Values                                   | ❌         | - ?  |
 | Documents/ModifyDocuments           | Transfer Document                                           | ✅         |      |
@@ -220,15 +221,15 @@ then optimize the processes that power the core of your business.
 | Documents/ClipUnclip&StapleUnstaple | Unclip                                                      | ✅         |      |
 | Documents/ClipUnclip&StapleUnstaple | Staple                                                      | ✅         |      |
 | Documents/ClipUnclip&StapleUnstaple | Unstaple                                                    | ✅         |      |
-| Documents/AnnotationsStamps         | AddStampWithPosition                                        | 🕣        |      |
-| Documents/AnnotationsStamps         | AddStampWithBestPosition                                    | 🕣        |      |
+| Documents/AnnotationsStamps         | AddStampWithPosition                                        | ✅         | `AddDocumentAnnotations` |
+| Documents/AnnotationsStamps         | AddStampWithBestPosition                                    | ✅         | `AddDocumentAnnotations` |
 | Documents/AnnotationsStamps         | AddTextAnnotation                                           | 🕣        |      |
 | Documents/AnnotationsStamps         | AddRectEntryAnnotation                                      | 🕣        |      |
 | Documents/AnnotationsStamps         | AddLineEntryAnnotation                                      | 🕣        |      |
 | Documents/AnnotationsStamps         | AddPolyLineEntryAnnotation                                  | ❌         | -    |
 | Documents/AnnotationsStamps         | DeleteAnnotation                                            | ❌         | -    |
 | Documents/AnnotationsStamps         | UpdateTextAnnotation                                        | 🕣        |      |
-| Documents/AnnotationsStamps         | Get Stamps                                                  | ❌         | -    |
+| Documents/AnnotationsStamps         | Get Stamps                                                  | ✅         | `GetStamps` |
 | Documents/DocumentsTrashBin         | Get Documents                                               | ✅         |      |
 | Documents/DocumentsTrashBin         | Delete Documents                                            | ✅         |      |
 | Documents/DocumentsTrashBin         | Restore Documents                                           | ✅         |      |
@@ -1746,6 +1747,17 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Platform path
+    |--------------------------------------------------------------------------
+    |
+    | Matches Postman {{Platform}} (default DocuWare/Platform).
+    |
+    */
+
+    'platform_path' => env('DOCUWARE_PLATFORM_PATH', 'DocuWare/Platform'),
+
+    /*
+    |--------------------------------------------------------------------------
     | DocuWare Credentials
     |--------------------------------------------------------------------------
     |
@@ -1816,9 +1828,28 @@ return [
         'file_cabinet_id' => env('DOCUWARE_TESTS_FILE_CABINET_ID'),
         'dialog_id' => env('DOCUWARE_TESTS_DIALOG_ID'),
         'basket_id' => env('DOCUWARE_TESTS_BASKET_ID'),
+        'org_id' => env('DOCUWARE_TESTS_ORG_ID', env('DOCUWARE_TESTS_ORGANIZATION_ID')),
+        'search_dialog_id' => env('DOCUWARE_TESTS_SEARCH_DIALOG_ID'),
+        'store_dialog_id' => env('DOCUWARE_TESTS_STORE_DIALOG_ID'),
+        'document_id' => env('DOCUWARE_TESTS_DOCUMENT_ID'),
     ],
 ];
 ```
+
+## Postman collection parity & Saloon fixtures
+
+The official DocuWare Postman collection uses `{{ServerUrl}}` and `{{Platform}}` (default `DocuWare/Platform`). This package maps them to Laravel env vars — see [`.env.example`](.env.example) for a **Postman variable → `DOCUWARE_*`** table.
+
+- **Parity matrix** (endpoints vs request classes): [`docs/postman-parity.md`](docs/postman-parity.md).
+- **Platform path**: `DOCUWARE_PLATFORM_PATH` (used by `DocuWareConnector`, `GetResponsibleIdentityService`, and encrypted Web Client URLs in `DocuWareUrl`).
+- **CI-friendly tests**: Default `composer test` runs **unit**, **DTO**, and **Saloon fixture** tests (`tests/Feature/SaloonFixtures`). HTTP responses are replayed from JSON files under [`tests/Fixtures/saloon/`](tests/Fixtures/saloon) using [Saloon fixtures](https://docs.saloon.dev/digging-deeper/testing) (`MockClient` + `Fixture`). Bodies use Saloon’s recorded format: `statusCode`, `headers`, `data` (raw response body), `context`.
+- **Recording fixtures** (optional): Edit [`tests/Manual/RecordGetOrganizationFixtureTest.php`](tests/Manual/RecordGetOrganizationFixtureTest.php), remove the `->skip(...)`, set real `DOCUWARE_*` credentials, then run:
+  ```bash
+  composer test:manual
+  ```
+  (`composer test:manual` runs only `tests/Manual`.)
+  Review the generated JSON for secrets, commit if safe, then restore the skip.
+- **Live tenant tests** (destructive cleanup, real API): `composer test:live` runs the `integration` PHPUnit testsuite (`tests/Integration`). Requires valid DocuWare credentials and test cabinet IDs in `phpunit.xml` or the environment.
 
 ## 🚧 Testing
 
@@ -1832,6 +1863,7 @@ Modify environment variables in the phpunit.xml-file:
 
 ```xml
 <env name="DOCUWARE_URL" value="https://domain.docuware.cloud"/>
+<env name="DOCUWARE_PLATFORM_PATH" value="DocuWare/Platform"/>
 <env name="DOCUWARE_USERNAME" value="user@domain.test"/>
 <env name="DOCUWARE_PASSWORD" value="password"/>
 <env name="DOCUWARE_PASSPHRASE" value="passphrase"/>
@@ -1844,12 +1876,22 @@ Modify environment variables in the phpunit.xml-file:
 <env name="DOCUWARE_TESTS_FILE_CABINET_ID" value=""/>
 <env name="DOCUWARE_TESTS_DIALOG_ID" value=""/>
 <env name="DOCUWARE_TESTS_BASKET_ID" value=""/>
+<env name="DOCUWARE_TESTS_ORG_ID" value=""/>
+<env name="DOCUWARE_TESTS_SEARCH_DIALOG_ID" value=""/>
+<env name="DOCUWARE_TESTS_STORE_DIALOG_ID" value=""/>
+<env name="DOCUWARE_TESTS_DOCUMENT_ID" value=""/>
 ```
 
-Run the tests:
+Default test run (no live DocuWare required):
 
 ```bash
 composer test
+```
+
+Against a real system (integration suite):
+
+```bash
+composer test:live
 ```
 
 ## 📝 Changelog

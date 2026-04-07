@@ -10,7 +10,7 @@ use Saloon\Http\Response;
 
 final class GetDocumentsFromAFileCabinetResponse
 {
-    public static function fromResponse(Response $response, $page = 1, $perPage = 50): DocumentPaginator
+    public static function fromResponse(Response $response, int $page = 1, int $perPage = 50): DocumentPaginator
     {
         event(new DocuWareResponseLog($response));
 

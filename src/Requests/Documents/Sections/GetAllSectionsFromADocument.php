@@ -2,9 +2,9 @@
 
 namespace CodebarAg\DocuWare\Requests\Documents\Sections;
 
+use CodebarAg\DocuWare\DTO\Section;
 use CodebarAg\DocuWare\Responses\Documents\Sections\GetAllSectionsFromADocumentResponse;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Enumerable;
 use Illuminate\Support\Facades\Cache;
 use Saloon\CachePlugin\Contracts\Cacheable;
 use Saloon\CachePlugin\Drivers\LaravelCacheDriver;
@@ -46,7 +46,10 @@ class GetAllSectionsFromADocument extends Request implements Cacheable
         return config('laravel-docuware.configurations.cache.lifetime_in_seconds', 3600);
     }
 
-    public function createDtoFromResponse(Response $response): Collection|Enumerable
+    /**
+     * @return Collection<int, Section>
+     */
+    public function createDtoFromResponse(Response $response): Collection
     {
         return GetAllSectionsFromADocumentResponse::fromResponse($response);
     }

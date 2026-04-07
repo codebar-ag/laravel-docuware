@@ -1,7 +1,5 @@
 <?php
 
-namespace CodebarAg\DocuWare\Tests\Feature;
-
 use CodebarAg\DocuWare\DocuWare;
 use CodebarAg\DocuWare\Requests\FileCabinets\Upload\CreateDataRecord;
 use Illuminate\Support\Facades\Event;
@@ -33,9 +31,11 @@ it('can create encrypted url for a document in a file cabinet', function () {
         ->validUntil(now()->addMinute())
         ->make();
 
+    $platform = trim(config('laravel-docuware.platform_path', 'DocuWare/Platform'), '/');
     $endpoint = sprintf(
-        '%s/DocuWare/Platform/WebClient/Integration?ep=',
-        config('laravel-docuware.credentials.url'),
+        '%s/%s/WebClient/Integration?ep=',
+        rtrim((string) config('laravel-docuware.credentials.url'), '/'),
+        $platform,
     );
 
     $this->assertStringStartsWith(
@@ -70,9 +70,11 @@ it('can create encrypted url for a document in a basket', function () {
         ->validUntil(now()->addMinute())
         ->make();
 
+    $platform = trim(config('laravel-docuware.platform_path', 'DocuWare/Platform'), '/');
     $endpoint = sprintf(
-        '%s/DocuWare/Platform/WebClient/Integration?ep=',
-        config('laravel-docuware.credentials.url'),
+        '%s/%s/WebClient/Integration?ep=',
+        rtrim((string) config('laravel-docuware.credentials.url'), '/'),
+        $platform,
     );
 
     $this->assertStringStartsWith(

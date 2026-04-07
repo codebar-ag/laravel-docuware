@@ -30,7 +30,7 @@ class ParseValue
             'Int' => (int) $item,
             'String' => (string) $item,
             'Decimal' => (float) $item,
-            'Date', 'DateTime' => self::date(is_string($item) ? $item : ''),
+            'Date', 'DateTime' => is_string($item) ? self::date($item) : $default,
             'Keywords' => Arr::join(
                 is_array($item) && isset($item['Keyword']) && is_array($item['Keyword']) ? $item['Keyword'] : [],
                 ', '

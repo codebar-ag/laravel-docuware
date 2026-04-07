@@ -5,6 +5,7 @@ namespace CodebarAg\DocuWare\DTO\Documents;
 use Carbon\Carbon;
 use CodebarAg\DocuWare\DTO\Section;
 use CodebarAg\DocuWare\DTO\SuggestionField;
+use CodebarAg\DocuWare\Support\JsonArrays;
 use CodebarAg\DocuWare\Support\ParseValue;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
@@ -18,15 +19,15 @@ final class Document
     public static function fromJson(array $data): self
     {
         $fields = Arr::has($data, 'Fields')
-            ? self::convertFields(collect(self::listOfFieldArraysFromData($data, 'Fields')))
+            ? self::convertFields(collect(JsonArrays::listOfRecords(Arr::get($data, 'Fields'))))
             : null;
 
         $sections = Arr::has($data, 'Sections')
-            ? self::convertSections(collect(self::listOfFieldArraysFromData($data, 'Sections')))
+            ? self::convertSections(collect(JsonArrays::listOfRecords(Arr::get($data, 'Sections'))))
             : null;
 
         $suggestions = Arr::has($data, 'Suggestions')
-            ? self::convertSuggestions(collect(self::listOfFieldArraysFromData($data, 'Suggestions')))
+            ? self::convertSuggestions(collect(JsonArrays::listOfRecords(Arr::get($data, 'Suggestions'))))
             : null;
 
         return new self(
@@ -44,27 +45,6 @@ final class Document
             sections: $sections,
             suggestions: $suggestions,
         );
-    }
-
-    /**
-     * @param  array<string, mixed>  $data
-     * @return list<array<string, mixed>>
-     */
-    protected static function listOfFieldArraysFromData(array $data, string $key): array
-    {
-        $raw = Arr::get($data, $key);
-        if (! is_array($raw)) {
-            return [];
-        }
-
-        $out = [];
-        foreach (array_values($raw) as $item) {
-            if (is_array($item)) {
-                $out[] = $item;
-            }
-        }
-
-        return $out;
     }
 
     /**

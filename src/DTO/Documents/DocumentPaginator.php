@@ -8,10 +8,13 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 
 /**
- * @property Collection|Document[] $documents
+ * @property Collection<int, Document> $documents
  */
 class DocumentPaginator
 {
+    /**
+     * @param  Collection<int, Document>  $documents
+     */
     public function __construct(
         public int $total,
         public int $per_page,
@@ -43,6 +46,9 @@ class DocumentPaginator
         return ! $this->successful();
     }
 
+    /**
+     * @param  array<string, mixed>  $data
+     */
     public static function fromJson(
         array $data,
         int $page,
@@ -56,7 +62,17 @@ class DocumentPaginator
 
         $to = $page === $lastPage ? $total : $page * $perPage;
 
-        $documents = collect(Arr::get($data, 'Items'))->map(function (array $document) {
+        $itemsRaw = Arr::get($data, 'Items', []);
+        $itemList = [];
+        if (is_array($itemsRaw)) {
+            foreach (array_values($itemsRaw) as $item) {
+                if (is_array($item)) {
+                    $itemList[] = $item;
+                }
+            }
+        }
+
+        $documents = collect($itemList)->map(function (array $document) {
             return Document::fromJson($document);
         });
 
@@ -80,11 +96,14 @@ class DocumentPaginator
             last_page: 0,
             from: 0,
             to: 0,
-            documents: collect(),
+            documents: new Collection,
             error: ErrorBag::make($e),
         );
     }
 
+    /**
+     * @param  Collection<int, Document>|null  $documents
+     */
     public static function fake(
         ?int $total = null,
         ?int $per_page = null,

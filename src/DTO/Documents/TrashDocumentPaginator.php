@@ -8,10 +8,15 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 
 /**
- * @property Collection|Document[] $documents
+ * @property Collection<int, array<mixed>> $documents
  */
 class TrashDocumentPaginator
 {
+    /**
+     * @param  Collection<int|string, array<mixed>>  $headers
+     * @param  Collection<int, array<mixed>>  $documents
+     * @param  Collection<int, Collection<int|string, mixed>>  $mappedDocuments
+     */
     public function __construct(
         public int $total,
         public int $per_page,
@@ -45,6 +50,9 @@ class TrashDocumentPaginator
         return ! $this->successful();
     }
 
+    /**
+     * @param  array<string, mixed>  $data
+     */
     public static function fromJson(
         array $data,
         int $page,
@@ -58,14 +66,34 @@ class TrashDocumentPaginator
 
         $to = $page === $lastPage ? $total : $page * $perPage;
 
-        $headers = collect(Arr::get($data, 'Headers'));
-        $documents = collect(Arr::get($data, 'Rows'));
+        $headersRaw = Arr::get($data, 'Headers', []);
+        $headerMap = [];
+        if (is_array($headersRaw)) {
+            foreach ($headersRaw as $key => $value) {
+                if (is_array($value)) {
+                    $headerMap[$key] = $value;
+                }
+            }
+        }
+        $headers = collect($headerMap);
 
-        $mappedDocuments = $documents->map(function (array $document) use ($headers) {
+        $rowsRaw = Arr::get($data, 'Rows', []);
+        $rowList = [];
+        if (is_array($rowsRaw)) {
+            foreach (array_values($rowsRaw) as $row) {
+                if (is_array($row)) {
+                    $rowList[] = $row;
+                }
+            }
+        }
+        $documents = collect($rowList);
+
+        $mappedDocuments = $documents->map(function (array $document) use ($headers): Collection {
             $document = collect($document);
 
-            return $document->mapWithKeys(function ($value, $key) use ($headers) {
-                $header = collect($headers->get($key));
+            return $document->mapWithKeys(function (mixed $value, int|string $key) use ($headers): array {
+                $headerRaw = $headers->get($key);
+                $header = collect(is_array($headerRaw) ? $headerRaw : []);
 
                 return $header->has('FieldName') ? [$header->get('FieldName') => $value] : [];
             })->filter();
@@ -100,6 +128,11 @@ class TrashDocumentPaginator
         );
     }
 
+    /**
+     * @param  Collection<int|string, array<mixed>>|null  $headers
+     * @param  Collection<int, array<mixed>>|null  $documents
+     * @param  Collection<int, Collection<int|string, mixed>>|null  $mappedDocuments
+     */
     public static function fake(
         ?int $total = null,
         ?int $per_page = null,

@@ -16,7 +16,7 @@ class IndexDateTimeDTO
         return new self($name, $value);
     }
 
-    public static function makeWithFallback($name, object $value): mixed
+    public static function makeWithFallback(string $name, object $value): ?self
     {
         return match (true) {
             $value instanceof Carbon => self::make($name, $value),
@@ -24,6 +24,9 @@ class IndexDateTimeDTO
         };
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function values(): array
     {
         return [

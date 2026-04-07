@@ -3,6 +3,7 @@
 use CodebarAg\DocuWare\Connectors\DocuWareConnector;
 use CodebarAg\DocuWare\DocuWare;
 use CodebarAg\DocuWare\DTO\Config\ConfigWithCredentials;
+use CodebarAg\DocuWare\DTO\Documents\Document;
 use CodebarAg\DocuWare\Requests\Documents\DocumentsTrashBin\DeleteDocuments;
 use CodebarAg\DocuWare\Requests\Documents\ModifyDocuments\DeleteDocument;
 use CodebarAg\DocuWare\Requests\FileCabinets\Search\GetASpecificDocumentFromAFileCabinet;
@@ -21,28 +22,37 @@ uses()
     ->beforeEach(function () {
         $this->connector = getConnector();
 
-        clearFiles();
+        clearFiles($this->connector);
     })
     ->afterEach(function () {
-        setUsersInactive();
+        setUsersInactive($this->connector);
     })
     ->in('Feature');
 
-function clearFiles(): void
+function clearFiles(DocuWareConnector $connector): void
 {
-    $connector = getConnector();
+    $fileCabinetId = config('laravel-docuware.tests.file_cabinet_id');
 
-    $paginator = $connector->send(new GetDocumentsFromAFileCabinet(
-        config('laravel-docuware.tests.file_cabinet_id')
-    ))->dto();
+    $paginator = $connector->send(new GetDocumentsFromAFileCabinet($fileCabinetId))->dto();
+
+    if ($paginator->documents->isEmpty()) {
+        emptyTrashForConnector($connector);
+
+        return;
+    }
 
     foreach ($paginator->documents as $document) {
         $connector->send(new DeleteDocument(
-            config('laravel-docuware.tests.file_cabinet_id'),
+            $fileCabinetId,
             $document->id,
         ))->dto();
     }
 
+    emptyTrashForConnector($connector);
+}
+
+function emptyTrashForConnector(DocuWareConnector $connector): void
+{
     $paginatorRequest = (new DocuWare)
         ->searchRequestBuilder()
         ->trashBin()
@@ -56,10 +66,8 @@ function clearFiles(): void
     }
 }
 
-function setUsersInactive(): void
+function setUsersInactive(DocuWareConnector $connector): void
 {
-    $connector = getConnector();
-
     $response = $connector->send(new GetUsers);
 
     $users = $response->dto()->filter(function ($user) {
@@ -76,7 +84,7 @@ function setUsersInactive(): void
 /**
  * @throws Throwable
  */
-function getConnector(): object
+function getConnector(): DocuWareConnector
 {
     return new DocuWareConnector(new ConfigWithCredentials(
         username: config('laravel-docuware.credentials.username'),
@@ -98,7 +106,38 @@ function cleanup($connector, $fileCabinetId): void
     }
 }
 
-function uploadFiles($connector, $fileCabinetId, $path): array
+function documentLooksProcessed(Document $document): bool
+{
+    return $document->total_pages > 0
+        && $document->sections !== null
+        && $document->sections->isNotEmpty();
+}
+
+function refreshDocumentAfterProcessing(DocuWareConnector $connector, string $fileCabinetId, int $documentId): Document
+{
+    $maxAttempts = 60;
+    $sleepMs = 250;
+
+    for ($attempt = 1; $attempt <= $maxAttempts; $attempt++) {
+        $document = $connector->send(new GetASpecificDocumentFromAFileCabinet(
+            $fileCabinetId,
+            $documentId
+        ))->dto();
+
+        if (documentLooksProcessed($document)) {
+            return $document;
+        }
+
+        Sleep::for($sleepMs)->milliseconds();
+    }
+
+    return $connector->send(new GetASpecificDocumentFromAFileCabinet(
+        $fileCabinetId,
+        $documentId
+    ))->dto();
+}
+
+function uploadFiles(DocuWareConnector $connector, $fileCabinetId, $path): array
 {
     $document = $connector->send(new CreateDataRecord(
         $fileCabinetId,
@@ -112,19 +151,8 @@ function uploadFiles($connector, $fileCabinetId, $path): array
         'test-2.pdf',
     ))->dto();
 
-    Sleep::for(5)->seconds(); // Wait for the files to be uploaded and processed
-
-    // Have to get document again as returned data is incorrect
-    $document = $connector->send(new GetASpecificDocumentFromAFileCabinet(
-        $fileCabinetId,
-        $document->id
-    ))->dto();
-
-    // Have to get document2 again as returned data is incorrect
-    $document2 = $connector->send(new GetASpecificDocumentFromAFileCabinet(
-        $fileCabinetId,
-        $document2->id
-    ))->dto();
+    $document = refreshDocumentAfterProcessing($connector, $fileCabinetId, $document->id);
+    $document2 = refreshDocumentAfterProcessing($connector, $fileCabinetId, $document2->id);
 
     return [$document, $document2];
 }

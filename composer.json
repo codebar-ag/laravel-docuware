@@ -21,24 +21,27 @@
         }
     ],
     "require": {
-        "php": "8.2.*|8.3.*|8.4.*",
-        "guzzlehttp/guzzle": "^7.8",
-        "illuminate/contracts": "^12.0",
-        "nesbot/carbon": "^3.8",
+        "php": "8.3.*|8.4.*|8.5.*",
+        "guzzlehttp/guzzle": "^7.9.2",
+        "illuminate/contracts": "^13.0",
+        "illuminate/support": "^13.0",
+        "nesbot/carbon": "^3.8.4",
         "saloonphp/cache-plugin": "^3.1",
-        "saloonphp/laravel-plugin": "^3.0|^4.0",
-        "saloonphp/saloon": "^3.0|^4.0",
-        "spatie/laravel-package-tools": "^1.19"
+        "saloonphp/laravel-plugin": "^4.0",
+        "saloonphp/saloon": "^4.0",
+        "spatie/laravel-package-tools": "^1.19.0"
     },
     "require-dev": {
-        "laravel/pint": "^1.21",
-        "larastan/larastan": "^v3.1",
-        "orchestra/testbench": "^10.0",
-        "pestphp/pest": "^3.7",
-        "phpstan/extension-installer": "^1.4",
-        "phpstan/phpstan-deprecation-rules": "^2.0",
-        "phpstan/phpstan-phpunit": "^2.0",
-        "spatie/laravel-ray": "^1.39"
+        "laravel/pint": "^1.21.1",
+        "larastan/larastan": "^3.9.3",
+        "nunomaduro/collision": "^8.9",
+        "orchestra/testbench": "^11.0",
+        "pestphp/pest": "^4.4",
+        "phpdocumentor/reflection-docblock": "^5.6.1",
+        "phpstan/extension-installer": "^1.4.3",
+        "phpstan/phpstan-deprecation-rules": "^2.0.1",
+        "phpstan/phpstan-phpunit": "^2.0.4",
+        "spatie/laravel-ray": "^1.40.0"
     },
     "autoload": {
         "psr-4": {
@@ -53,16 +56,16 @@
     "scripts": {
         "post-autoload-dump": "@php ./vendor/bin/testbench package:discover --ansi",
         "analyse": "vendor/bin/phpstan analyse",
-        "test": "vendor/bin/pest",
+        "test": "vendor/bin/pest --no-coverage",
         "test-coverage": "vendor/bin/pest --coverage",
         "format": "vendor/bin/pint"
     },
     "config": {
         "sort-packages": true,
         "allow-plugins": {
-            "composer/package-versions-deprecated": true,
-            "phpstan/extension-installer": true,
-            "pestphp/pest-plugin": true
+            "composer/package-versions-deprecated": false,
+            "pestphp/pest-plugin": true,
+            "phpstan/extension-installer": true
         }
     },
     "extra": {

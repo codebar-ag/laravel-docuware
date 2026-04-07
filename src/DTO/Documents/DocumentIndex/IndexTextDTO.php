@@ -14,6 +14,9 @@ class IndexTextDTO
         return new self($name, $value);
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function values(): array
     {
         return [

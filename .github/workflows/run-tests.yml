@@ -14,22 +14,22 @@ jobs:
       max-parallel: 1
       matrix:
         os: [ ubuntu-latest ]
-        php: [ 8.2, 8.3, 8.4 ]
-        laravel: [ 12.* ]
+        php: [ 8.3, 8.4, 8.5 ]
+        laravel: [ 13.* ]
         stability: [ prefer-lowest, prefer-stable ]
 
     name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.stability }} - ${{ matrix.os }}
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
           extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, soap, intl, gd, exif, iconv, imagick, fileinfo
-          coverage: none
+          coverage: pcov
 
       - name: Setup problem matchers
         run: |
@@ -41,10 +41,10 @@ jobs:
           composer require "laravel/framework:${{ matrix.laravel }}" --no-interaction --no-update
           composer update --${{ matrix.stability }} --prefer-dist --no-interaction
 
-      - name: Execute tests
+      - name: Copy PHPUnit configuration
         run: cp phpunit.xml.dist phpunit.xml
 
-      - name: Execute tests
+      - name: Run Pest tests
         run: vendor/bin/pest
         env:
           DOCUWARE_URL: ${{ secrets.DOCUWARE_URL }}
@@ -54,7 +54,7 @@ jobs:
 
       - name: Store Log Artifacts
         if: failure()
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: Store report artifacts
           path: ./vendor/orchestra/testbench-core/laravel/storage/logs

@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use CodebarAg\DocuWare\Exceptions\UnableToSearch;
 use CodebarAg\DocuWare\Requests\Documents\DocumentsTrashBin\GetDocuments;
 use CodebarAg\DocuWare\Requests\Search\GetSearchRequest;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Saloon\Exceptions\InvalidResponseClassException;
 use Saloon\Exceptions\PendingRequestException;
@@ -16,6 +17,7 @@ class DocuWareSearchRequestBuilder
 
     protected ?string $dialogId = null;
 
+    /** @var list<string> */
     protected array $additionalFileCabinetIds = [];
 
     protected int $page = 1;
@@ -28,8 +30,10 @@ class DocuWareSearchRequestBuilder
 
     protected string $orderDirection = 'asc';
 
+    /** @var array<string, list<mixed>> */
     protected array $filters = [];
 
+    /** @var array<string, list<string>> */
     protected array $usedDateOperators = [];
 
     protected bool $trashBin = false;
@@ -48,6 +52,9 @@ class DocuWareSearchRequestBuilder
         return $this;
     }
 
+    /**
+     * @param  list<string>  $fileCabinetIds
+     */
     public function fileCabinets(array $fileCabinetIds): self
     {
         $this->fileCabinetId = $fileCabinetIds[0] ?? null;
@@ -95,6 +102,10 @@ class DocuWareSearchRequestBuilder
 
     public function filterDate(string $name, string $operator, ?Carbon $date): self
     {
+        if ($date === null) {
+            throw new \InvalidArgumentException('A date is required for date filters.');
+        }
+
         $date = $this->exactDateTime($date, $operator);
 
         $this->makeSureFilterDateRangeIsCorrect($name, $operator);
@@ -140,11 +151,17 @@ class DocuWareSearchRequestBuilder
             return $this->filter($name, $values);
         }
 
-        $values = collect($values)->map(function ($value) {
+        $list = match (true) {
+            is_array($values) => array_values($values),
+            $values instanceof Collection => $values->values()->all(),
+            default => [],
+        };
+
+        $prepared = collect($list)->map(function (mixed $value) {
             return self::prepareValueForFilter($value);
         })->toArray();
 
-        $this->filters[$name][] = implode(' OR ', $values);
+        $this->filters[$name][] = implode(' OR ', $prepared);
 
         return $this;
     }
@@ -250,7 +267,7 @@ class DocuWareSearchRequestBuilder
         }
     }
 
-    private function makeSureFilterDateRangeIsCorrect($name, $operator): void
+    private function makeSureFilterDateRangeIsCorrect(string $name, string $operator): void
     {
         if (isset($this->usedDateOperators[$name])) {
             if ($operatorFilterIndex = array_search($operator, $this->usedDateOperators[$name])) {
@@ -270,7 +287,7 @@ class DocuWareSearchRequestBuilder
         }
     }
 
-    private function exactDateTime($date, $operator): Carbon
+    private function exactDateTime(Carbon $date, string $operator): Carbon
     {
         return match ($operator) {
             '<', '>=' => $date->startOfDay(),

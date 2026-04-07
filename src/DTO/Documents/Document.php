@@ -12,18 +12,21 @@ use Illuminate\Support\Str;
 
 final class Document
 {
+    /**
+     * @param  array<string, mixed>  $data
+     */
     public static function fromJson(array $data): self
     {
         $fields = Arr::has($data, 'Fields')
-            ? self::convertFields(collect(Arr::get($data, 'Fields')))
+            ? self::convertFields(collect(self::listOfFieldArraysFromData($data, 'Fields')))
             : null;
 
         $sections = Arr::has($data, 'Sections')
-            ? self::convertSections(collect(Arr::get($data, 'Sections')))
+            ? self::convertSections(collect(self::listOfFieldArraysFromData($data, 'Sections')))
             : null;
 
         $suggestions = Arr::has($data, 'Suggestions')
-            ? self::convertSuggestions(collect(Arr::get($data, 'Suggestions')))
+            ? self::convertSuggestions(collect(self::listOfFieldArraysFromData($data, 'Suggestions')))
             : null;
 
         return new self(
@@ -31,7 +34,7 @@ final class Document
             file_size: Arr::get($data, 'FileSize'),
             total_pages: Arr::get($data, 'TotalPages'),
             title: Arr::get($data, 'Title'),
-            extension: (Arr::get($fields, 'DWEXTENSION'))->value ?? null,
+            extension: self::extensionFromFields($fields),
             content_type: Arr::get($data, 'ContentType'),
             file_cabinet_id: Arr::get($data, 'FileCabinetId'),
             intellixTrust: Arr::get($data, 'IntellixTrust'),
@@ -43,6 +46,50 @@ final class Document
         );
     }
 
+    /**
+     * @param  array<string, mixed>  $data
+     * @return list<array<string, mixed>>
+     */
+    protected static function listOfFieldArraysFromData(array $data, string $key): array
+    {
+        $raw = Arr::get($data, $key);
+        if (! is_array($raw)) {
+            return [];
+        }
+
+        $out = [];
+        foreach (array_values($raw) as $item) {
+            if (is_array($item)) {
+                $out[] = $item;
+            }
+        }
+
+        return $out;
+    }
+
+    /**
+     * @param  Collection<string, DocumentField>|null  $fields
+     */
+    protected static function extensionFromFields(?Collection $fields): ?string
+    {
+        if ($fields === null) {
+            return null;
+        }
+
+        $field = $fields->get('DWEXTENSION');
+        if (! $field instanceof DocumentField) {
+            return null;
+        }
+
+        $value = $field->value;
+
+        return is_string($value) ? $value : null;
+    }
+
+    /**
+     * @param  Collection<int, array<string, mixed>>  $fields
+     * @return Collection<string, DocumentField>
+     */
     protected static function convertFields(Collection $fields): Collection
     {
         return $fields->mapWithKeys(function (array $field) {
@@ -50,6 +97,10 @@ final class Document
         });
     }
 
+    /**
+     * @param  Collection<int, array<string, mixed>>  $suggestions
+     * @return Collection<string, SuggestionField>
+     */
     protected static function convertSuggestions(Collection $suggestions): Collection
     {
         return $suggestions->mapWithKeys(function (array $suggestion) {
@@ -57,6 +108,10 @@ final class Document
         });
     }
 
+    /**
+     * @param  Collection<int, array<string, mixed>>  $sections
+     * @return Collection<int, Section>
+     */
     protected static function convertSections(Collection $sections): Collection
     {
         return $sections->mapWithKeys(function (array $section) {
@@ -64,6 +119,11 @@ final class Document
         });
     }
 
+    /**
+     * @param  Collection<string, DocumentField>|null  $fields
+     * @param  Collection<int, Section>|null  $sections
+     * @param  Collection<string, SuggestionField>|null  $suggestions
+     */
     public function __construct(
         public int $id,
         public int $file_size,
@@ -118,6 +178,11 @@ final class Document
         return "{$name}{$this->extension}";
     }
 
+    /**
+     * @param  Collection<string, DocumentField>|null  $fields
+     * @param  Collection<int, Section>|null  $sections
+     * @param  Collection<string, SuggestionField>|null  $suggestions
+     */
     public static function fake(
         ?int $id = null,
         ?int $file_size = null,

@@ -9,6 +9,9 @@ use Illuminate\Support\Collection;
 
 final class DocumentField
 {
+    /**
+     * @param  array<string, mixed>  $data
+     */
     public static function fromJson(array $data): self
     {
         return new self(
@@ -21,6 +24,9 @@ final class DocumentField
         );
     }
 
+    /**
+     * @param  null|int|float|Carbon|string|Collection<int, mixed>  $value
+     */
     public function __construct(
         public bool $systemField,
         public string $name,

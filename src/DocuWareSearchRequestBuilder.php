@@ -30,7 +30,7 @@ class DocuWareSearchRequestBuilder
 
     protected string $orderDirection = 'asc';
 
-    /** @var array<string, list<mixed>> */
+    /** @var array<string, array<int, mixed>> */
     protected array $filters = [];
 
     /** @var array<string, list<string>> */
@@ -107,6 +107,7 @@ class DocuWareSearchRequestBuilder
         $this->makeSureFilterDateRangeIsCorrect($name, $operator);
 
         $this->filters[$name][] = $date;
+        $this->filters[$name] = array_values($this->filters[$name]);
 
         return $this;
     }
@@ -162,6 +163,30 @@ class DocuWareSearchRequestBuilder
     }
 
     /**
+     * Restrict results to documents where the index field has no value (DocuWare dialog expression `EMPTY()`).
+     *
+     * @param  string  $name  Database field name (typically uppercase), not the display label.
+     */
+    public function filterEmpty(string $name): self
+    {
+        $this->filters[$name][] = 'EMPTY()';
+
+        return $this;
+    }
+
+    /**
+     * Restrict results to documents where the index field has a value (DocuWare dialog expression `NOTEMPTY()`).
+     *
+     * @param  string  $name  Database field name (typically uppercase), not the display label.
+     */
+    public function filterNotEmpty(string $name): self
+    {
+        $this->filters[$name][] = 'NOTEMPTY()';
+
+        return $this;
+    }
+
+    /**
      * @throws \ReflectionException
      * @throws InvalidResponseClassException
      * @throws PendingRequestException
@@ -188,7 +213,7 @@ class DocuWareSearchRequestBuilder
 
             $condition[] = [
                 'DBName' => $name,
-                'Value' => $value,
+                'Value' => array_values($value),
             ];
         }
 
@@ -258,6 +283,7 @@ class DocuWareSearchRequestBuilder
                     '>=', '>' => now(),
                     default => now(),
                 };
+                $this->filters[$name] = array_values($this->filters[$name]);
             }
         }
     }
@@ -265,8 +291,11 @@ class DocuWareSearchRequestBuilder
     private function makeSureFilterDateRangeIsCorrect(string $name, string $operator): void
     {
         if (isset($this->usedDateOperators[$name])) {
-            if ($operatorFilterIndex = array_search($operator, $this->usedDateOperators[$name])) {
+            if (($operatorFilterIndex = array_search($operator, $this->usedDateOperators[$name], true)) !== false) {
                 unset($this->filters[$name][$operatorFilterIndex]);
+                if (isset($this->filters[$name])) {
+                    $this->filters[$name] = array_values($this->filters[$name]);
+                }
             } elseif ($operator == '=') {
                 unset($this->filters[$name]);
                 $this->usedDateOperators[$name] = [$operator];

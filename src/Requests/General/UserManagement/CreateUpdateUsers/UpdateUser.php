@@ -42,6 +42,8 @@ class UpdateUser extends Request implements Cacheable, HasBody
      */
     protected function defaultBody(): array
     {
+        $outOfOffice = $this->user->outOfOffice;
+
         return [
             'Id' => $this->user->id,
             'Active' => $this->user->active,
@@ -51,9 +53,9 @@ class UpdateUser extends Request implements Cacheable, HasBody
             'Name' => $this->user->name,
             'Email' => $this->user->email,
             'OutOfOffice' => [
-                'IsOutOfOffice' => $this->user->outOfOffice->isOutOfOffice,
-                'StartDateTime' => $this->user->outOfOffice->startDateTime?->toISOString(),
-                'EndDateTime' => $this->user->outOfOffice->endDateTime?->toISOString(),
+                'IsOutOfOffice' => $outOfOffice !== null && $outOfOffice->isOutOfOffice,
+                'StartDateTime' => $outOfOffice?->startDateTime?->toISOString(),
+                'EndDateTime' => $outOfOffice?->endDateTime?->toISOString(),
             ],
         ];
     }

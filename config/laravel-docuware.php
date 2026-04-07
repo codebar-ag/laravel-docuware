@@ -108,6 +108,8 @@ return [
         'dialog_id' => env('DOCUWARE_TESTS_DIALOG_ID'),
         'basket_id' => env('DOCUWARE_TESTS_BASKET_ID'),
         'org_id' => env('DOCUWARE_TESTS_ORG_ID', env('DOCUWARE_TESTS_ORGANIZATION_ID')),
+        'group_id' => env('DOCUWARE_TESTS_GROUP_ID'),
+        'role_id' => env('DOCUWARE_TESTS_ROLE_ID'),
         'search_dialog_id' => env('DOCUWARE_TESTS_SEARCH_DIALOG_ID'),
         'store_dialog_id' => env('DOCUWARE_TESTS_STORE_DIALOG_ID'),
         'document_id' => env('DOCUWARE_TESTS_DOCUMENT_ID'),

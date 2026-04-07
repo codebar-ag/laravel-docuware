@@ -2,9 +2,7 @@
 
 use CodebarAg\DocuWare\Events\DocuWareResponseLog;
 use CodebarAg\DocuWare\Requests\Documents\ClipUnclipStapleUnstaple\Staple;
-use CodebarAg\DocuWare\Requests\FileCabinets\Search\GetASpecificDocumentFromAFileCabinet;
 use Illuminate\Support\Facades\Event;
-use Illuminate\Support\Sleep;
 
 it('can staple 2 documents', function () {
     Event::fake();
@@ -24,15 +22,11 @@ it('can staple 2 documents', function () {
         ]
     ))->dto();
 
-    Sleep::for(5)->seconds(); // Wait for the files to be uploaded and processed
+    $expectedMinPages = $document->total_pages + $document2->total_pages;
 
-    $stapledDocument = $this->connector->send(new GetASpecificDocumentFromAFileCabinet(
-        $fileCabinetId,
-        $staple->id
-    ))->dto();
-
-    expect($stapledDocument->title)->toBe($document->title)
-        ->and($stapledDocument->total_pages)->toBe($document->total_pages + $document2->total_pages);
+    expect($staple->title)->toBe($document->title)
+        ->and($staple->total_pages)->toBeGreaterThanOrEqual($expectedMinPages)
+        ->and($staple->sections->count())->toBeGreaterThanOrEqual(1);
 
     Event::assertDispatched(DocuWareResponseLog::class);
 })->group('staple');

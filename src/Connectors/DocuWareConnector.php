@@ -14,6 +14,7 @@ use CodebarAg\DocuWare\Requests\Authentication\OAuth\RequestTokenWithCredentials
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Str;
 use Psr\SimpleCache\InvalidArgumentException;
 use Saloon\Http\Auth\TokenAuthenticator;
 use Saloon\Http\Connector;
@@ -101,7 +102,6 @@ class DocuWareConnector extends Connector
 
     /**
      * @throws \Throwable
-     * @throws \JsonException
      */
     protected function getNewOAuthTokenWithCredentials(): RequestTokenDto
     {
@@ -118,7 +118,6 @@ class DocuWareConnector extends Connector
 
     /**
      * @throws \Throwable
-     * @throws \JsonException
      */
     protected function getNewOAuthTokenWithCredentialsTrustedUser(): RequestTokenDto
     {
@@ -136,21 +135,47 @@ class DocuWareConnector extends Connector
 
     /**
      * @throws \Throwable
-     * @throws \JsonException
      */
     protected function ensureRequestTokenSuccess(Response $requestTokenResponse): RequestTokenDto
     {
-        throw_if(
-            $requestTokenResponse->failed(),
-            trim(preg_replace('/\s\s+/', ' ', Arr::get(
-                array: $requestTokenResponse->json(),
-                key: 'error_description',
-                default: $requestTokenResponse->body()
-            )))
-        );
+        if ($requestTokenResponse->failed()) {
+            throw new \RuntimeException($this->oauthTokenFailureMessage($requestTokenResponse));
+        }
 
         throw_if($requestTokenResponse->dto() == null, 'Token response is null');
 
         return $requestTokenResponse->dto();
+    }
+
+    /**
+     * Build a safe error message when the token endpoint returns a failure.
+     * Avoids calling {@see Response::json()} on HTML or other non-JSON bodies (would throw JsonException).
+     */
+    protected function oauthTokenFailureMessage(Response $response): string
+    {
+        $body = (string) $response->body();
+
+        try {
+            /** @var mixed $decoded */
+            $decoded = json_decode($body, true, 512, JSON_THROW_ON_ERROR);
+            if (is_array($decoded)) {
+                $message = Arr::get($decoded, 'error_description')
+                    ?? Arr::get($decoded, 'error');
+
+                if (is_string($message) && $message !== '') {
+                    return trim(preg_replace('/\s\s+/', ' ', $message));
+                }
+            }
+        } catch (\JsonException) {
+            // Non-JSON error page or empty body.
+        }
+
+        $trimmed = trim(preg_replace('/\s\s+/', ' ', $body));
+
+        if ($trimmed !== '') {
+            return Str::limit($trimmed, 500);
+        }
+
+        return 'OAuth token request failed with HTTP '.$response->status().'.';
     }
 }

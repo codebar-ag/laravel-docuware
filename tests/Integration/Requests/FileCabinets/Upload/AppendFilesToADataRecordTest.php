@@ -10,7 +10,7 @@ use Saloon\Data\MultipartValue;
 it('can attach a file to a data record', function () {
     Event::fake();
 
-    $fileCabinetId = env('DOCUWARE_TESTS_FILE_CABINET_ID');
+    $fileCabinetId = config('laravel-docuware.tests.file_cabinet_id');
 
     $document = $this->connector->send(new CreateDataRecord(
         fileCabinetId: $fileCabinetId,
@@ -44,7 +44,7 @@ it('can attach a file to a data record', function () {
 it('can attach files to a data record', function () {
     Event::fake();
 
-    $fileCabinetId = env('DOCUWARE_TESTS_FILE_CABINET_ID');
+    $fileCabinetId = config('laravel-docuware.tests.file_cabinet_id');
 
     $document = $this->connector->send(new CreateDataRecord(
         fileCabinetId: $fileCabinetId,
@@ -74,8 +74,6 @@ it('can attach files to a data record', function () {
 
     $sections = $response->sections->values();
 
-    ray($sections->toArray());
-
     expect($response)->toBeInstanceOf(Document::class)
         ->and($sections->count())->toBe(3)
         ->and($sections[0]->originalFileName)->toBe('test-1.pdf')
@@ -83,4 +81,4 @@ it('can attach files to a data record', function () {
         ->and($sections[2]->originalFileName)->toBe('test-3.pdf');
 
     Event::assertDispatched(DocuWareResponseLog::class);
-})->skip();
+});

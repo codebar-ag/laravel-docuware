@@ -40,7 +40,7 @@ it('can\'t search documents by more than two dates in trash', function () {
         ->perPage(5)
         ->fulltext('test')
         ->filterDate('DELETEDATETIME', '>=', Carbon::create(2020))
-        ->filterDate('DELETEDATETIME', '>=', Carbon::create(2021))
+        ->filterDate('DELETEDATETIME', '<=', Carbon::create(2022))
         ->filterDate('DELETEDATETIME', '<', now())
         ->filter('DOCUMENT_TYPE', 'Abrechnung')
         ->orderBy('DELETEDATETIME', 'desc')

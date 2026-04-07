@@ -60,7 +60,8 @@
         "test:live": "vendor/bin/pest --no-coverage --testsuite=integration",
         "test:manual": "vendor/bin/pest --no-coverage tests/Manual",
         "test-coverage": "vendor/bin/pest --coverage --testsuite=default",
-        "format": "vendor/bin/pint"
+        "format": "vendor/bin/pint",
+        "postman:parity": "php tests/bin/postman-inventory.php --output=docs/postman-parity.md --check"
     },
     "config": {
         "sort-packages": true,

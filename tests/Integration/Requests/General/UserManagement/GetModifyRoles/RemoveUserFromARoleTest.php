@@ -8,11 +8,12 @@ use CodebarAg\DocuWare\Requests\General\UserManagement\GetModifyRoles\RemoveUser
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Sleep;
+use Illuminate\Support\Str;
 
-it('can add roles to a user', function () {
+it('removes a user from a role', function () {
     Event::fake();
 
-    $timestamp = Str::substr(Carbon::now()->timestamp, -8);
+    $timestamp = Str::substr((string) Carbon::now()->timestamp, -8);
 
     $user = $this->connector->send(new CreateUser(new User(
         name: $timestamp.' - Test User',
@@ -23,33 +24,21 @@ it('can add roles to a user', function () {
 
     Sleep::for(5)->seconds();
 
-    $response = $this->connector->send(new AddUserToARole(
+    $this->connector->send(new AddUserToARole(
         userId: $user->id,
-        ids: [
-            env('DOCUWARE_TESTS_ROLE_ID'),
-        ]
+        ids: [(string) config('laravel-docuware.tests.role_id')],
     ))->dto();
 
-    expect($response->status())->toBe(200);
-
-    Event::assertDispatched(DocuWareResponseLog::class);
-
-    return $user;
-});
-
-it('can remove roles to a user', function ($user) {
     Event::fake();
 
     Sleep::for(5)->seconds();
 
     $response = $this->connector->send(new RemoveUserFromARole(
         userId: $user->id,
-        ids: [
-            env('DOCUWARE_TESTS_ROLE_ID'),
-        ]
+        ids: [(string) config('laravel-docuware.tests.role_id')],
     ))->dto();
 
     expect($response->status())->toBe(200);
 
     Event::assertDispatched(DocuWareResponseLog::class);
-})->depends('it can add roles to a user');
+});

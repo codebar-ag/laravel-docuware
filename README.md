@@ -68,6 +68,7 @@ See the documentation if you need further functionality. ⚠️
           * [Order the results by field name.](#order-the-results-by-field-name)
           * [Search documents filtered to the value.](#search-documents-filtered-to-the-value)
           * [Search documents filtered to multiple values.](#search-documents-filtered-to-multiple-values)
+          * [Search documents with empty or non-empty index fields.](#search-documents-with-empty-or-non-empty-index-fields)
           * [You can specify the dialog which should be used.](#you-can-specify-the-dialog-which-should-be-used)
           * [You can also combine everything.](#you-can-also-combine-everything)
         * [Check In Check Out](#check-in-check-out)
@@ -742,6 +743,29 @@ $paginatorRequest = DocuWare::searchRequestBuilder()
 $paginator = $connector->send($paginatorRequest)->dto();
 ```
 
+###### Search documents with empty or non-empty index fields.
+> Use the **database field name** for `$name` (often uppercase in DocuWare), not the dialog display label. These map to DocuWare dialog expressions `EMPTY()` and `NOTEMPTY()`—they are not passed through `filter()` string quoting.
+
+```php
+// Documents where STATUS has no index value (DocuWare EMPTY())
+$paginatorRequest = DocuWare::searchRequestBuilder()
+    ->fileCabinet($id)
+    ->filterEmpty('STATUS')
+    ->get();
+
+$paginator = $connector->send($paginatorRequest)->dto();
+```
+
+```php
+// Documents where STATUS has any value (DocuWare NOTEMPTY())
+$paginatorRequest = DocuWare::searchRequestBuilder()
+    ->fileCabinet($id)
+    ->filterNotEmpty('STATUS')
+    ->get();
+
+$paginator = $connector->send($paginatorRequest)->dto();
+```
+
 ###### You can specify the dialog which should be used.
 ```php 
 $dialogId = 'bb42c30a-89fc-4b81-9091-d7e326caba62';
@@ -1077,6 +1101,8 @@ $unclip = $connector->send(new Unstaple(
 ##### Annotations/Stamps
 | Request                    | Supported |
 |----------------------------|-----------|
+| Get Stamps                 | ✅         |
+| Get Annotations            | ✅         |
 | AddStampWithPosition       | 🕣        |
 | AddStampWithBestPosition   | 🕣        |
 | AddTextAnnotation          | 🕣        |
@@ -1085,9 +1111,27 @@ $unclip = $connector->send(new Unstaple(
 | AddPolyLineEntryAnnotation | ❌         |
 | DeleteAnnotation           | ❌         |
 | UpdateTextAnnotation       | 🕣        |
-| Get Stamps                 | ❌         |
 
-> Not Currently Supported
+> Stamp/annotation **POST** variants map to `AddDocumentAnnotations` with the JSON body Postman sends. **GET** annotations use `GetDocumentAnnotations`.
+
+###### Get Stamps
+```php
+use CodebarAg\DocuWare\Requests\Documents\Stamps\GetStamps;
+
+$stamps = $connector->send(new GetStamps(
+    $fileCabinetId,
+))->dto();
+```
+
+###### Get Annotations
+```php
+use CodebarAg\DocuWare\Requests\Documents\Stamps\GetDocumentAnnotations;
+
+$annotations = $connector->send(new GetDocumentAnnotations(
+    $fileCabinetId,
+    $documentId,
+))->dto(); // Collection<int, array<string, mixed>>
+```
 
 ###### Documents Trash Bin
 | Request           | Supported |
@@ -1848,8 +1892,9 @@ The official DocuWare Postman collection uses `{{ServerUrl}}` and `{{Platform}}`
   composer test:manual
   ```
   (`composer test:manual` runs only `tests/Manual`.)
+  The recorder **only writes** `tests/Fixtures/saloon/get-organization.json` when the HTTP response is successful and looks like JSON, so a bad run (HTML error page, 401, etc.) **does not overwrite** a good committed fixture—the test fails instead.
   Review the generated JSON for secrets, commit if safe, then restore the skip.
-- **Live tenant tests** (destructive cleanup, real API): `composer test:live` runs the `integration` PHPUnit testsuite (`tests/Integration`). Requires valid DocuWare credentials and test cabinet IDs in `phpunit.xml` or the environment.
+- **Live tenant tests** (destructive cleanup, real API): `composer test:live` runs the `integration` PHPUnit testsuite (`tests/Integration`). Requires valid DocuWare credentials and test cabinet IDs in `phpunit.xml` or the environment. **Do not** run integration against DocuWare with `pest --parallel` or multiple concurrent `test:live` processes (rate limits and shared cabinet cleanup). Use a **single** sequential run.
 
 ## 🚧 Testing
 
@@ -1893,6 +1938,10 @@ Against a real system (integration suite):
 ```bash
 composer test:live
 ```
+
+Run integration **one process at a time** (no `pest --parallel`). Keep real credentials in a **local** `phpunit.xml` (this file is gitignored in this repo); use GitHub Actions secrets in CI.
+
+In GitHub Actions ([`.github/workflows/run-tests.yml`](.github/workflows/run-tests.yml)), every matrix job runs `composer test` first; `composer test:live` runs **only** on PHP 8.3 with `prefer-stable`, and **only** when `DOCUWARE_URL`, `DOCUWARE_USERNAME`, and `DOCUWARE_PASSWORD` are set as repository secrets (optional `DOCUWARE_PASSPHRASE` and `DOCUWARE_TESTS_*` IDs as needed).
 
 ## 📝 Changelog
 

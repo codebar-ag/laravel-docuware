@@ -40,13 +40,21 @@ class CreateDataRecord extends Request implements HasBody
 
     public function resolveEndpoint(): string
     {
-        $path = '/FileCabinets/'.$this->fileCabinetId.'/Documents';
+        return '/FileCabinets/'.$this->fileCabinetId.'/Documents';
+    }
 
-        if ($this->storeDialogId !== null && $this->storeDialogId !== '') {
-            $path .= '?StoreDialogId='.rawurlencode($this->storeDialogId);
+    /**
+     * @return array<string, string>
+     */
+    public function defaultQuery(): array
+    {
+        if ($this->storeDialogId === null || $this->storeDialogId === '') {
+            return [];
         }
 
-        return $path;
+        return [
+            'StoreDialogId' => $this->storeDialogId,
+        ];
     }
 
     /**

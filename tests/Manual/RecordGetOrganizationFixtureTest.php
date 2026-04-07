@@ -18,6 +18,13 @@ it('records get-organization Saloon fixture', function () {
 
     $response = getConnector()->send(new GetOrganization);
 
+    expect($response->successful())
+        ->toBeTrue('Expected successful GetOrganization response before writing fixture; HTTP '.$response->status().'.');
+
+    $contentType = (string) $response->header('Content-Type');
+    expect($contentType === '' || str_contains(strtolower($contentType), 'json'))
+        ->toBeTrue('Expected JSON Content-Type from GetOrganization; got: '.($contentType !== '' ? $contentType : '(empty)'));
+
     $fixturePath = dirname(__DIR__).'/Fixtures/saloon/get-organization.json';
 
     file_put_contents(

@@ -8,6 +8,7 @@ use CodebarAg\DocuWare\Support\EnsureValidResponse;
 use CodebarAg\DocuWare\Support\JsonArrays;
 use Illuminate\Support\Collection;
 use Saloon\Http\Response;
+use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
 final class GetDocumentWorkflowHistoryResponse
 {
@@ -17,6 +18,10 @@ final class GetDocumentWorkflowHistoryResponse
     public static function fromResponse(Response $response): Collection
     {
         event(new DocuWareResponseLog($response));
+
+        if ($response->status() === SymfonyResponse::HTTP_NOT_FOUND) {
+            return collect();
+        }
 
         EnsureValidResponse::from($response);
 

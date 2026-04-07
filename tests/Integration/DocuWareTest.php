@@ -3,7 +3,6 @@
 use CodebarAg\DocuWare\DocuWare;
 use CodebarAg\DocuWare\Requests\FileCabinets\Upload\CreateDataRecord;
 use Illuminate\Support\Facades\Event;
-use Illuminate\Support\Sleep;
 
 it('can create encrypted url for a document in a file cabinet', function () {
     Event::fake();
@@ -17,7 +16,7 @@ it('can create encrypted url for a document in a file cabinet', function () {
         'example.txt'
     ))->dto();
 
-    Sleep::for(2)->seconds(); // Wait for the document to be processed
+    refreshDocumentAfterProcessing($this->connector, $fileCabinetId, $document->id);
 
     $url = (new DocuWare)
         ->url(
@@ -56,7 +55,7 @@ it('can create encrypted url for a document in a basket', function () {
         'example.txt'
     ))->dto();
 
-    Sleep::for(2)->seconds(); // Wait for the document to be processed
+    refreshDocumentAfterProcessing($this->connector, $basketId, $document->id);
 
     $url = (new DocuWare)
         ->url(

@@ -51,7 +51,7 @@ it('can\'t search documents by more than two dates', function () {
         ->perPage(5)
         ->fulltext('test')
         ->filterDate('DWSTOREDATETIME', '>=', Carbon::create(2020))
-        ->filterDate('DWSTOREDATETIME', '>=', Carbon::create(2021))
+        ->filterDate('DWSTOREDATETIME', '<=', Carbon::create(2022))
         ->filterDate('DWSTOREDATETIME', '<', now())
         ->filter('DOCUMENT_TYPE', 'Abrechnung')
         ->orderBy('DWSTOREDATETIME', 'desc')

@@ -4,15 +4,15 @@ use CodebarAg\DocuWare\DTO\General\UserManagement\CreateUpdateUser\User;
 use CodebarAg\DocuWare\Events\DocuWareResponseLog;
 use CodebarAg\DocuWare\Requests\General\UserManagement\CreateUpdateUsers\CreateUser;
 use CodebarAg\DocuWare\Requests\General\UserManagement\GetModifyGroups\AddUserToAGroup;
-use CodebarAg\DocuWare\Requests\General\UserManagement\GetModifyGroups\RemoveUserFromAGroup;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Sleep;
+use Illuminate\Support\Str;
 
-it('can add groups to a user', function () {
+it('adds a user to a group', function () {
     Event::fake();
 
-    $timestamp = Str::substr(Carbon::now()->timestamp, -8);
+    $timestamp = Str::substr((string) Carbon::now()->timestamp, -8);
 
     $user = $this->connector->send(new CreateUser(new User(
         name: $timestamp.' - Test User',
@@ -26,30 +26,11 @@ it('can add groups to a user', function () {
     $response = $this->connector->send(new AddUserToAGroup(
         userId: $user->id,
         ids: [
-            env('DOCUWARE_TESTS_GROUP_ID'),
+            (string) config('laravel-docuware.tests.group_id'),
         ]
     ))->dto();
 
     expect($response->status())->toBe(200);
 
     Event::assertDispatched(DocuWareResponseLog::class);
-
-    return $user;
 });
-
-it('can remove groups to a user', function ($user) {
-    Event::fake();
-
-    Sleep::for(5)->seconds();
-
-    $response = $this->connector->send(new RemoveUserFromAGroup(
-        userId: $user->id,
-        ids: [
-            env('DOCUWARE_TESTS_GROUP_ID'),
-        ]
-    ))->dto();
-
-    expect($response->status())->toBe(200);
-
-    Event::assertDispatched(DocuWareResponseLog::class);
-})->depends('it can add groups to a user');

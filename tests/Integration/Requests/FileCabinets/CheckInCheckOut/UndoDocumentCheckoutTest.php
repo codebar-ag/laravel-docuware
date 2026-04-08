@@ -35,4 +35,7 @@ it('undoes checkout for a document', function () {
     expect($restored->id)->toBe($document->id);
 
     Event::assertDispatched(DocuWareResponseLog::class);
-})->skip('Check-out requires version management enabled on the file cabinet (often off on cloud test cabinets).');
+})->skip(
+    fn () => ! filter_var(config('laravel-docuware.tests.version_management_enabled'), FILTER_VALIDATE_BOOLEAN),
+    'Set DOCUWARE_TESTS_VERSION_MANAGEMENT_ENABLED=true when the test file cabinet has version management enabled.',
+);

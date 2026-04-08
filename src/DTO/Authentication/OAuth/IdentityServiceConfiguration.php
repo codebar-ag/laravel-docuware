@@ -112,10 +112,13 @@ final class IdentityServiceConfiguration
 
         $out = [];
         foreach (array_values($value) as $item) {
-            if (is_string($item)) {
-                $out[] = $item;
-            } elseif (is_scalar($item)) {
-                $out[] = (string) $item;
+            $normalized = match (true) {
+                is_string($item) => $item,
+                is_scalar($item) => (string) $item,
+                default => null,
+            };
+            if ($normalized !== null) {
+                $out[] = $normalized;
             }
         }
 

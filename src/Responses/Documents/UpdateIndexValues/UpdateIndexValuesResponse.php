@@ -6,6 +6,7 @@ use CodebarAg\DocuWare\Events\DocuWareResponseLog;
 use CodebarAg\DocuWare\Support\EnsureValidResponse;
 use CodebarAg\DocuWare\Support\JsonArrays;
 use CodebarAg\DocuWare\Support\ParseValue;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Saloon\Http\Response;
 
@@ -22,10 +23,10 @@ final class UpdateIndexValuesResponse
 
         $fields = $response->throw()->json('Field');
 
-        return collect(JsonArrays::listOfRecords($fields))->mapWithKeys(function (array $field) {
-            return [
-                $field['FieldName'] => ParseValue::field($field),
-            ];
-        });
+        return collect(JsonArrays::listOfRecords($fields))
+            ->filter(fn (array $field) => is_string(Arr::get($field, 'FieldName')) && Arr::get($field, 'FieldName') !== '')
+            ->mapWithKeys(fn (array $field) => [
+                Arr::get($field, 'FieldName') => ParseValue::field($field),
+            ]);
     }
 }

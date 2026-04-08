@@ -54,13 +54,13 @@ class GetSearchRequest extends Request implements Cacheable, HasBody
 
     public function defaultQuery(): array
     {
-        $defultQuery = [];
+        $defaultQuery = [];
 
         if ($this->dialogId) {
-            $defultQuery['dialogId'] = $this->dialogId;
+            $defaultQuery['dialogId'] = $this->dialogId;
         }
 
-        return $defultQuery;
+        return $defaultQuery;
     }
 
     /**

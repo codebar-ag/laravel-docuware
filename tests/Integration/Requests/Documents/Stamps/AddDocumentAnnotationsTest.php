@@ -22,10 +22,10 @@ it('posts annotations payload to the document annotation endpoint', function () 
     $response = $this->connector->send(new AddDocumentAnnotations(
         $fileCabinetId,
         $document->id,
-        ['Annotations' => []],
+        integrationTestAnnotationPayload(),
     ));
 
     expect($response->successful())->toBeTrue();
 
     Event::assertDispatched(DocuWareResponseLog::class);
-})->skip('Empty annotation payloads are rejected on many tenants; see Feature Saloon fixture test.');
+});

@@ -43,4 +43,7 @@ it('checks in a checked-out document from the file system', function () {
     expect($checkedIn->id)->toBe($document->id);
 
     Event::assertDispatched(DocuWareResponseLog::class);
-})->skip('Check-in requires a prior check-out and version management on the file cabinet.');
+})->skip(
+    fn () => ! filter_var(config('laravel-docuware.tests.version_management_enabled'), FILTER_VALIDATE_BOOLEAN),
+    'Set DOCUWARE_TESTS_VERSION_MANAGEMENT_ENABLED=true when the test file cabinet has version management enabled.',
+);

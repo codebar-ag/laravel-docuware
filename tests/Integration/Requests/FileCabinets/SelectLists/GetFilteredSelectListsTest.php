@@ -2,32 +2,57 @@
 
 use CodebarAg\DocuWare\Events\DocuWareResponseLog;
 use CodebarAg\DocuWare\Requests\FileCabinets\SelectLists\GetFilteredSelectLists;
+use CodebarAg\DocuWare\Requests\FileCabinets\SelectLists\GetSelectLists;
 use Illuminate\Support\Facades\Event;
 
-it('returns a filtered select list using DialogExpression', function () {
+it('returns a select list for a dialog field', function () {
     Event::fake();
 
     $fileCabinetId = config('laravel-docuware.tests.file_cabinet_id');
     $dialogId = config('laravel-docuware.tests.dialog_id');
+    $fieldName = config('laravel-docuware.tests.filtered_select_list_field');
+
+    $response = $this->connector->send(new GetSelectLists(
+        $fileCabinetId,
+        $dialogId,
+        $fieldName,
+    ));
+
+    expect($response->successful())->toBeTrue('HTTP '.$response->status().': '.$response->body());
+
+    $values = $response->dto();
+    expect($values !== null)->toBeTrue();
+
+    Event::assertDispatched(DocuWareResponseLog::class);
+});
+
+it('returns a filtered select list using DialogExpression', function () {
+    $fileCabinetId = config('laravel-docuware.tests.file_cabinet_id');
+    $dialogId = config('laravel-docuware.tests.dialog_id');
+    $fieldName = config('laravel-docuware.tests.filtered_select_list_field');
+    $conditionField = config('laravel-docuware.tests.filtered_select_list_condition_field');
+    $conditionValue = config('laravel-docuware.tests.filtered_select_list_condition_value');
 
     $dialogExpression = [
         'Operation' => 'And',
         'Condition' => [
             [
-                'DBName' => 'DOCUMENT_TYPE',
-                'Value' => ['"DocuWare"'],
+                'DBName' => $conditionField,
+                'Value' => [$conditionValue],
             ],
         ],
     ];
 
-    $values = $this->connector->send(new GetFilteredSelectLists(
+    $response = $this->connector->send(new GetFilteredSelectLists(
         $fileCabinetId,
         $dialogId,
-        'DOCUMENT_TYPE',
+        $fieldName,
         $dialogExpression,
-    ))->dto();
+    ));
 
-    expect($values !== null)->toBeTrue();
+    expect($response->successful())->toBeTrue('HTTP '.$response->status().': '.$response->body());
 
-    Event::assertDispatched(DocuWareResponseLog::class);
-})->skip('Filtered select lists depend on cabinet field names and DialogExpression shape for your tenant.');
+    /** @var mixed $payload */
+    $payload = $response->json();
+    expect(is_array($payload))->toBeTrue();
+});

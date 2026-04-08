@@ -3,6 +3,7 @@
 namespace CodebarAg\DocuWare\DTO\Documents;
 
 use CodebarAg\DocuWare\Support\JsonArrays;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 
 class TableRow
@@ -25,9 +26,9 @@ class TableRow
      */
     protected static function convertFields(Collection $fields): Collection
     {
-        return $fields->mapWithKeys(function (array $field) {
-            return [$field['FieldName'] => DocumentField::fromJson($field)];
-        });
+        return $fields
+            ->filter(fn (array $field) => is_string(Arr::get($field, 'FieldName')) && Arr::get($field, 'FieldName') !== '')
+            ->mapWithKeys(fn (array $field) => [Arr::get($field, 'FieldName') => DocumentField::fromJson($field)]);
     }
 
     /**

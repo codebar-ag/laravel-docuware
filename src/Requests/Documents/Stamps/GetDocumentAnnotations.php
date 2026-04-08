@@ -5,6 +5,7 @@ namespace CodebarAg\DocuWare\Requests\Documents\Stamps;
 use CodebarAg\DocuWare\Events\DocuWareResponseLog;
 use CodebarAg\DocuWare\Support\EnsureValidResponse;
 use CodebarAg\DocuWare\Support\JsonArrays;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Saloon\CachePlugin\Contracts\Cacheable;
@@ -68,8 +69,9 @@ final class GetDocumentAnnotations extends Request implements Cacheable
         }
 
         foreach (['Annotations', 'Annotation', 'Items'] as $key) {
-            if (isset($decoded[$key]) && is_array($decoded[$key])) {
-                return JsonArrays::listOfRecords($decoded[$key]);
+            $nested = Arr::get($decoded, $key);
+            if (is_array($nested)) {
+                return JsonArrays::listOfRecords($nested);
             }
         }
 

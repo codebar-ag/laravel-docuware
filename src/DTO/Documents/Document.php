@@ -72,9 +72,9 @@ final class Document
      */
     protected static function convertFields(Collection $fields): Collection
     {
-        return $fields->mapWithKeys(function (array $field) {
-            return [$field['FieldName'] => DocumentField::fromJson($field)];
-        });
+        return $fields
+            ->filter(fn (array $field) => is_string(Arr::get($field, 'FieldName')) && Arr::get($field, 'FieldName') !== '')
+            ->mapWithKeys(fn (array $field) => [Arr::get($field, 'FieldName') => DocumentField::fromJson($field)]);
     }
 
     /**
@@ -83,9 +83,9 @@ final class Document
      */
     protected static function convertSuggestions(Collection $suggestions): Collection
     {
-        return $suggestions->mapWithKeys(function (array $suggestion) {
-            return [$suggestion['DBName'] => SuggestionField::fromJson($suggestion)];
-        });
+        return $suggestions
+            ->filter(fn (array $suggestion) => is_string(Arr::get($suggestion, 'DBName')) && Arr::get($suggestion, 'DBName') !== '')
+            ->mapWithKeys(fn (array $suggestion) => [Arr::get($suggestion, 'DBName') => SuggestionField::fromJson($suggestion)]);
     }
 
     /**
@@ -94,9 +94,9 @@ final class Document
      */
     protected static function convertSections(Collection $sections): Collection
     {
-        return $sections->mapWithKeys(function (array $section) {
-            return [$section['Id'] => Section::fromJson($section)];
-        });
+        return $sections
+            ->filter(fn (array $section) => filled(Arr::get($section, 'Id')))
+            ->mapWithKeys(fn (array $section) => [Arr::get($section, 'Id') => Section::fromJson($section)]);
     }
 
     /**

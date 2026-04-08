@@ -73,22 +73,14 @@ class DocuWareSearchRequestBuilder
 
     public function page(?int $page): self
     {
-        if (is_null($page)) {
-            $this->page = 1;
-        } else {
-            $this->page = $page;
-        }
+        $this->page = $page ?? 1;
 
         return $this;
     }
 
     public function perPage(?int $perPage): self
     {
-        if (is_null($perPage)) {
-            $this->perPage = 50;
-        } else {
-            $this->perPage = $perPage;
-        }
+        $this->perPage = $perPage ?? 50;
 
         return $this;
     }
@@ -116,11 +108,7 @@ class DocuWareSearchRequestBuilder
     {
         $this->orderField = $field;
 
-        if (is_null($direction)) {
-            $this->orderDirection = 'asc';
-        } else {
-            $this->orderDirection = $direction; // Supported values: 'asc', 'desc'
-        }
+        $this->orderDirection = $direction ?? 'asc'; // Supported values: 'asc', 'desc'
 
         return $this;
     }
@@ -290,25 +278,48 @@ class DocuWareSearchRequestBuilder
 
     private function makeSureFilterDateRangeIsCorrect(string $name, string $operator): void
     {
-        if (isset($this->usedDateOperators[$name])) {
-            if (($operatorFilterIndex = array_search($operator, $this->usedDateOperators[$name], true)) !== false) {
-                unset($this->filters[$name][$operatorFilterIndex]);
-                if (isset($this->filters[$name])) {
-                    $this->filters[$name] = array_values($this->filters[$name]);
-                }
-            } elseif ($operator == '=') {
-                unset($this->filters[$name]);
-                $this->usedDateOperators[$name] = [$operator];
-            } else {
-                $this->usedDateOperators[$name][] = $operator;
-            }
-        } else {
+        if (! isset($this->usedDateOperators[$name])) {
             $this->usedDateOperators[$name][] = $operator;
+            $this->throwIfInvalidDateFiltersCount($name);
+
+            return;
         }
 
-        if (isset($this->filters[$name]) && ($dateFiltersCount = count($this->filters[$name])) == 2) {
-            throw UnableToSearch::InvalidDateFiltersCount($dateFiltersCount);
+        $operatorFilterIndex = array_search($operator, $this->usedDateOperators[$name], true);
+        if ($operatorFilterIndex !== false) {
+            unset($this->filters[$name][$operatorFilterIndex]);
+            if (isset($this->filters[$name])) {
+                $this->filters[$name] = array_values($this->filters[$name]);
+            }
+            $this->throwIfInvalidDateFiltersCount($name);
+
+            return;
         }
+
+        if ($operator == '=') {
+            unset($this->filters[$name]);
+            $this->usedDateOperators[$name] = [$operator];
+            $this->throwIfInvalidDateFiltersCount($name);
+
+            return;
+        }
+
+        $this->usedDateOperators[$name][] = $operator;
+        $this->throwIfInvalidDateFiltersCount($name);
+    }
+
+    private function throwIfInvalidDateFiltersCount(string $name): void
+    {
+        if (! isset($this->filters[$name])) {
+            return;
+        }
+
+        $dateFiltersCount = count($this->filters[$name]);
+        if ($dateFiltersCount !== 2) {
+            return;
+        }
+
+        throw UnableToSearch::InvalidDateFiltersCount($dateFiltersCount);
     }
 
     private function exactDateTime(Carbon $date, string $operator): Carbon

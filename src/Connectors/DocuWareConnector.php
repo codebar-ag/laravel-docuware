@@ -74,15 +74,10 @@ class DocuWareConnector extends Connector
             return $token->accessToken;
         }
 
-        if ($this->configuration instanceof ConfigWithCredentials) {
-            $token = $this->getNewOAuthTokenWithCredentials();
-            DocuWareOAuthLog::dispatch($this->configuration->url, $this->configuration->username, 'Token retrieved from API');
-            $cache->put($cacheKey, Crypt::encrypt($token), $this->oauthTokenCacheTtlSeconds($token));
+        $token = $this->configuration instanceof ConfigWithCredentials
+            ? $this->getNewOAuthTokenWithCredentials()
+            : $this->getNewOAuthTokenWithCredentialsTrustedUser();
 
-            return $token->accessToken;
-        }
-
-        $token = $this->getNewOAuthTokenWithCredentialsTrustedUser();
         DocuWareOAuthLog::dispatch($this->configuration->url, $this->configuration->username, 'Token retrieved from API');
         $cache->put($cacheKey, Crypt::encrypt($token), $this->oauthTokenCacheTtlSeconds($token));
 
@@ -149,29 +144,30 @@ class DocuWareConnector extends Connector
 
     /**
      * Build a safe error message when the token endpoint returns a failure.
-     * Avoids calling {@see Response::json()} on HTML or other non-JSON bodies (would throw JsonException).
+     * Uses non-throwing {@see json_decode()} so HTML or other non-JSON bodies do not throw.
      */
     protected function oauthTokenFailureMessage(Response $response): string
     {
         $body = (string) $response->body();
 
-        try {
-            /** @var mixed $decoded */
-            $decoded = json_decode($body, true, 512, JSON_THROW_ON_ERROR);
-            if (is_array($decoded)) {
-                $message = Arr::get($decoded, 'error_description')
-                    ?? Arr::get($decoded, 'error');
-
-                if (is_string($message) && $message !== '') {
-                    return trim(preg_replace('/\s\s+/', ' ', $message));
-                }
-            }
-        } catch (\JsonException) {
-            // Non-JSON error page or empty body.
+        /** @var mixed $decoded */
+        $decoded = json_decode($body, true);
+        if (! is_array($decoded)) {
+            return $this->oauthFailureBodySummary($body, $response);
         }
 
-        $trimmed = trim(preg_replace('/\s\s+/', ' ', $body));
+        $message = Arr::get($decoded, 'error_description')
+            ?? Arr::get($decoded, 'error');
+        if (! is_string($message) || $message === '') {
+            return $this->oauthFailureBodySummary($body, $response);
+        }
 
+        return trim(preg_replace('/\s\s+/', ' ', $message));
+    }
+
+    protected function oauthFailureBodySummary(string $body, Response $response): string
+    {
+        $trimmed = trim(preg_replace('/\s\s+/', ' ', $body));
         if ($trimmed !== '') {
             return Str::limit($trimmed, 500);
         }

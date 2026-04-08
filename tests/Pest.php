@@ -83,6 +83,94 @@ function setUsersInactive(DocuWareConnector $connector): void
 }
 
 /**
+ * JSON body for AddDocumentAnnotations integration test.
+ * Set DOCUWARE_TESTS_ANNOTATION_JSON to override (full JSON object as a string).
+ * Or set DOCUWARE_TESTS_STAMP_ID to use a StampPlacement payload (optional Location).
+ *
+ * @return array<string, mixed>
+ */
+function integrationTestAnnotationPayload(): array
+{
+    $raw = env('DOCUWARE_TESTS_ANNOTATION_JSON');
+    if (is_string($raw) && $raw !== '') {
+        try {
+            /** @var mixed $decoded */
+            $decoded = json_decode($raw, true, 512, JSON_THROW_ON_ERROR);
+        } catch (JsonException $e) {
+            throw new InvalidArgumentException('DOCUWARE_TESTS_ANNOTATION_JSON must be valid JSON: '.$e->getMessage(), 0, $e);
+        }
+        if (! is_array($decoded)) {
+            throw new InvalidArgumentException('DOCUWARE_TESTS_ANNOTATION_JSON must decode to an array.');
+        }
+
+        return $decoded;
+    }
+
+    $stampId = env('DOCUWARE_TESTS_STAMP_ID');
+    if (is_string($stampId) && $stampId !== '') {
+        return [
+            'Annotations' => [
+                [
+                    'PageNumber' => 0,
+                    'SectionNumber' => 0,
+                    'AnnotationsPlacement' => [
+                        'Items' => [
+                            [
+                                '$type' => 'StampPlacement',
+                                'StampId' => $stampId,
+                                'Layer' => 1,
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+    }
+
+    return [
+        'Annotations' => [
+            [
+                'PageNumber' => 0,
+                'SectionNumber' => 0,
+                'AnnotationsPlacement' => [
+                    'Items' => [
+                        [
+                            '$type' => 'Annotation',
+                            'Layer' => [
+                                [
+                                    'Id' => 1,
+                                    'Items' => [
+                                        [
+                                            '$type' => 'TextEntry',
+                                            'Location' => [
+                                                'Left' => 100,
+                                                'Top' => 100,
+                                                'Width' => 800,
+                                                'Height' => 400,
+                                            ],
+                                            'Value' => 'laravel-docuware integration',
+                                            'Font' => [
+                                                'FontName' => 'Arial',
+                                                'Bold' => false,
+                                                'Italic' => false,
+                                                'Underlined' => false,
+                                                'StrikeThrough' => false,
+                                                'FontSize' => 200,
+                                                'Spacing' => 0,
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ],
+    ];
+}
+
+/**
  * @throws Throwable
  */
 function getConnector(): DocuWareConnector

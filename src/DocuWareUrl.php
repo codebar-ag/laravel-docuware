@@ -63,11 +63,9 @@ class DocuWareUrl
 
         $lc = URL::formatWithBase64($credentials);
 
-        if ($this->fileCabinetId) {
-            $source = "fc={$this->fileCabinetId}";
-        } else {
-            $source = "scid={$this->basketId}";
-        }
+        $source = $this->fileCabinetId
+            ? "fc={$this->fileCabinetId}"
+            : "scid={$this->basketId}";
 
         $data = implode('&', [
             "lc={$lc}",

@@ -19,7 +19,7 @@ class ParseValue
         ?array $field,
         int|float|Carbon|string|Collection|null $default = null,
     ): null|int|float|Carbon|string|Collection {
-        if (! $field || $field['IsNull']) {
+        if (! $field || Arr::get($field, 'IsNull')) {
             return $default;
         }
 
@@ -32,7 +32,10 @@ class ParseValue
             'Decimal' => (float) $item,
             'Date', 'DateTime' => is_string($item) ? self::date($item) : $default,
             'Keywords' => Arr::join(
-                is_array($item) && isset($item['Keyword']) && is_array($item['Keyword']) ? $item['Keyword'] : [],
+                match (true) {
+                    is_array($item) && is_array($k = Arr::get($item, 'Keyword', [])) => $k,
+                    default => [],
+                },
                 ', '
             ),
             'Table' => is_array($item) ? self::table($item) : $default,
@@ -56,11 +59,11 @@ class ParseValue
      */
     public static function table(array $Item): ?Collection
     {
-        $type = $Item['$type'] ?? null;
+        $type = Arr::get($Item, '$type');
 
         return match ($type) {
-            'DocumentIndexFieldTable' => isset($Item['Row']) && is_array($Item['Row'])
-                ? self::documentIndexFieldTable($Item['Row'])
+            'DocumentIndexFieldTable' => is_array($row = Arr::get($Item, 'Row'))
+                ? self::documentIndexFieldTable($row)
                 : null,
             default => null,
         };
@@ -83,7 +86,7 @@ class ParseValue
         $rows = collect($list);
 
         return $rows->map(function (array $row) {
-            $columnValue = $row['ColumnValue'] ?? [];
+            $columnValue = Arr::get($row, 'ColumnValue', []);
 
             return TableRow::fromJson(is_array($columnValue) ? $columnValue : []);
         });

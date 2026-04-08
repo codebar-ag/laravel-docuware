@@ -35,4 +35,7 @@ it('checks out a document to the file system', function () {
         $fileCabinetId,
         $document->id,
     ))->dto();
-})->skip('Check-out requires version management enabled on the file cabinet (often off on cloud test cabinets).');
+})->skip(
+    fn () => ! filter_var(config('laravel-docuware.tests.version_management_enabled'), FILTER_VALIDATE_BOOLEAN),
+    'Set DOCUWARE_TESTS_VERSION_MANAGEMENT_ENABLED=true when the test file cabinet has version management enabled.',
+);

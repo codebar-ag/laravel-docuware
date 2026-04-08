@@ -4,9 +4,9 @@
  * Record or refresh tests/Fixtures/saloon/get-organization.json from a real DocuWare tenant.
  *
  * 1. Set DOCUWARE_URL, DOCUWARE_USERNAME, DOCUWARE_PASSWORD in the environment.
- * 2. Remove ->skip() below temporarily.
+ * 2. Set DOCUWARE_RECORD_FIXTURES=true (e.g. in phpunit.xml or .env).
  * 3. Run: vendor/bin/pest tests/Manual/RecordGetOrganizationFixtureTest.php
- * 4. Review the JSON for secrets, then restore ->skip().
+ * 4. Review the JSON for secrets, then unset DOCUWARE_RECORD_FIXTURES.
  */
 
 use CodebarAg\DocuWare\Requests\General\Organization\GetOrganization;
@@ -33,4 +33,7 @@ it('records get-organization Saloon fixture', function () {
     );
 
     expect(file_exists($fixturePath))->toBeTrue();
-})->group('manual')->skip('Remove skip to record fixtures against a real DocuWare system.');
+})->group('manual')->skip(
+    fn () => ! filter_var(env('DOCUWARE_RECORD_FIXTURES', false), FILTER_VALIDATE_BOOLEAN),
+    'Set DOCUWARE_RECORD_FIXTURES=true to record get-organization.json against your tenant.',
+);

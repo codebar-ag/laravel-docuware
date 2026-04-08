@@ -11,8 +11,6 @@ it('transfers a document to another file cabinet or basket', function () {
 
     $sourceCabinetId = config('laravel-docuware.tests.file_cabinet_id');
     $destinationId = config('laravel-docuware.tests.basket_id');
-    $storeDialogId = config('laravel-docuware.tests.store_dialog_id')
-        ?? config('laravel-docuware.tests.dialog_id');
 
     $document = $this->connector->send(new CreateDataRecord(
         $sourceCabinetId,
@@ -26,10 +24,10 @@ it('transfers a document to another file cabinet or basket', function () {
         fileCabinetId: $sourceCabinetId,
         destinationFileCabinetId: $destinationId,
         documentId: (string) $document->id,
-        storeDialogId: $storeDialogId ? (string) $storeDialogId : null,
+        useDefaultDialog: true,
     ))->dto();
 
     expect($ok)->toBeTrue();
 
     Event::assertDispatched(DocuWareResponseLog::class);
-})->skip('Requires a valid destination cabinet/basket and store dialog for your tenant.');
+});

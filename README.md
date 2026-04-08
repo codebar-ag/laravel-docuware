@@ -206,8 +206,8 @@ then optimize the processes that power the core of your business.
 | FileCabinets/SelectLists            | Get Select Lists & Get Filtered Select Lists                | ✅         |      |
 | FileCabinets/Upload                 | Create Data Record                                          | ✅         |      |
 | FileCabinets/Upload                 | Append File(s) to a Data Record                             | ✅         |      |
-| FileCabinets/Upload                 | Upload a Single File for a Data Record                      | ❌         | -    |
-| FileCabinets/Upload                 | Create a Data Record & Upload File                          | ❌         | -    |
+| FileCabinets/Upload                 | Upload a Single File for a Data Record                      | ✅         | `CreateDataRecord` (multipart `POST …/Documents`) |
+| FileCabinets/Upload                 | Create a Data Record & Upload File                          | ✅         | `CreateDataRecord` |
 | FileCabinets/Upload                 | Create Data Record & Upload File Using Store Dialog         | ✅         | `CreateDataRecord` + `storeDialogId` |
 | FileCabinets/Upload                 | Append a Single PDF to a Document                           | ✅         | -    |
 | FileCabinets/Upload                 | Replace a PDF Document Section                              | ✅         |      |
@@ -215,7 +215,7 @@ then optimize the processes that power the core of your business.
 | FileCabinets/BatchIndexFieldsUpdate | Batch Update Index Fields By Search                         | ✅         | `BatchDocumentsUpdateFields` |
 | FileCabinets/BatchIndexFieldsUpdate | Batch Append/Update Keyword Fields By Id                    | ✅         | `BatchDocumentsUpdateFields` |
 | Documents/UpdateIndexValues         | Update Index Values                                         | ✅         |      |
-| Documents/UpdateIndexValues         | Update Table Field Values                                   | ❌         | - ?  |
+| Documents/UpdateIndexValues         | Update Table Field Values                                   | ✅         | `UpdateIndexValues` + `IndexTableDTO` |
 | Documents/ModifyDocuments           | Transfer Document                                           | ✅         |      |
 | Documents/ModifyDocuments           | Delete Document                                             | ✅         |      |
 | Documents/ClipUnclip&StapleUnstaple | Clip                                                        | ✅         |      |
@@ -224,12 +224,12 @@ then optimize the processes that power the core of your business.
 | Documents/ClipUnclip&StapleUnstaple | Unstaple                                                    | ✅         |      |
 | Documents/AnnotationsStamps         | AddStampWithPosition                                        | ✅         | `AddDocumentAnnotations` |
 | Documents/AnnotationsStamps         | AddStampWithBestPosition                                    | ✅         | `AddDocumentAnnotations` |
-| Documents/AnnotationsStamps         | AddTextAnnotation                                           | 🕣        |      |
-| Documents/AnnotationsStamps         | AddRectEntryAnnotation                                      | 🕣        |      |
-| Documents/AnnotationsStamps         | AddLineEntryAnnotation                                      | 🕣        |      |
-| Documents/AnnotationsStamps         | AddPolyLineEntryAnnotation                                  | ❌         | -    |
-| Documents/AnnotationsStamps         | DeleteAnnotation                                            | ❌         | -    |
-| Documents/AnnotationsStamps         | UpdateTextAnnotation                                        | 🕣        |      |
+| Documents/AnnotationsStamps         | AddTextAnnotation                                           | ✅         | `AddDocumentAnnotations` |
+| Documents/AnnotationsStamps         | AddRectEntryAnnotation                                      | ✅         | `AddDocumentAnnotations` |
+| Documents/AnnotationsStamps         | AddLineEntryAnnotation                                      | ✅         | `AddDocumentAnnotations` |
+| Documents/AnnotationsStamps         | AddPolyLineEntryAnnotation                                  | ✅         | `AddDocumentAnnotations` |
+| Documents/AnnotationsStamps         | DeleteAnnotation                                            | ❌         | —    |
+| Documents/AnnotationsStamps         | UpdateTextAnnotation                                        | ❌         | —    |
 | Documents/AnnotationsStamps         | Get Stamps                                                  | ✅         | `GetStamps` |
 | Documents/DocumentsTrashBin         | Get Documents                                               | ✅         |      |
 | Documents/DocumentsTrashBin         | Delete Documents                                            | ✅         |      |
@@ -801,11 +801,11 @@ $paginator = $connector->send($paginatorRequest)->dto();
 
 | Request                                                     | Supported |
 |-------------------------------------------------------------|-----------|
-| Check-out & Download a Document                             | 🕣        |
-| Check-in a Document from the File System                    | 🕣        |
-| Undo Check-out                                              | 🕣        |
+| Check-out & Download a Document                             | ✅         |
+| Check-in a Document from the File System                    | ✅         |
+| Undo Check-out                                              | ✅         |
 
-> Not Currently Supported
+> Implemented as `CheckoutDocumentToFileSystem`, `CheckInDocumentFromFileSystem`, and `UndoDocumentCheckout`. Your file cabinet must have **version management** enabled; otherwise DocuWare returns HTTP 405.
 
 ##### Select Lists
 | Request                                      | Supported |
@@ -829,11 +829,13 @@ $types = $this->connector->send(new GetSelectLists(
 |-----------------------------------------------------|-----------|
 | Create Data Record                                  | ✅         |
 | Append File(s) to a Data Record                     | ✅         |
-| Upload a Single File for a Data Record              | ❌         |
-| Create a Data Record & Upload File                  | ❌         |
-| Create Data Record & Upload File Using Store Dialog | ❌         |
-| Append a Single PDF to a Document                   | ❌         |
-| Replace a PDF Document Section                      | ❌         |
+| Upload a Single File for a Data Record              | ✅         |
+| Create a Data Record & Upload File                  | ✅         |
+| Create Data Record & Upload File Using Store Dialog | ✅         |
+| Append a Single PDF to a Document                   | ✅         |
+| Replace a PDF Document Section                      | ✅         |
+
+> Postman splits some uploads into separate recipes; this package maps them to `CreateDataRecord` (multipart `POST …/Documents`, optional `storeDialogId`), `AppendFilesToADataRecord`, `AppendASinglePDFToADocument`, and `ReplaceAPDFDocumentSection`.
 
 ###### Create Data Record
 ```php
@@ -940,11 +942,11 @@ $response = $this->connector->send(new ReplaceAPDFDocumentSection(
 ###### Batch Index Fields Update
 | Request                                  | Supported |
 |------------------------------------------|-----------|
-| Batch Update Index Fields By Id          | ❌         |
-| Batch Update Index Fields By Search      | ❌         |
-| Batch Append/Update Keyword Fields By Id | ❌         |
+| Batch Update Index Fields By Id          | ✅         |
+| Batch Update Index Fields By Search      | ✅         |
+| Batch Append/Update Keyword Fields By Id | ✅         |
 
-> Not Currently Supported
+> Use `BatchDocumentsUpdateFields` (same class covers these Postman variants).
 
 ###### Get Fields
 ```php
@@ -960,7 +962,9 @@ $fields = $connector->send(new GetFieldsRequest($fileCabinetId))->dto();
 |---------------------------|-----------|
 | Update Index Values       | ✅         |
 | Update Table Index Values | ✅         |
-| Update Table Field Values | ❌         |
+| Update Table Field Values | ✅         |
+
+> Table columns use `IndexTableDTO` in the same `UpdateIndexValues` request as scalar fields (see **Update Table Data Record** below).
 
 
 ```php
@@ -1099,20 +1103,23 @@ $unclip = $connector->send(new Unstaple(
 ```
 
 ##### Annotations/Stamps
-| Request                    | Supported |
-|----------------------------|-----------|
-| Get Stamps                 | ✅         |
-| Get Annotations            | ✅         |
-| AddStampWithPosition       | 🕣        |
-| AddStampWithBestPosition   | 🕣        |
-| AddTextAnnotation          | 🕣        |
-| AddRectEntryAnnotation     | 🕣        |
-| AddLineEntryAnnotation     | 🕣        |
-| AddPolyLineEntryAnnotation | ❌         |
-| DeleteAnnotation           | ❌         |
-| UpdateTextAnnotation       | 🕣        |
 
-> Stamp/annotation **POST** variants map to `AddDocumentAnnotations` with the JSON body Postman sends. **GET** annotations use `GetDocumentAnnotations`.
+DocuWare's Postman collection lists several **add** operations (stamp with position / best position, text, rectangle, line, polyline). They target the same Platform route: `POST /FileCabinets/{id}/Documents/{documentId}/Annotation`, differing only by JSON (`$type`, `Annotations`, `AnnotationsPlacement`, etc.). This package exposes that as **`AddDocumentAnnotations`** with the same payload array you would send from Postman—there are no separate classes per recipe.
+
+**Not implemented:** `DeleteAnnotation` and `UpdateTextAnnotation` are separate operations in the API (different HTTP method or path); there is no Saloon request class for them yet—contributions welcome.
+
+| Request                    | Supported | Package class |
+|----------------------------|-----------|---------------|
+| Get Stamps                 | ✅         | `GetStamps` |
+| Get Annotations            | ✅         | `GetDocumentAnnotations` |
+| AddStampWithPosition       | ✅         | `AddDocumentAnnotations` |
+| AddStampWithBestPosition   | ✅         | `AddDocumentAnnotations` |
+| AddTextAnnotation          | ✅         | `AddDocumentAnnotations` |
+| AddRectEntryAnnotation     | ✅         | `AddDocumentAnnotations` |
+| AddLineEntryAnnotation     | ✅         | `AddDocumentAnnotations` |
+| AddPolyLineEntryAnnotation | ✅         | `AddDocumentAnnotations` |
+| DeleteAnnotation           | ❌         | — |
+| UpdateTextAnnotation       | ❌         | — |
 
 ###### Get Stamps
 ```php
@@ -1131,6 +1138,19 @@ $annotations = $connector->send(new GetDocumentAnnotations(
     $fileCabinetId,
     $documentId,
 ))->dto(); // Collection<int, array<string, mixed>>
+```
+
+###### Add stamps / annotations (POST body from Postman)
+```php
+use CodebarAg\DocuWare\Requests\Documents\Stamps\AddDocumentAnnotations;
+
+$result = $connector->send(new AddDocumentAnnotations(
+    $fileCabinetId,
+    $documentId,
+    [
+        // Same JSON structure as the matching Postman request (e.g. StampPlacement, TextEntry, …).
+    ],
+))->dto();
 ```
 
 ###### Documents Trash Bin

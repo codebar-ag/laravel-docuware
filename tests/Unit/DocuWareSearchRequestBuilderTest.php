@@ -62,3 +62,25 @@ it('encodes date range filter values as a zero-indexed list for json', function 
         ->and(array_is_list($condition['Value']))->toBeTrue()
         ->and($condition['Value'])->toHaveCount(2);
 })->group('search', 'unit');
+
+it('replaces a date bound in place when the same operator is used again', function () {
+    $request = (new DocuWare)
+        ->searchRequestBuilder()
+        ->fileCabinet('cabinet-id')
+        ->filterDate('DWSTOREDATETIME', '>=', Carbon::parse('2020-01-01'))
+        ->filterDate('DWSTOREDATETIME', '<', Carbon::parse('2021-01-01'))
+        ->filterDate('DWSTOREDATETIME', '>=', Carbon::parse('2020-06-01'))
+        ->get();
+
+    $condition = collect($request->defaultBody()['Condition'])
+        ->firstWhere('DBName', 'DWSTOREDATETIME');
+
+    $start = Carbon::parse('2020-06-01')->startOfDay();
+    $end = Carbon::parse('2021-01-01')->startOfDay();
+
+    expect($condition)->not->toBeNull()
+        ->and($condition['Value'])->toHaveCount(2)
+        ->and($condition['Value'][0])->toBeInstanceOf(Carbon::class)
+        ->and($condition['Value'][0]->equalTo($start))->toBeTrue()
+        ->and($condition['Value'][1]->equalTo($end))->toBeTrue();
+})->group('search', 'unit');

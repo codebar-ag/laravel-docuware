@@ -20,6 +20,9 @@ class DeleteApplicationProperties extends Request implements Cacheable, HasBody
 
     protected Method $method = Method::POST;
 
+    /**
+     * @param  list<string>  $propertyNames
+     */
     public function __construct(
         protected readonly string $fileCabinetId,
         protected readonly string $documentId,
@@ -31,9 +34,12 @@ class DeleteApplicationProperties extends Request implements Cacheable, HasBody
         return '/FileCabinets/'.$this->fileCabinetId.'/Documents/'.$this->documentId.'/DocumentApplicationProperties';
     }
 
-    public function defaultBody()
+    /**
+     * @return array<string, mixed>
+     */
+    public function defaultBody(): array
     {
-        $props = collect($this->propertyNames)->map(function ($name) {
+        $props = collect($this->propertyNames)->map(function (string $name) {
             return [
                 'Name' => $name,
                 'Value' => null,

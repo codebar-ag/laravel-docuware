@@ -2,9 +2,9 @@
 
 namespace CodebarAg\DocuWare\Requests\General\UserManagement\GetModifyGroups;
 
+use CodebarAg\DocuWare\DTO\General\UserManagement\GetModifyGroups\Group;
 use CodebarAg\DocuWare\Responses\General\UserManagement\GetModifyGroups\GetGroupsResponse;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Enumerable;
 use Illuminate\Support\Facades\Cache;
 use Saloon\CachePlugin\Contracts\Cacheable;
 use Saloon\CachePlugin\Drivers\LaravelCacheDriver;
@@ -47,7 +47,10 @@ class GetGroups extends Request implements Cacheable
         return config('laravel-docuware.configurations.cache.lifetime_in_seconds', 3600);
     }
 
-    public function createDtoFromResponse(Response $response): Enumerable|Collection
+    /**
+     * @return Collection<int, Group>
+     */
+    public function createDtoFromResponse(Response $response): Collection
     {
         return GetGroupsResponse::fromResponse($response);
     }

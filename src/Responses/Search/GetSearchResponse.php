@@ -10,7 +10,7 @@ use Saloon\Http\Response;
 
 final class GetSearchResponse
 {
-    public static function fromResponse(Response $response, $page, $perPage): DocumentPaginator
+    public static function fromResponse(Response $response, int $page, int $perPage): DocumentPaginator
     {
         event(new DocuWareResponseLog($response));
 

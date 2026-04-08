@@ -14,22 +14,22 @@ jobs:
       max-parallel: 1
       matrix:
         os: [ ubuntu-latest ]
-        php: [ 8.2, 8.3, 8.4 ]
-        laravel: [ 12.* ]
+        php: [ 8.3, 8.4, 8.5 ]
+        laravel: [ 13.* ]
         stability: [ prefer-lowest, prefer-stable ]
 
     name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.stability }} - ${{ matrix.os }}
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
           extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, soap, intl, gd, exif, iconv, imagick, fileinfo
-          coverage: none
+          coverage: pcov
 
       - name: Setup problem matchers
         run: |
@@ -41,20 +41,41 @@ jobs:
           composer require "laravel/framework:${{ matrix.laravel }}" --no-interaction --no-update
           composer update --${{ matrix.stability }} --prefer-dist --no-interaction
 
-      - name: Execute tests
+      - name: Copy PHPUnit configuration
         run: cp phpunit.xml.dist phpunit.xml
 
-      - name: Execute tests
-        run: vendor/bin/pest
+      - name: Verify Postman parity matrix
+        run: composer postman:parity
+
+      # Default suite only (unit, feature, manual skips) — no live DocuWare required.
+      - name: Run Pest tests (default suite)
+        run: composer test
+
+      # One matrix cell hits the live API to limit tenant traffic and rate limits (sequential tests in-process).
+      - name: Run DocuWare integration tests
+        if: matrix.php == '8.3' && matrix.stability == 'prefer-stable'
         env:
           DOCUWARE_URL: ${{ secrets.DOCUWARE_URL }}
           DOCUWARE_USERNAME: ${{ secrets.DOCUWARE_USERNAME }}
           DOCUWARE_PASSWORD: ${{ secrets.DOCUWARE_PASSWORD }}
+          DOCUWARE_PASSPHRASE: ${{ secrets.DOCUWARE_PASSPHRASE }}
           DOCUWARE_COOKIES: ${{ secrets.DOCUWARE_COOKIES }}
+          DOCUWARE_TESTS_FILE_CABINET_ID: ${{ secrets.DOCUWARE_TESTS_FILE_CABINET_ID }}
+          DOCUWARE_TESTS_DIALOG_ID: ${{ secrets.DOCUWARE_TESTS_DIALOG_ID }}
+          DOCUWARE_TESTS_BASKET_ID: ${{ secrets.DOCUWARE_TESTS_BASKET_ID }}
+          DOCUWARE_TESTS_ORGANIZATION_ID: ${{ secrets.DOCUWARE_TESTS_ORGANIZATION_ID }}
+          DOCUWARE_TESTS_GROUP_ID: ${{ secrets.DOCUWARE_TESTS_GROUP_ID }}
+          DOCUWARE_TESTS_ROLE_ID: ${{ secrets.DOCUWARE_TESTS_ROLE_ID }}
+        run: |
+          if [ -z "$DOCUWARE_URL" ] || [ -z "$DOCUWARE_USERNAME" ] || [ -z "$DOCUWARE_PASSWORD" ]; then
+            echo "Skipping DocuWare integration (DOCUWARE_* secrets not configured)."
+            exit 0
+          fi
+          composer test:live
 
       - name: Store Log Artifacts
         if: failure()
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: Store report artifacts
           path: ./vendor/orchestra/testbench-core/laravel/storage/logs

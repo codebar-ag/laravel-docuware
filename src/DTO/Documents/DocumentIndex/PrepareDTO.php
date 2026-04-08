@@ -6,6 +6,10 @@ use Illuminate\Support\Collection;
 
 class PrepareDTO
 {
+    /**
+     * @param  Collection<int, IndexTextDTO|IndexDateDTO|IndexDateTimeDTO|IndexNumericDTO|IndexDecimalDTO|IndexTableDTO|IndexKeywordDTO|IndexMemoDTO>  $indexes
+     * @return array<string, mixed>
+     */
     public static function makeFields(Collection $indexes): array
     {
         return [
@@ -16,6 +20,10 @@ class PrepareDTO
         ];
     }
 
+    /**
+     * @param  Collection<int, IndexTextDTO|IndexDateDTO|IndexDateTimeDTO|IndexNumericDTO|IndexDecimalDTO|IndexTableDTO|IndexKeywordDTO|IndexMemoDTO>  $indexes
+     * @return array<string, mixed>
+     */
     public static function makeField(Collection $indexes, bool $forceUpdate = false): array
     {
         return [

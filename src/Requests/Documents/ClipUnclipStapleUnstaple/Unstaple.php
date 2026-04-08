@@ -33,6 +33,9 @@ class Unstaple extends Request implements HasBody
         ];
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function defaultBody(): array
     {
         return [

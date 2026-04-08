@@ -68,6 +68,7 @@ See the documentation if you need further functionality. ⚠️
           * [Order the results by field name.](#order-the-results-by-field-name)
           * [Search documents filtered to the value.](#search-documents-filtered-to-the-value)
           * [Search documents filtered to multiple values.](#search-documents-filtered-to-multiple-values)
+          * [Search documents with empty or non-empty index fields.](#search-documents-with-empty-or-non-empty-index-fields)
           * [You can specify the dialog which should be used.](#you-can-specify-the-dialog-which-should-be-used)
           * [You can also combine everything.](#you-can-also-combine-everything)
         * [Check In Check Out](#check-in-check-out)
@@ -130,6 +131,7 @@ See the documentation if you need further functionality. ⚠️
   * [💥 Exceptions explained](#-exceptions-explained)
   * [✨ Events](#-events)
   * [🔧 Configuration file](#-configuration-file)
+  * [Postman collection parity & Saloon fixtures](#postman-collection-parity--saloon-fixtures)
   * [🚧 Testing](#-testing)
   * [📝 Changelog](#-changelog)
   * [✏️ Contributing](#-contributing)
@@ -198,37 +200,37 @@ then optimize the processes that power the core of your business.
 | FileCabinets/Search                 | Get a Specific Document From a File Cabinet                 | ✅         |      |
 | FileCabinets/Search                 | Search for Documents in a Single File Cabinet               | ✅         |      |
 | FileCabinets/Search                 | Search for Documents in Multiple File Cabinets              | ✅         |      |
-| FileCabinets/CheckInCheckOut        | Check-out & Download a Document                             | 🕣        |      |
-| FileCabinets/CheckInCheckOut        | Check-in a Document from the File System                    | 🕣        |      |
-| FileCabinets/CheckInCheckOut        | Undo Check-out                                              | 🕣        |      |
+| FileCabinets/CheckInCheckOut        | Check-out & Download a Document                             | ✅         | `CheckoutDocumentToFileSystem` |
+| FileCabinets/CheckInCheckOut        | Check-in a Document from the File System                    | ✅         | `CheckInDocumentFromFileSystem` |
+| FileCabinets/CheckInCheckOut        | Undo Check-out                                              | ✅         | `UndoDocumentCheckout` |
 | FileCabinets/SelectLists            | Get Select Lists & Get Filtered Select Lists                | ✅         |      |
 | FileCabinets/Upload                 | Create Data Record                                          | ✅         |      |
 | FileCabinets/Upload                 | Append File(s) to a Data Record                             | ✅         |      |
-| FileCabinets/Upload                 | Upload a Single File for a Data Record                      | ❌         | -    |
-| FileCabinets/Upload                 | Create a Data Record & Upload File                          | ❌         | -    |
-| FileCabinets/Upload                 | Create Data Record & Upload File Using Store Dialog         | ❌         | -    |
+| FileCabinets/Upload                 | Upload a Single File for a Data Record                      | ✅         | `CreateDataRecord` (multipart `POST …/Documents`) |
+| FileCabinets/Upload                 | Create a Data Record & Upload File                          | ✅         | `CreateDataRecord` |
+| FileCabinets/Upload                 | Create Data Record & Upload File Using Store Dialog         | ✅         | `CreateDataRecord` + `storeDialogId` |
 | FileCabinets/Upload                 | Append a Single PDF to a Document                           | ✅         | -    |
 | FileCabinets/Upload                 | Replace a PDF Document Section                              | ✅         |      |
-| FileCabinets/BatchIndexFieldsUpdate | Batch Update Index Fields By Id                             | ❌         | -    |
-| FileCabinets/BatchIndexFieldsUpdate | Batch Update Index Fields By Search                         | ❌         | -    |
-| FileCabinets/BatchIndexFieldsUpdate | Batch Append/Update Keyword Fields By Id                    | ❌         | -    |
+| FileCabinets/BatchIndexFieldsUpdate | Batch Update Index Fields By Id                             | ✅         | `BatchDocumentsUpdateFields` |
+| FileCabinets/BatchIndexFieldsUpdate | Batch Update Index Fields By Search                         | ✅         | `BatchDocumentsUpdateFields` |
+| FileCabinets/BatchIndexFieldsUpdate | Batch Append/Update Keyword Fields By Id                    | ✅         | `BatchDocumentsUpdateFields` |
 | Documents/UpdateIndexValues         | Update Index Values                                         | ✅         |      |
-| Documents/UpdateIndexValues         | Update Table Field Values                                   | ❌         | - ?  |
+| Documents/UpdateIndexValues         | Update Table Field Values                                   | ✅         | `UpdateIndexValues` + `IndexTableDTO` |
 | Documents/ModifyDocuments           | Transfer Document                                           | ✅         |      |
 | Documents/ModifyDocuments           | Delete Document                                             | ✅         |      |
 | Documents/ClipUnclip&StapleUnstaple | Clip                                                        | ✅         |      |
 | Documents/ClipUnclip&StapleUnstaple | Unclip                                                      | ✅         |      |
 | Documents/ClipUnclip&StapleUnstaple | Staple                                                      | ✅         |      |
 | Documents/ClipUnclip&StapleUnstaple | Unstaple                                                    | ✅         |      |
-| Documents/AnnotationsStamps         | AddStampWithPosition                                        | 🕣        |      |
-| Documents/AnnotationsStamps         | AddStampWithBestPosition                                    | 🕣        |      |
-| Documents/AnnotationsStamps         | AddTextAnnotation                                           | 🕣        |      |
-| Documents/AnnotationsStamps         | AddRectEntryAnnotation                                      | 🕣        |      |
-| Documents/AnnotationsStamps         | AddLineEntryAnnotation                                      | 🕣        |      |
-| Documents/AnnotationsStamps         | AddPolyLineEntryAnnotation                                  | ❌         | -    |
-| Documents/AnnotationsStamps         | DeleteAnnotation                                            | ❌         | -    |
-| Documents/AnnotationsStamps         | UpdateTextAnnotation                                        | 🕣        |      |
-| Documents/AnnotationsStamps         | Get Stamps                                                  | ❌         | -    |
+| Documents/AnnotationsStamps         | AddStampWithPosition                                        | ✅         | `AddDocumentAnnotations` |
+| Documents/AnnotationsStamps         | AddStampWithBestPosition                                    | ✅         | `AddDocumentAnnotations` |
+| Documents/AnnotationsStamps         | AddTextAnnotation                                           | ✅         | `AddDocumentAnnotations` |
+| Documents/AnnotationsStamps         | AddRectEntryAnnotation                                      | ✅         | `AddDocumentAnnotations` |
+| Documents/AnnotationsStamps         | AddLineEntryAnnotation                                      | ✅         | `AddDocumentAnnotations` |
+| Documents/AnnotationsStamps         | AddPolyLineEntryAnnotation                                  | ✅         | `AddDocumentAnnotations` |
+| Documents/AnnotationsStamps         | DeleteAnnotation                                            | ❌         | —    |
+| Documents/AnnotationsStamps         | UpdateTextAnnotation                                        | ❌         | —    |
+| Documents/AnnotationsStamps         | Get Stamps                                                  | ✅         | `GetStamps` |
 | Documents/DocumentsTrashBin         | Get Documents                                               | ✅         |      |
 | Documents/DocumentsTrashBin         | Delete Documents                                            | ✅         |      |
 | Documents/DocumentsTrashBin         | Restore Documents                                           | ✅         |      |
@@ -741,6 +743,29 @@ $paginatorRequest = DocuWare::searchRequestBuilder()
 $paginator = $connector->send($paginatorRequest)->dto();
 ```
 
+###### Search documents with empty or non-empty index fields.
+> Use the **database field name** for `$name` (often uppercase in DocuWare), not the dialog display label. These map to DocuWare dialog expressions `EMPTY()` and `NOTEMPTY()`—they are not passed through `filter()` string quoting.
+
+```php
+// Documents where STATUS has no index value (DocuWare EMPTY())
+$paginatorRequest = DocuWare::searchRequestBuilder()
+    ->fileCabinet($id)
+    ->filterEmpty('STATUS')
+    ->get();
+
+$paginator = $connector->send($paginatorRequest)->dto();
+```
+
+```php
+// Documents where STATUS has any value (DocuWare NOTEMPTY())
+$paginatorRequest = DocuWare::searchRequestBuilder()
+    ->fileCabinet($id)
+    ->filterNotEmpty('STATUS')
+    ->get();
+
+$paginator = $connector->send($paginatorRequest)->dto();
+```
+
 ###### You can specify the dialog which should be used.
 ```php 
 $dialogId = 'bb42c30a-89fc-4b81-9091-d7e326caba62';
@@ -776,11 +801,11 @@ $paginator = $connector->send($paginatorRequest)->dto();
 
 | Request                                                     | Supported |
 |-------------------------------------------------------------|-----------|
-| Check-out & Download a Document                             | 🕣        |
-| Check-in a Document from the File System                    | 🕣        |
-| Undo Check-out                                              | 🕣        |
+| Check-out & Download a Document                             | ✅         |
+| Check-in a Document from the File System                    | ✅         |
+| Undo Check-out                                              | ✅         |
 
-> Not Currently Supported
+> Implemented as `CheckoutDocumentToFileSystem`, `CheckInDocumentFromFileSystem`, and `UndoDocumentCheckout`. Your file cabinet must have **version management** enabled; otherwise DocuWare returns HTTP 405.
 
 ##### Select Lists
 | Request                                      | Supported |
@@ -804,11 +829,13 @@ $types = $this->connector->send(new GetSelectLists(
 |-----------------------------------------------------|-----------|
 | Create Data Record                                  | ✅         |
 | Append File(s) to a Data Record                     | ✅         |
-| Upload a Single File for a Data Record              | ❌         |
-| Create a Data Record & Upload File                  | ❌         |
-| Create Data Record & Upload File Using Store Dialog | ❌         |
-| Append a Single PDF to a Document                   | ❌         |
-| Replace a PDF Document Section                      | ❌         |
+| Upload a Single File for a Data Record              | ✅         |
+| Create a Data Record & Upload File                  | ✅         |
+| Create Data Record & Upload File Using Store Dialog | ✅         |
+| Append a Single PDF to a Document                   | ✅         |
+| Replace a PDF Document Section                      | ✅         |
+
+> Postman splits some uploads into separate recipes; this package maps them to `CreateDataRecord` (multipart `POST …/Documents`, optional `storeDialogId`), `AppendFilesToADataRecord`, `AppendASinglePDFToADocument`, and `ReplaceAPDFDocumentSection`.
 
 ###### Create Data Record
 ```php
@@ -915,11 +942,11 @@ $response = $this->connector->send(new ReplaceAPDFDocumentSection(
 ###### Batch Index Fields Update
 | Request                                  | Supported |
 |------------------------------------------|-----------|
-| Batch Update Index Fields By Id          | ❌         |
-| Batch Update Index Fields By Search      | ❌         |
-| Batch Append/Update Keyword Fields By Id | ❌         |
+| Batch Update Index Fields By Id          | ✅         |
+| Batch Update Index Fields By Search      | ✅         |
+| Batch Append/Update Keyword Fields By Id | ✅         |
 
-> Not Currently Supported
+> Use `BatchDocumentsUpdateFields` (same class covers these Postman variants).
 
 ###### Get Fields
 ```php
@@ -935,7 +962,9 @@ $fields = $connector->send(new GetFieldsRequest($fileCabinetId))->dto();
 |---------------------------|-----------|
 | Update Index Values       | ✅         |
 | Update Table Index Values | ✅         |
-| Update Table Field Values | ❌         |
+| Update Table Field Values | ✅         |
+
+> Table columns use `IndexTableDTO` in the same `UpdateIndexValues` request as scalar fields (see **Update Table Data Record** below).
 
 
 ```php
@@ -1074,19 +1103,55 @@ $unclip = $connector->send(new Unstaple(
 ```
 
 ##### Annotations/Stamps
-| Request                    | Supported |
-|----------------------------|-----------|
-| AddStampWithPosition       | 🕣        |
-| AddStampWithBestPosition   | 🕣        |
-| AddTextAnnotation          | 🕣        |
-| AddRectEntryAnnotation     | 🕣        |
-| AddLineEntryAnnotation     | 🕣        |
-| AddPolyLineEntryAnnotation | ❌         |
-| DeleteAnnotation           | ❌         |
-| UpdateTextAnnotation       | 🕣        |
-| Get Stamps                 | ❌         |
 
-> Not Currently Supported
+DocuWare's Postman collection lists several **add** operations (stamp with position / best position, text, rectangle, line, polyline). They target the same Platform route: `POST /FileCabinets/{id}/Documents/{documentId}/Annotation`, differing only by JSON (`$type`, `Annotations`, `AnnotationsPlacement`, etc.). This package exposes that as **`AddDocumentAnnotations`** with the same payload array you would send from Postman—there are no separate classes per recipe.
+
+**Not implemented:** `DeleteAnnotation` and `UpdateTextAnnotation` are separate operations in the API (different HTTP method or path); there is no Saloon request class for them yet—contributions welcome.
+
+| Request                    | Supported | Package class |
+|----------------------------|-----------|---------------|
+| Get Stamps                 | ✅         | `GetStamps` |
+| Get Annotations            | ✅         | `GetDocumentAnnotations` |
+| AddStampWithPosition       | ✅         | `AddDocumentAnnotations` |
+| AddStampWithBestPosition   | ✅         | `AddDocumentAnnotations` |
+| AddTextAnnotation          | ✅         | `AddDocumentAnnotations` |
+| AddRectEntryAnnotation     | ✅         | `AddDocumentAnnotations` |
+| AddLineEntryAnnotation     | ✅         | `AddDocumentAnnotations` |
+| AddPolyLineEntryAnnotation | ✅         | `AddDocumentAnnotations` |
+| DeleteAnnotation           | ❌         | — |
+| UpdateTextAnnotation       | ❌         | — |
+
+###### Get Stamps
+```php
+use CodebarAg\DocuWare\Requests\Documents\Stamps\GetStamps;
+
+$stamps = $connector->send(new GetStamps(
+    $fileCabinetId,
+))->dto();
+```
+
+###### Get Annotations
+```php
+use CodebarAg\DocuWare\Requests\Documents\Stamps\GetDocumentAnnotations;
+
+$annotations = $connector->send(new GetDocumentAnnotations(
+    $fileCabinetId,
+    $documentId,
+))->dto(); // Collection<int, array<string, mixed>>
+```
+
+###### Add stamps / annotations (POST body from Postman)
+```php
+use CodebarAg\DocuWare\Requests\Documents\Stamps\AddDocumentAnnotations;
+
+$result = $connector->send(new AddDocumentAnnotations(
+    $fileCabinetId,
+    $documentId,
+    [
+        // Same JSON structure as the matching Postman request (e.g. StampPlacement, TextEntry, …).
+    ],
+))->dto();
+```
 
 ###### Documents Trash Bin
 | Request           | Supported |
@@ -1746,6 +1811,17 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Platform path
+    |--------------------------------------------------------------------------
+    |
+    | Matches Postman {{Platform}} (default DocuWare/Platform).
+    |
+    */
+
+    'platform_path' => env('DOCUWARE_PLATFORM_PATH', 'DocuWare/Platform'),
+
+    /*
+    |--------------------------------------------------------------------------
     | DocuWare Credentials
     |--------------------------------------------------------------------------
     |
@@ -1816,9 +1892,29 @@ return [
         'file_cabinet_id' => env('DOCUWARE_TESTS_FILE_CABINET_ID'),
         'dialog_id' => env('DOCUWARE_TESTS_DIALOG_ID'),
         'basket_id' => env('DOCUWARE_TESTS_BASKET_ID'),
+        'org_id' => env('DOCUWARE_TESTS_ORG_ID', env('DOCUWARE_TESTS_ORGANIZATION_ID')),
+        'search_dialog_id' => env('DOCUWARE_TESTS_SEARCH_DIALOG_ID'),
+        'store_dialog_id' => env('DOCUWARE_TESTS_STORE_DIALOG_ID'),
+        'document_id' => env('DOCUWARE_TESTS_DOCUMENT_ID'),
     ],
 ];
 ```
+
+## Postman collection parity & Saloon fixtures
+
+The official DocuWare Postman collection uses `{{ServerUrl}}` and `{{Platform}}` (default `DocuWare/Platform`). This package maps them to Laravel env vars — see [`.env.example`](.env.example) for a **Postman variable → `DOCUWARE_*`** table.
+
+- **Parity matrix** (endpoints vs request classes): [`docs/postman-parity.md`](docs/postman-parity.md).
+- **Platform path**: `DOCUWARE_PLATFORM_PATH` (used by `DocuWareConnector`, `GetResponsibleIdentityService`, and encrypted Web Client URLs in `DocuWareUrl`).
+- **CI-friendly tests**: Default `composer test` runs **unit**, **DTO**, and **Saloon fixture** tests (`tests/Feature/SaloonFixtures`). HTTP responses are replayed from JSON files under [`tests/Fixtures/saloon/`](tests/Fixtures/saloon) using [Saloon fixtures](https://docs.saloon.dev/digging-deeper/testing) (`MockClient` + `Fixture`). Bodies use Saloon’s recorded format: `statusCode`, `headers`, `data` (raw response body), `context`.
+- **Recording fixtures** (optional): Edit [`tests/Manual/RecordGetOrganizationFixtureTest.php`](tests/Manual/RecordGetOrganizationFixtureTest.php), remove the `->skip(...)`, set real `DOCUWARE_*` credentials, then run:
+  ```bash
+  composer test:manual
+  ```
+  (`composer test:manual` runs only `tests/Manual`.)
+  The recorder **only writes** `tests/Fixtures/saloon/get-organization.json` when the HTTP response is successful and looks like JSON, so a bad run (HTML error page, 401, etc.) **does not overwrite** a good committed fixture—the test fails instead.
+  Review the generated JSON for secrets, commit if safe, then restore the skip.
+- **Live tenant tests** (destructive cleanup, real API): `composer test:live` runs the `integration` PHPUnit testsuite (`tests/Integration`). Requires valid DocuWare credentials and test cabinet IDs in `phpunit.xml` or the environment. **Do not** run integration against DocuWare with `pest --parallel` or multiple concurrent `test:live` processes (rate limits and shared cabinet cleanup). Use a **single** sequential run.
 
 ## 🚧 Testing
 
@@ -1832,6 +1928,7 @@ Modify environment variables in the phpunit.xml-file:
 
 ```xml
 <env name="DOCUWARE_URL" value="https://domain.docuware.cloud"/>
+<env name="DOCUWARE_PLATFORM_PATH" value="DocuWare/Platform"/>
 <env name="DOCUWARE_USERNAME" value="user@domain.test"/>
 <env name="DOCUWARE_PASSWORD" value="password"/>
 <env name="DOCUWARE_PASSPHRASE" value="passphrase"/>
@@ -1844,13 +1941,27 @@ Modify environment variables in the phpunit.xml-file:
 <env name="DOCUWARE_TESTS_FILE_CABINET_ID" value=""/>
 <env name="DOCUWARE_TESTS_DIALOG_ID" value=""/>
 <env name="DOCUWARE_TESTS_BASKET_ID" value=""/>
+<env name="DOCUWARE_TESTS_ORG_ID" value=""/>
+<env name="DOCUWARE_TESTS_SEARCH_DIALOG_ID" value=""/>
+<env name="DOCUWARE_TESTS_STORE_DIALOG_ID" value=""/>
+<env name="DOCUWARE_TESTS_DOCUMENT_ID" value=""/>
 ```
 
-Run the tests:
+Default test run (no live DocuWare required):
 
 ```bash
 composer test
 ```
+
+Against a real system (integration suite):
+
+```bash
+composer test:live
+```
+
+Run integration **one process at a time** (no `pest --parallel`). Keep real credentials in a **local** `phpunit.xml` (this file is gitignored in this repo); use GitHub Actions secrets in CI.
+
+In GitHub Actions ([`.github/workflows/run-tests.yml`](.github/workflows/run-tests.yml)), every matrix job runs `composer test` first; `composer test:live` runs **only** on PHP 8.3 with `prefer-stable`, and **only** when `DOCUWARE_URL`, `DOCUWARE_USERNAME`, and `DOCUWARE_PASSWORD` are set as repository secrets (optional `DOCUWARE_PASSPHRASE` and `DOCUWARE_TESTS_*` IDs as needed).
 
 ## 📝 Changelog
 

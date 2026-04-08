@@ -2,23 +2,36 @@
 
 namespace CodebarAg\DocuWare\DTO\FileCabinets;
 
+use CodebarAg\DocuWare\Support\JsonArrays;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 
 final class Dialog
 {
+    /**
+     * @param  array<string, mixed>  $data
+     */
     public static function fromJson(array $data): self
     {
+        $fieldsRaw = Arr::get($data, 'Fields');
+        $fields = null;
+        if (is_array($fieldsRaw)) {
+            $fields = JsonArrays::listOfRecords($fieldsRaw);
+        }
+
         return new self(
             id: Arr::get($data, 'Id'),
             type: Arr::get($data, 'Type'),
             label: Arr::get($data, 'DisplayName'),
             isDefault: Arr::get($data, 'IsDefault'),
             fileCabinetId: Arr::get($data, 'FileCabinetId'),
-            fields: Arr::get($data, 'Fields'),
+            fields: $fields,
         );
     }
 
+    /**
+     * @param  list<array<string, mixed>>|null  $fields
+     */
     public function __construct(
         public string $id,
         public string $type,

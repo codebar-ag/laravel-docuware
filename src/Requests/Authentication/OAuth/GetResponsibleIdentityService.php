@@ -25,7 +25,8 @@ class GetResponsibleIdentityService extends SoloRequest implements Cacheable
     public function resolveEndpoint(): string
     {
         $url = $this->url ?? config('laravel-docuware.credentials.url');
-        $base = $url.'/DocuWare/Platform';
+        $platform = trim(config('laravel-docuware.platform_path', 'DocuWare/Platform'), '/');
+        $base = rtrim($url, '/').'/'.$platform;
 
         return $base.'/Home/IdentityServiceInfo';
     }

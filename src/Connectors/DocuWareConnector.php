@@ -14,9 +14,11 @@ use CodebarAg\DocuWare\Requests\Authentication\OAuth\RequestTokenWithCredentials
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Str;
 use Psr\SimpleCache\InvalidArgumentException;
 use Saloon\Http\Auth\TokenAuthenticator;
 use Saloon\Http\Connector;
+use Saloon\Http\Response;
 
 class DocuWareConnector extends Connector
 {
@@ -26,7 +28,10 @@ class DocuWareConnector extends Connector
 
     public function resolveBaseUrl(): string
     {
-        return $this->configuration->url.'/DocuWare/Platform';
+        $base = rtrim($this->configuration->url, '/');
+        $platform = trim(config('laravel-docuware.platform_path', 'DocuWare/Platform'), '/');
+
+        return $base.'/'.$platform;
     }
 
     public function defaultHeaders(): array
@@ -48,9 +53,13 @@ class DocuWareConnector extends Connector
         return new TokenAuthenticator($this->getOrCreateNewOAuthToken());
     }
 
+    protected function oauthTokenCacheTtlSeconds(RequestTokenDto $token): int
+    {
+        return max(1, $token->expiresIn - 60);
+    }
+
     /**
      * @throws InvalidArgumentException
-     * @throws \Exception
      */
     protected function getOrCreateNewOAuthToken(): string
     {
@@ -58,7 +67,6 @@ class DocuWareConnector extends Connector
 
         $cacheKey = 'docuware.oauth.'.$this->configuration->identifier;
 
-        // Check if the token exists in cache and return it if found
         if ($cache->has($cacheKey)) {
             $token = Crypt::decrypt($cache->get($cacheKey));
             DocuWareOAuthLog::dispatch($this->configuration->url, $this->configuration->username, 'Token retrieved from cache');
@@ -66,24 +74,14 @@ class DocuWareConnector extends Connector
             return $token->accessToken;
         }
 
-        // Handle token retrieval for ConfigWithCredentials
-        if ($this->configuration instanceof ConfigWithCredentials) {
-            $token = $this->getNewOAuthTokenWithCredentials();
-            DocuWareOAuthLog::dispatch($this->configuration->url, $this->configuration->username, 'Token retrieved from API');
-            $cache->put($cacheKey, Crypt::encrypt($token), $token->expiresIn - 60);
+        $token = $this->configuration instanceof ConfigWithCredentials
+            ? $this->getNewOAuthTokenWithCredentials()
+            : $this->getNewOAuthTokenWithCredentialsTrustedUser();
 
-            return $token->accessToken;
-        }
+        DocuWareOAuthLog::dispatch($this->configuration->url, $this->configuration->username, 'Token retrieved from API');
+        $cache->put($cacheKey, Crypt::encrypt($token), $this->oauthTokenCacheTtlSeconds($token));
 
-        // Handle token retrieval for ConfigWithCredentialsTrustedUser
-        // @phpstan-ignore-next-line
-        if ($this->configuration instanceof ConfigWithCredentialsTrustedUser) {
-            $token = $this->getNewOAuthTokenWithCredentialsTrustedUser();
-            DocuWareOAuthLog::dispatch($this->configuration->url, $this->configuration->username, 'Token retrieved from API');
-            $cache->put($cacheKey, Crypt::encrypt($token), $token->expiresIn - 60);
-
-            return $token->accessToken;
-        }
+        return $token->accessToken;
     }
 
     protected function getAuthenticationTokenEndpoint(): IdentityServiceConfiguration
@@ -99,7 +97,6 @@ class DocuWareConnector extends Connector
 
     /**
      * @throws \Throwable
-     * @throws \JsonException
      */
     protected function getNewOAuthTokenWithCredentials(): RequestTokenDto
     {
@@ -111,23 +108,11 @@ class DocuWareConnector extends Connector
             password: $this->configuration->password,
         ))->send();
 
-        throw_if(
-            $requestTokenResponse->failed(),
-            trim(preg_replace('/\s\s+/', ' ', Arr::get(
-                array: $requestTokenResponse->json(),
-                key: 'error_description',
-                default: $requestTokenResponse->body()
-            )))
-        );
-
-        throw_if($requestTokenResponse->dto() == null, 'Token response is null');
-
-        return $requestTokenResponse->dto();
+        return $this->ensureRequestTokenSuccess($requestTokenResponse);
     }
 
     /**
      * @throws \Throwable
-     * @throws \JsonException
      */
     protected function getNewOAuthTokenWithCredentialsTrustedUser(): RequestTokenDto
     {
@@ -140,17 +125,53 @@ class DocuWareConnector extends Connector
             impersonateName: $this->configuration->impersonatedUsername,
         ))->send();
 
-        throw_if(
-            $requestTokenResponse->failed(),
-            trim(preg_replace('/\s\s+/', ' ', Arr::get(
-                array: $requestTokenResponse->json(),
-                key: 'error_description',
-                default: $requestTokenResponse->body()
-            )))
-        );
+        return $this->ensureRequestTokenSuccess($requestTokenResponse);
+    }
+
+    /**
+     * @throws \Throwable
+     */
+    protected function ensureRequestTokenSuccess(Response $requestTokenResponse): RequestTokenDto
+    {
+        if ($requestTokenResponse->failed()) {
+            throw new \RuntimeException($this->oauthTokenFailureMessage($requestTokenResponse));
+        }
 
         throw_if($requestTokenResponse->dto() == null, 'Token response is null');
 
         return $requestTokenResponse->dto();
+    }
+
+    /**
+     * Build a safe error message when the token endpoint returns a failure.
+     * Uses non-throwing {@see json_decode()} so HTML or other non-JSON bodies do not throw.
+     */
+    protected function oauthTokenFailureMessage(Response $response): string
+    {
+        $body = (string) $response->body();
+
+        /** @var mixed $decoded */
+        $decoded = json_decode($body, true);
+        if (! is_array($decoded)) {
+            return $this->oauthFailureBodySummary($body, $response);
+        }
+
+        $message = Arr::get($decoded, 'error_description')
+            ?? Arr::get($decoded, 'error');
+        if (! is_string($message) || $message === '') {
+            return $this->oauthFailureBodySummary($body, $response);
+        }
+
+        return trim(preg_replace('/\s\s+/', ' ', $message));
+    }
+
+    protected function oauthFailureBodySummary(string $body, Response $response): string
+    {
+        $trimmed = trim(preg_replace('/\s\s+/', ' ', $body));
+        if ($trimmed !== '') {
+            return Str::limit($trimmed, 500);
+        }
+
+        return 'OAuth token request failed with HTTP '.$response->status().'.';
     }
 }

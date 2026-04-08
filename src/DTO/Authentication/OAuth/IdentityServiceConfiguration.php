@@ -6,6 +6,9 @@ use Illuminate\Support\Arr;
 
 final class IdentityServiceConfiguration
 {
+    /**
+     * @param  array<string, mixed>  $data
+     */
     public static function make(array $data): self
     {
         return new self(
@@ -26,26 +29,41 @@ final class IdentityServiceConfiguration
             frontchannelLogoutSessionSupported: Arr::get($data, 'frontchannel_logout_session_supported'),
             backchannelLogoutSupported: Arr::get($data, 'backchannel_logout_supported'),
             backchannelLogoutSessionSupported: Arr::get($data, 'backchannel_logout_session_supported'),
-            scopesSupported: Arr::get($data, 'scopes_supported', []),
-            claimsSupported: Arr::get($data, 'claims_supported', []),
-            grantTypesSupported: Arr::get($data, 'grant_types_supported', []),
-            responseTypesSupported: Arr::get($data, 'response_types_supported', []),
-            responseModesSupported: Arr::get($data, 'response_modes_supported', []),
-            tokenEndpointAuthMethodsSupported: Arr::get($data, 'token_endpoint_auth_methods_supported', []),
-            idTokenSigningAlgValuesSupported: Arr::get($data, 'id_token_signing_alg_values_supported', []),
-            subjectTypesSupported: Arr::get($data, 'subject_types_supported', []),
-            codeChallengeMethodsSupported: Arr::get($data, 'code_challenge_methods_supported', []),
+            scopesSupported: self::stringList(Arr::get($data, 'scopes_supported', [])),
+            claimsSupported: self::stringList(Arr::get($data, 'claims_supported', [])),
+            grantTypesSupported: self::stringList(Arr::get($data, 'grant_types_supported', [])),
+            responseTypesSupported: self::stringList(Arr::get($data, 'response_types_supported', [])),
+            responseModesSupported: self::stringList(Arr::get($data, 'response_modes_supported', [])),
+            tokenEndpointAuthMethodsSupported: self::stringList(Arr::get($data, 'token_endpoint_auth_methods_supported', [])),
+            idTokenSigningAlgValuesSupported: self::stringList(Arr::get($data, 'id_token_signing_alg_values_supported', [])),
+            subjectTypesSupported: self::stringList(Arr::get($data, 'subject_types_supported', [])),
+            codeChallengeMethodsSupported: self::stringList(Arr::get($data, 'code_challenge_methods_supported', [])),
             requestParameterSupported: Arr::get($data, 'request_parameter_supported'),
-            requestObjectSigningAlgValuesSupported: Arr::get($data, 'request_object_signing_alg_values_supported', []),
-            promptValuesSupported: Arr::get($data, 'prompt_values_supported', []),
+            requestObjectSigningAlgValuesSupported: self::stringList(Arr::get($data, 'request_object_signing_alg_values_supported', [])),
+            promptValuesSupported: self::stringList(Arr::get($data, 'prompt_values_supported', [])),
             authorizationResponseIssParameterSupported: Arr::get($data, 'authorization_response_iss_parameter_supported'),
-            backchannelTokenDeliveryModesSupported: Arr::get($data, 'backchannel_token_delivery_modes_supported', []),
+            backchannelTokenDeliveryModesSupported: self::stringList(Arr::get($data, 'backchannel_token_delivery_modes_supported', [])),
             backchannelUserCodeParameterSupported: Arr::get($data, 'backchannel_user_code_parameter_supported'),
-            dpopSigningAlgValuesSupported: Arr::get($data, 'dpop_signing_alg_values_supported', []),
+            dpopSigningAlgValuesSupported: self::stringList(Arr::get($data, 'dpop_signing_alg_values_supported', [])),
             windowsAuthEndpoint: Arr::get($data, 'windows_auth_endpoint'),
         );
     }
 
+    /**
+     * @param  list<string>  $scopesSupported
+     * @param  list<string>  $claimsSupported
+     * @param  list<string>  $grantTypesSupported
+     * @param  list<string>  $responseTypesSupported
+     * @param  list<string>  $responseModesSupported
+     * @param  list<string>  $tokenEndpointAuthMethodsSupported
+     * @param  list<string>  $idTokenSigningAlgValuesSupported
+     * @param  list<string>  $subjectTypesSupported
+     * @param  list<string>  $codeChallengeMethodsSupported
+     * @param  list<string>  $requestObjectSigningAlgValuesSupported
+     * @param  list<string>  $promptValuesSupported
+     * @param  list<string>  $backchannelTokenDeliveryModesSupported
+     * @param  list<string>  $dpopSigningAlgValuesSupported
+     */
     public function __construct(
         public ?string $issuer,
         public ?string $jwksUri,
@@ -82,4 +100,28 @@ final class IdentityServiceConfiguration
         public array $dpopSigningAlgValuesSupported,
         public ?string $windowsAuthEndpoint,
     ) {}
+
+    /**
+     * @return list<string>
+     */
+    private static function stringList(mixed $value): array
+    {
+        if (! is_array($value)) {
+            return [];
+        }
+
+        $out = [];
+        foreach (array_values($value) as $item) {
+            $normalized = match (true) {
+                is_string($item) => $item,
+                is_scalar($item) => (string) $item,
+                default => null,
+            };
+            if ($normalized !== null) {
+                $out[] = $normalized;
+            }
+        }
+
+        return $out;
+    }
 }

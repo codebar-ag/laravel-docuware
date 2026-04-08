@@ -3,15 +3,21 @@
 namespace CodebarAg\DocuWare\DTO\Documents;
 
 use CodebarAg\DocuWare\DTO\ErrorBag;
+use CodebarAg\DocuWare\Support\JsonArrays;
 use Exception;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 
 /**
- * @property Collection|Document[] $documents
+ * @property Collection<int, array<string, mixed>> $documents
  */
 class TrashDocumentPaginator
 {
+    /**
+     * @param  Collection<string, array<string, mixed>>  $headers
+     * @param  Collection<int, array<string, mixed>>  $documents
+     * @param  Collection<int, Collection<string, mixed>>  $mappedDocuments
+     */
     public function __construct(
         public int $total,
         public int $per_page,
@@ -45,6 +51,9 @@ class TrashDocumentPaginator
         return ! $this->successful();
     }
 
+    /**
+     * @param  array<string, mixed>  $data
+     */
     public static function fromJson(
         array $data,
         int $page,
@@ -58,18 +67,25 @@ class TrashDocumentPaginator
 
         $to = $page === $lastPage ? $total : $page * $perPage;
 
-        $headers = collect(Arr::get($data, 'Headers'));
-        $documents = collect(Arr::get($data, 'Rows'));
+        $headersRaw = Arr::get($data, 'Headers', []);
+        $headerMap = [];
+        if (is_array($headersRaw)) {
+            foreach ($headersRaw as $key => $value) {
+                if (is_array($value)) {
+                    $headerMap[(string) $key] = JsonArrays::associativeRow($value);
+                }
+            }
+        }
+        $headers = collect($headerMap);
 
-        $mappedDocuments = $documents->map(function (array $document) use ($headers) {
-            $document = collect($document);
+        $rowsRaw = Arr::get($data, 'Rows', []);
+        $documents = collect(JsonArrays::listOfRecords(is_array($rowsRaw) ? $rowsRaw : []));
 
-            return $document->mapWithKeys(function ($value, $key) use ($headers) {
-                $header = collect($headers->get($key));
-
-                return $header->has('FieldName') ? [$header->get('FieldName') => $value] : [];
-            })->filter();
-        });
+        $mappedList = [];
+        foreach ($documents as $document) {
+            $mappedList[] = self::mapDocumentRowToFields($document, $headers);
+        }
+        $mappedDocuments = collect($mappedList);
 
         return new self(
             total: $total,
@@ -82,6 +98,27 @@ class TrashDocumentPaginator
             documents: $documents,
             mappedDocuments: $mappedDocuments,
         );
+    }
+
+    /**
+     * @param  array<string, mixed>  $document
+     * @param  Collection<string, array<string, mixed>>  $headers
+     * @return Collection<string, mixed>
+     */
+    protected static function mapDocumentRowToFields(array $document, Collection $headers): Collection
+    {
+        $row = collect(JsonArrays::associativeRow($document));
+
+        return $row->mapWithKeys(function (mixed $value, int|string $key) use ($headers): array {
+            $headerRaw = $headers->get((string) $key);
+            $header = collect(is_array($headerRaw) ? JsonArrays::associativeRow($headerRaw) : []);
+
+            $fieldName = $header->get('FieldName');
+
+            return $header->has('FieldName') && (is_string($fieldName) || is_int($fieldName))
+                ? [(string) $fieldName => $value]
+                : [];
+        })->filter();
     }
 
     public static function fromFailed(Exception $e): self
@@ -100,6 +137,11 @@ class TrashDocumentPaginator
         );
     }
 
+    /**
+     * @param  Collection<string, array<string, mixed>>|null  $headers
+     * @param  Collection<int, array<string, mixed>>|null  $documents
+     * @param  Collection<int, Collection<string, mixed>>|null  $mappedDocuments
+     */
     public static function fake(
         ?int $total = null,
         ?int $per_page = null,
@@ -118,9 +160,9 @@ class TrashDocumentPaginator
             last_page: $last_page ?? random_int(10, 20),
             from: $from ?? 1,
             to: $to ?? 10,
-            headers: $headers,
-            documents: $documents,
-            mappedDocuments: $mappedDocuments,
+            headers: $headers ?? collect(),
+            documents: $documents ?? collect(),
+            mappedDocuments: $mappedDocuments ?? collect(),
         );
     }
 }

@@ -20,6 +20,9 @@ class GetLoginToken extends Request implements Cacheable, HasBody
 
     protected Method $method = Method::POST;
 
+    /**
+     * @param  list<string>  $targetProducts
+     */
     public function __construct(
         public array $targetProducts = ['PlatformService'],
         public string $usage = 'Multi',
@@ -31,6 +34,9 @@ class GetLoginToken extends Request implements Cacheable, HasBody
         return '/Organization/LoginToken';
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     protected function defaultBody(): array
     {
         return [

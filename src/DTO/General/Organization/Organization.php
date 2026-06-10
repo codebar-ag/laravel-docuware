@@ -7,6 +7,9 @@ use Illuminate\Support\Str;
 
 final class Organization
 {
+    /**
+     * @param  array<string, mixed>  $data
+     */
     public static function fromJson(array $data): self
     {
         return new self(
@@ -18,6 +21,10 @@ final class Organization
         );
     }
 
+    /**
+     * @param  array<string, mixed>  $additionalInfo
+     * @param  array<string, mixed>  $configurationRights
+     */
     public function __construct(
         public string $id,
         public string $name,
@@ -26,6 +33,10 @@ final class Organization
         public array $configurationRights = [],
     ) {}
 
+    /**
+     * @param  array<string, mixed>  $additionalInfo
+     * @param  array<string, mixed>  $configurationRights
+     */
     public static function fake(
         ?string $id = null,
         ?string $name = null,

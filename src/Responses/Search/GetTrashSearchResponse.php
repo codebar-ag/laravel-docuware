@@ -10,7 +10,7 @@ use Saloon\Http\Response;
 
 final class GetTrashSearchResponse
 {
-    public static function fromResponse(Response $response, $page, $perPage): TrashDocumentPaginator
+    public static function fromResponse(Response $response, int $page, int $perPage): TrashDocumentPaginator
     {
         event(new DocuWareResponseLog($response));
 

@@ -6,6 +6,9 @@ use Illuminate\Support\Arr;
 
 final class DocumentThumbnail
 {
+    /**
+     * @param  array<string, mixed>  $data
+     */
     public static function fromData(array $data): self
     {
         $mime = Arr::get($data, 'mime');

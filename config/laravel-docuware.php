@@ -25,6 +25,18 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Platform path
+    |--------------------------------------------------------------------------
+    |
+    | Postman variable {{Platform}} is usually "DocuWare/Platform". Base URL is
+    | rtrim(DOCUWARE_URL,'/').'/'.platform_path
+    |
+    */
+
+    'platform_path' => env('DOCUWARE_PLATFORM_PATH', 'DocuWare/Platform'),
+
+    /*
+    |--------------------------------------------------------------------------
     | DocuWare Credentials
     |--------------------------------------------------------------------------
     |
@@ -95,5 +107,21 @@ return [
         'file_cabinet_id' => env('DOCUWARE_TESTS_FILE_CABINET_ID'),
         'dialog_id' => env('DOCUWARE_TESTS_DIALOG_ID'),
         'basket_id' => env('DOCUWARE_TESTS_BASKET_ID'),
+        'org_id' => env('DOCUWARE_TESTS_ORG_ID', env('DOCUWARE_TESTS_ORGANIZATION_ID')),
+        'group_id' => env('DOCUWARE_TESTS_GROUP_ID'),
+        'role_id' => env('DOCUWARE_TESTS_ROLE_ID'),
+        'search_dialog_id' => env('DOCUWARE_TESTS_SEARCH_DIALOG_ID'),
+        'store_dialog_id' => env('DOCUWARE_TESTS_STORE_DIALOG_ID'),
+        'document_id' => env('DOCUWARE_TESTS_DOCUMENT_ID'),
+
+        /*
+        | Filtered select list integration test: field and condition must exist on the cabinet dialog.
+        */
+        'filtered_select_list_field' => env('DOCUWARE_TESTS_FILTERED_SELECT_LIST_FIELD', 'DOCUMENT_TYPE'),
+        'filtered_select_list_condition_field' => env('DOCUWARE_TESTS_FILTERED_SELECT_LIST_CONDITION_FIELD', 'DOCUMENT_TYPE'),
+        'filtered_select_list_condition_value' => env('DOCUWARE_TESTS_FILTERED_SELECT_LIST_CONDITION_VALUE', '"DocuWare"'),
+
+        'version_management_enabled' => env('DOCUWARE_TESTS_VERSION_MANAGEMENT_ENABLED', false),
+        'stamp_id' => env('DOCUWARE_TESTS_STAMP_ID'),
     ],
 ];

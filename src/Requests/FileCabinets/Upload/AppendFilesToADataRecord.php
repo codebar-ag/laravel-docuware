@@ -6,6 +6,7 @@ use CodebarAg\DocuWare\DTO\Documents\Document;
 use CodebarAg\DocuWare\Responses\FileCabinets\Upload\CreateDataRecordResponse;
 use Illuminate\Support\Collection;
 use Saloon\Contracts\Body\HasBody;
+use Saloon\Data\MultipartValue;
 use Saloon\Enums\Method;
 use Saloon\Http\Request;
 use Saloon\Http\Response;
@@ -17,6 +18,9 @@ class AppendFilesToADataRecord extends Request implements HasBody
 
     protected Method $method = Method::POST;
 
+    /**
+     * @param  Collection<int, MultipartValue>  $files
+     */
     public function __construct(
         protected readonly string $fileCabinetId,
         protected readonly string $dataRecordId,
@@ -28,6 +32,9 @@ class AppendFilesToADataRecord extends Request implements HasBody
         return '/FileCabinets/'.$this->fileCabinetId.'/Documents/'.$this->dataRecordId;
     }
 
+    /**
+     * @return list<MultipartValue>
+     */
     protected function defaultBody(): array
     {
         return $this->files->toArray();

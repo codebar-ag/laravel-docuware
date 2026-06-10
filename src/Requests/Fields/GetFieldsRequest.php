@@ -2,9 +2,9 @@
 
 namespace CodebarAg\DocuWare\Requests\Fields;
 
+use CodebarAg\DocuWare\DTO\Documents\Field;
 use CodebarAg\DocuWare\Responses\Fields\GetFieldsResponse;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Enumerable;
 use Illuminate\Support\Facades\Cache;
 use Saloon\CachePlugin\Contracts\Cacheable;
 use Saloon\CachePlugin\Drivers\LaravelCacheDriver;
@@ -38,7 +38,10 @@ class GetFieldsRequest extends Request implements Cacheable
         return config('laravel-docuware.configurations.cache.lifetime_in_seconds', 3600);
     }
 
-    public function createDtoFromResponse(Response $response): Collection|Enumerable
+    /**
+     * @return Collection<int, Field>
+     */
+    public function createDtoFromResponse(Response $response): Collection
     {
         return GetFieldsResponse::fromResponse($response);
     }

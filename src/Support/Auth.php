@@ -18,7 +18,10 @@ class Auth
 
     public static function store(CookieJar $cookies): void
     {
-        $cookie = collect($cookies->toArray())
+        /** @var list<array<string, mixed>> $cookieList */
+        $cookieList = $cookies->toArray();
+
+        $cookie = collect($cookieList)
             ->reject(fn (array $cookie) => Arr::get($cookie, 'Value') === '')
             ->firstWhere('Name', self::COOKIE_NAME);
 
@@ -33,9 +36,14 @@ class Auth
             );
     }
 
+    /**
+     * @return array<string, mixed>|null
+     */
     public static function cookies(): ?array
     {
-        return Cache::driver(self::cacheDriver())->get(self::CACHE_KEY);
+        $cached = Cache::driver(self::cacheDriver())->get(self::CACHE_KEY);
+
+        return is_array($cached) ? $cached : null;
     }
 
     public static function cookieJar(): ?CookieJar
@@ -49,7 +57,9 @@ class Auth
 
     public static function cookieDate(): string
     {
-        return Arr::get(Cache::driver(self::cacheDriver())->get(self::CACHE_KEY), 'CreatedAt');
+        $cached = Cache::driver(self::cacheDriver())->get(self::CACHE_KEY);
+
+        return is_array($cached) ? (string) Arr::get($cached, 'CreatedAt') : '';
     }
 
     public static function forget(): void

@@ -2,9 +2,17 @@
 
 namespace CodebarAg\DocuWare\Requests\Documents\ModifyDocuments;
 
-use Arr;
+use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexDateDTO;
+use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexDateTimeDTO;
+use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexDecimalDTO;
+use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexKeywordDTO;
+use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexMemoDTO;
+use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexNumericDTO;
+use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexTableDTO;
+use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexTextDTO;
 use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\PrepareDTO;
 use CodebarAg\DocuWare\Responses\Documents\ModifyDocuments\TransferDocumentResponse;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Saloon\Contracts\Body\HasBody;
 use Saloon\Enums\Method;
@@ -18,6 +26,9 @@ class TransferDocument extends Request implements HasBody
 
     protected Method $method = Method::POST;
 
+    /**
+     * @param  Collection<int, IndexTextDTO|IndexDateDTO|IndexDateTimeDTO|IndexNumericDTO|IndexDecimalDTO|IndexTableDTO|IndexKeywordDTO|IndexMemoDTO>|null  $fields
+     */
     public function __construct(
         protected readonly string $fileCabinetId,
         protected readonly string $destinationFileCabinetId,
@@ -49,6 +60,9 @@ class TransferDocument extends Request implements HasBody
         ];
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     protected function defaultBody(): array
     {
         $body = [

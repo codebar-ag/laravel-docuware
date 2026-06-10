@@ -16,6 +16,9 @@ class Staple extends Request implements HasBody
 
     protected Method $method = Method::POST;
 
+    /**
+     * @param  list<array<string, mixed>>  $documents
+     */
     public function __construct(
         protected readonly string $documentTrayId,
         protected readonly array $documents,
@@ -27,6 +30,9 @@ class Staple extends Request implements HasBody
         return '/FileCabinets/'.$this->documentTrayId.'/Operations/ContentMerge';
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function defaultBody(): array
     {
         return [

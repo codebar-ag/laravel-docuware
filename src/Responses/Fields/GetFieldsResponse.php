@@ -5,13 +5,16 @@ namespace CodebarAg\DocuWare\Responses\Fields;
 use CodebarAg\DocuWare\DTO\Documents\Field;
 use CodebarAg\DocuWare\Events\DocuWareResponseLog;
 use CodebarAg\DocuWare\Support\EnsureValidResponse;
+use CodebarAg\DocuWare\Support\JsonArrays;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Enumerable;
 use Saloon\Http\Response;
 
 final class GetFieldsResponse
 {
-    public static function fromResponse(Response $response): Collection|Enumerable
+    /**
+     * @return Collection<int, Field>
+     */
+    public static function fromResponse(Response $response): Collection
     {
         event(new DocuWareResponseLog($response));
 
@@ -19,6 +22,6 @@ final class GetFieldsResponse
 
         $fields = $response->throw()->json('Fields');
 
-        return collect($fields)->map(fn (array $field) => Field::fromJson($field));
+        return collect(JsonArrays::listOfRecords($fields))->map(fn (array $field) => Field::fromJson($field));
     }
 }

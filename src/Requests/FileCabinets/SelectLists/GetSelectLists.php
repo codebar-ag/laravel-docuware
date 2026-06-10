@@ -7,15 +7,18 @@ use Illuminate\Support\Facades\Cache;
 use Saloon\CachePlugin\Contracts\Cacheable;
 use Saloon\CachePlugin\Drivers\LaravelCacheDriver;
 use Saloon\CachePlugin\Traits\HasCaching;
+use Saloon\Contracts\Body\HasBody;
 use Saloon\Enums\Method;
 use Saloon\Http\Request;
 use Saloon\Http\Response;
+use Saloon\Traits\Body\HasJsonBody;
 
-class GetSelectLists extends Request implements Cacheable
+class GetSelectLists extends Request implements Cacheable, HasBody
 {
     use HasCaching;
+    use HasJsonBody;
 
-    protected Method $method = Method::GET;
+    protected Method $method = Method::POST;
 
     public function __construct(
         protected readonly string $fileCabinetId,
@@ -33,6 +36,19 @@ class GetSelectLists extends Request implements Cacheable
         return [
             'DialogId' => $this->dialogId,
             'FieldName' => $this->fieldName,
+        ];
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    protected function defaultBody(): array
+    {
+        return [
+            'ValuePrefix' => '',
+            'Limit' => 100,
+            'Typed' => false,
+            'ExcludeExternal' => true,
         ];
     }
 

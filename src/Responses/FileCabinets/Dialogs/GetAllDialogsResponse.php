@@ -5,13 +5,16 @@ namespace CodebarAg\DocuWare\Responses\FileCabinets\Dialogs;
 use CodebarAg\DocuWare\DTO\FileCabinets\Dialog;
 use CodebarAg\DocuWare\Events\DocuWareResponseLog;
 use CodebarAg\DocuWare\Support\EnsureValidResponse;
+use CodebarAg\DocuWare\Support\JsonArrays;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Enumerable;
 use Saloon\Http\Response;
 
 final class GetAllDialogsResponse
 {
-    public static function fromResponse(Response $response): Collection|Enumerable
+    /**
+     * @return Collection<int, Dialog>
+     */
+    public static function fromResponse(Response $response): Collection
     {
         event(new DocuWareResponseLog($response));
 
@@ -19,6 +22,6 @@ final class GetAllDialogsResponse
 
         $dialogs = $response->throw()->json('Dialog');
 
-        return collect($dialogs)->map(fn (array $dialog) => Dialog::fromJson($dialog));
+        return collect(JsonArrays::listOfRecords($dialogs))->map(fn (array $dialog) => Dialog::fromJson($dialog));
     }
 }

@@ -16,6 +16,9 @@ class RemoveUserFromARole extends Request implements HasBody
 
     protected Method $method = Method::PUT;
 
+    /**
+     * @param  list<string>  $ids
+     */
     public function __construct(
         public string $userId,
         public array $ids
@@ -33,6 +36,9 @@ class RemoveUserFromARole extends Request implements HasBody
         ];
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     protected function defaultBody(): array
     {
         return [

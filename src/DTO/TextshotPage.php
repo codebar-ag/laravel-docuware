@@ -2,23 +2,31 @@
 
 namespace CodebarAg\DocuWare\DTO;
 
+use CodebarAg\DocuWare\Support\JsonArrays;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 
 final class TextshotPage
 {
+    /**
+     * @param  Collection<int, array<string, mixed>>  $collection
+     * @return Collection<int, TextshotPage>
+     */
     public static function fromCollection(Collection $collection): Collection
     {
         return $collection->map(fn (array $data) => self::fromJson($data));
     }
 
+    /**
+     * @param  array<string, mixed>  $data
+     */
     public static function fromJson(array $data): self
     {
         $rawItems = Arr::get($data, 'Items', []);
 
         return new self(
             language: Arr::get($data, 'Lang'),
-            content: self::content($rawItems)
+            content: self::content(JsonArrays::listOfRecords(is_array($rawItems) ? $rawItems : []))
         );
     }
 
@@ -27,19 +35,22 @@ final class TextshotPage
         public string $content,
     ) {}
 
+    /**
+     * @param  list<array<string, mixed>>  $rawItems
+     */
     protected static function content(array $rawItems): string
     {
         return collect($rawItems)
-            ->filter(function ($item) {
+            ->filter(function (mixed $item) {
                 return Arr::get($item, '$type') === 'TextZone';
             })
             ->pluck('Ln')
             ->flatten(2)
-            ->filter(function ($item) {
+            ->filter(function (mixed $item) {
                 return is_array($item);
             })
             ->flatten(1)
-            ->map(function ($item) {
+            ->map(function (mixed $item) {
 
                 $type = Arr::get($item, '$type');
 

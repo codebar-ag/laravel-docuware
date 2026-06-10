@@ -8,6 +8,9 @@ use Illuminate\Support\Str;
 
 final class Section
 {
+    /**
+     * @param  array<string, mixed>  $data
+     */
     public static function fromJson(array $data): self
     {
         if ($contentModifiedDateTime = Arr::get($data, 'ContentModified')) {

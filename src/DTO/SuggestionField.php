@@ -6,6 +6,9 @@ use Illuminate\Support\Arr;
 
 final class SuggestionField
 {
+    /**
+     * @param  array<string, mixed>  $data
+     */
     public static function fromJson(array $data): self
     {
         return new self(
@@ -16,6 +19,9 @@ final class SuggestionField
         );
     }
 
+    /**
+     * @param  array<int|string, mixed>  $value
+     */
     public function __construct(
         public array $value,
         public ?string $name,
@@ -23,6 +29,9 @@ final class SuggestionField
         public ?string $confidence,
     ) {}
 
+    /**
+     * @param  array<int|string, mixed>  $value
+     */
     public static function fake(
         array $value = [],
         ?string $name = null,

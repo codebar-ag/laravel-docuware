@@ -11,7 +11,7 @@ class IndexDetectDTO
         public mixed $value,
     ) {}
 
-    public static function make(string $name, mixed $value)
+    public static function make(string $name, mixed $value): IndexTextDTO|IndexNumericDTO|IndexDecimalDTO|IndexDateTimeDTO|null
     {
         return match (true) {
             is_string($value) => IndexTextDTO::make($name, $value),

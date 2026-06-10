@@ -10,11 +10,16 @@ use Illuminate\Support\Str;
 
 class ParseValue
 {
+    /**
+     * @param  array<string, mixed>|null  $field
+     * @param  int|float|Carbon|string|Collection<int, mixed>|null  $default
+     * @return int|float|Carbon|string|Collection<int, mixed>|null
+     */
     public static function field(
         ?array $field,
         int|float|Carbon|string|Collection|null $default = null,
     ): null|int|float|Carbon|string|Collection {
-        if (! $field || $field['IsNull']) {
+        if (! $field || Arr::get($field, 'IsNull')) {
             return $default;
         }
 
@@ -25,9 +30,15 @@ class ParseValue
             'Int' => (int) $item,
             'String' => (string) $item,
             'Decimal' => (float) $item,
-            'Date', 'DateTime' => self::date($item),
-            'Keywords' => Arr::join($item['Keyword'], ', '),
-            'Table' => self::table($item),
+            'Date', 'DateTime' => is_string($item) ? self::date($item) : $default,
+            'Keywords' => Arr::join(
+                match (true) {
+                    is_array($item) && is_array($k = Arr::get($item, 'Keyword', [])) => $k,
+                    default => [],
+                },
+                ', '
+            ),
+            'Table' => is_array($item) ? self::table($item) : $default,
             default => $default,
         };
     }
@@ -42,20 +53,42 @@ class ParseValue
         return Carbon::createFromTimestampMs($timestamp);
     }
 
+    /**
+     * @param  array<string, mixed>  $Item
+     * @return Collection<int, TableRow>|null
+     */
     public static function table(array $Item): ?Collection
     {
-        return match ($Item['$type']) {
-            'DocumentIndexFieldTable' => self::documentIndexFieldTable($Item['Row']),
+        $type = Arr::get($Item, '$type');
+
+        return match ($type) {
+            'DocumentIndexFieldTable' => is_array($row = Arr::get($Item, 'Row'))
+                ? self::documentIndexFieldTable($row)
+                : null,
             default => null,
         };
     }
 
+    /**
+     * @param  array<int|string, mixed>  $Row
+     * @return Collection<int, TableRow>|null
+     */
     public static function documentIndexFieldTable(array $Row): ?Collection
     {
-        $rows = collect($Row);
+        /** @var list<array<string, mixed>> $list */
+        $list = [];
+        foreach (array_values($Row) as $row) {
+            if (is_array($row)) {
+                $list[] = $row;
+            }
+        }
+
+        $rows = collect($list);
 
         return $rows->map(function (array $row) {
-            return TableRow::fromJson($row['ColumnValue']);
+            $columnValue = Arr::get($row, 'ColumnValue', []);
+
+            return TableRow::fromJson(is_array($columnValue) ? $columnValue : []);
         });
     }
 }

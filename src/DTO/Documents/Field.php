@@ -6,6 +6,9 @@ use Illuminate\Support\Arr;
 
 final class Field
 {
+    /**
+     * @param  array<string, mixed>  $data
+     */
     public static function fromJson(array $data): self
     {
         return new self(

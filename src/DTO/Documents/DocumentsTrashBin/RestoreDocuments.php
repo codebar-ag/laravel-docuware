@@ -2,13 +2,18 @@
 
 namespace CodebarAg\DocuWare\DTO\Documents\DocumentsTrashBin;
 
+use CodebarAg\DocuWare\Support\JsonArrays;
 use Illuminate\Support\Arr;
 
 final class RestoreDocuments
 {
+    /**
+     * @param  array<string, mixed>  $data
+     */
     public static function fromData(array $data): self
     {
-        $failedItems = Arr::get($data, 'FailedItems');
+        $failedRaw = Arr::get($data, 'FailedItems', []);
+        $failedItems = JsonArrays::listOfRecords(is_array($failedRaw) ? $failedRaw : []);
         $successCount = Arr::get($data, 'SuccessCount');
 
         return new self(
@@ -17,6 +22,9 @@ final class RestoreDocuments
         );
     }
 
+    /**
+     * @param  list<array<string, mixed>>  $failedItems
+     */
     public function __construct(
         public array $failedItems = [],
         public int $successCount = 0,

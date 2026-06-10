@@ -7,6 +7,9 @@ use Illuminate\Support\Str;
 
 final class FileCabinet
 {
+    /**
+     * @param  array<string, mixed>  $data
+     */
     public static function fromJson(array $data): self
     {
         return new self(

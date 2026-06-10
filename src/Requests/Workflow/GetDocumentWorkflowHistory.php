@@ -2,6 +2,7 @@
 
 namespace CodebarAg\DocuWare\Requests\Workflow;
 
+use CodebarAg\DocuWare\DTO\Workflow\InstanceHistory;
 use CodebarAg\DocuWare\Responses\Workflow\GetDocumentWorkflowHistoryResponse;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
@@ -38,6 +39,9 @@ class GetDocumentWorkflowHistory extends Request implements Cacheable
         return config('laravel-docuware.configurations.cache.lifetime_in_seconds', 3600);
     }
 
+    /**
+     * @return Collection<int, InstanceHistory>
+     */
     public function createDtoFromResponse(Response $response): Collection
     {
         return GetDocumentWorkflowHistoryResponse::fromResponse($response);

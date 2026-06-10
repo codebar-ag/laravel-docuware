@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use CodebarAg\DocuWare\Exceptions\UnableToSearch;
 use CodebarAg\DocuWare\Requests\Documents\DocumentsTrashBin\GetDocuments;
 use CodebarAg\DocuWare\Requests\Search\GetSearchRequest;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Saloon\Exceptions\InvalidResponseClassException;
 use Saloon\Exceptions\PendingRequestException;
@@ -16,6 +17,7 @@ class DocuWareSearchRequestBuilder
 
     protected ?string $dialogId = null;
 
+    /** @var list<string> */
     protected array $additionalFileCabinetIds = [];
 
     protected int $page = 1;
@@ -28,8 +30,10 @@ class DocuWareSearchRequestBuilder
 
     protected string $orderDirection = 'asc';
 
+    /** @var array<string, array<int, mixed>> */
     protected array $filters = [];
 
+    /** @var array<string, list<string>> */
     protected array $usedDateOperators = [];
 
     protected bool $trashBin = false;
@@ -48,6 +52,9 @@ class DocuWareSearchRequestBuilder
         return $this;
     }
 
+    /**
+     * @param  list<string>  $fileCabinetIds
+     */
     public function fileCabinets(array $fileCabinetIds): self
     {
         $this->fileCabinetId = $fileCabinetIds[0] ?? null;
@@ -66,22 +73,14 @@ class DocuWareSearchRequestBuilder
 
     public function page(?int $page): self
     {
-        if (is_null($page)) {
-            $this->page = 1;
-        } else {
-            $this->page = $page;
-        }
+        $this->page = $page ?? 1;
 
         return $this;
     }
 
     public function perPage(?int $perPage): self
     {
-        if (is_null($perPage)) {
-            $this->perPage = 50;
-        } else {
-            $this->perPage = $perPage;
-        }
+        $this->perPage = $perPage ?? 50;
 
         return $this;
     }
@@ -93,13 +92,20 @@ class DocuWareSearchRequestBuilder
         return $this;
     }
 
-    public function filterDate(string $name, string $operator, ?Carbon $date): self
+    public function filterDate(string $name, string $operator, Carbon $date): self
     {
         $date = $this->exactDateTime($date, $operator);
 
-        $this->makeSureFilterDateRangeIsCorrect($name, $operator);
+        $insertAt = $this->makeSureFilterDateRangeIsCorrect($name, $operator);
 
-        $this->filters[$name][] = $date;
+        if ($insertAt === null) {
+            $this->filters[$name][] = $date;
+        } else {
+            $this->filters[$name] ??= [];
+            array_splice($this->filters[$name], $insertAt, 0, [$date]);
+            array_splice($this->usedDateOperators[$name], $insertAt, 0, [$operator]);
+        }
+
         $this->filters[$name] = array_values($this->filters[$name]);
 
         return $this;
@@ -109,11 +115,7 @@ class DocuWareSearchRequestBuilder
     {
         $this->orderField = $field;
 
-        if (is_null($direction)) {
-            $this->orderDirection = 'asc';
-        } else {
-            $this->orderDirection = $direction; // Supported values: 'asc', 'desc'
-        }
+        $this->orderDirection = $direction ?? 'asc'; // Supported values: 'asc', 'desc'
 
         return $this;
     }
@@ -140,11 +142,41 @@ class DocuWareSearchRequestBuilder
             return $this->filter($name, $values);
         }
 
-        $values = collect($values)->map(function ($value) {
+        $list = match (true) {
+            is_array($values) => array_values($values),
+            $values instanceof Collection => $values->values()->all(),
+            default => [],
+        };
+
+        $prepared = collect($list)->map(function (mixed $value) {
             return self::prepareValueForFilter($value);
         })->toArray();
 
-        $this->filters[$name][] = implode(' OR ', $values);
+        $this->filters[$name][] = implode(' OR ', $prepared);
+
+        return $this;
+    }
+
+    /**
+     * Restrict results to documents where the index field has no value (DocuWare dialog expression `EMPTY()`).
+     *
+     * @param  string  $name  Database field name (typically uppercase), not the display label.
+     */
+    public function filterEmpty(string $name): self
+    {
+        $this->filters[$name][] = 'EMPTY()';
+
+        return $this;
+    }
+
+    /**
+     * Restrict results to documents where the index field has a value (DocuWare dialog expression `NOTEMPTY()`).
+     *
+     * @param  string  $name  Database field name (typically uppercase), not the display label.
+     */
+    public function filterNotEmpty(string $name): self
+    {
+        $this->filters[$name][] = 'NOTEMPTY()';
 
         return $this;
     }
@@ -160,25 +192,7 @@ class DocuWareSearchRequestBuilder
         $this->restructureMonoDateFilterRange();
         $this->guard();
 
-        $condition = [];
-
-        if (Str::length($this->searchTerm) >= 1) {
-            $condition[] = [
-                'DBName' => 'DocuWareFulltext',
-                'Value' => [$this->searchTerm],
-            ];
-        }
-
-        foreach ($this->filters as $name => $value) {
-            if (empty($value)) {
-                continue;
-            }
-
-            $condition[] = [
-                'DBName' => $name,
-                'Value' => $value,
-            ];
-        }
+        $condition = $this->buildSearchCondition();
 
         if ($this->trashBin) {
             return new GetDocuments(
@@ -204,6 +218,34 @@ class DocuWareSearchRequestBuilder
         );
     }
 
+    /**
+     * @return list<array{DBName: string, Value: list<mixed>}>
+     */
+    private function buildSearchCondition(): array
+    {
+        $condition = [];
+
+        if (Str::length($this->searchTerm) >= 1) {
+            $condition[] = [
+                'DBName' => 'DocuWareFulltext',
+                'Value' => [$this->searchTerm],
+            ];
+        }
+
+        foreach ($this->filters as $name => $value) {
+            if ($value === []) {
+                continue;
+            }
+
+            $condition[] = [
+                'DBName' => $name,
+                'Value' => array_values($value),
+            ];
+        }
+
+        return $condition;
+    }
+
     protected function guard(): void
     {
         throw_if(
@@ -225,52 +267,116 @@ class DocuWareSearchRequestBuilder
     private function checkDateFilterRangeDivergence(): void
     {
         foreach ($this->usedDateOperators as $name => $operators) {
-            if (count($operators) == 2) {
-                foreach ($operators as $index => $operator) {
-                    throw_if(
-                        eval("return {$this->filters[$name][$index]->timestamp} {$operator} {$this->filters[$name][$index + 1]->timestamp};"),
-                        UnableToSearch::DivergedDateFilterRange(),
-                    );
-                    break;
-                }
+            if (count($operators) !== 2) {
+                continue;
             }
+
+            $left = $this->filters[$name][0];
+            $right = $this->filters[$name][1];
+            if (! $left instanceof Carbon || ! $right instanceof Carbon) {
+                continue;
+            }
+
+            throw_if(
+                $this->dateBoundsViolateRange($left, $right, $operators[0]),
+                UnableToSearch::DivergedDateFilterRange(),
+            );
         }
+    }
+
+    /**
+     * First operator between the two stored bounds (same semantics as the previous eval-based check).
+     */
+    private function dateBoundsViolateRange(Carbon $left, Carbon $right, string $operator): bool
+    {
+        $a = $left->getTimestamp();
+        $b = $right->getTimestamp();
+
+        return match ($operator) {
+            '>=' => $a >= $b,
+            '>' => $a > $b,
+            '<=' => $a <= $b,
+            '<' => $a < $b,
+            default => false,
+        };
     }
 
     private function restructureMonoDateFilterRange(): void
     {
         foreach ($this->usedDateOperators as $name => $operators) {
-            if (count($operators) == 1) {
-                $this->filters[$name][] = match ($operators[0]) {
-                    '<=', '<' => Carbon::createFromTimestamp(0),
-                    '>=', '>' => now(),
-                    default => now(),
-                };
+            if (count($operators) !== 1) {
+                continue;
             }
+
+            $this->filters[$name][] = $this->syntheticOppositeDateBound($operators[0]);
+            $this->filters[$name] = array_values($this->filters[$name]);
         }
     }
 
-    private function makeSureFilterDateRangeIsCorrect($name, $operator): void
+    private function syntheticOppositeDateBound(string $operator): Carbon
     {
-        if (isset($this->usedDateOperators[$name])) {
-            if ($operatorFilterIndex = array_search($operator, $this->usedDateOperators[$name])) {
-                unset($this->filters[$name][$operatorFilterIndex]);
-            } elseif ($operator == '=') {
-                unset($this->filters[$name]);
-                $this->usedDateOperators[$name] = [$operator];
-            } else {
-                $this->usedDateOperators[$name][] = $operator;
-            }
-        } else {
-            $this->usedDateOperators[$name][] = $operator;
-        }
-
-        if (isset($this->filters[$name]) && ($dateFiltersCount = count($this->filters[$name])) == 2) {
-            throw UnableToSearch::InvalidDateFiltersCount($dateFiltersCount);
-        }
+        return match ($operator) {
+            '<=', '<' => Carbon::createFromTimestamp(0),
+            '>=', '>' => Carbon::now(),
+            default => Carbon::now(),
+        };
     }
 
-    private function exactDateTime($date, $operator): Carbon
+    /**
+     * @return int|null insert index when replacing an existing operator-bound date; null to append (operator already registered for this call)
+     */
+    private function makeSureFilterDateRangeIsCorrect(string $name, string $operator): ?int
+    {
+        if (! isset($this->usedDateOperators[$name])) {
+            $this->usedDateOperators[$name][] = $operator;
+            $this->throwIfInvalidDateFiltersCount($name);
+
+            return null;
+        }
+
+        $operatorIndex = array_search($operator, $this->usedDateOperators[$name], true);
+        if ($operatorIndex !== false) {
+            unset($this->filters[$name][$operatorIndex]);
+            $this->filters[$name] = isset($this->filters[$name])
+                ? array_values($this->filters[$name])
+                : [];
+            array_splice($this->usedDateOperators[$name], $operatorIndex, 1);
+            $this->throwIfInvalidDateFiltersCount($name);
+
+            return $operatorIndex;
+        }
+
+        if ($operator === '=') {
+            unset($this->filters[$name]);
+            $this->usedDateOperators[$name] = [$operator];
+            $this->throwIfInvalidDateFiltersCount($name);
+
+            return null;
+        }
+
+        $this->usedDateOperators[$name][] = $operator;
+        $this->throwIfInvalidDateFiltersCount($name);
+
+        return null;
+    }
+
+    /**
+     * DocuWare allows at most one open range per field before {@see restructureMonoDateFilterRange()} fills the pair.
+     */
+    private function throwIfInvalidDateFiltersCount(string $name): void
+    {
+        if (! isset($this->filters[$name])) {
+            return;
+        }
+
+        if (count($this->filters[$name]) !== 2) {
+            return;
+        }
+
+        throw UnableToSearch::InvalidDateFiltersCount(2);
+    }
+
+    private function exactDateTime(Carbon $date, string $operator): Carbon
     {
         return match ($operator) {
             '<', '>=' => $date->startOfDay(),

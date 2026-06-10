@@ -7,6 +7,9 @@ use Illuminate\Support\Carbon;
 
 final class RequestToken
 {
+    /**
+     * @param  array<string, mixed>  $data
+     */
     public static function make(array $data): self
     {
         return new self(

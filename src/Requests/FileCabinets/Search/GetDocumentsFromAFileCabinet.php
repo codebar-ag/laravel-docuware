@@ -18,6 +18,9 @@ class GetDocumentsFromAFileCabinet extends Request implements Cacheable
 
     protected Method $method = Method::GET;
 
+    /**
+     * @param  list<string>  $fields
+     */
     public function __construct(
         protected readonly string $fileCabinetId,
         protected readonly array $fields = [],

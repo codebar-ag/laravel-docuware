@@ -1,0 +1,10 @@
+{
+    "statusCode": 200,
+    "headers": {
+        "Content-Type": [
+            "application/json; charset=utf-8"
+        ]
+    },
+    "data": "{\"Organization\":[{\"Id\":\"org-fixture-1\",\"Name\":\"Fixture Org\",\"Guid\":\"aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee\",\"AdditionalInfo\":[],\"ConfigurationRights\":[]}]}",
+    "context": []
+}

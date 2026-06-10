@@ -21,6 +21,9 @@ class GetDocuments extends Request implements Cacheable, HasBody
 
     protected Method $method = Method::POST;
 
+    /**
+     * @param  array<int|string, mixed>  $condition
+     */
     public function __construct(
         protected readonly int $page = 1,
         protected readonly int $perPage = 50,
@@ -46,6 +49,9 @@ class GetDocuments extends Request implements Cacheable, HasBody
         return config('laravel-docuware.configurations.cache.lifetime_in_seconds', 3600);
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function defaultBody(): array
     {
         return [

@@ -21,6 +21,10 @@ class GetSearchRequest extends Request implements Cacheable, HasBody
 
     protected Method $method = Method::POST;
 
+    /**
+     * @param  list<string>  $additionalFileCabinetIds
+     * @param  array<int|string, mixed>  $condition
+     */
     public function __construct(
         protected readonly ?string $fileCabinetId,
         protected readonly ?string $dialogId = null,
@@ -50,15 +54,18 @@ class GetSearchRequest extends Request implements Cacheable, HasBody
 
     public function defaultQuery(): array
     {
-        $defultQuery = [];
+        $defaultQuery = [];
 
         if ($this->dialogId) {
-            $defultQuery['dialogId'] = $this->dialogId;
+            $defaultQuery['dialogId'] = $this->dialogId;
         }
 
-        return $defultQuery;
+        return $defaultQuery;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function defaultBody(): array
     {
         return [

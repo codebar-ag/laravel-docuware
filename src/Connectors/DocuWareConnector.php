@@ -6,11 +6,13 @@ use CodebarAg\DocuWare\DTO\Authentication\OAuth\IdentityServiceConfiguration;
 use CodebarAg\DocuWare\DTO\Authentication\OAuth\RequestToken as RequestTokenDto;
 use CodebarAg\DocuWare\DTO\Config\ConfigWithCredentials;
 use CodebarAg\DocuWare\DTO\Config\ConfigWithCredentialsTrustedUser;
+use CodebarAg\DocuWare\DTO\Config\ConfigWithDocuWareToken;
 use CodebarAg\DocuWare\Events\DocuWareOAuthLog;
 use CodebarAg\DocuWare\Requests\Authentication\OAuth\GetIdentityServiceConfiguration;
 use CodebarAg\DocuWare\Requests\Authentication\OAuth\GetResponsibleIdentityService;
 use CodebarAg\DocuWare\Requests\Authentication\OAuth\RequestTokenWithCredentials;
 use CodebarAg\DocuWare\Requests\Authentication\OAuth\RequestTokenWithCredentialsTrustedUser;
+use CodebarAg\DocuWare\Requests\Authentication\OAuth\RequestTokenWithDocuWareToken;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Crypt;
@@ -23,7 +25,7 @@ use Saloon\Http\Response;
 class DocuWareConnector extends Connector
 {
     public function __construct(
-        public ConfigWithCredentials|ConfigWithCredentialsTrustedUser $configuration
+        public ConfigWithCredentials|ConfigWithCredentialsTrustedUser|ConfigWithDocuWareToken $configuration
     ) {}
 
     public function resolveBaseUrl(): string
@@ -74,9 +76,11 @@ class DocuWareConnector extends Connector
             return $token->accessToken;
         }
 
-        $token = $this->configuration instanceof ConfigWithCredentials
-            ? $this->getNewOAuthTokenWithCredentials()
-            : $this->getNewOAuthTokenWithCredentialsTrustedUser();
+        $token = match (true) {
+            $this->configuration instanceof ConfigWithCredentials => $this->getNewOAuthTokenWithCredentials(),
+            $this->configuration instanceof ConfigWithDocuWareToken => $this->getNewOAuthTokenWithDocuWareToken(),
+            default => $this->getNewOAuthTokenWithCredentialsTrustedUser(),
+        };
 
         DocuWareOAuthLog::dispatch($this->configuration->url, $this->configuration->username, 'Token retrieved from API');
         $cache->put($cacheKey, Crypt::encrypt($token), $this->oauthTokenCacheTtlSeconds($token));
@@ -100,6 +104,8 @@ class DocuWareConnector extends Connector
      */
     protected function getNewOAuthTokenWithCredentials(): RequestTokenDto
     {
+        assert($this->configuration instanceof ConfigWithCredentials);
+
         $requestTokenResponse = (new RequestTokenWithCredentials(
             tokenEndpoint: $this->getAuthenticationTokenEndpoint()->tokenEndpoint,
             clientId: $this->configuration->clientId,
@@ -116,6 +122,8 @@ class DocuWareConnector extends Connector
      */
     protected function getNewOAuthTokenWithCredentialsTrustedUser(): RequestTokenDto
     {
+        assert($this->configuration instanceof ConfigWithCredentialsTrustedUser);
+
         $requestTokenResponse = (new RequestTokenWithCredentialsTrustedUser(
             tokenEndpoint: $this->getAuthenticationTokenEndpoint()->tokenEndpoint,
             clientId: $this->configuration->clientId,
@@ -123,6 +131,23 @@ class DocuWareConnector extends Connector
             username: $this->configuration->username,
             password: $this->configuration->password,
             impersonateName: $this->configuration->impersonatedUsername,
+        ))->send();
+
+        return $this->ensureRequestTokenSuccess($requestTokenResponse);
+    }
+
+    /**
+     * @throws \Throwable
+     */
+    protected function getNewOAuthTokenWithDocuWareToken(): RequestTokenDto
+    {
+        assert($this->configuration instanceof ConfigWithDocuWareToken);
+
+        $requestTokenResponse = (new RequestTokenWithDocuWareToken(
+            tokenEndpoint: $this->getAuthenticationTokenEndpoint()->tokenEndpoint,
+            token: $this->configuration->token,
+            clientId: $this->configuration->clientId,
+            scope: $this->configuration->scope,
         ))->send();
 
         return $this->ensureRequestTokenSuccess($requestTokenResponse);

@@ -48,7 +48,7 @@ class UpdateIndexValues extends Request implements HasBody
         $body = [];
 
         if ($this->indexes) {
-            $bodyEncode = json_encode(PrepareDTO::makeField($this->indexes));
+            $bodyEncode = json_encode(PrepareDTO::makeField($this->indexes, $this->forceUpdate));
             $bodyDecode = json_decode($bodyEncode, true);
             $body = $bodyDecode;
         }

@@ -2,42 +2,19 @@
 
 namespace CodebarAg\DocuWare\Facades;
 
-use Carbon\Carbon;
 use CodebarAg\DocuWare\DocuWareSearchRequestBuilder;
 use CodebarAg\DocuWare\DocuWareUrl;
-use CodebarAg\DocuWare\DTO\Documents\Document;
-use CodebarAg\DocuWare\DTO\Documents\DocumentThumbnail;
-use CodebarAg\DocuWare\DTO\Documents\Field;
-use CodebarAg\DocuWare\DTO\FileCabinets\Dialog;
-use CodebarAg\DocuWare\DTO\FileCabinets\General\FileCabinetInformation;
-use CodebarAg\DocuWare\DTO\General\Organization\Organization;
-use CodebarAg\DocuWare\DTO\General\Organization\OrganizationIndex;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Facade;
 
 /**
  * @see \CodebarAg\DocuWare\DocuWare
  *
- * @method static string login()
- * @method static void logout()
- * @method static Organization getOrganization(string $organizationId)
- * @method static Collection<int, OrganizationIndex> getOrganizations()
- * @method static Collection<int, FileCabinetInformation> getFileCabinets()
- * @method static Collection<int, Field> getFields(string $fileCabinetId)
- * @method static Collection<int, Dialog> getDialogs(string $fileCabinetId)
- * @method static array<int, string> getSelectList(string $fileCabinetId, string $dialogId, string $fieldName)
- * @method static Document getDocument(string $fileCabinetId, int $documentId)
- * @method static string getDocumentPreview(string $fileCabinetId, int $documentId)
- * @method static string downloadDocument(string $fileCabinetId, int $documentId)
- * @method static string downloadDocuments(string $fileCabinetId, list<int> $documentIds)
- * @method static DocumentThumbnail downloadDocumentThumbnail(string $fileCabinetId, int $documentId, int $section, int $page = 0)
- * @method static null|int|float|Carbon|string updateDocumentValue(string $fileCabinetId, int $documentId, string $fieldName, string $newValue, bool $forceUpdate = false)
- * @method static null|int|float|Carbon|string updateDocumentValues(string $fileCabinetId, int $documentId, array<string, mixed> $values, bool $forceUpdate = false)
- * @method static Document uploadDocument(string $fileCabinetId, string $fileContent, string $fileName, ?Collection<int, mixed> $indexes = null)
- * @method static int documentCount(string $fileCabinetId, string $dialogId)
- * @method static void deleteDocument(string $fileCabinetId, int $documentId)
- * @method static DocuWareSearchRequestBuilder search()
- * @method static DocuWareUrl url(string $url, string $username, string $password, null|string $passphrase = null)
+ * Low-level requests are sent through a DocuWareConnector:
+ * `$connector->send(new SomeRequest(...))->dto();`. This facade only exposes the two
+ * helpers that genuinely live on the DocuWare class.
+ *
+ * @method static DocuWareSearchRequestBuilder searchRequestBuilder()
+ * @method static DocuWareUrl url(string $url, string $username, string $password, ?string $passphrase = null)
  */
 class DocuWare extends Facade
 {

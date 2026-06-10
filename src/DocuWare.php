@@ -13,7 +13,7 @@ class DocuWare
         string $url,
         string $username,
         string $password,
-        string $passphrase
+        ?string $passphrase = null
     ): DocuWareUrl {
         return new DocuWareUrl(
             url: $url,

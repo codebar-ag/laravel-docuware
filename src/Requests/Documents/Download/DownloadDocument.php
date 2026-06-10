@@ -2,6 +2,7 @@
 
 namespace CodebarAg\DocuWare\Requests\Documents\Download;
 
+use CodebarAg\DocuWare\Enums\TargetFileType;
 use CodebarAg\DocuWare\Responses\Documents\Download\DownloadDocumentResponse;
 use Illuminate\Support\Facades\Cache;
 use Saloon\CachePlugin\Contracts\Cacheable;
@@ -20,6 +21,8 @@ class DownloadDocument extends Request implements Cacheable
     public function __construct(
         protected readonly string $fileCabinetId,
         protected readonly string $documentId,
+        protected readonly TargetFileType $targetFileType = TargetFileType::AUTO,
+        protected readonly bool $keepAnnotations = false,
     ) {}
 
     public function resolveEndpoint(): string
@@ -37,11 +40,14 @@ class DownloadDocument extends Request implements Cacheable
         return config('laravel-docuware.configurations.cache.lifetime_in_seconds', 3600);
     }
 
+    /**
+     * @return array<string, string>
+     */
     public function defaultQuery(): array
     {
         return [
-            'targetFileType' => 'Auto',
-            'keepAnnotations' => 'false',
+            'targetFileType' => $this->targetFileType->value,
+            'keepAnnotations' => $this->keepAnnotations ? 'true' : 'false',
         ];
     }
 

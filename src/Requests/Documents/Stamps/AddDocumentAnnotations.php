@@ -2,6 +2,7 @@
 
 namespace CodebarAg\DocuWare\Requests\Documents\Stamps;
 
+use CodebarAg\DocuWare\DTO\Documents\Annotations\AnnotationBuilder;
 use CodebarAg\DocuWare\Events\DocuWareResponseLog;
 use CodebarAg\DocuWare\Support\EnsureValidResponse;
 use Saloon\Contracts\Body\HasBody;
@@ -11,7 +12,8 @@ use Saloon\Http\Response;
 use Saloon\Traits\Body\HasJsonBody;
 
 /**
- * POST …/Documents/{id}/Annotation — stamps and other annotations (Postman "Add Stamp With Position/Best Position").
+ * POST …/Documents/{id}/Annotation — stamps, text, rectangle, line, polyline, delete and update
+ * annotations. Build the payload with {@see AnnotationBuilder} (recommended) or pass a raw array.
  */
 final class AddDocumentAnnotations extends Request implements HasBody
 {
@@ -27,6 +29,14 @@ final class AddDocumentAnnotations extends Request implements HasBody
         protected readonly int|string $documentId,
         protected readonly array $payload,
     ) {}
+
+    /**
+     * Build the request from a fluent {@see AnnotationBuilder} instead of a raw array.
+     */
+    public static function fromBuilder(string $fileCabinetId, int|string $documentId, AnnotationBuilder $builder): self
+    {
+        return new self($fileCabinetId, $documentId, $builder->toArray());
+    }
 
     public function resolveEndpoint(): string
     {

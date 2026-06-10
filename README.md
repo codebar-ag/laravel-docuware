@@ -171,8 +171,8 @@ then optimize the processes that power the core of your business.
 | Authentication/OAuth                | 1. Get Responsible Identity Service                         | ✅         |      |
 | Authentication/OAuth                | 2. Get Identity Service Configuration                       | ✅         |      |
 | Authentication/OAuth                | 3.a Request Token w/ Username & Password                    | ✅         |      |
-| Authentication/OAuth                | 3.b Request Token w/ a DocuWare Token                       | 🕣        |      |
-| Authentication/OAuth                | 3.c Request Token w/ Username & Password (Trusted User)     | 🕣        |      |
+| Authentication/OAuth                | 3.b Request Token w/ a DocuWare Token                       | ✅         | `ConfigWithDocuWareToken` |
+| Authentication/OAuth                | 3.c Request Token w/ Username & Password (Trusted User)     | ✅         | `ConfigWithCredentialsTrustedUser` |
 | Authentication/OAuth                | 3.d.1 Obtain Windows Authorization (On Premises Only)       | 🕣        |      |
 | Authentication/OAuth                | 3.d.2 Request Token /w a Windows Account (On Premises Only) | 🕣        |      |
 | General/Organisation                | Get Login Token                                             | ✅         |      |
@@ -319,21 +319,29 @@ $connector = new DocuWareConnector(
 );
 ```
 
+### Getting a new token via a DocuWare Token (`dwtoken` grant):
+
+If you already hold a DocuWare login token (e.g. minted via the `GetLoginToken` request, or
+handed to you by DocuWare), you can exchange it for an OAuth access token:
+
+```php
+use CodebarAg\DocuWare\Connectors\DocuWareConnector;
+use CodebarAg\DocuWare\DTO\Config\ConfigWithDocuWareToken;
+
+$connector = new DocuWareConnector(
+    configuration: new ConfigWithDocuWareToken(
+        token: 'your-docuware-login-token',
+    )
+);
+```
+
+> The access token is encrypted and cached for `expires_in - 60` seconds. On expiry a fresh
+> token is requested automatically — the DocuWare grants used here do not return a refresh
+> token, so re-authentication simply replays the configured grant.
+
 ### Enums
 
 The package provides several enums to ensure type safety and consistency when working with DocuWare API values.
-
-#### ConnectionEnum
-
-Represents different connection types for DocuWare authentication:
-
-```php
-use CodebarAg\DocuWare\Enums\ConnectionEnum;
-
-ConnectionEnum::WITHOUT_COOKIE;    
-ConnectionEnum::STATIC_COOKIE; 
-ConnectionEnum::DYNAMIC_COOKIE;
-```
 
 #### DialogType
 
@@ -364,6 +372,35 @@ DocuWareFieldTypeEnum::DATE;
 DocuWareFieldTypeEnum::DATETIME;
 DocuWareFieldTypeEnum::TABLE;
 ```
+
+#### TargetFileType
+
+The format used when downloading a document (see `DownloadDocument`):
+
+```php
+use CodebarAg\DocuWare\Enums\TargetFileType;
+
+TargetFileType::AUTO;     // DocuWare decides (default)
+TargetFileType::PDF;      // always render to PDF
+TargetFileType::ORIGINAL; // the originally stored file(s)
+```
+
+### Error handling
+
+Every request runs its response through `EnsureValidResponse`, which throws a typed exception
+for any non-2xx response (it never returns silently and never chokes on non-JSON error bodies):
+
+| Status | Exception |
+|--------|-----------|
+| 400 | `CodebarAg\DocuWare\Exceptions\BadRequest` |
+| 401 | `CodebarAg\DocuWare\Exceptions\UnableToMakeRequest` |
+| 403 | `CodebarAg\DocuWare\Exceptions\Forbidden` |
+| 404 | `CodebarAg\DocuWare\Exceptions\NotFound` |
+| 409 | `CodebarAg\DocuWare\Exceptions\Conflict` |
+| 422 / 5xx / other | `CodebarAg\DocuWare\Exceptions\UnableToProcessRequest` |
+
+The DocuWare `Message` field (or an OAuth `error_description`) is used as the exception message
+when present.
 
 ### Available Requests
 
@@ -946,7 +983,37 @@ $response = $this->connector->send(new ReplaceAPDFDocumentSection(
 | Batch Update Index Fields By Search      | ✅         |
 | Batch Append/Update Keyword Fields By Id | ✅         |
 
-> Use `BatchDocumentsUpdateFields` (same class covers these Postman variants).
+`BatchDocumentsUpdateFields` covers all three Postman variants via named constructors, each of
+which sets the correct DocuWare media type for you:
+
+```php
+use CodebarAg\DocuWare\Requests\FileCabinets\Batch\BatchDocumentsUpdateFields;
+
+// Update fields on documents selected by id:
+$connector->send(BatchDocumentsUpdateFields::byId(
+    fileCabinetId: $fileCabinetId,
+    ids: [309, 310],
+    fields: [['FieldName' => 'DOCUMENT_TYPE', 'Item' => 'Batch Update Test']],
+))->dto();
+
+// Update fields on documents selected by a dialog expression:
+$connector->send(BatchDocumentsUpdateFields::bySearch(
+    fileCabinetId: $fileCabinetId,
+    expression: ['Operation' => 'And', 'Condition' => [['DBName' => 'DOCUMENT_TYPE', 'Value' => ['Test']]]],
+    fields: [['FieldName' => 'DOCUMENT_TYPE', 'Item' => 'Batch Update Test']],
+))->dto();
+
+// Append keyword values to a keyword field:
+$connector->send(BatchDocumentsUpdateFields::appendKeywords(
+    fileCabinetId: $fileCabinetId,
+    docIds: [309, 310],
+    keywords: ['Value1', 'Value2'],
+    fieldName: 'ORDER_NUMBER',
+))->dto();
+```
+
+> You can still pass a raw payload (and optional content type) to the constructor if you need
+> full control: `new BatchDocumentsUpdateFields($fileCabinetId, $payload, $contentType)`.
 
 ###### Get Fields
 ```php
@@ -1104,22 +1171,25 @@ $unclip = $connector->send(new Unstaple(
 
 ##### Annotations/Stamps
 
-DocuWare's Postman collection lists several **add** operations (stamp with position / best position, text, rectangle, line, polyline). They target the same Platform route: `POST /FileCabinets/{id}/Documents/{documentId}/Annotation`, differing only by JSON (`$type`, `Annotations`, `AnnotationsPlacement`, etc.). This package exposes that as **`AddDocumentAnnotations`** with the same payload array you would send from Postman—there are no separate classes per recipe.
+DocuWare's Postman collection lists several annotation operations (stamp with position / best
+position, text, rectangle, line, polyline, delete, update text). They all target the same
+Platform route — `POST /FileCabinets/{id}/Documents/{documentId}/Annotation` — differing only by
+the JSON body. The package sends them all through **`AddDocumentAnnotations`**, and ships an
+**`AnnotationBuilder`** plus typed entry objects so you don't have to hand-assemble the nested
+`Annotations → AnnotationsPlacement → Items → Layer → Items` structure.
 
-**Not implemented:** `DeleteAnnotation` and `UpdateTextAnnotation` are separate operations in the API (different HTTP method or path); there is no Saloon request class for them yet—contributions welcome.
-
-| Request                    | Supported | Package class |
-|----------------------------|-----------|---------------|
+| Request                    | Supported | Package class / helper |
+|----------------------------|-----------|------------------------|
 | Get Stamps                 | ✅         | `GetStamps` |
 | Get Annotations            | ✅         | `GetDocumentAnnotations` |
-| AddStampWithPosition       | ✅         | `AddDocumentAnnotations` |
-| AddStampWithBestPosition   | ✅         | `AddDocumentAnnotations` |
-| AddTextAnnotation          | ✅         | `AddDocumentAnnotations` |
-| AddRectEntryAnnotation     | ✅         | `AddDocumentAnnotations` |
-| AddLineEntryAnnotation     | ✅         | `AddDocumentAnnotations` |
-| AddPolyLineEntryAnnotation | ✅         | `AddDocumentAnnotations` |
-| DeleteAnnotation           | ❌         | — |
-| UpdateTextAnnotation       | ❌         | — |
+| AddStampWithPosition       | ✅         | `StampPlacement` (with `Point` location) |
+| AddStampWithBestPosition   | ✅         | `StampPlacement` (no location) |
+| AddTextAnnotation          | ✅         | `TextEntry` |
+| AddRectEntryAnnotation     | ✅         | `RectEntry` |
+| AddLineEntryAnnotation     | ✅         | `LineEntry` |
+| AddPolyLineEntryAnnotation | ✅         | `PolyLineEntry` |
+| DeleteAnnotation           | ✅         | `DeleteEntry` |
+| UpdateTextAnnotation       | ✅         | `TextEntry` with `id:` |
 
 ###### Get Stamps
 ```php
@@ -1140,17 +1210,40 @@ $annotations = $connector->send(new GetDocumentAnnotations(
 ))->dto(); // Collection<int, array<string, mixed>>
 ```
 
-###### Add stamps / annotations (POST body from Postman)
+###### Add stamps / annotations (with the builder)
 ```php
 use CodebarAg\DocuWare\Requests\Documents\Stamps\AddDocumentAnnotations;
+use CodebarAg\DocuWare\DTO\Documents\Annotations\AnnotationBuilder;
+use CodebarAg\DocuWare\DTO\Documents\Annotations\TextEntry;
+use CodebarAg\DocuWare\DTO\Documents\Annotations\RectEntry;
+use CodebarAg\DocuWare\DTO\Documents\Annotations\Location;
+use CodebarAg\DocuWare\DTO\Documents\Annotations\StampPlacement;
+use CodebarAg\DocuWare\DTO\Documents\Annotations\StampField;
+use CodebarAg\DocuWare\DTO\Documents\Annotations\Point;
 
-$result = $connector->send(new AddDocumentAnnotations(
-    $fileCabinetId,
-    $documentId,
-    [
-        // Same JSON structure as the matching Postman request (e.g. StampPlacement, TextEntry, …).
-    ],
-))->dto();
+$builder = AnnotationBuilder::make()
+    ->addEntry(new TextEntry('Approved', Location::make(100, 100, 1500, 500)))
+    ->addEntry(new RectEntry(Location::make(100, 600, 1500, 500)))
+    // Stamp with a fixed position (omit the Point for "best position"):
+    ->addStamp(new StampPlacement($stampId, location: new Point(100, 100), fields: [
+        StampField::make('<#1>', 'september'),
+    ]));
+
+$result = $connector->send(
+    AddDocumentAnnotations::fromBuilder($fileCabinetId, $documentId, $builder)
+)->dto();
+
+// Update an existing text annotation (pass its id) or delete one:
+$update = AnnotationBuilder::make()
+    ->addEntry(new TextEntry('Updated', Location::make(100, 100, 1500, 500), id: $annotationId));
+```
+
+You can still pass a raw Postman-shaped payload array if you prefer:
+
+```php
+$result = $connector->send(new AddDocumentAnnotations($fileCabinetId, $documentId, [
+    'Annotations' => [ /* … */ ],
+]))->dto();
 ```
 
 ###### Documents Trash Bin
@@ -1320,10 +1413,20 @@ $deleted = $connector->send(new GetTextshot(
 ###### Download Document
 ```php
 use CodebarAg\DocuWare\Requests\Documents\Download\DownloadDocument;
+use CodebarAg\DocuWare\Enums\TargetFileType;
 
+// Default: TargetFileType::AUTO, annotations removed.
 $contents = $connector->send(new DownloadDocument(
     $fileCabinetId,
     $documentId
+))->dto();
+
+// Download as PDF and keep annotations:
+$contents = $connector->send(new DownloadDocument(
+    $fileCabinetId,
+    $documentId,
+    TargetFileType::PDF,
+    keepAnnotations: true,
 ))->dto();
 ```
 

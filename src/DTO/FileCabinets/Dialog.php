@@ -4,6 +4,7 @@ namespace CodebarAg\DocuWare\DTO\FileCabinets;
 
 use CodebarAg\DocuWare\Support\JsonArrays;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 
 final class Dialog
@@ -44,6 +45,18 @@ final class Dialog
     public function isSearch(): bool
     {
         return $this->type === 'Search';
+    }
+
+    /**
+     * The dialog's fields as typed {@see DialogField} objects (parsed from the raw `$fields`).
+     *
+     * @return Collection<int, DialogField>
+     */
+    public function fieldObjects(): Collection
+    {
+        return collect($this->fields ?? [])
+            ->map(fn (array $field): DialogField => DialogField::fromJson($field))
+            ->values();
     }
 
     public static function fake(

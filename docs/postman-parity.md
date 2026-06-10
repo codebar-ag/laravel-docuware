@@ -6,14 +6,12 @@ Regenerate this file: `php tests/bin/postman-inventory.php --output=docs/postman
 
 Legend: **Parity** = same endpoint and verb, usable for the Postman scenario; **Partial** = same endpoint with different query/body/helpers or bundled Postman variants; **OutOfScope** = intentionally not implemented; **Missing** = gap.
 
-Some integration tests are **skipped** on typical cloud tenants (check-out/versioning, empty annotation POST, filtered select lists) and covered in the default suite via **Saloon fixtures** under `tests/Feature/SaloonFixtures/` where noted in test skip messages.
-
 | # | Postman (folder / name) | Method | Path (after `{{Platform}}`) | Package request | FQCN | Status | Integration test |
 |---:|---|---|---|---|---|---|---|
 | 1 | Authentication / OAuth / 1. Get Responsible Identity Service | GET | Home/IdentityServiceInfo | `GetResponsibleIdentityService` | `CodebarAg\DocuWare\Requests\Authentication\OAuth\GetResponsibleIdentityService` | Parity | `tests/Integration/Requests/Authentication/OAuth/GetResponsibleIdentityServiceTest.php` |
 | 2 | Authentication / OAuth / 2. Get Identity Service Configuration | GET | .well-known/openid-configuration | `GetIdentityServiceConfiguration` | `CodebarAg\DocuWare\Requests\Authentication\OAuth\GetIdentityServiceConfiguration` | Parity | `tests/Integration/Requests/Authentication/OAuth/GetIdentityServiceConfigurationTest.php` |
 | 3 | Authentication / OAuth / 3.a Request Token w/ Username & Password | POST | _(token / external URL)_ | `RequestTokenWithCredentials` | `CodebarAg\DocuWare\Requests\Authentication\OAuth\RequestTokenWithCredentials` | Partial OAuth body/grant aligns with username-password flow. | `tests/Integration/Requests/Authentication/OAuth/RequestTokenWithCredentialsTest.php` |
-| 4 | Authentication / OAuth / 3.b Request Token w/ a  DocuWare Token | POST | _(token / external URL)_ | `—` | `—` | OutOfScope DocuWare token grant; intentionally not implemented. | `—` |
+| 4 | Authentication / OAuth / 3.b Request Token w/ a  DocuWare Token | POST | _(token / external URL)_ | `RequestTokenWithDocuWareToken` | `CodebarAg\DocuWare\Requests\Authentication\OAuth\RequestTokenWithDocuWareToken` | Partial DocuWare token (dwtoken) grant; pair with ConfigWithDocuWareToken. | `—` |
 | 5 | Authentication / OAuth / 3.c Request Token w/ Username & Password (Trusted User) | POST | _(token / external URL)_ | `RequestTokenWithCredentialsTrustedUser` | `CodebarAg\DocuWare\Requests\Authentication\OAuth\RequestTokenWithCredentialsTrustedUser` | Partial Trusted-user / on-prem variant. | `tests/Integration/Requests/Authentication/OAuth/RequestTokenWithCredentialsTrustedUserTest.php` |
 | 6 | Authentication / OAuth / 3.d.1 Obtain Windows Authorization (On Premises Only) | POST | _(token / external URL)_ | `—` | `—` | OutOfScope On-premises Windows authorization; intentionally not implemented. | `—` |
 | 7 | Authentication / OAuth / 3.d.2 Request Token /w a Windows Account (On Premises Only) | POST | _(token / external URL)_ | `—` | `—` | OutOfScope On-premises Windows account token; intentionally not implemented. | `—` |

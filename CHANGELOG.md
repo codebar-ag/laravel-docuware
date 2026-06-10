@@ -2,6 +2,36 @@
 
 All notable changes to `laravel-docuware` will be documented in this file.
 
+## Unreleased
+
+### Added
+- `dwtoken` OAuth grant: `ConfigWithDocuWareToken` + `RequestTokenWithDocuWareToken` exchange a
+  DocuWare login token for an access token (Postman "3.b Request Token w/ a DocuWare Token").
+- `TargetFileType` enum (`AUTO`, `PDF`, `ORIGINAL`) and `DownloadDocument` now accepts
+  `targetFileType` and `keepAnnotations` constructor arguments (previously hard-coded).
+- Typed annotation builder: `AnnotationBuilder` with `StampPlacement`, `StampField`, `TextEntry`,
+  `RectEntry`, `LineEntry`, `PolyLineEntry`, `DeleteEntry`, `Location`, `Point`, `Font`, plus
+  `AddDocumentAnnotations::fromBuilder()`. Covers add/update/delete annotation recipes without
+  hand-built JSON.
+- `BatchDocumentsUpdateFields::byId()`, `::bySearch()` and `::appendKeywords()` named constructors
+  that set the correct `vnd.docuware.platform.*` content type per variant.
+- Typed `DialogField` DTO and `Dialog::fieldObjects()` accessor.
+- Typed HTTP exceptions: `BadRequest` (400), `Forbidden` (403), `NotFound` (404), `Conflict` (409).
+
+### Fixed
+- `UpdateIndexValues` now honors the `forceUpdate` flag (it was silently dropped, so `ForceUpdate`
+  was always `false`).
+- `EnsureValidResponse` now throws a typed exception for **every** non-2xx response (previously
+  400/403/409 and message-less bodies passed silently) and no longer throws a `JsonException` when
+  the error body is not JSON (e.g. an HTML error page).
+- The `DocuWare` facade no longer advertises 18 `@method` helpers that were never implemented and
+  would throw when called.
+
+### Changed (breaking)
+- Removed the unused `ConnectionEnum` (vestige of the pre-OAuth cookie auth).
+- `DocuWare::url()` / `DocuWareUrl` now accept a nullable `passphrase` and fall back to the
+  `DOCUWARE_PASSPHRASE` config value.
+
 ## [v12.1.0]
 
 ### Laravel 12 Compatibility

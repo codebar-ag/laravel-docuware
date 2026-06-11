@@ -1,10 +1,8 @@
 <?php
 
-use CodebarAg\DocuWare\DTO\General\UserManagement\CreateUpdateUser\User;
-use CodebarAg\DocuWare\Events\DocuWareResponseLog;
-use CodebarAg\DocuWare\Requests\General\UserManagement\CreateUpdateUsers\CreateUser;
-use CodebarAg\DocuWare\Requests\General\UserManagement\GetModifyGroups\AddUserToAGroup;
-use CodebarAg\DocuWare\Requests\General\UserManagement\GetModifyGroups\RemoveUserFromAGroup;
+use CodebarAg\DocuWare\Data\Write\UserInput;
+use CodebarAg\DocuWare\Events\ResponseReceived;
+use CodebarAg\DocuWare\Facades\DocuWare;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Sleep;
@@ -15,30 +13,29 @@ it('removes a user from a group', function () {
 
     $timestamp = Str::substr((string) Carbon::now()->timestamp, -8);
 
-    $user = $this->connector->send(new CreateUser(new User(
+    $user = DocuWare::users()->create(UserInput::make(
         name: $timestamp.' - Test User',
         dbName: $timestamp,
         email: $timestamp.'-test@example.test',
         password: 'TestPass123!',
-    )))->dto();
+        networkId: null,
+    ));
 
     Sleep::for(5)->seconds();
 
-    $this->connector->send(new AddUserToAGroup(
-        userId: $user->id,
-        ids: [(string) config('laravel-docuware.tests.group_id')],
-    ))->dto();
+    $groupId = (string) config('laravel-docuware.tests.group_id');
+
+    DocuWare::users()->addToGroup($user->id, [$groupId]);
 
     Event::fake();
 
     Sleep::for(5)->seconds();
 
-    $response = $this->connector->send(new RemoveUserFromAGroup(
-        userId: $user->id,
-        ids: [(string) config('laravel-docuware.tests.group_id')],
-    ))->dto();
+    DocuWare::users()->removeFromGroup($user->id, [$groupId]);
 
-    expect($response->status())->toBe(200);
+    $groupIds = DocuWare::users()->groupsOf($user->id)->pluck('id');
 
-    Event::assertDispatched(DocuWareResponseLog::class);
-});
+    expect($groupIds)->not->toContain($groupId);
+
+    Event::assertDispatched(ResponseReceived::class);
+})->group('integration');

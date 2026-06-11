@@ -1,19 +1,18 @@
 <?php
 
-use CodebarAg\DocuWare\DTO\General\UserManagement\GetUsers\User;
-use CodebarAg\DocuWare\Events\DocuWareResponseLog;
-use CodebarAg\DocuWare\Requests\General\UserManagement\GetUsers\GetUserById;
-use CodebarAg\DocuWare\Requests\General\UserManagement\GetUsers\GetUsers;
+use CodebarAg\DocuWare\Data\Users\UserData;
+use CodebarAg\DocuWare\Events\ResponseReceived;
+use CodebarAg\DocuWare\Facades\DocuWare;
 use Illuminate\Support\Facades\Event;
 
 it('can get user by id', function () {
     Event::fake();
 
-    $users = $this->connector->send(new GetUsers)->dto();
+    $users = DocuWare::users()->all();
 
-    $user = $this->connector->send(new GetUserById($users->get(2)->id))->dto();
+    $user = DocuWare::users()->find($users->get(2)->id);
 
-    $this->assertInstanceOf(User::class, $user);
+    expect($user)->toBeInstanceOf(UserData::class);
 
-    Event::assertDispatched(DocuWareResponseLog::class);
-});
+    Event::assertDispatched(ResponseReceived::class);
+})->group('integration');

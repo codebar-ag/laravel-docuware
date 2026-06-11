@@ -1,19 +1,19 @@
 <?php
 
-use CodebarAg\DocuWare\DTO\FileCabinets\Dialog;
-use CodebarAg\DocuWare\Events\DocuWareResponseLog;
-use CodebarAg\DocuWare\Requests\FileCabinets\Dialogs\GetASpecificDialog;
+use CodebarAg\DocuWare\Data\FileCabinets\DialogData;
+use CodebarAg\DocuWare\Events\ResponseReceived;
+use CodebarAg\DocuWare\Facades\DocuWare;
 use Illuminate\Support\Facades\Event;
 
 it('can get a dialog', function () {
     Event::fake();
 
-    $fileCabinetId = config('laravel-docuware.tests.file_cabinet_id');
-    $dialogId = config('laravel-docuware.tests.dialog_id');
+    $dialogId = sandboxSearchDialogId($this->cabinet);
 
-    $dialog = $this->connector->send(new GetASpecificDialog($fileCabinetId, $dialogId))->dto();
+    $dialog = DocuWare::dialogs($this->cabinet)->find($dialogId);
 
-    $this->assertInstanceOf(Dialog::class, $dialog);
+    expect($dialog)->toBeInstanceOf(DialogData::class)
+        ->and($dialog->id)->toBe($dialogId);
 
-    Event::assertDispatched(DocuWareResponseLog::class);
+    Event::assertDispatched(ResponseReceived::class);
 });

@@ -1,9 +1,8 @@
 <?php
 
-use CodebarAg\DocuWare\DTO\General\UserManagement\CreateUpdateUser\User;
-use CodebarAg\DocuWare\Events\DocuWareResponseLog;
-use CodebarAg\DocuWare\Requests\General\UserManagement\CreateUpdateUsers\CreateUser;
-use CodebarAg\DocuWare\Requests\General\UserManagement\GetModifyRoles\AddUserToARole;
+use CodebarAg\DocuWare\Data\Write\UserInput;
+use CodebarAg\DocuWare\Events\ResponseReceived;
+use CodebarAg\DocuWare\Facades\DocuWare;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Sleep;
@@ -14,23 +13,23 @@ it('adds a user to a role', function () {
 
     $timestamp = Str::substr((string) Carbon::now()->timestamp, -8);
 
-    $user = $this->connector->send(new CreateUser(new User(
+    $user = DocuWare::users()->create(UserInput::make(
         name: $timestamp.' - Test User',
         dbName: $timestamp,
         email: $timestamp.'-test@example.test',
         password: 'TestPass123!',
-    )))->dto();
+        networkId: null,
+    ));
 
     Sleep::for(5)->seconds();
 
-    $response = $this->connector->send(new AddUserToARole(
-        userId: $user->id,
-        ids: [
-            (string) config('laravel-docuware.tests.role_id'),
-        ]
-    ))->dto();
+    $roleId = (string) config('laravel-docuware.tests.role_id');
 
-    expect($response->status())->toBe(200);
+    DocuWare::users()->addToRole($user->id, [$roleId]);
 
-    Event::assertDispatched(DocuWareResponseLog::class);
-});
+    $roleIds = DocuWare::users()->rolesOf($user->id)->pluck('id');
+
+    expect($roleIds)->toContain($roleId);
+
+    Event::assertDispatched(ResponseReceived::class);
+})->group('integration');

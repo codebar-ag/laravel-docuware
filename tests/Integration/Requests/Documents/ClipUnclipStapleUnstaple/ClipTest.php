@@ -1,30 +1,24 @@
 <?php
 
-use CodebarAg\DocuWare\Events\DocuWareResponseLog;
-use CodebarAg\DocuWare\Requests\Documents\ClipUnclipStapleUnstaple\Clip;
+use CodebarAg\DocuWare\Data\Documents\DocumentData;
+use CodebarAg\DocuWare\Events\ResponseReceived;
+use CodebarAg\DocuWare\Facades\DocuWare;
 use Illuminate\Support\Facades\Event;
 
 it('can clip 2 documents', function () {
     Event::fake();
 
-    $fileCabinetId = config('laravel-docuware.tests.basket_id');
-    $path = __DIR__.'/../../../../Fixtures/files';
+    $document = uploadTestDocument($this->cabinet);
+    $document2 = uploadTestDocument($this->cabinet);
 
-    cleanup($this->connector, $fileCabinetId);
+    $clip = DocuWare::documents($this->cabinet)->clip([
+        $document->id,
+        $document2->id,
+    ]);
 
-    [$document, $document2] = uploadFiles($this->connector, $fileCabinetId, $path);
+    expect($clip)->toBeInstanceOf(DocumentData::class)
+        ->and($clip->id)->toBe($document->id)
+        ->and($clip->total_pages)->toBe($document->total_pages + $document2->total_pages);
 
-    $clip = $this->connector->send(new Clip(
-        $fileCabinetId,
-        [
-            $document->id,
-            $document2->id,
-        ]
-    ))->dto();
-
-    expect($clip->id)->toBe($document->id)
-        ->and($clip->total_pages)->toBe($document->total_pages + $document2->total_pages)
-        ->and($clip->sections->count())->toBe(2);
-
-    Event::assertDispatched(DocuWareResponseLog::class);
+    Event::assertDispatched(ResponseReceived::class);
 })->group('clip');

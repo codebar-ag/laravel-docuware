@@ -11,13 +11,11 @@ use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexNumericDTO;
 use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexTableDTO;
 use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexTextDTO;
 use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\PrepareDTO;
-use CodebarAg\DocuWare\Responses\Documents\ModifyDocuments\TransferDocumentResponse;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Saloon\Contracts\Body\HasBody;
 use Saloon\Enums\Method;
 use Saloon\Http\Request;
-use Saloon\Http\Response;
 use Saloon\Traits\Body\HasJsonBody;
 
 class TransferDocument extends Request implements HasBody
@@ -79,10 +77,5 @@ class TransferDocument extends Request implements HasBody
         ];
 
         return $body;
-    }
-
-    public function createDtoFromResponse(Response $response): bool
-    {
-        return TransferDocumentResponse::fromResponse($response);
     }
 }

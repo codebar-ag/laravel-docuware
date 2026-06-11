@@ -3,13 +3,11 @@
 namespace CodebarAg\DocuWare\Requests\General\UserManagement\CreateUpdateUsers;
 
 use CodebarAg\DocuWare\Concerns\HasDocuWareCaching;
-use CodebarAg\DocuWare\DTO\General\UserManagement\GetUsers\User;
-use CodebarAg\DocuWare\Responses\General\UserManagement\GetUsers\GetUserResponse;
+use CodebarAg\DocuWare\Data\Users\UserData;
 use Saloon\CachePlugin\Contracts\Cacheable;
 use Saloon\Contracts\Body\HasBody;
 use Saloon\Enums\Method;
 use Saloon\Http\Request;
-use Saloon\Http\Response;
 use Saloon\Traits\Body\HasJsonBody;
 
 class UpdateUser extends Request implements Cacheable, HasBody
@@ -20,7 +18,7 @@ class UpdateUser extends Request implements Cacheable, HasBody
     protected Method $method = Method::POST;
 
     public function __construct(
-        protected readonly User $user,
+        protected readonly UserData $user,
     ) {}
 
     public function resolveEndpoint(): string
@@ -56,10 +54,5 @@ class UpdateUser extends Request implements Cacheable, HasBody
                 'EndDateTime' => $outOfOffice?->endDateTime?->toISOString(),
             ],
         ];
-    }
-
-    public function createDtoFromResponse(Response $response): User
-    {
-        return GetUserResponse::fromResponse($response);
     }
 }

@@ -3,12 +3,9 @@
 namespace CodebarAg\DocuWare\Requests\Workflow;
 
 use CodebarAg\DocuWare\Concerns\HasDocuWareCaching;
-use CodebarAg\DocuWare\DTO\Workflow\InstanceHistory;
-use CodebarAg\DocuWare\Responses\Workflow\GetDocumentWorkflowHistoryStepsResponse;
 use Saloon\CachePlugin\Contracts\Cacheable;
 use Saloon\Enums\Method;
 use Saloon\Http\Request;
-use Saloon\Http\Response;
 
 class GetDocumentWorkflowHistorySteps extends Request implements Cacheable
 {
@@ -24,10 +21,5 @@ class GetDocumentWorkflowHistorySteps extends Request implements Cacheable
     public function resolveEndpoint(): string
     {
         return '/Workflows/'.$this->workflowId.'/Instances/'.$this->workflowInstanceId.'/History';
-    }
-
-    public function createDtoFromResponse(Response $response): InstanceHistory
-    {
-        return GetDocumentWorkflowHistoryStepsResponse::fromResponse($response);
     }
 }

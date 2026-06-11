@@ -37,7 +37,48 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | DocuWare Credentials
+    | Default instance
+    |--------------------------------------------------------------------------
+    |
+    | The name of the instance used when no instance is given explicitly, e.g.
+    | DocuWare::documents($cabinet) proxies to DocuWare::instance(default).
+    | Single-app users never need to think about instances.
+    |
+    */
+
+    'default' => env('DOCUWARE_INSTANCE', 'default'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Instances (multi-tenancy, first-class)
+    |--------------------------------------------------------------------------
+    |
+    | Each instance is a fully isolated DocuWare connection: its own auth grant,
+    | base url, cache namespace, token store entry, and rate limiter. Add one
+    | entry per tenant/environment and select it with DocuWare::instance('name').
+    |
+    | Supported grants: 'credentials' (username/password), 'trusted_user'
+    | (impersonation), 'token' (dwtoken login-token exchange).
+    |
+    */
+
+    'instances' => [
+        'default' => [
+            'grant' => env('DOCUWARE_GRANT', 'credentials'),
+            'url' => env('DOCUWARE_URL'),
+            'username' => env('DOCUWARE_USERNAME'),
+            'password' => env('DOCUWARE_PASSWORD'),
+            'impersonate' => env('DOCUWARE_IMPERSONATE'),
+            'token' => env('DOCUWARE_TOKEN'),
+            'passphrase' => env('DOCUWARE_PASSPHRASE'),
+            'client_id' => env('DOCUWARE_CLIENT_ID', 'docuware.platform.net.client'),
+            'scope' => env('DOCUWARE_SCOPE', 'docuware.platform'),
+        ],
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | DocuWare Credentials (legacy — maps onto the "default" instance)
     |--------------------------------------------------------------------------
     |
     | Before you can communicate with the DocuWare REST-API it is necessary
@@ -95,6 +136,55 @@ return [
 
         'client_id' => env('DOCUWARE_CLIENT_ID', 'docuware.platform.net.client'),
         'scope' => env('DOCUWARE_SCOPE', 'docuware.platform'),
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Debug
+    |--------------------------------------------------------------------------
+    |
+    | Secrets are never logged, evented or thrown. When capture_bodies is true
+    | request/response bodies are attached to events for debugging — still
+    | structurally redacted (Authorization, passwords, tokens, passphrase).
+    |
+    */
+
+    'debug' => [
+        'capture_bodies' => env('DOCUWARE_DEBUG_CAPTURE_BODIES', false),
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Retry (exponential backoff + jitter)
+    |--------------------------------------------------------------------------
+    |
+    | Transient failures (429 / 5xx / timeouts) are retried with backoff,
+    | honoring the Retry-After header. Reads are always retried; writes only
+    | when safe (idempotent).
+    |
+    */
+
+    'retry' => [
+        'enabled' => env('DOCUWARE_RETRY_ENABLED', true),
+        'times' => env('DOCUWARE_RETRY_TIMES', 3),
+        'base_interval_ms' => env('DOCUWARE_RETRY_BASE_INTERVAL_MS', 250),
+        'max_interval_ms' => env('DOCUWARE_RETRY_MAX_INTERVAL_MS', 10000),
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Rate limiting (per instance)
+    |--------------------------------------------------------------------------
+    |
+    | Optional client-side limiter, isolated per instance (per-tenant). Leave
+    | disabled unless your DocuWare instance enforces a known request budget.
+    |
+    */
+
+    'rate_limit' => [
+        'enabled' => env('DOCUWARE_RATE_LIMIT_ENABLED', false),
+        'allow' => env('DOCUWARE_RATE_LIMIT_ALLOW', 60),
+        'per_seconds' => env('DOCUWARE_RATE_LIMIT_PER_SECONDS', 60),
     ],
 
     /*

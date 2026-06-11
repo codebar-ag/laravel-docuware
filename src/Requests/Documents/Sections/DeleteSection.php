@@ -3,11 +3,9 @@
 namespace CodebarAg\DocuWare\Requests\Documents\Sections;
 
 use CodebarAg\DocuWare\Concerns\HasDocuWareCaching;
-use CodebarAg\DocuWare\Responses\Documents\Sections\DeleteSectionResponse;
 use Saloon\CachePlugin\Contracts\Cacheable;
 use Saloon\Enums\Method;
 use Saloon\Http\Request;
-use Saloon\Http\Response;
 
 class DeleteSection extends Request implements Cacheable
 {
@@ -23,10 +21,5 @@ class DeleteSection extends Request implements Cacheable
     public function resolveEndpoint(): string
     {
         return '/FileCabinets/'.$this->fileCabinetId.'/Sections/'.$this->sectionId;
-    }
-
-    public function createDtoFromResponse(Response $response): bool
-    {
-        return DeleteSectionResponse::fromResponse($response);
     }
 }

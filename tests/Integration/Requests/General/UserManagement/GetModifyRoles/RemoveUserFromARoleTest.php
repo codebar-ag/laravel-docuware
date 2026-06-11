@@ -1,10 +1,8 @@
 <?php
 
-use CodebarAg\DocuWare\DTO\General\UserManagement\CreateUpdateUser\User;
-use CodebarAg\DocuWare\Events\DocuWareResponseLog;
-use CodebarAg\DocuWare\Requests\General\UserManagement\CreateUpdateUsers\CreateUser;
-use CodebarAg\DocuWare\Requests\General\UserManagement\GetModifyRoles\AddUserToARole;
-use CodebarAg\DocuWare\Requests\General\UserManagement\GetModifyRoles\RemoveUserFromARole;
+use CodebarAg\DocuWare\Data\Write\UserInput;
+use CodebarAg\DocuWare\Events\ResponseReceived;
+use CodebarAg\DocuWare\Facades\DocuWare;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Sleep;
@@ -15,30 +13,29 @@ it('removes a user from a role', function () {
 
     $timestamp = Str::substr((string) Carbon::now()->timestamp, -8);
 
-    $user = $this->connector->send(new CreateUser(new User(
+    $user = DocuWare::users()->create(UserInput::make(
         name: $timestamp.' - Test User',
         dbName: $timestamp,
         email: $timestamp.'-test@example.test',
         password: 'TestPass123!',
-    )))->dto();
+        networkId: null,
+    ));
 
     Sleep::for(5)->seconds();
 
-    $this->connector->send(new AddUserToARole(
-        userId: $user->id,
-        ids: [(string) config('laravel-docuware.tests.role_id')],
-    ))->dto();
+    $roleId = (string) config('laravel-docuware.tests.role_id');
+
+    DocuWare::users()->addToRole($user->id, [$roleId]);
 
     Event::fake();
 
     Sleep::for(5)->seconds();
 
-    $response = $this->connector->send(new RemoveUserFromARole(
-        userId: $user->id,
-        ids: [(string) config('laravel-docuware.tests.role_id')],
-    ))->dto();
+    DocuWare::users()->removeFromRole($user->id, [$roleId]);
 
-    expect($response->status())->toBe(200);
+    $roleIds = DocuWare::users()->rolesOf($user->id)->pluck('id');
 
-    Event::assertDispatched(DocuWareResponseLog::class);
-});
+    expect($roleIds)->not->toContain($roleId);
+
+    Event::assertDispatched(ResponseReceived::class);
+})->group('integration');

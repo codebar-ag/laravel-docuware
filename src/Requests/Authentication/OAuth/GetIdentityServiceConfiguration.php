@@ -3,13 +3,8 @@
 namespace CodebarAg\DocuWare\Requests\Authentication\OAuth;
 
 use CodebarAg\DocuWare\Concerns\HasDocuWareCaching;
-use CodebarAg\DocuWare\DTO\Authentication\OAuth\IdentityServiceConfiguration;
-use CodebarAg\DocuWare\Events\DocuWareResponseLog;
-use CodebarAg\DocuWare\Support\EnsureValidResponse;
-use CodebarAg\DocuWare\Support\ResponseBody;
 use Saloon\CachePlugin\Contracts\Cacheable;
 use Saloon\Enums\Method;
-use Saloon\Http\Response;
 use Saloon\Http\SoloRequest;
 
 class GetIdentityServiceConfiguration extends SoloRequest implements Cacheable
@@ -32,14 +27,5 @@ class GetIdentityServiceConfiguration extends SoloRequest implements Cacheable
         return [
             'Accept' => 'application/json',
         ];
-    }
-
-    public function createDtoFromResponse(Response $response): IdentityServiceConfiguration
-    {
-        event(new DocuWareResponseLog($response));
-
-        EnsureValidResponse::from($response);
-
-        return IdentityServiceConfiguration::make(ResponseBody::toArray($response));
     }
 }

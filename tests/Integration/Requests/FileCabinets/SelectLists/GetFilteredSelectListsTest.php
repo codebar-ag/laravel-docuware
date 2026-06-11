@@ -1,24 +1,21 @@
 <?php
 
-use CodebarAg\DocuWare\Requests\FileCabinets\SelectLists\GetFilteredSelectLists;
-use CodebarAg\DocuWare\Requests\FileCabinets\SelectLists\GetSelectLists;
+use CodebarAg\DocuWare\Facades\DocuWare;
+use Illuminate\Support\Collection;
 
 it('returns a select list for a discovered dialog field', function () {
-    $fileCabinetId = config('laravel-docuware.tests.file_cabinet_id');
-    $dialogId = sandboxSearchDialogId($this->connector);
-    $keywordField = sandboxFieldName($this->connector, 'Keyword');
+    $dialogId = sandboxSearchDialogId($this->cabinet);
+    $keywordField = sandboxFieldName($this->cabinet, 'Keyword');
 
-    $response = $this->connector->send(new GetSelectLists($fileCabinetId, $dialogId, $keywordField));
+    $values = DocuWare::selectLists($this->cabinet)->get($dialogId, $keywordField);
 
-    expect($response->successful())->toBeTrue('HTTP '.$response->status().': '.$response->body());
-    expect($response->dto())->toBeArray();
-})->group('live');
+    expect($values)->toBeInstanceOf(Collection::class);
+});
 
 it('returns a filtered select list using a DialogExpression', function () {
-    $fileCabinetId = config('laravel-docuware.tests.file_cabinet_id');
-    $dialogId = sandboxSearchDialogId($this->connector);
-    $keywordField = sandboxFieldName($this->connector, 'Keyword');
-    $textField = sandboxFieldName($this->connector, 'Text');
+    $dialogId = sandboxSearchDialogId($this->cabinet);
+    $keywordField = sandboxFieldName($this->cabinet, 'Keyword');
+    $textField = sandboxFieldName($this->cabinet, 'Text');
 
     $dialogExpression = [
         'Operation' => 'And',
@@ -27,11 +24,7 @@ it('returns a filtered select list using a DialogExpression', function () {
         ],
     ];
 
-    $response = recordFixture(
-        new GetFilteredSelectLists($fileCabinetId, $dialogId, $keywordField, $dialogExpression),
-        'file-cabinets/select-lists/get-filtered-select-lists',
-    );
+    $values = DocuWare::selectLists($this->cabinet)->filtered($dialogId, $keywordField, $dialogExpression);
 
-    expect($response->successful())->toBeTrue('HTTP '.$response->status().': '.$response->body());
-    expect($response->json())->toBeArray();
-})->group('live');
+    expect($values)->toBeInstanceOf(Collection::class);
+});

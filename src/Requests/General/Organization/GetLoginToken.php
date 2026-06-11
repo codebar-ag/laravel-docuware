@@ -3,12 +3,10 @@
 namespace CodebarAg\DocuWare\Requests\General\Organization;
 
 use CodebarAg\DocuWare\Concerns\HasDocuWareCaching;
-use CodebarAg\DocuWare\Responses\General\Organization\RequestLoginTokenResponse;
 use Saloon\CachePlugin\Contracts\Cacheable;
 use Saloon\Contracts\Body\HasBody;
 use Saloon\Enums\Method;
 use Saloon\Http\Request;
-use Saloon\Http\Response;
 use Saloon\Traits\Body\HasJsonBody;
 
 class GetLoginToken extends Request implements Cacheable, HasBody
@@ -42,10 +40,5 @@ class GetLoginToken extends Request implements Cacheable, HasBody
             'Usage' => $this->usage,
             'Lifetime' => $this->lifetime,
         ];
-    }
-
-    public function createDtoFromResponse(Response $response): string
-    {
-        return RequestLoginTokenResponse::fromResponse($response);
     }
 }

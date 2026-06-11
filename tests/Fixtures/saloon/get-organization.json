@@ -3,14 +3,14 @@
     "headers": {
         "Content-Length": "1480",
         "Content-Type": "application\/json; charset=utf-8",
-        "Date": "Thu, 11 Jun 2026 02:23:15 GMT",
+        "Date": "Thu, 11 Jun 2026 10:07:46 GMT",
         "Cache-Control": "max-age=0, private",
         "Set-Cookie": "REDACTED",
         "Vary": "Cookie,Accept,Accept-Encoding",
         "Strict-Transport-Security": "max-age=31536000; includeSubDomains; preload",
         "Server-Timing": [
-            "proxy-start;dur=2.4",
-            "proxy-backend-header;dur=153.8"
+            "proxy-start;dur=6.1",
+            "proxy-backend-header;dur=184.9"
         ],
         "request-context": "appId=cid-v1:b9ba619d-451d-4516-894f-2bcd6dd771dc",
         "Content-Security-Policy": "script-src https:\/\/*.docuware.cloud https:\/\/saas.docuware.com https:\/\/go.docuware.com https:\/\/widget.surveymonkey.com https:\/\/secure.surveymonkey.com 'self' blob: dwcloudstatic202310.azureedge.net dwcloudstatic.azureedge.net cdnjs.cloudflare.com ajax.aspnetcdn.com ajax.googleapis.com js.monitor.azure.com *.msecnd.net https:\/\/*.userlane.com use.fontawesome.com 'unsafe-inline' 'unsafe-eval'; report-uri https:\/\/dwcsp.azurewebsites.net\/csp",
@@ -18,7 +18,7 @@
         "Referrer-Policy": "strict-origin",
         "X-Content-Type-Options": "nosniff",
         "x-robots-tag": "noindex, nofollow",
-        "X-Served-By": "platformcore-5c9d656b84-tzjrq"
+        "X-Served-By": "platformcore-698f9fb975-cp5pv"
     },
     "data": "{\"Organization\":[{\"Links\":[{\"rel\":\"filecabinets\",\"href\":\"\/DocuWare\/Platform\/FileCabinets\"},{\"rel\":\"self\",\"href\":\"\/DocuWare\/Platform\/Organization\"},{\"rel\":\"users\",\"href\":\"\/DocuWare\/Platform\/Organization\/Users\"},{\"rel\":\"dialogs\",\"href\":\"\/DocuWare\/Platform\/Organization\/Dialogs\"},{\"rel\":\"roles\",\"href\":\"\/DocuWare\/Platform\/Organization\/Roles\"},{\"rel\":\"groups\",\"href\":\"\/DocuWare\/Platform\/Organization\/Groups\"},{\"rel\":\"createGroup\",\"href\":\"\/DocuWare\/Platform\/Organization\/Groups\"},{\"rel\":\"substitutionLists\",\"href\":\"\/DocuWare\/Platform\/Organization\/SubstitutionLists\"},{\"rel\":\"webSettings\",\"href\":\"\/DocuWare\/Platform\/Organization\/WebSettings\"},{\"rel\":\"loginToken\",\"href\":\"\/DocuWare\/Platform\/Organization\/LoginToken\"},{\"rel\":\"userInfo\",\"href\":\"\/DocuWare\/Platform\/Organization\/UserInfo\"},{\"rel\":\"selectListInfos\",\"href\":\"\/DocuWare\/Platform\/Organization\/SelectLists\"},{\"rel\":\"multiColSelectListInfos\",\"href\":\"\/DocuWare\/Platform\/Organization\/MultiColSelectLists\"},{\"rel\":\"workflows\",\"href\":\"\/DocuWare\/Platform\/Workflow\/Workflows\"},{\"rel\":\"controllerWorkflows\",\"href\":\"\/DocuWare\/Platform\/Workflow\/ControllerWorkflows\"},{\"rel\":\"designerWorkflows\",\"href\":\"\/DocuWare\/Platform\/Workflow\/DesignerWorkflows\"},{\"rel\":\"workflowRequests\",\"href\":\"\/DocuWare\/Platform\/Workflow\/RequestsWorkflows\"},{\"rel\":\"trashBin\",\"href\":\"\/DocuWare\/Platform\/TrashBin\"}],\"Name\":\"MCP  GmbH\",\"Id\":\"1\",\"Guid\":\"70c06589-0590-4cc6-92c7-1645274caebc\",\"IsTwoStepVerificationEnabled\":false,\"IsTwoStepVerificationRequired\":false}]}",
     "context": []

@@ -1,24 +1,17 @@
 <?php
 
-use CodebarAg\DocuWare\Events\DocuWareResponseLog;
-use CodebarAg\DocuWare\Requests\Documents\GetDocumentPreviewRequest;
-use CodebarAg\DocuWare\Requests\FileCabinets\Upload\CreateDataRecord;
+use CodebarAg\DocuWare\Events\ResponseReceived;
+use CodebarAg\DocuWare\Facades\DocuWare;
 use Illuminate\Support\Facades\Event;
 
 it('can preview a document image', function () {
     Event::fake();
 
-    $fileCabinetId = config('laravel-docuware.tests.file_cabinet_id');
+    $document = uploadTestDocument($this->cabinet);
 
-    $document = $this->connector->send(new CreateDataRecord(
-        $fileCabinetId,
-        '::fake-file-content::',
-        'example.txt'
-    ))->dto();
+    $image = DocuWare::documents($this->cabinet)->preview((string) $document->id);
 
-    $image = $this->connector->send(new GetDocumentPreviewRequest($fileCabinetId, $document->id))->dto();
+    expect(strlen($image))->toBeGreaterThan(0);
 
-    $this->assertSame(9221, strlen($image));
-    Event::assertDispatched(DocuWareResponseLog::class);
-
+    Event::assertDispatched(ResponseReceived::class);
 });

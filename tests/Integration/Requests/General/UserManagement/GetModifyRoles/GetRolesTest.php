@@ -1,22 +1,22 @@
 <?php
 
-use CodebarAg\DocuWare\DTO\General\UserManagement\GetModifyRoles\Role;
-use CodebarAg\DocuWare\Events\DocuWareResponseLog;
-use CodebarAg\DocuWare\Requests\General\UserManagement\GetModifyRoles\GetRoles;
+use CodebarAg\DocuWare\Data\Users\RoleData;
+use CodebarAg\DocuWare\Events\ResponseReceived;
+use CodebarAg\DocuWare\Facades\DocuWare;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Event;
 
-it('can list groups', function () {
+it('can list roles', function () {
     Event::fake();
 
-    $roles = $this->connector->send(new GetRoles)->dto();
+    $roles = DocuWare::roles()->all();
 
-    $this->assertInstanceOf(Collection::class, $roles);
+    expect($roles)->toBeInstanceOf(Collection::class)
+        ->and($roles)->not->toBeEmpty();
 
     foreach ($roles as $role) {
-        $this->assertInstanceOf(Role::class, $role);
+        expect($role)->toBeInstanceOf(RoleData::class);
     }
 
-    $this->assertNotCount(0, $roles);
-    Event::assertDispatched(DocuWareResponseLog::class);
-});
+    Event::assertDispatched(ResponseReceived::class);
+})->group('integration');

@@ -3,13 +3,10 @@
 namespace CodebarAg\DocuWare\Requests\Search;
 
 use CodebarAg\DocuWare\Concerns\HasDocuWareCaching;
-use CodebarAg\DocuWare\DTO\Documents\DocumentPaginator;
-use CodebarAg\DocuWare\Responses\Search\GetSearchResponse;
 use Saloon\CachePlugin\Contracts\Cacheable;
 use Saloon\Contracts\Body\HasBody;
 use Saloon\Enums\Method;
 use Saloon\Http\Request;
-use Saloon\Http\Response;
 use Saloon\Traits\Body\HasJsonBody;
 
 class GetSearchRequest extends Request implements Cacheable, HasBody
@@ -72,10 +69,5 @@ class GetSearchRequest extends Request implements Cacheable, HasBody
             'IncludeSuggestions' => config('laravel-docuware.configurations.search.include_suggestions', false),
             'AdditionalResultFields' => config('laravel-docuware.configurations.search.additional_result_fields', []),
         ];
-    }
-
-    public function createDtoFromResponse(Response $response): DocumentPaginator
-    {
-        return GetSearchResponse::fromResponse($response, $this->page, $this->perPage);
     }
 }

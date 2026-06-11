@@ -1,23 +1,21 @@
 <?php
 
-use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexTextDTO;
-use CodebarAg\DocuWare\Events\DocuWareResponseLog;
-use CodebarAg\DocuWare\Requests\FileCabinets\Batch\BatchDocumentsUpdateFields;
-use CodebarAg\DocuWare\Requests\FileCabinets\Upload\CreateDataRecord;
+use CodebarAg\DocuWare\Data\Write\IndexFields;
+use CodebarAg\DocuWare\Events\ResponseReceived;
+use CodebarAg\DocuWare\Facades\DocuWare;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Sleep;
 
 it('runs a batch index update by document id', function () {
     Event::fake();
 
-    $fileCabinetId = config('laravel-docuware.tests.file_cabinet_id');
+    $textField = sandboxFieldName($this->cabinet, 'Text');
 
-    $document = $this->connector->send(new CreateDataRecord(
-        $fileCabinetId,
-        '::fake-file-content::',
-        'example.txt',
-        collect([IndexTextDTO::make('DOCUMENT_LABEL', 'batch-test')]),
-    ))->dto();
+    $document = DocuWare::documents($this->cabinet)->store(
+        fileContent: '::fake-file-content::',
+        fileName: 'example.txt',
+        indexes: IndexFields::make()->text($textField, 'batch-test'),
+    );
 
     Sleep::for(2)->seconds();
 
@@ -29,7 +27,7 @@ it('runs a batch index update by document id', function () {
         'Data' => [
             'Field' => [
                 [
-                    'FieldName' => 'DOCUMENT_LABEL',
+                    'FieldName' => $textField,
                     'Item' => 'batch-updated',
                 ],
             ],
@@ -40,10 +38,7 @@ it('runs a batch index update by document id', function () {
         ],
     ];
 
-    $this->connector->send(new BatchDocumentsUpdateFields(
-        $fileCabinetId,
-        $payload,
-    ))->dto();
+    DocuWare::documents($this->cabinet)->batchUpdate($payload);
 
-    Event::assertDispatched(DocuWareResponseLog::class);
+    Event::assertDispatched(ResponseReceived::class);
 });

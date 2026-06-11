@@ -3,11 +3,9 @@
 namespace CodebarAg\DocuWare\Requests\Documents\ApplicationProperties;
 
 use CodebarAg\DocuWare\Concerns\HasDocuWareCaching;
-use CodebarAg\DocuWare\Responses\Documents\ApplicationProperties\GetApplicationPropertiesResponse;
 use Saloon\CachePlugin\Contracts\Cacheable;
 use Saloon\Enums\Method;
 use Saloon\Http\Request;
-use Saloon\Http\Response;
 
 class GetApplicationProperties extends Request implements Cacheable
 {
@@ -23,10 +21,5 @@ class GetApplicationProperties extends Request implements Cacheable
     public function resolveEndpoint(): string
     {
         return '/FileCabinets/'.$this->fileCabinetId.'/Documents/'.$this->documentId.'/DocumentApplicationProperties';
-    }
-
-    public function createDtoFromResponse(Response $response): mixed
-    {
-        return GetApplicationPropertiesResponse::fromResponse($response);
     }
 }

@@ -1,20 +1,16 @@
 <?php
 
-use CodebarAg\DocuWare\Requests\FileCabinets\SelectLists\GetSelectLists;
+use CodebarAg\DocuWare\Facades\DocuWare;
+use Illuminate\Support\Collection;
 
 it('can list values for a select list of a discovered field', function () {
-    $fileCabinetId = config('laravel-docuware.tests.file_cabinet_id');
-    $dialogId = sandboxSearchDialogId($this->connector);
-    $keywordField = sandboxFieldName($this->connector, 'Keyword');
+    $dialogId = sandboxSearchDialogId($this->cabinet);
+    $keywordField = sandboxFieldName($this->cabinet, 'Keyword');
 
     // Seed a value so the dynamic select list has something to return.
-    uploadTestDocument($this->connector);
+    uploadTestDocument($this->cabinet);
 
-    $response = recordFixture(
-        new GetSelectLists($fileCabinetId, $dialogId, $keywordField),
-        'file-cabinets/select-lists/get-select-lists',
-    );
+    $values = DocuWare::selectLists($this->cabinet)->get($dialogId, $keywordField);
 
-    expect($response->successful())->toBeTrue('HTTP '.$response->status().': '.$response->body());
-    expect($response->dto())->toBeArray();
-})->group('live');
+    expect($values)->toBeInstanceOf(Collection::class);
+});

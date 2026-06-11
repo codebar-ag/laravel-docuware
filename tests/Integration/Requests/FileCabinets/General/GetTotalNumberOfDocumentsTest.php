@@ -1,18 +1,18 @@
 <?php
 
-use CodebarAg\DocuWare\Requests\FileCabinets\General\GetTotalNumberOfDocuments;
+use CodebarAg\DocuWare\Facades\DocuWare;
+use Illuminate\Support\Sleep;
 
 it('can get a total count of documents', function () {
-    $fileCabinetId = config('laravel-docuware.tests.file_cabinet_id');
-    $dialogId = sandboxSearchDialogId($this->connector);
-
-    $before = $this->connector->send(new GetTotalNumberOfDocuments($fileCabinetId, $dialogId))->dto();
+    $before = DocuWare::documents($this->cabinet)->search()->count();
 
     expect($before)->toBeInt();
 
-    uploadTestDocument($this->connector);
+    uploadTestDocument($this->cabinet);
 
-    $after = $this->connector->send(new GetTotalNumberOfDocuments($fileCabinetId, $dialogId))->dto();
+    Sleep::for(2)->seconds(); // Wait for the document to be indexed.
+
+    $after = DocuWare::documents($this->cabinet)->search()->count();
 
     expect($after)->toBe($before + 1);
-})->group('live');
+});

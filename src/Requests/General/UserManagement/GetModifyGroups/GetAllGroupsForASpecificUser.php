@@ -3,13 +3,9 @@
 namespace CodebarAg\DocuWare\Requests\General\UserManagement\GetModifyGroups;
 
 use CodebarAg\DocuWare\Concerns\HasDocuWareCaching;
-use CodebarAg\DocuWare\DTO\General\UserManagement\GetModifyGroups\Group;
-use CodebarAg\DocuWare\Responses\General\UserManagement\GetModifyGroups\GetGroupsResponse;
-use Illuminate\Support\Collection;
 use Saloon\CachePlugin\Contracts\Cacheable;
 use Saloon\Enums\Method;
 use Saloon\Http\Request;
-use Saloon\Http\Response;
 
 class GetAllGroupsForASpecificUser extends Request implements Cacheable
 {
@@ -35,13 +31,5 @@ class GetAllGroupsForASpecificUser extends Request implements Cacheable
             'Name' => $this->name,
             'Active' => $this->active,
         ];
-    }
-
-    /**
-     * @return Collection<int, Group>
-     */
-    public function createDtoFromResponse(Response $response): Collection
-    {
-        return GetGroupsResponse::fromResponse($response);
     }
 }

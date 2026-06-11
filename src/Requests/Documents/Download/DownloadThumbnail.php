@@ -3,11 +3,9 @@
 namespace CodebarAg\DocuWare\Requests\Documents\Download;
 
 use CodebarAg\DocuWare\Concerns\HasDocuWareCaching;
-use CodebarAg\DocuWare\Responses\Documents\Download\DownloadThumbnailResponse;
 use Saloon\CachePlugin\Contracts\Cacheable;
 use Saloon\Enums\Method;
 use Saloon\Http\Request;
-use Saloon\Http\Response;
 
 class DownloadThumbnail extends Request implements Cacheable
 {
@@ -31,10 +29,5 @@ class DownloadThumbnail extends Request implements Cacheable
         return [
             'page' => $this->page,
         ];
-    }
-
-    public function createDtoFromResponse(Response $response): mixed
-    {
-        return DownloadThumbnailResponse::fromResponse($response);
     }
 }

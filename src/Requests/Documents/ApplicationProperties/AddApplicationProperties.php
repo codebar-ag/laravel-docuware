@@ -3,12 +3,10 @@
 namespace CodebarAg\DocuWare\Requests\Documents\ApplicationProperties;
 
 use CodebarAg\DocuWare\Concerns\HasDocuWareCaching;
-use CodebarAg\DocuWare\Responses\Documents\ApplicationProperties\GetApplicationPropertiesResponse;
 use Saloon\CachePlugin\Contracts\Cacheable;
 use Saloon\Contracts\Body\HasBody;
 use Saloon\Enums\Method;
 use Saloon\Http\Request;
-use Saloon\Http\Response;
 use Saloon\Traits\Body\HasJsonBody;
 
 class AddApplicationProperties extends Request implements Cacheable, HasBody
@@ -40,10 +38,5 @@ class AddApplicationProperties extends Request implements Cacheable, HasBody
         return [
             'DocumentApplicationProperty' => $this->properties,
         ];
-    }
-
-    public function createDtoFromResponse(Response $response): mixed
-    {
-        return GetApplicationPropertiesResponse::fromResponse($response);
     }
 }

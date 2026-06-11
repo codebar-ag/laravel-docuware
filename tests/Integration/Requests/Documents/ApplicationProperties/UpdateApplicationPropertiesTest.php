@@ -1,40 +1,29 @@
 <?php
 
-use CodebarAg\DocuWare\Events\DocuWareResponseLog;
-use CodebarAg\DocuWare\Requests\Documents\ApplicationProperties\AddApplicationProperties;
-use CodebarAg\DocuWare\Requests\Documents\ApplicationProperties\UpdateApplicationProperties;
-use CodebarAg\DocuWare\Requests\FileCabinets\Upload\CreateDataRecord;
-use Illuminate\Support\Collection;
+use CodebarAg\DocuWare\Events\ResponseReceived;
+use CodebarAg\DocuWare\Facades\DocuWare;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Event;
 
 it('updates application properties on a document', function () {
     Event::fake();
 
-    $fileCabinetId = config('laravel-docuware.tests.file_cabinet_id');
+    $document = uploadTestDocument($this->cabinet);
 
-    $document = $this->connector->send(new CreateDataRecord(
-        $fileCabinetId,
-        '::fake-file-content::',
-        'example.txt'
-    ))->dto();
+    DocuWare::documents($this->cabinet)->addApplicationProperties((string) $document->id, [
+        ['Name' => 'Key1', 'Value' => 'original'],
+        ['Name' => 'Key2', 'Value' => 'keep'],
+    ]);
 
-    $this->connector->send(new AddApplicationProperties(
-        $fileCabinetId,
-        $document->id,
-        [
-            ['Name' => 'Key1', 'Value' => 'original'],
-            ['Name' => 'Key2', 'Value' => 'keep'],
-        ],
-    ))->dto();
+    $updated = collect(Arr::get(
+        DocuWare::documents($this->cabinet)->updateApplicationProperties((string) $document->id, [
+            ['Name' => 'Key1', 'Value' => 'updated'],
+        ]),
+        'Property',
+        [],
+    ))->sortBy('Name');
 
-    $updated = $this->connector->send(new UpdateApplicationProperties(
-        $fileCabinetId,
-        $document->id,
-        [['Name' => 'Key1', 'Value' => 'updated']],
-    ))->dto()->sortBy('Name');
+    expect($updated->firstWhere('Name', 'Key1')['Value'])->toBe('updated');
 
-    expect($updated)->toBeInstanceOf(Collection::class)
-        ->and($updated->firstWhere('Name', 'Key1')['Value'])->toBe('updated');
-
-    Event::assertDispatched(DocuWareResponseLog::class);
+    Event::assertDispatched(ResponseReceived::class);
 });

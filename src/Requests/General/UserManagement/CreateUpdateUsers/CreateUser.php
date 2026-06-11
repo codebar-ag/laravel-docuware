@@ -4,13 +4,10 @@ namespace CodebarAg\DocuWare\Requests\General\UserManagement\CreateUpdateUsers;
 
 use CodebarAg\DocuWare\Concerns\HasDocuWareCaching;
 use CodebarAg\DocuWare\DTO\General\UserManagement\CreateUpdateUser\User;
-use CodebarAg\DocuWare\DTO\General\UserManagement\GetUsers\User as GetUser;
-use CodebarAg\DocuWare\Responses\General\UserManagement\GetUsers\GetUserResponse;
 use Saloon\CachePlugin\Contracts\Cacheable;
 use Saloon\Contracts\Body\HasBody;
 use Saloon\Enums\Method;
 use Saloon\Http\Request;
-use Saloon\Http\Response;
 use Saloon\Traits\Body\HasJsonBody;
 
 class CreateUser extends Request implements Cacheable, HasBody
@@ -48,10 +45,5 @@ class CreateUser extends Request implements Cacheable, HasBody
             'NetworkId' => $this->user->networkId,
             'Password' => $this->user->password,
         ];
-    }
-
-    public function createDtoFromResponse(Response $response): GetUser
-    {
-        return GetUserResponse::fromResponse($response);
     }
 }

@@ -2,13 +2,10 @@
 
 namespace CodebarAg\DocuWare\Requests\FileCabinets\Upload;
 
-use CodebarAg\DocuWare\DTO\Section;
-use CodebarAg\DocuWare\Responses\FileCabinets\Upload\AppendSinglePDFToADocumentResponse;
 use Saloon\Contracts\Body\HasBody;
 use Saloon\Data\MultipartValue;
 use Saloon\Enums\Method;
 use Saloon\Http\Request;
-use Saloon\Http\Response;
 use Saloon\Traits\Body\HasMultipartBody;
 
 class AppendASinglePDFToADocument extends Request implements HasBody
@@ -45,10 +42,5 @@ class AppendASinglePDFToADocument extends Request implements HasBody
         return [
             new MultipartValue(name: 'file', value: $this->fileContent, filename: $this->fileName),
         ];
-    }
-
-    public function createDtoFromResponse(Response $response): Section
-    {
-        return AppendSinglePDFToADocumentResponse::fromResponse($response);
     }
 }

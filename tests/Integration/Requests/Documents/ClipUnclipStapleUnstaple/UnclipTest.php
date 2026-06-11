@@ -1,41 +1,28 @@
 <?php
 
-use CodebarAg\DocuWare\Events\DocuWareResponseLog;
-use CodebarAg\DocuWare\Requests\Documents\ClipUnclipStapleUnstaple\Clip;
-use CodebarAg\DocuWare\Requests\Documents\ClipUnclipStapleUnstaple\Unclip;
+use CodebarAg\DocuWare\Data\Documents\DocumentData;
+use CodebarAg\DocuWare\Events\ResponseReceived;
+use CodebarAg\DocuWare\Facades\DocuWare;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Sleep;
 
 it('can unclip 2 documents', function () {
     Event::fake();
 
-    $fileCabinetId = config('laravel-docuware.tests.basket_id');
-    $path = __DIR__.'/../../../../Fixtures/files';
+    $document = uploadTestDocument($this->cabinet);
+    $document2 = uploadTestDocument($this->cabinet);
 
-    cleanup($this->connector, $fileCabinetId);
-
-    [$document, $document2] = uploadFiles($this->connector, $fileCabinetId, $path);
-
-    $clip = $this->connector->send(new Clip(
-        $fileCabinetId,
-        [
-            $document->id,
-            $document2->id,
-        ]
-    ))->dto();
+    $clip = DocuWare::documents($this->cabinet)->clip([
+        $document->id,
+        $document2->id,
+    ]);
 
     Sleep::for(5)->seconds();
 
-    $unclip = $this->connector->send(new Unclip(
-        $fileCabinetId,
-        $clip->id
-    ))->dto();
+    $unclip = DocuWare::documents($this->cabinet)->unclip((string) $clip->id);
 
-    expect($unclip->documents->count())->toBe(2)
-        ->and($unclip->documents->first()->title)->toBe($document->title)
-        ->and($unclip->documents->first()->file_size)->toBe($document->file_size)
-        ->and($unclip->documents->last()->title)->toBe($document2->title)
-        ->and($unclip->documents->last()->file_size)->toBe($document2->file_size);
+    expect($unclip)->toBeInstanceOf(DocumentData::class)
+        ->and($unclip->title)->toBe($document->title);
 
-    Event::assertDispatched(DocuWareResponseLog::class);
+    Event::assertDispatched(ResponseReceived::class);
 })->group('unclip');

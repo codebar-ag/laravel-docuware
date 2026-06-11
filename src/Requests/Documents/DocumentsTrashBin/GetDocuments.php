@@ -3,13 +3,10 @@
 namespace CodebarAg\DocuWare\Requests\Documents\DocumentsTrashBin;
 
 use CodebarAg\DocuWare\Concerns\HasDocuWareCaching;
-use CodebarAg\DocuWare\DTO\Documents\TrashDocumentPaginator;
-use CodebarAg\DocuWare\Responses\Search\GetTrashSearchResponse;
 use Saloon\CachePlugin\Contracts\Cacheable;
 use Saloon\Contracts\Body\HasBody;
 use Saloon\Enums\Method;
 use Saloon\Http\Request;
-use Saloon\Http\Response;
 use Saloon\Traits\Body\HasJsonBody;
 
 class GetDocuments extends Request implements Cacheable, HasBody
@@ -57,10 +54,5 @@ class GetDocuments extends Request implements Cacheable, HasBody
             'IncludeSuggestions' => config('laravel-docuware.configurations.search.include_suggestions', false),
             'AdditionalResultFields' => config('laravel-docuware.configurations.search.additional_result_fields', []),
         ];
-    }
-
-    public function createDtoFromResponse(Response $response): TrashDocumentPaginator
-    {
-        return GetTrashSearchResponse::fromResponse($response, $this->page, $this->perPage);
     }
 }

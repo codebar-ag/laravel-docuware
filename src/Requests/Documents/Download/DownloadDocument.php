@@ -4,11 +4,9 @@ namespace CodebarAg\DocuWare\Requests\Documents\Download;
 
 use CodebarAg\DocuWare\Concerns\HasDocuWareCaching;
 use CodebarAg\DocuWare\Enums\TargetFileType;
-use CodebarAg\DocuWare\Responses\Documents\Download\DownloadDocumentResponse;
 use Saloon\CachePlugin\Contracts\Cacheable;
 use Saloon\Enums\Method;
 use Saloon\Http\Request;
-use Saloon\Http\Response;
 
 class DownloadDocument extends Request implements Cacheable
 {
@@ -37,10 +35,5 @@ class DownloadDocument extends Request implements Cacheable
             'targetFileType' => $this->targetFileType->value,
             'keepAnnotations' => $this->keepAnnotations ? 'true' : 'false',
         ];
-    }
-
-    public function createDtoFromResponse(Response $response): mixed
-    {
-        return DownloadDocumentResponse::fromResponse($response);
     }
 }

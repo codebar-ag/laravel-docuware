@@ -3,12 +3,9 @@
 namespace CodebarAg\DocuWare\Requests\FileCabinets\Search;
 
 use CodebarAg\DocuWare\Concerns\HasDocuWareCaching;
-use CodebarAg\DocuWare\DTO\Documents\DocumentPaginator;
-use CodebarAg\DocuWare\Responses\FileCabinets\Search\GetDocumentsFromAFileCabinetResponse;
 use Saloon\CachePlugin\Contracts\Cacheable;
 use Saloon\Enums\Method;
 use Saloon\Http\Request;
-use Saloon\Http\Response;
 
 class GetDocumentsFromAFileCabinet extends Request implements Cacheable
 {
@@ -38,10 +35,5 @@ class GetDocumentsFromAFileCabinet extends Request implements Cacheable
     public function resolveEndpoint(): string
     {
         return '/FileCabinets/'.$this->fileCabinetId.'/Documents';
-    }
-
-    public function createDtoFromResponse(Response $response): DocumentPaginator
-    {
-        return GetDocumentsFromAFileCabinetResponse::fromResponse($response, $this->page, $this->perPage);
     }
 }

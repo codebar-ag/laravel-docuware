@@ -1,54 +1,37 @@
 <?php
 
-use CodebarAg\DocuWare\Events\DocuWareResponseLog;
-use CodebarAg\DocuWare\Requests\FileCabinets\Upload\CreateDataRecord;
-use CodebarAg\DocuWare\Requests\Workflow\GetDocumentWorkflowHistory;
-use CodebarAg\DocuWare\Requests\Workflow\GetDocumentWorkflowHistorySteps;
+use CodebarAg\DocuWare\Data\Workflow\InstanceHistoryData;
+use CodebarAg\DocuWare\Events\ResponseReceived;
+use CodebarAg\DocuWare\Facades\DocuWare;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Event;
 
-it('can get document workflow history', function () {
+it('can get document workflow history steps', function () {
     Event::fake();
 
-    $fileCabinetId = config('laravel-docuware.tests.file_cabinet_id');
+    $document = uploadTestDocument($this->cabinet);
 
-    $document = $this->connector->send(new CreateDataRecord(
-        $fileCabinetId,
-        '::fake-file-content::',
-        'example.txt'
-    ))->dto();
+    $document = refreshDocumentAfterProcessing($this->cabinet, $document->id);
 
-    $document = refreshDocumentAfterProcessing($this->connector, $fileCabinetId, $document->id);
-
-    $history = $this->connector->send(new GetDocumentWorkflowHistory(
-        $fileCabinetId,
-        $document->id
-    ))->dto();
+    $history = DocuWare::documents($this->cabinet)->workflowHistory((string) $document->id);
 
     expect($history)->toBeInstanceOf(Collection::class);
 
     if ($history->isEmpty()) {
-        Event::assertDispatched(DocuWareResponseLog::class);
+        Event::assertDispatched(ResponseReceived::class);
 
         return;
     }
 
-    $historySteps = $this->connector->send(new GetDocumentWorkflowHistorySteps(
-        $history->first()->workflowId,
-        $history->first()->id,
-    ))->dto();
+    $instance = $history->first();
 
-    expect($historySteps)->toHaveKeys([
-        'id',
-        'workflowId',
-        'name',
-        'version',
-        'workflowRequest',
-        'startedAt',
-        'docId',
-        'historySteps',
-    ])
+    $historySteps = DocuWare::workflows()->historySteps(
+        $instance->workflowId,
+        $instance->id,
+    );
+
+    expect($historySteps)->toBeInstanceOf(InstanceHistoryData::class)
         ->and($historySteps->historySteps)->toBeInstanceOf(Collection::class);
 
-    Event::assertDispatched(DocuWareResponseLog::class);
-})->group('workflow');
+    Event::assertDispatched(ResponseReceived::class);
+})->group('integration', 'workflow');

@@ -2,12 +2,9 @@
 
 namespace CodebarAg\DocuWare\Requests\Documents\ClipUnclipStapleUnstaple;
 
-use CodebarAg\DocuWare\DTO\Documents\DocumentPaginator;
-use CodebarAg\DocuWare\Responses\FileCabinets\Search\GetDocumentsFromAFileCabinetResponse;
 use Saloon\Contracts\Body\HasBody;
 use Saloon\Enums\Method;
 use Saloon\Http\Request;
-use Saloon\Http\Response;
 use Saloon\Traits\Body\HasJsonBody;
 
 class Unstaple extends Request implements HasBody
@@ -41,10 +38,5 @@ class Unstaple extends Request implements HasBody
         return [
             'Operation' => 'Unstaple',
         ];
-    }
-
-    public function createDtoFromResponse(Response $response): DocumentPaginator
-    {
-        return GetDocumentsFromAFileCabinetResponse::fromResponse($response);
     }
 }

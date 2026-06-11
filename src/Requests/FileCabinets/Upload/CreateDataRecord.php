@@ -2,7 +2,6 @@
 
 namespace CodebarAg\DocuWare\Requests\FileCabinets\Upload;
 
-use CodebarAg\DocuWare\DTO\Documents\Document;
 use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexDateDTO;
 use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexDateTimeDTO;
 use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexDecimalDTO;
@@ -12,13 +11,11 @@ use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexNumericDTO;
 use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexTableDTO;
 use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexTextDTO;
 use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\PrepareDTO;
-use CodebarAg\DocuWare\Responses\FileCabinets\Upload\CreateDataRecordResponse;
 use Illuminate\Support\Collection;
 use Saloon\Contracts\Body\HasBody;
 use Saloon\Data\MultipartValue;
 use Saloon\Enums\Method;
 use Saloon\Http\Request;
-use Saloon\Http\Response;
 use Saloon\Traits\Body\HasMultipartBody;
 
 class CreateDataRecord extends Request implements HasBody
@@ -74,10 +71,5 @@ class CreateDataRecord extends Request implements HasBody
         }
 
         return $body;
-    }
-
-    public function createDtoFromResponse(Response $response): Document
-    {
-        return CreateDataRecordResponse::fromResponse($response);
     }
 }

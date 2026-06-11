@@ -1,24 +1,19 @@
 <?php
 
-use CodebarAg\DocuWare\DTO\General\Organization\FileCabinet;
-use CodebarAg\DocuWare\Events\DocuWareResponseLog;
-use CodebarAg\DocuWare\Requests\General\Organization\GetAllFileCabinetsAndDocumentTrays;
+use CodebarAg\DocuWare\Data\Organization\FileCabinetData;
+use CodebarAg\DocuWare\Events\ResponseReceived;
+use CodebarAg\DocuWare\Facades\DocuWare;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Event;
 
 it('lists file cabinets and document trays for the organization', function () {
     Event::fake();
 
-    $orgId = config('laravel-docuware.tests.org_id');
-
-    $items = $this->connector->send(new GetAllFileCabinetsAndDocumentTrays(
-        organizationId: $orgId ? (string) $orgId : null,
-    ))->dto();
+    $items = DocuWare::fileCabinets()->all();
 
     expect($items)->toBeInstanceOf(Collection::class)
-        ->and($items)->not->toBeEmpty();
+        ->and($items)->not->toBeEmpty()
+        ->and($items->first())->toBeInstanceOf(FileCabinetData::class);
 
-    expect($items->first())->toBeInstanceOf(FileCabinet::class);
-
-    Event::assertDispatched(DocuWareResponseLog::class);
-});
+    Event::assertDispatched(ResponseReceived::class);
+})->group('integration');

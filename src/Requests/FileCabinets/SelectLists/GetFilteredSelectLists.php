@@ -3,12 +3,10 @@
 namespace CodebarAg\DocuWare\Requests\FileCabinets\SelectLists;
 
 use CodebarAg\DocuWare\Concerns\HasDocuWareCaching;
-use CodebarAg\DocuWare\Responses\FileCabinets\SelectLists\GetSelectListsResponse;
 use Saloon\CachePlugin\Contracts\Cacheable;
 use Saloon\Contracts\Body\HasBody;
 use Saloon\Enums\Method;
 use Saloon\Http\Request;
-use Saloon\Http\Response;
 use Saloon\Traits\Body\HasJsonBody;
 
 class GetFilteredSelectLists extends Request implements Cacheable, HasBody
@@ -53,10 +51,5 @@ class GetFilteredSelectLists extends Request implements Cacheable, HasBody
             'ExcludeExternal' => true,
             'DialogExpression' => $this->dialogExpression,
         ];
-    }
-
-    public function createDtoFromResponse(Response $response): mixed
-    {
-        return GetSelectListsResponse::fromResponse($response);
     }
 }

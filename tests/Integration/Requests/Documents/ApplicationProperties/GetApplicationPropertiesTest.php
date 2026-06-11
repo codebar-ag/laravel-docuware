@@ -1,36 +1,26 @@
 <?php
 
-use CodebarAg\DocuWare\Events\DocuWareResponseLog;
-use CodebarAg\DocuWare\Requests\Documents\ApplicationProperties\AddApplicationProperties;
-use CodebarAg\DocuWare\Requests\Documents\ApplicationProperties\GetApplicationProperties;
-use CodebarAg\DocuWare\Requests\FileCabinets\Upload\CreateDataRecord;
-use Illuminate\Support\Collection;
+use CodebarAg\DocuWare\Events\ResponseReceived;
+use CodebarAg\DocuWare\Facades\DocuWare;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Event;
 
 it('gets application properties for a document', function () {
     Event::fake();
 
-    $fileCabinetId = config('laravel-docuware.tests.file_cabinet_id');
+    $document = uploadTestDocument($this->cabinet);
 
-    $document = $this->connector->send(new CreateDataRecord(
-        $fileCabinetId,
-        '::fake-file-content::',
-        'example.txt'
-    ))->dto();
+    DocuWare::documents($this->cabinet)->addApplicationProperties((string) $document->id, [
+        ['Name' => 'Key1', 'Value' => 'v'],
+    ]);
 
-    $this->connector->send(new AddApplicationProperties(
-        $fileCabinetId,
-        $document->id,
-        [['Name' => 'Key1', 'Value' => 'v']],
-    ))->dto();
+    $properties = collect(Arr::get(
+        DocuWare::documents($this->cabinet)->applicationProperties((string) $document->id),
+        'Property',
+        [],
+    ));
 
-    $properties = $this->connector->send(new GetApplicationProperties(
-        $fileCabinetId,
-        $document->id,
-    ))->dto();
+    expect($properties->count())->toBeGreaterThanOrEqual(1);
 
-    expect($properties)->toBeInstanceOf(Collection::class)
-        ->and($properties->count())->toBeGreaterThanOrEqual(1);
-
-    Event::assertDispatched(DocuWareResponseLog::class);
+    Event::assertDispatched(ResponseReceived::class);
 });

@@ -3,11 +3,9 @@
 namespace CodebarAg\DocuWare\Requests\Documents;
 
 use CodebarAg\DocuWare\Concerns\HasDocuWareCaching;
-use CodebarAg\DocuWare\Responses\Documents\GetDocumentPreviewResponse;
 use Saloon\CachePlugin\Contracts\Cacheable;
 use Saloon\Enums\Method;
 use Saloon\Http\Request;
-use Saloon\Http\Response;
 
 class GetDocumentPreviewRequest extends Request implements Cacheable
 {
@@ -23,10 +21,5 @@ class GetDocumentPreviewRequest extends Request implements Cacheable
     public function resolveEndpoint(): string
     {
         return '/FileCabinets/'.$this->fileCabinetId.'/Documents/'.$this->documentId.'/Image';
-    }
-
-    public function createDtoFromResponse(Response $response): string
-    {
-        return GetDocumentPreviewResponse::fromResponse($response);
     }
 }

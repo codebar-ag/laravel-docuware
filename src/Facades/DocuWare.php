@@ -23,7 +23,8 @@ use Illuminate\Support\Facades\Facade;
  * The 2.0 entry point. Bare calls operate on the default instance; `instance('tenant')`
  * selects another. Consumers touch resources and data — never Saloon.
  *
- * @method static DocuWareClient instance(?string $name = null)
+ * @method static DocuWareClient instance(string|\CodebarAg\DocuWare\Config\InstanceConfig|null $instance = null)
+ * @method static DocuWareClient connection(\CodebarAg\DocuWare\Config\InstanceConfig $config)
  * @method static DocumentsResource documents(string $fileCabinetId)
  * @method static FileCabinetsResource fileCabinets()
  * @method static DialogsResource dialogs(string $fileCabinetId)

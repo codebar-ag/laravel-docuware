@@ -28,6 +28,36 @@ final class TokenConfig extends InstanceConfig
         );
     }
 
+    /**
+     * Build a token-grant config at runtime from a DocuWare login token. Defaults
+     * mirror {@see InstanceConfig::make()}.
+     */
+    public static function for(
+        string $url,
+        string $token,
+        string $name = 'runtime',
+        string $username = '',
+        ?string $passphrase = null,
+        string $cacheDriver = self::DEFAULT_CACHE_DRIVER,
+        int $cacheLifetimeInSeconds = self::DEFAULT_CACHE_LIFETIME_IN_SECONDS,
+        int $requestTimeoutInSeconds = self::DEFAULT_REQUEST_TIMEOUT_IN_SECONDS,
+        string $clientId = self::DEFAULT_CLIENT_ID,
+        string $scope = self::DEFAULT_SCOPE,
+    ): self {
+        return new self(
+            name: $name,
+            token: $token,
+            username: $username,
+            url: $url,
+            passphrase: $passphrase,
+            cacheDriver: $cacheDriver,
+            cacheLifetimeInSeconds: $cacheLifetimeInSeconds,
+            requestTimeoutInSeconds: $requestTimeoutInSeconds,
+            clientId: $clientId,
+            scope: $scope,
+        );
+    }
+
     public function grant(): Grant
     {
         return Grant::Token;

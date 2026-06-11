@@ -29,17 +29,34 @@ final class DocuWareManager
     ) {}
 
     /**
-     * Resolve (and cache) the client for the given instance, or the default instance.
+     * Resolve a client for an instance. Pass a config-file instance name (cached for the
+     * request), an {@see InstanceConfig} DTO built at runtime (see {@see self::connection()}),
+     * or nothing for the default instance.
      */
-    public function instance(?string $name = null): DocuWareClient
+    public function instance(string|InstanceConfig|null $instance = null): DocuWareClient
     {
-        $name ??= $this->getDefaultInstance();
+        if ($instance instanceof InstanceConfig) {
+            return $this->connection($instance);
+        }
+
+        $name = $instance ?? $this->getDefaultInstance();
 
         return $this->clients[$name] ??= new DocuWareClient(
             $this->resolveConfig($name),
             $this->tokens,
             $this->fetcher,
         );
+    }
+
+    /**
+     * Build a client from a runtime {@see InstanceConfig} DTO — the ergonomic path for
+     * database-driven multi-tenancy where connections are not declared in config files.
+     * Clients are not name-cached here (two tenants may share a name); per-tenant tokens
+     * stay isolated via {@see InstanceConfig::identifier()} in the token store.
+     */
+    public function connection(InstanceConfig $config): DocuWareClient
+    {
+        return new DocuWareClient($config, $this->tokens, $this->fetcher);
     }
 
     public function getDefaultInstance(): string

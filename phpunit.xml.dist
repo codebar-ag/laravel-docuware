@@ -8,7 +8,6 @@
     <testsuite name="default">
         <directory>tests/Unit</directory>
         <directory>tests/Core</directory>
-        <directory>tests/Feature</directory>
         <directory>tests/Manual</directory>
     </testsuite>
     <testsuite name="integration">

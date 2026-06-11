@@ -15,6 +15,16 @@ use InvalidArgumentException;
  */
 abstract class InstanceConfig
 {
+    public const DEFAULT_CACHE_DRIVER = 'file';
+
+    public const DEFAULT_CACHE_LIFETIME_IN_SECONDS = 60;
+
+    public const DEFAULT_REQUEST_TIMEOUT_IN_SECONDS = 60;
+
+    public const DEFAULT_CLIENT_ID = 'docuware.platform.net.client';
+
+    public const DEFAULT_SCOPE = 'docuware.platform';
+
     public function __construct(
         public readonly string $name,
         public readonly string $url,
@@ -49,11 +59,11 @@ abstract class InstanceConfig
         $common = [
             'url' => self::required($name, $c, 'url'),
             'passphrase' => self::nullableString($c['passphrase'] ?? null),
-            'cacheDriver' => (string) ($c['cacheDriver'] ?? 'file'),
-            'cacheLifetimeInSeconds' => (int) ($c['cacheLifetimeInSeconds'] ?? 60),
-            'requestTimeoutInSeconds' => (int) ($c['requestTimeoutInSeconds'] ?? 60),
-            'clientId' => (string) ($c['clientId'] ?? 'docuware.platform.net.client'),
-            'scope' => (string) ($c['scope'] ?? 'docuware.platform'),
+            'cacheDriver' => (string) ($c['cacheDriver'] ?? self::DEFAULT_CACHE_DRIVER),
+            'cacheLifetimeInSeconds' => (int) ($c['cacheLifetimeInSeconds'] ?? self::DEFAULT_CACHE_LIFETIME_IN_SECONDS),
+            'requestTimeoutInSeconds' => (int) ($c['requestTimeoutInSeconds'] ?? self::DEFAULT_REQUEST_TIMEOUT_IN_SECONDS),
+            'clientId' => (string) ($c['clientId'] ?? self::DEFAULT_CLIENT_ID),
+            'scope' => (string) ($c['scope'] ?? self::DEFAULT_SCOPE),
         ];
 
         return match ($grant) {

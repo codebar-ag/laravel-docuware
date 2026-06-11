@@ -3,6 +3,7 @@
 namespace CodebarAg\DocuWare\Data\Users;
 
 use CodebarAg\DocuWare\Data\DocuWareData;
+use CodebarAg\DocuWare\Data\Support\Field;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
@@ -44,11 +45,11 @@ final class OutOfOfficeData extends DocuWareData
         }
 
         return new self(
-            isOutOfOffice: Arr::get($data, 'IsOutOfOffice'),
+            isOutOfOffice: Field::bool($data, 'IsOutOfOffice'),
             startDateTime: $startDateTime,
-            startDateTimeSpecified: Arr::get($data, 'StartDateTimeSpecified'),
+            startDateTimeSpecified: Field::bool($data, 'StartDateTimeSpecified'),
             endDateTime: $endDateTime,
-            endDateTimeSpecified: Arr::get($data, 'EndDateTimeSpecified'),
+            endDateTimeSpecified: Field::bool($data, 'EndDateTimeSpecified'),
         );
     }
 }

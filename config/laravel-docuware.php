@@ -179,6 +179,13 @@ return [
     | Optional client-side limiter, isolated per instance (per-tenant). Leave
     | disabled unless your DocuWare instance enforces a known request budget.
     |
+    | These are the global defaults. Any instance may override them with its own
+    | `rate_limit` block, e.g.
+    |
+    |   'instances' => [
+    |       'acme' => [..., 'rate_limit' => ['enabled' => true, 'allow' => 30, 'per_seconds' => 60]],
+    |   ],
+    |
     */
 
     'rate_limit' => [

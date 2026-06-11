@@ -7,6 +7,7 @@ use CodebarAg\DocuWare\Data\DocuWareData;
 use CodebarAg\DocuWare\Data\LinkData;
 use CodebarAg\DocuWare\Data\SectionData;
 use CodebarAg\DocuWare\Data\SuggestionFieldData;
+use CodebarAg\DocuWare\Data\Support\Field;
 use CodebarAg\DocuWare\Support\JsonArrays;
 use CodebarAg\DocuWare\Support\ParseValue;
 use Illuminate\Support\Arr;
@@ -33,8 +34,8 @@ final class DocumentData extends DocuWareData
         public string $content_type,
         public string $file_cabinet_id,
         public ?string $intellixTrust,
-        public Carbon $created_at,
-        public Carbon $updated_at,
+        public ?Carbon $created_at,
+        public ?Carbon $updated_at,
         public ?Collection $fields,
         public ?Collection $sections,
         public ?Collection $suggestions,
@@ -75,16 +76,16 @@ final class DocumentData extends DocuWareData
             : null;
 
         return new self(
-            id: Arr::get($data, 'Id'),
-            file_size: Arr::get($data, 'FileSize'),
-            total_pages: Arr::get($data, 'TotalPages'),
-            title: Arr::get($data, 'Title'),
+            id: Field::int($data, 'Id', self::class),
+            file_size: (int) Arr::get($data, 'FileSize', 0),
+            total_pages: (int) Arr::get($data, 'TotalPages', 0),
+            title: (string) Arr::get($data, 'Title', ''),
             extension: self::extensionFromFields($fields),
-            content_type: Arr::get($data, 'ContentType'),
-            file_cabinet_id: Arr::get($data, 'FileCabinetId'),
+            content_type: (string) Arr::get($data, 'ContentType', ''),
+            file_cabinet_id: (string) Arr::get($data, 'FileCabinetId', ''),
             intellixTrust: Arr::get($data, 'IntellixTrust'),
-            created_at: ParseValue::date(Arr::get($data, 'CreatedAt')),
-            updated_at: ParseValue::date(Arr::get($data, 'LastModified')),
+            created_at: ParseValue::dateOrNull(Field::stringOrNull($data, 'CreatedAt')),
+            updated_at: ParseValue::dateOrNull(Field::stringOrNull($data, 'LastModified')),
             fields: $fields,
             sections: $sections,
             suggestions: $suggestions,

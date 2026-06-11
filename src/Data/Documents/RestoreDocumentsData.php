@@ -26,11 +26,10 @@ final class RestoreDocumentsData extends DocuWareData
     {
         $failedRaw = Arr::get($data, 'FailedItems', []);
         $failedItems = JsonArrays::listOfRecords(is_array($failedRaw) ? $failedRaw : []);
-        $successCount = Arr::get($data, 'SuccessCount');
 
         return new self(
             failedItems: $failedItems,
-            successCount: $successCount,
+            successCount: (int) Arr::get($data, 'SuccessCount', 0),
         );
     }
 }

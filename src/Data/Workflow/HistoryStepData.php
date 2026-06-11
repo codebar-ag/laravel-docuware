@@ -3,11 +3,12 @@
 namespace CodebarAg\DocuWare\Data\Workflow;
 
 use CodebarAg\DocuWare\Data\DocuWareData;
+use CodebarAg\DocuWare\Data\Support\Field;
 use CodebarAg\DocuWare\Support\JsonArrays;
+use CodebarAg\DocuWare\Support\ParseValue;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Str;
 
 final class HistoryStepData extends DocuWareData
 {
@@ -17,7 +18,7 @@ final class HistoryStepData extends DocuWareData
     public function __construct(
         public Collection $infoItem,
         public int $stepNumber,
-        public Carbon $stepDate,
+        public ?Carbon $stepDate,
         public string $activityName,
         public string $activityType,
         public string $stepType,
@@ -28,11 +29,6 @@ final class HistoryStepData extends DocuWareData
      */
     public static function fromDocuWare(array $data): self
     {
-        if ($stepDateTime = Arr::get($data, 'StepDate')) {
-            $stepDateTime = Str::of($stepDateTime)->after('(')->before(')');
-            $stepDateTime = Carbon::createFromTimestamp($stepDateTime);
-        }
-
         $itemRaw = Arr::get($data, 'Info.Item');
         $rows = [];
         if (is_array($itemRaw)) {
@@ -44,11 +40,11 @@ final class HistoryStepData extends DocuWareData
 
         return new self(
             infoItem: $infoItem,
-            stepNumber: Arr::get($data, 'StepNumber'),
-            stepDate: $stepDateTime,
-            activityName: Arr::get($data, 'ActivityName'),
-            activityType: Arr::get($data, 'ActivityType'),
-            stepType: Arr::get($data, 'StepType'),
+            stepNumber: (int) Arr::get($data, 'StepNumber', 0),
+            stepDate: ParseValue::dateInSecondsOrNull(Field::stringOrNull($data, 'StepDate')),
+            activityName: (string) Arr::get($data, 'ActivityName', ''),
+            activityType: (string) Arr::get($data, 'ActivityType', ''),
+            stepType: (string) Arr::get($data, 'StepType', ''),
         );
     }
 }

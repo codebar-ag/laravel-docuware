@@ -4,6 +4,7 @@ namespace CodebarAg\DocuWare\Data\Users;
 
 use CodebarAg\DocuWare\Data\DocuWareData;
 use CodebarAg\DocuWare\Data\LinkData;
+use CodebarAg\DocuWare\Data\Support\Field;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 
@@ -42,18 +43,18 @@ final class UserData extends DocuWareData
     public static function fromDocuWare(array $data): self
     {
         return new self(
-            id: Arr::get($data, 'Id'),
-            name: Arr::get($data, 'Name'),
+            id: Field::string($data, 'Id', self::class),
+            name: (string) Arr::get($data, 'Name', ''),
             salutation: Arr::get($data, 'Salutation'),
             firstName: Arr::get($data, 'FirstName'),
             lastName: Arr::get($data, 'LastName'),
-            dbName: Arr::get($data, 'DBName'),
-            email: Arr::get($data, 'EMail'),
-            active: Arr::get($data, 'Active'),
-            isHighSecurity: Arr::get($data, 'IsHighSecurity'),
-            defaultWebBasket: Arr::get($data, 'DefaultWebBasket'),
-            outOfOffice: Arr::has($data, 'OutOfOffice') ? OutOfOfficeData::fromDocuWare(Arr::get($data, 'OutOfOffice')) : null,
-            regionalSettings: Arr::has($data, 'RegionalSettings') ? RegionalSettingsData::fromDocuWare(Arr::get($data, 'RegionalSettings')) : null,
+            dbName: (string) Arr::get($data, 'DBName', ''),
+            email: (string) Arr::get($data, 'EMail', ''),
+            active: Field::bool($data, 'Active'),
+            isHighSecurity: Field::bool($data, 'IsHighSecurity'),
+            defaultWebBasket: (string) Arr::get($data, 'DefaultWebBasket', ''),
+            outOfOffice: is_array($oof = Arr::get($data, 'OutOfOffice')) ? OutOfOfficeData::fromDocuWare($oof) : null,
+            regionalSettings: is_array($rs = Arr::get($data, 'RegionalSettings')) ? RegionalSettingsData::fromDocuWare($rs) : null,
             links: LinkData::collection(Arr::get($data, 'Links')),
             shouldUpdateActive: Arr::get($data, 'ShouldUpdateActive'),
             twoStepVerificationEnabled: Arr::get($data, 'TwoStepVerificationEnabled'),

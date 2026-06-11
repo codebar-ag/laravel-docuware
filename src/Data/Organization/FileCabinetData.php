@@ -3,6 +3,7 @@
 namespace CodebarAg\DocuWare\Data\Organization;
 
 use CodebarAg\DocuWare\Data\DocuWareData;
+use CodebarAg\DocuWare\Data\Support\Field;
 use Illuminate\Support\Arr;
 
 final class FileCabinetData extends DocuWareData
@@ -28,18 +29,18 @@ final class FileCabinetData extends DocuWareData
     public static function fromDocuWare(array $data): self
     {
         return new self(
-            color: Arr::get($data, 'Color'),
-            name: Arr::get($data, 'Name'),
-            id: Arr::get($data, 'Id'),
-            isBasket: Arr::get($data, 'IsBasket'),
-            usable: Arr::get($data, 'Usable'),
-            default: Arr::get($data, 'Default'),
+            color: (string) Arr::get($data, 'Color', ''),
+            name: (string) Arr::get($data, 'Name', ''),
+            id: Field::string($data, 'Id', self::class),
+            isBasket: Field::bool($data, 'IsBasket'),
+            usable: Field::bool($data, 'Usable'),
+            default: Field::bool($data, 'Default'),
             assignedCabinetId: Arr::get($data, 'AssignedCabinetId'),
-            versionManagement: Arr::get($data, 'VersionManagement'),
-            windowsExplorerClientAccess: Arr::get($data, 'WindowsExplorerClientAccess'),
-            addIndexEntriesInUpperCase: Arr::get($data, 'AddIndexEntriesInUpperCase'),
-            documentAuditingEnabled: Arr::get($data, 'DocumentAuditingEnabled'),
-            hasFullTextSupport: Arr::get($data, 'HasFullTextSupport'),
+            versionManagement: (string) Arr::get($data, 'VersionManagement', ''),
+            windowsExplorerClientAccess: Field::bool($data, 'WindowsExplorerClientAccess'),
+            addIndexEntriesInUpperCase: Field::bool($data, 'AddIndexEntriesInUpperCase'),
+            documentAuditingEnabled: Field::bool($data, 'DocumentAuditingEnabled'),
+            hasFullTextSupport: Field::bool($data, 'HasFullTextSupport'),
         );
     }
 }

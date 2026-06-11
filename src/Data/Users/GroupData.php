@@ -4,6 +4,7 @@ namespace CodebarAg\DocuWare\Data\Users;
 
 use CodebarAg\DocuWare\Data\DocuWareData;
 use CodebarAg\DocuWare\Data\LinkData;
+use CodebarAg\DocuWare\Data\Support\Field;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 
@@ -28,9 +29,9 @@ final class GroupData extends DocuWareData
     public static function fromDocuWare(array $data): self
     {
         return new self(
-            id: Arr::get($data, 'Id'),
-            name: Arr::get($data, 'Name'),
-            active: Arr::get($data, 'Active'),
+            id: Field::string($data, 'Id', self::class),
+            name: (string) Arr::get($data, 'Name', ''),
+            active: Field::bool($data, 'Active'),
             links: LinkData::collection(Arr::get($data, 'Links')),
         );
     }

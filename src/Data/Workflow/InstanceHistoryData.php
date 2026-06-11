@@ -3,11 +3,12 @@
 namespace CodebarAg\DocuWare\Data\Workflow;
 
 use CodebarAg\DocuWare\Data\DocuWareData;
+use CodebarAg\DocuWare\Data\Support\Field;
 use CodebarAg\DocuWare\Support\JsonArrays;
+use CodebarAg\DocuWare\Support\ParseValue;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Str;
 
 final class InstanceHistoryData extends DocuWareData
 {
@@ -20,7 +21,7 @@ final class InstanceHistoryData extends DocuWareData
         public string $name,
         public int $version,
         public bool $workflowRequest,
-        public Carbon $startedAt,
+        public ?Carbon $startedAt,
         public string $docId,
         public ?Collection $historySteps = null,
     ) {}
@@ -30,11 +31,6 @@ final class InstanceHistoryData extends DocuWareData
      */
     public static function fromDocuWare(array $data): self
     {
-        if ($startDateTime = Arr::get($data, 'StartedAt')) {
-            $startDateTime = Str::of($startDateTime)->after('(')->before(')');
-            $startDateTime = Carbon::createFromTimestamp($startDateTime);
-        }
-
         $historySteps = null;
         $stepsRaw = Arr::get($data, 'HistorySteps');
         if (is_array($stepsRaw)) {
@@ -43,13 +39,13 @@ final class InstanceHistoryData extends DocuWareData
         }
 
         return new self(
-            id: Arr::get($data, 'Id'),
-            workflowId: Arr::get($data, 'WorkflowId'),
-            name: Arr::get($data, 'Name'),
-            version: Arr::get($data, 'Version'),
-            workflowRequest: Arr::get($data, 'WorkflowRequest'),
-            startedAt: $startDateTime,
-            docId: Arr::get($data, 'DocId'),
+            id: Field::string($data, 'Id', self::class),
+            workflowId: (string) Arr::get($data, 'WorkflowId', ''),
+            name: (string) Arr::get($data, 'Name', ''),
+            version: (int) Arr::get($data, 'Version', 0),
+            workflowRequest: Field::bool($data, 'WorkflowRequest'),
+            startedAt: ParseValue::dateInSecondsOrNull(Field::stringOrNull($data, 'StartedAt')),
+            docId: (string) Arr::get($data, 'DocId', ''),
             historySteps: $historySteps,
         );
     }

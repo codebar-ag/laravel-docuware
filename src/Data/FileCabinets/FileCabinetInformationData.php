@@ -4,6 +4,7 @@ namespace CodebarAg\DocuWare\Data\FileCabinets;
 
 use CodebarAg\DocuWare\Data\DocuWareData;
 use CodebarAg\DocuWare\Data\LinkData;
+use CodebarAg\DocuWare\Data\Support\Field;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 
@@ -41,22 +42,22 @@ final class FileCabinetInformationData extends DocuWareData
     public static function fromDocuWare(array $data): self
     {
         return new self(
-            color: Arr::get($data, 'Color'),
-            name: Arr::get($data, 'Name'),
-            id: Arr::get($data, 'Id'),
-            isBasket: Arr::get($data, 'IsBasket'),
-            usable: Arr::get($data, 'Usable'),
-            default: Arr::get($data, 'Default'),
+            color: (string) Arr::get($data, 'Color', ''),
+            name: (string) Arr::get($data, 'Name', ''),
+            id: Field::string($data, 'Id', self::class),
+            isBasket: Field::bool($data, 'IsBasket'),
+            usable: Field::bool($data, 'Usable'),
+            default: Field::bool($data, 'Default'),
             assignedCabinetId: Arr::get($data, 'AssignedCabinetId'),
-            versionManagement: Arr::get($data, 'VersionManagement'),
-            windowsExplorerClientAccess: Arr::get($data, 'WindowsExplorerClientAccess'),
-            addIndexEntriesInUpperCase: Arr::get($data, 'AddIndexEntriesInUpperCase'),
-            documentAuditingEnabled: Arr::get($data, 'DocumentAuditingEnabled'),
-            hasFullTextSupport: Arr::get($data, 'HasFullTextSupport'),
+            versionManagement: (string) Arr::get($data, 'VersionManagement', ''),
+            windowsExplorerClientAccess: Field::bool($data, 'WindowsExplorerClientAccess'),
+            addIndexEntriesInUpperCase: Field::bool($data, 'AddIndexEntriesInUpperCase'),
+            documentAuditingEnabled: Field::bool($data, 'DocumentAuditingEnabled'),
+            hasFullTextSupport: Field::bool($data, 'HasFullTextSupport'),
             links: LinkData::collection(Arr::get($data, 'Links')),
-            fields: Arr::get($data, 'Fields'),
-            rights: Arr::get($data, 'Rights'),
-            extendedUserRights: Arr::get($data, 'ExtendedUserRights'),
+            fields: is_array($fields = Arr::get($data, 'Fields')) ? $fields : null,
+            rights: is_array($rights = Arr::get($data, 'Rights')) ? $rights : null,
+            extendedUserRights: is_array($eur = Arr::get($data, 'ExtendedUserRights')) ? $eur : null,
             versionHistoryResultListId: Arr::get($data, 'VersionHistoryResultListId'),
         );
     }

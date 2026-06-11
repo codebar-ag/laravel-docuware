@@ -3,7 +3,7 @@
 namespace CodebarAg\DocuWare\Data\Documents;
 
 use CodebarAg\DocuWare\Data\DocuWareData;
-use Illuminate\Support\Arr;
+use CodebarAg\DocuWare\Data\Support\Field;
 
 final class DocumentThumbnailData extends DocuWareData
 {
@@ -18,13 +18,13 @@ final class DocumentThumbnailData extends DocuWareData
      */
     public static function fromDocuWare(array $data): self
     {
-        $mime = Arr::get($data, 'mime');
-        $data = Arr::get($data, 'data');
+        $mime = Field::string($data, 'mime', self::class);
+        $bytes = Field::string($data, 'data', self::class);
 
         return new self(
             mime: $mime,
-            data: $data,
-            base64: 'data:'.$mime.';base64,'.base64_encode($data),
+            data: $bytes,
+            base64: 'data:'.$mime.';base64,'.base64_encode($bytes),
         );
     }
 }

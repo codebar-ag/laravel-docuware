@@ -7,6 +7,7 @@ use CodebarAg\DocuWare\Events\ResponseReceived;
 use CodebarAg\DocuWare\Security\Redactor;
 use CodebarAg\DocuWare\Transport\Auth\OAuthTokenFetcher;
 use CodebarAg\DocuWare\Transport\Auth\TokenRepository;
+use Illuminate\Support\Facades\Cache;
 use Saloon\Enums\Method;
 use Saloon\Exceptions\Request\FatalRequestException;
 use Saloon\Exceptions\Request\RequestException;
@@ -14,6 +15,10 @@ use Saloon\Http\Auth\TokenAuthenticator;
 use Saloon\Http\Connector;
 use Saloon\Http\Request;
 use Saloon\Http\Response;
+use Saloon\RateLimitPlugin\Contracts\RateLimitStore;
+use Saloon\RateLimitPlugin\Limit;
+use Saloon\RateLimitPlugin\Stores\LaravelCacheStore;
+use Saloon\RateLimitPlugin\Traits\HasRateLimits;
 
 /**
  * The native DocuWare transport: one connector per instance (one Guzzle handler → connection
@@ -25,6 +30,8 @@ use Saloon\Http\Response;
  */
 class DocuWareConnector extends Connector
 {
+    use HasRateLimits;
+
     public function __construct(
         public readonly InstanceConfig $instanceConfig,
         protected readonly TokenRepository $tokens,
@@ -32,6 +39,10 @@ class DocuWareConnector extends Connector
     ) {
         $this->configureRetries();
         $this->registerResponseEvent();
+
+        // Client-side throttling is opt-in per instance (config `rate_limit.enabled`); when off,
+        // the only rate handling is the server-side 429 back-off in handleRetry().
+        $this->useRateLimitPlugin($this->rateLimitConfig()['enabled']);
     }
 
     public function resolveBaseUrl(): string
@@ -157,5 +168,48 @@ class DocuWareConnector extends Connector
         }
 
         return null;
+    }
+
+    /**
+     * One limit, named by the instance's stable identifier so tenants never share a bucket.
+     *
+     * @return array<int, Limit>
+     */
+    protected function resolveLimits(): array
+    {
+        $config = $this->rateLimitConfig();
+
+        return [
+            Limit::allow($config['allow'])
+                ->everySeconds($config['per_seconds'])
+                ->name('docuware:'.$this->instanceConfig->identifier()),
+        ];
+    }
+
+    protected function resolveRateLimitStore(): RateLimitStore
+    {
+        return new LaravelCacheStore(Cache::store($this->instanceConfig->cacheDriver));
+    }
+
+    /**
+     * Resolve the instance's rate-limit settings: the per-instance `instances.{name}.rate_limit`
+     * block overrides the global `rate_limit` defaults.
+     *
+     * @return array{enabled: bool, allow: int, per_seconds: int}
+     */
+    private function rateLimitConfig(): array
+    {
+        /** @var array<string, mixed> $global */
+        $global = (array) config('laravel-docuware.rate_limit', []);
+        /** @var array<string, mixed> $perInstance */
+        $perInstance = (array) config('laravel-docuware.instances.'.$this->instanceConfig->name.'.rate_limit', []);
+
+        $merged = array_merge($global, $perInstance);
+
+        return [
+            'enabled' => (bool) ($merged['enabled'] ?? false),
+            'allow' => max(1, (int) ($merged['allow'] ?? 60)),
+            'per_seconds' => max(1, (int) ($merged['per_seconds'] ?? 60)),
+        ];
     }
 }

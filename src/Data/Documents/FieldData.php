@@ -4,6 +4,7 @@ namespace CodebarAg\DocuWare\Data\Documents;
 
 use CodebarAg\DocuWare\Data\DocuWareData;
 use CodebarAg\DocuWare\Data\LinkData;
+use CodebarAg\DocuWare\Data\Support\Field;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 
@@ -34,10 +35,10 @@ final class FieldData extends DocuWareData
     public static function fromDocuWare(array $data): self
     {
         return new self(
-            name: Arr::get($data, 'DBFieldName'),
-            label: Arr::get($data, 'DisplayName'),
-            type: Arr::get($data, 'DWFieldType'),
-            scope: Arr::get($data, 'Scope'),
+            name: Field::string($data, 'DBFieldName', self::class),
+            label: (string) Arr::get($data, 'DisplayName', ''),
+            type: (string) Arr::get($data, 'DWFieldType', ''),
+            scope: (string) Arr::get($data, 'Scope', ''),
             length: Arr::get($data, 'Length'),
             precision: Arr::get($data, 'Precision'),
             notEmpty: Arr::get($data, 'NotEmpty'),

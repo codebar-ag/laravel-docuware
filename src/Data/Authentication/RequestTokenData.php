@@ -3,6 +3,7 @@
 namespace CodebarAg\DocuWare\Data\Authentication;
 
 use CodebarAg\DocuWare\Data\DocuWareData;
+use CodebarAg\DocuWare\Data\Support\Field;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
 
@@ -23,12 +24,16 @@ final class RequestTokenData extends DocuWareData
      */
     public static function fromDocuWare(array $data): self
     {
+        // access_token and expires_in are auth-critical: a missing/invalid value must fail loudly
+        // rather than silently mint an unusable, already-expired token.
+        $expiresIn = Field::int($data, 'expires_in', self::class);
+
         return new self(
-            accessToken: Arr::get($data, 'access_token'),
-            tokenType: Arr::get($data, 'token_type'),
-            scope: Arr::get($data, 'scope'),
-            expiresIn: Arr::get($data, 'expires_in'),
-            expiresAt: Carbon::now()->addSeconds(Arr::get($data, 'expires_in')),
+            accessToken: Field::string($data, 'access_token', self::class),
+            tokenType: (string) Arr::get($data, 'token_type', ''),
+            scope: (string) Arr::get($data, 'scope', ''),
+            expiresIn: $expiresIn,
+            expiresAt: Carbon::now()->addSeconds($expiresIn),
             refreshToken: Arr::get($data, 'refresh_token'),
             idToken: Arr::get($data, 'id_token'),
         );

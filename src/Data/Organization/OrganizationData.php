@@ -4,6 +4,7 @@ namespace CodebarAg\DocuWare\Data\Organization;
 
 use CodebarAg\DocuWare\Data\DocuWareData;
 use CodebarAg\DocuWare\Data\LinkData;
+use CodebarAg\DocuWare\Data\Support\Field;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 
@@ -31,8 +32,8 @@ final class OrganizationData extends DocuWareData
     public static function fromDocuWare(array $data): self
     {
         return new self(
-            id: Arr::get($data, 'Id'),
-            name: Arr::get($data, 'Name'),
+            id: Field::string($data, 'Id', self::class),
+            name: (string) Arr::get($data, 'Name', ''),
             guid: Arr::get($data, 'Guid'),
             additionalInfo: Arr::get($data, 'AdditionalInfo', []),
             configurationRights: Arr::get($data, 'ConfigurationRights', []),

@@ -4,6 +4,7 @@ namespace CodebarAg\DocuWare\Data\FileCabinets;
 
 use CodebarAg\DocuWare\Data\DocuWareData;
 use CodebarAg\DocuWare\Data\LinkData;
+use CodebarAg\DocuWare\Data\Support\Field;
 use CodebarAg\DocuWare\Support\JsonArrays;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
@@ -41,11 +42,11 @@ final class DialogData extends DocuWareData
         }
 
         return new self(
-            id: Arr::get($data, 'Id'),
-            type: Arr::get($data, 'Type'),
-            label: Arr::get($data, 'DisplayName'),
-            isDefault: Arr::get($data, 'IsDefault'),
-            fileCabinetId: Arr::get($data, 'FileCabinetId'),
+            id: Field::string($data, 'Id', self::class),
+            type: (string) Arr::get($data, 'Type', ''),
+            label: (string) Arr::get($data, 'DisplayName', ''),
+            isDefault: Field::bool($data, 'IsDefault'),
+            fileCabinetId: (string) Arr::get($data, 'FileCabinetId', ''),
             fields: $fields,
             schemaType: Arr::get($data, '$type'),
             links: LinkData::collection(Arr::get($data, 'Links')),

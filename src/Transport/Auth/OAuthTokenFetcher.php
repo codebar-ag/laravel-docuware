@@ -68,8 +68,17 @@ final class OAuthTokenFetcher
 
     private function discoverTokenEndpoint(InstanceConfig $config): string
     {
-        $identityResponse = (new GetResponsibleIdentityService($config->url))->send();
+        $identityRequest = new GetResponsibleIdentityService($config->url);
+        $identityResponse = $identityRequest->send();
         $identity = ResponsibleIdentityServiceData::fromDocuWare(ResponseBody::toArray($identityResponse));
+
+        if ($identity->identityServiceUrl === null) {
+            throw new RuntimeException($this->discoveryFailureMessage(
+                instance: $config->name,
+                endpoint: $identityRequest->resolveEndpoint(),
+                response: $identityResponse,
+            ));
+        }
 
         $configResponse = (new GetIdentityServiceConfiguration(
             identityServiceUrl: $identity->identityServiceUrl,
@@ -83,6 +92,21 @@ final class OAuthTokenFetcher
         }
 
         return $endpoint;
+    }
+
+    private function discoveryFailureMessage(string $instance, string $endpoint, Response $response): string
+    {
+        $body = trim((string) $response->body());
+        $snippet = $body === '' ? '<empty body>' : mb_substr($body, 0, 200);
+
+        return sprintf(
+            'Could not discover the identity service URL for instance [%s]. '
+            .'GET %s returned HTTP %d without an "IdentityServiceUrl". Response: %s',
+            $instance,
+            $endpoint,
+            $response->status(),
+            $snippet,
+        );
     }
 
     private function failureMessage(Response $response): string

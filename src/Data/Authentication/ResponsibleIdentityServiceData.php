@@ -8,7 +8,7 @@ use Illuminate\Support\Arr;
 final class ResponsibleIdentityServiceData extends DocuWareData
 {
     public function __construct(
-        public string $identityServiceUrl,
+        public ?string $identityServiceUrl,
         public bool $refreshTokenSupported,
     ) {}
 
@@ -17,9 +17,14 @@ final class ResponsibleIdentityServiceData extends DocuWareData
      */
     public static function fromDocuWare(array $data): self
     {
+        $url = Arr::get($data, 'IdentityServiceUrl');
+
         return new self(
-            identityServiceUrl: Arr::get($data, 'IdentityServiceUrl'),
-            refreshTokenSupported: Arr::get($data, 'RefreshTokenSupported'),
+            identityServiceUrl: is_string($url) && $url !== '' ? $url : null,
+            refreshTokenSupported: filter_var(
+                Arr::get($data, 'RefreshTokenSupported'),
+                FILTER_VALIDATE_BOOLEAN,
+            ),
         );
     }
 }

@@ -10,6 +10,32 @@ use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexTableDTO;
 use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexTextDTO;
 use Illuminate\Support\Arr;
 
+it('builds rows from associative scalar maps, auto-detecting cell types', function () {
+    $field = IndexTableDTO::make('POSITIONS', [
+        ['ARTICLE' => 'Widget', 'QTY' => 5, 'PRICE' => 19.99],
+        ['ARTICLE' => 'Gadget', 'QTY' => 3, 'PRICE' => 4.5],
+    ])->values();
+
+    expect(Arr::get($field, 'ItemElementName'))->toBe('Table')
+        ->and(Arr::get($field, 'Item.$type'))->toBe('DocumentIndexFieldTable')
+        ->and(Arr::get($field, 'Item.Row'))->toBe([
+            [
+                'ColumnValue' => [
+                    ['FieldName' => 'ARTICLE', 'Item' => 'Widget', 'ItemElementName' => 'String'],
+                    ['FieldName' => 'QTY', 'Item' => 5, 'ItemElementName' => 'Int'],
+                    ['FieldName' => 'PRICE', 'Item' => 19.99, 'ItemElementName' => 'Decimal'],
+                ],
+            ],
+            [
+                'ColumnValue' => [
+                    ['FieldName' => 'ARTICLE', 'Item' => 'Gadget', 'ItemElementName' => 'String'],
+                    ['FieldName' => 'QTY', 'Item' => 3, 'ItemElementName' => 'Int'],
+                    ['FieldName' => 'PRICE', 'Item' => 4.5, 'ItemElementName' => 'Decimal'],
+                ],
+            ],
+        ]);
+})->group('dto');
+
 it('create prepare index text dto using dto', function () {
     $name = 'TABLE';
 

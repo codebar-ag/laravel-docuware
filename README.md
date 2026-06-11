@@ -14,21 +14,6 @@ You work with **resources** and **immutable data objects** — never raw HTTP.
 
 ---
 
-> # ⚠️ v14 is a breaking, ground-up release
->
-> **v14 has a completely new syntax and is NOT backward compatible with v13 or any earlier release.**
->
-> Every entry point changed: the old `DocuWare`/`Connectors`/`Requests`/`DocuWareSearchRequestBuilder`
-> classes and the hand-rolled DTOs are **gone**. v14 is built around a single facade, domain
-> **resources**, immutable `*Data` objects, and a fluent search builder.
->
-> There is **no in-place upgrade path** and **no compatibility shim** — calling code must be rewritten.
-> Pin to `^13.0` if you are not ready. When you are, jump straight to
-> [**What changed in v14 (and why)**](#what-changed-in-v14-and-why) for the old → new mapping and the
-> reasoning behind every removal.
-
----
-
 ## Table of contents
 
 - [Highlights](#highlights)
@@ -50,7 +35,6 @@ You work with **resources** and **immutable data objects** — never raw HTTP.
 - [Error handling](#error-handling)
 - [Events](#events)
 - [Security](#security)
-- [What changed in v14 (and why)](#what-changed-in-v14-and-why)
 - [Testing](#testing)
 - [Credits](#credits)
 - [License](#license)
@@ -241,6 +225,10 @@ objects or collections of them.
 
 ### Documents — `DocuWare::documents($cabinetId)`
 
+The documents resource is broad, so its methods are grouped by area below.
+
+**Core (search, read, write, lifecycle)**
+
 | Method | Returns | Description |
 | --- | --- | --- |
 | `search()` | `SearchQuery` | Fluent search builder (see below) |
@@ -251,23 +239,41 @@ objects or collections of them.
 | `delete($id)` | — | Delete a document |
 | `download($id, TargetFileType = AUTO, $keepAnnotations = false)` | `string` | Binary content |
 | `preview($id)` | `string` | Preview image bytes |
-| `sections($id)` / `section($sectionId)` | `Collection<SectionData>` / `SectionData` | Document sections |
+
+**Sections** (a document is composed of one or more file sections)
+
+| Method | Returns | Description |
+| --- | --- | --- |
+| `sections($id)` / `section($sectionId)` | `Collection<SectionData>` / `SectionData` | List / fetch sections |
 | `deleteSection($sectionId)` | `bool` | Delete a section |
 | `downloadSection($sectionId)` / `textshot($sectionId)` | `string` | Section data / text layer |
 | `thumbnail($sectionId, $page = 0)` | `string` | Thumbnail bytes |
+
+**Annotations & application properties**
+
+| Method | Returns | Description |
+| --- | --- | --- |
 | `annotations($id)` / `annotate($id, $payload)` / `stamps($id)` | `Collection` / `mixed` / `Collection` | Annotations & stamps |
 | `applicationProperties($id)` / `addApplicationProperties(...)` / `updateApplicationProperties(...)` / `deleteApplicationProperties(...)` | `mixed` | App-defined properties |
+
+**Structure operations (clip/staple, transfer, batch & upload)**
+
+| Method | Returns | Description |
+| --- | --- | --- |
 | `clip($ids, $force)` / `staple($ids, $force)` / `unclip($id)` / `unstaple($id)` | `DocumentData` / `DocumentPageData` | Content merge/divide |
 | `transfer($id, $destinationFileCabinetId, $storeDialogId, $keepSource = false)` | `bool` | Move/copy across cabinets |
 | `batchUpdate(...)` / `appendPdf(...)` / `appendFiles(...)` / `replaceSection(...)` | `array` / `Section` / `Document` | Batch & upload operations |
 | `workflowHistory($id)` | `Collection<HistoryStepData>` | Document workflow history |
 
-### Other resources
+### File cabinets & structure — `fileCabinets`, `dialogs`, `selectLists`
+
+Cabinet metadata, the search/store dialogs defined on a cabinet, and the option lists behind
+select fields.
 
 ```php
 DocuWare::fileCabinets()->all();                 // Collection<FileCabinetData>
 DocuWare::fileCabinets()->info($cabinetId);      // FileCabinetInformationData
-DocuWare::fileCabinets()->fields($cabinetId);    // Collection<FieldData>
+DocuWare::fileCabinets()->fields($cabinetId);    // Collection<FieldData> — the cabinet's index fields
 
 DocuWare::dialogs($cabinetId)->all();            // Collection<DialogData>
 DocuWare::dialogs($cabinetId)->ofType(DialogType::SEARCH);
@@ -275,7 +281,13 @@ DocuWare::dialogs($cabinetId)->find($dialogId);
 
 DocuWare::selectLists($cabinetId)->get($dialogId, 'FIELD');
 DocuWare::selectLists($cabinetId)->filtered($dialogId, 'FIELD', $expression);
+```
 
+### Organization & users — `organizations`, `users`, `groups`, `roles`
+
+Tenant-level directory: the organization, its users, and the groups/roles they belong to.
+
+```php
 DocuWare::organizations()->all();                // Collection<OrganizationData>
 DocuWare::organizations()->loginToken($targetProducts, $usage, $lifetime);
 
@@ -294,12 +306,22 @@ DocuWare::users()->rolesOf($userId);
 
 DocuWare::groups()->all();                       // Collection<GroupData>
 DocuWare::roles()->all();                        // Collection<RoleData>
+```
 
+### Workflows — `workflows`
+
+```php
 DocuWare::workflows()->historySteps($workflowId, $instanceId);  // InstanceHistoryData
+```
 
+### Trash (recycle bin) — `trash`
+
+Documents deleted from a cabinet land here until purged or restored.
+
+```php
 DocuWare::trash()->search($page, $perPage, ...); // TrashPageData
-DocuWare::trash()->delete($ids);                 // DeleteDocumentsData
-DocuWare::trash()->restore($ids);                // RestoreDocumentsData
+DocuWare::trash()->delete($ids);                 // DeleteDocumentsData — purge permanently
+DocuWare::trash()->restore($ids);                // RestoreDocumentsData — recover to the cabinet
 ```
 
 ## Search builder
@@ -373,8 +395,114 @@ DocuWare::documents($cabinetId)->update($documentId, IndexFields::make()->number
 | `dateTime($name, $value)` | `?Carbon` | `String` (datetime) |
 | `table($name, $rows)` | `array\|Collection` | `Table` |
 
-`store()` and `update()` also accept a raw `Collection` of index DTOs if you need to build them
-yourself, but `IndexFields` is the recommended path.
+`IndexFields::make()` starts a builder; `isEmpty()` tells you whether anything was added; and
+`toCollection()` returns the underlying index objects. `store()` and `update()` also accept that
+raw `Collection` directly if you need to build the DTOs yourself, but `IndexFields` is the
+recommended path.
+
+### Updating index fields
+
+`update()` writes index values on an existing document — every field type uses the **same** call,
+including tables. It returns a `Collection<string, DocumentFieldData>` keyed by field name (the
+server's view of the fields after the write):
+
+```php
+use CodebarAg\DocuWare\Data\Write\IndexFields;
+use Illuminate\Support\Carbon;
+
+$fields = DocuWare::documents($cabinetId)->update(
+    $documentId,
+    IndexFields::make()
+        ->text('STATUS', 'closed')
+        ->number('AMOUNT', 99)
+        ->decimal('PRICE', 19.99)
+        ->date('DUE', Carbon::today())
+        ->dateTime('SEEN', Carbon::now())
+        // Table fields are replaced wholesale — pass the full set of rows you want stored:
+        ->table('POSITIONS', [
+            ['ARTICLE' => 'Widget', 'QTY' => 5],
+            ['ARTICLE' => 'Gadget', 'QTY' => 3],
+        ]),
+    forceUpdate: true, // overwrite read-only/system-managed fields where the cabinet allows it
+);
+
+$fields['STATUS']->value; // 'closed'
+```
+
+Pass `forceUpdate: false` (the default) to let DocuWare reject writes to protected fields; pass
+`true` to force them through where the cabinet permits.
+
+### Table fields
+
+A table field holds **rows of typed cells**. The same `table($name, $rows)` builder is used for
+both create (`store()`) and update (`update()`), and accepts rows in either form:
+
+- **Simple** — an associative `[column => value]` map per row; cell types are auto-detected
+  (`string → String`, `int → Int`, `float → Decimal`, `Carbon → DateTime`):
+
+  ```php
+  IndexFields::make()->table('POSITIONS', [
+      ['ARTICLE' => 'Widget', 'QTY' => 5, 'PRICE' => 19.99],
+      ['ARTICLE' => 'Gadget', 'QTY' => 3, 'PRICE' => 4.50],
+  ]);
+  ```
+
+- **Explicit** — build each cell with an index DTO when you need exact typing that auto-detection
+  can't infer (a date-only cell, a keyword, or a memo):
+
+  ```php
+  use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexTextDTO;
+  use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexNumericDTO;
+  use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexDateDTO;
+
+  IndexFields::make()->table('POSITIONS', [
+      [
+          IndexTextDTO::make('ARTICLE', 'Widget'),
+          IndexNumericDTO::make('QTY', 5),
+          IndexDateDTO::make('DELIVERED', Carbon::today()),
+      ],
+  ]);
+  ```
+
+> **Tables are written wholesale.** A `store()`/`update()` call **replaces every row** of the field,
+> so always pass the complete set of rows you want stored. To append, read the current rows first
+> (see below) and re-send them along with the new ones.
+
+Reading a table back, the field's `->value` is a `Collection<TableRowData>`; each row exposes its
+cells as a `Collection<string, DocumentFieldData>` keyed by column name (cell values already parsed
+to native PHP types):
+
+```php
+$document = DocuWare::documents($cabinetId)->find($documentId);
+$rows = $document->fields['POSITIONS']->value;   // Collection<TableRowData>
+
+foreach ($rows as $row) {
+    $row->fields['ARTICLE']->value;  // 'Widget' (string)
+    $row->fields['QTY']->value;      // 5 (int)
+}
+```
+
+### Reading values back
+
+The reverse conversion is automatic. Index values read from DocuWare are exposed on
+`DocumentFieldData->value` already cast to the matching PHP type:
+
+| DocuWare type | PHP type on `->value` |
+| --- | --- |
+| `Int` | `int` |
+| `Decimal` | `float` |
+| `Date` / `DateTime` | `Carbon` |
+| `String` / `Memo` / `Keyword(s)` | `string` |
+| `Table` | `Collection<TableRowData>` (each row is a `Collection<string, DocumentFieldData>`) |
+
+```php
+$document = DocuWare::documents($cabinetId)->find($documentId);
+
+foreach ($document->fields as $field) {
+    $field->name;  // 'AMOUNT'
+    $field->value; // 99 (int) — already parsed, no manual conversion
+}
+```
 
 ## Immutable data & withers
 
@@ -790,25 +918,6 @@ use CodebarAg\DocuWare\Events\{ResponseReceived, TokenRefreshed};
   from every log, event, and exception. An architecture test asserts no sentinel secret can leak.
 - **Token store**: access tokens are `Crypt`-encrypted, namespaced per instance, and refreshed under a
   cache lock to avoid stampedes.
-
-## What changed in v14 (and why)
-
-v14 is a ground-up rewrite. The old surface is gone; here is what replaced it and why.
-
-| Removed in ≤ v13 | Replaced by | Why |
-| --- | --- | --- |
-| `DocuWare` god-object & `$connector->send(new SomeRequest())` | `DocuWare` facade → resources (`DocuWare::documents($cabinet)->…`) | A small, domain-shaped API instead of leaking Saloon requests into app code |
-| `Connectors\DocuWareConnector` (public) | Internal `Transport\DocuWareConnector`, one per resolved client | Connection lifecycle and auth are package concerns, not yours |
-| Hand-rolled `DTO\*` classes | Immutable `spatie/laravel-data` `*Data` objects with `copyWith()` | Free serialization, validation, and immutability |
-| `DocuWareSearchRequestBuilder` | Fluent `SearchQuery` (`->where()`, `->whereDateBetween()`, `->cursor()`) | Composable, lazy, memory-safe iteration over all pages |
-| Manually built index-field arrays | `IndexFields::make()->text()/number()/date()/table()` | You pass PHP values; the package builds the correct wire format |
-| Config-file-only multi-tenancy | Config instances **and** runtime `DocuWare::connection(InstanceConfig)` DTOs | Database-driven tenancy without touching config files |
-| Per-operation error/result objects & mixed exceptions | One `DocuWareException` hierarchy | A single, predictable error model |
-| `DocuWareResponseLog` / `DocuWareOAuthLog` events | `ResponseReceived` / `TokenRefreshed` (redacted) | Observability without leaking secrets |
-
-There is no compatibility layer — rewrite call sites against the resources and data objects documented
-above. The old → new mapping in this table plus the [Resources](#resources) section cover every
-previously available operation.
 
 ## Testing
 

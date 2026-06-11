@@ -2,17 +2,16 @@
 
 namespace CodebarAg\DocuWare\Responses\General\Organization;
 
-use CodebarAg\DocuWare\Events\DocuWareResponseLog;
-use CodebarAg\DocuWare\Support\EnsureValidResponse;
+use CodebarAg\DocuWare\Concerns\HandlesDocuWareResponse;
 use Saloon\Http\Response;
 
 final class RequestLoginTokenResponse
 {
+    use HandlesDocuWareResponse;
+
     public static function fromResponse(Response $response): string
     {
-        event(new DocuWareResponseLog($response));
-
-        EnsureValidResponse::from($response);
+        $response = self::validated($response);
 
         return $response->body();
     }

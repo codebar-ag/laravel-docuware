@@ -26,13 +26,44 @@ final class TextshotPage
 
         return new self(
             language: Arr::get($data, 'Lang'),
-            content: self::content(JsonArrays::listOfRecords(is_array($rawItems) ? $rawItems : []))
+            content: self::content(JsonArrays::listOfRecords(is_array($rawItems) ? $rawItems : [])),
+            schemaType: Arr::get($data, '$type'),
+            version: Arr::get($data, 'Version'),
+            horizontalDpi: Arr::get($data, 'HorizontalDpi'),
+            verticalDpi: Arr::get($data, 'VerticalDpi'),
+            sizeX: Arr::get($data, 'SizeX'),
+            sizeY: Arr::get($data, 'SizeY'),
+            skewAngle: ($skew = Arr::get($data, 'SkewAngle')) === null ? null : (float) $skew,
+            rotation: Arr::get($data, 'Rotation'),
+            languageDetection: Arr::get($data, 'LanguageDetection'),
+            candidateDetectionVersion: Arr::get($data, 'CandidateDetectionVersion'),
+            barCodes: Arr::get($data, 'BarCodes'),
+            candidates: Arr::get($data, 'Candidates'),
+            metadata: Arr::get($data, 'metadata'),
         );
     }
 
+    /**
+     * @param  list<array<string, mixed>>|null  $barCodes
+     * @param  list<array<string, mixed>>|null  $candidates
+     * @param  list<array<string, mixed>>|null  $metadata
+     */
     public function __construct(
-        public ?string $language,
-        public string $content,
+        public readonly ?string $language,
+        public readonly string $content,
+        public readonly ?string $schemaType = null,
+        public readonly ?int $version = null,
+        public readonly ?float $horizontalDpi = null,
+        public readonly ?float $verticalDpi = null,
+        public readonly ?int $sizeX = null,
+        public readonly ?int $sizeY = null,
+        public readonly ?float $skewAngle = null,
+        public readonly ?string $rotation = null,
+        public readonly ?string $languageDetection = null,
+        public readonly ?int $candidateDetectionVersion = null,
+        public readonly ?array $barCodes = null,
+        public readonly ?array $candidates = null,
+        public readonly ?array $metadata = null,
     ) {}
 
     /**

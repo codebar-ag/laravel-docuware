@@ -2,19 +2,17 @@
 
 namespace CodebarAg\DocuWare\Requests\Workflow;
 
+use CodebarAg\DocuWare\Concerns\HasDocuWareCaching;
 use CodebarAg\DocuWare\DTO\Workflow\InstanceHistory;
 use CodebarAg\DocuWare\Responses\Workflow\GetDocumentWorkflowHistoryStepsResponse;
-use Illuminate\Support\Facades\Cache;
 use Saloon\CachePlugin\Contracts\Cacheable;
-use Saloon\CachePlugin\Drivers\LaravelCacheDriver;
-use Saloon\CachePlugin\Traits\HasCaching;
 use Saloon\Enums\Method;
 use Saloon\Http\Request;
 use Saloon\Http\Response;
 
 class GetDocumentWorkflowHistorySteps extends Request implements Cacheable
 {
-    use HasCaching;
+    use HasDocuWareCaching;
 
     protected Method $method = Method::GET;
 
@@ -26,16 +24,6 @@ class GetDocumentWorkflowHistorySteps extends Request implements Cacheable
     public function resolveEndpoint(): string
     {
         return '/Workflows/'.$this->workflowId.'/Instances/'.$this->workflowInstanceId.'/History';
-    }
-
-    public function resolveCacheDriver(): LaravelCacheDriver
-    {
-        return new LaravelCacheDriver(Cache::store(config('laravel-docuware.configurations.cache.driver')));
-    }
-
-    public function cacheExpiryInSeconds(): int
-    {
-        return config('laravel-docuware.configurations.cache.lifetime_in_seconds', 3600);
     }
 
     public function createDtoFromResponse(Response $response): InstanceHistory

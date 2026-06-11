@@ -2,22 +2,19 @@
 
 namespace CodebarAg\DocuWare\Responses\Search;
 
+use CodebarAg\DocuWare\Concerns\HandlesDocuWareResponse;
 use CodebarAg\DocuWare\DTO\Documents\DocumentPaginator;
-use CodebarAg\DocuWare\Events\DocuWareResponseLog;
-use CodebarAg\DocuWare\Support\EnsureValidResponse;
 use Exception;
 use Saloon\Http\Response;
 
 final class GetSearchResponse
 {
+    use HandlesDocuWareResponse;
+
     public static function fromResponse(Response $response, int $page, int $perPage): DocumentPaginator
     {
-        event(new DocuWareResponseLog($response));
-
         try {
-            EnsureValidResponse::from($response);
-
-            $data = $response->throw()->json();
+            $data = self::validated($response)->json();
         } catch (Exception $e) {
             return DocumentPaginator::fromFailed($e);
         }

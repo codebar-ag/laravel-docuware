@@ -42,7 +42,12 @@ final class CheckInDocumentFromFileSystem extends Request implements HasBody
     protected function defaultBody(): array
     {
         return [
-            new MultipartValue(name: 'CheckIn', value: $this->checkInJson, filename: 'CheckIn.json'),
+            new MultipartValue(
+                name: 'CheckIn',
+                value: $this->checkInJson,
+                filename: 'CheckIn.json',
+                headers: ['Content-Type' => 'application/json'],
+            ),
             new MultipartValue(name: 'File[]', value: $this->fileContent, filename: $this->fileName),
         ];
     }

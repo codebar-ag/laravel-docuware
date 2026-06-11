@@ -22,8 +22,8 @@ final class DocumentThumbnail
     }
 
     public function __construct(
-        public string $mime,
-        public string $data,
-        public string $base64,
+        public readonly string $mime,
+        public readonly string $data,
+        public readonly string $base64,
     ) {}
 }

@@ -25,7 +25,7 @@ it('checks out a document to the file system', function () {
         $document->id,
     ))->dto();
 
-    expect($checkout->links)->not->toBeEmpty();
+    expect($checkout->content)->toBe('::fake-file-content::');
 
     Event::assertDispatched(DocuWareResponseLog::class);
 

@@ -21,6 +21,7 @@ final class DocumentField
             isNull: Arr::get($data, 'IsNull'),
             value: ParseValue::field($data),
             type: Arr::get($data, 'ItemElementName'),
+            readOnly: Arr::get($data, 'ReadOnly'),
         );
     }
 
@@ -28,12 +29,13 @@ final class DocumentField
      * @param  null|int|float|Carbon|string|Collection<int, mixed>  $value
      */
     public function __construct(
-        public bool $systemField,
-        public string $name,
-        public string $label,
-        public bool $isNull,
-        public null|int|float|Carbon|string|Collection $value,
-        public string $type,
+        public readonly bool $systemField,
+        public readonly string $name,
+        public readonly string $label,
+        public readonly bool $isNull,
+        public readonly null|int|float|Carbon|string|Collection $value,
+        public readonly string $type,
+        public readonly ?bool $readOnly = null,
     ) {}
 
     public static function fake(
@@ -43,6 +45,7 @@ final class DocumentField
         ?bool $isNull = true,
         int|float|Carbon|string|null $value = null,
         ?string $type = null,
+        ?bool $readOnly = null,
     ): self {
         $fakeType = Arr::random(['Int', 'Decimal', 'Text', 'DateTime']);
 
@@ -60,6 +63,7 @@ final class DocumentField
             isNull: $isNull ?? true,
             value: $value ?? $fakeValue,
             type: $type ?? $fakeType,
+            readOnly: $readOnly ?? false,
         );
     }
 }

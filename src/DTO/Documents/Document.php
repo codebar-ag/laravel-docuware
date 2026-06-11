@@ -3,6 +3,7 @@
 namespace CodebarAg\DocuWare\DTO\Documents;
 
 use Carbon\Carbon;
+use CodebarAg\DocuWare\DTO\Link;
 use CodebarAg\DocuWare\DTO\Section;
 use CodebarAg\DocuWare\DTO\SuggestionField;
 use CodebarAg\DocuWare\Support\JsonArrays;
@@ -44,6 +45,17 @@ final class Document
             fields: $fields,
             sections: $sections,
             suggestions: $suggestions,
+            annotations_preview: Arr::get($data, 'AnnotationsPreview'),
+            checksum_info: is_array($checksum = Arr::get($data, 'ChecksumInfo')) ? ChecksumInfo::fromJson($checksum) : null,
+            flags: is_array($flags = Arr::get($data, 'Flags')) ? DocumentFlags::fromJson($flags) : null,
+            has_text_annotation: Arr::get($data, 'HasTextAnnotation'),
+            has_xml_digital_signatures: Arr::get($data, 'HasXmlDigitalSignatures'),
+            have_more_total_pages: Arr::get($data, 'HaveMoreTotalPages'),
+            links: Link::collection(Arr::get($data, 'Links')),
+            organization_guid: Arr::get($data, 'OrganizationGuid'),
+            section_count: Arr::get($data, 'SectionCount'),
+            version: is_array($version = Arr::get($data, 'Version')) ? DocumentVersion::fromJson($version) : null,
+            version_status: Arr::get($data, 'VersionStatus'),
         );
     }
 
@@ -103,21 +115,33 @@ final class Document
      * @param  Collection<string, DocumentField>|null  $fields
      * @param  Collection<int, Section>|null  $sections
      * @param  Collection<string, SuggestionField>|null  $suggestions
+     * @param  Collection<int, Link>|null  $links
      */
     public function __construct(
-        public int $id,
-        public int $file_size,
-        public int $total_pages,
-        public string $title,
-        public ?string $extension,
-        public string $content_type,
-        public string $file_cabinet_id,
-        public ?string $intellixTrust,
-        public Carbon $created_at,
-        public Carbon $updated_at,
-        public ?Collection $fields,
-        public ?Collection $sections,
-        public ?Collection $suggestions,
+        public readonly int $id,
+        public readonly int $file_size,
+        public readonly int $total_pages,
+        public readonly string $title,
+        public readonly ?string $extension,
+        public readonly string $content_type,
+        public readonly string $file_cabinet_id,
+        public readonly ?string $intellixTrust,
+        public readonly Carbon $created_at,
+        public readonly Carbon $updated_at,
+        public readonly ?Collection $fields,
+        public readonly ?Collection $sections,
+        public readonly ?Collection $suggestions,
+        public readonly ?bool $annotations_preview = null,
+        public readonly ?ChecksumInfo $checksum_info = null,
+        public readonly ?DocumentFlags $flags = null,
+        public readonly ?bool $has_text_annotation = null,
+        public readonly ?bool $has_xml_digital_signatures = null,
+        public readonly ?bool $have_more_total_pages = null,
+        public readonly ?Collection $links = null,
+        public readonly ?string $organization_guid = null,
+        public readonly ?int $section_count = null,
+        public readonly ?DocumentVersion $version = null,
+        public readonly ?string $version_status = null,
     ) {}
 
     public function isPdf(): bool
@@ -162,6 +186,7 @@ final class Document
      * @param  Collection<string, DocumentField>|null  $fields
      * @param  Collection<int, Section>|null  $sections
      * @param  Collection<string, SuggestionField>|null  $suggestions
+     * @param  Collection<int, Link>|null  $links
      */
     public static function fake(
         ?int $id = null,
@@ -177,6 +202,17 @@ final class Document
         ?Collection $fields = null,
         ?Collection $sections = null,
         ?Collection $suggestions = null,
+        ?bool $annotations_preview = null,
+        ?ChecksumInfo $checksum_info = null,
+        ?DocumentFlags $flags = null,
+        ?bool $has_text_annotation = null,
+        ?bool $has_xml_digital_signatures = null,
+        ?bool $have_more_total_pages = null,
+        ?Collection $links = null,
+        ?string $organization_guid = null,
+        ?int $section_count = null,
+        ?DocumentVersion $version = null,
+        ?string $version_status = null,
     ): self {
         return new self(
             id: $id ?? random_int(1, 999999),
@@ -194,7 +230,18 @@ final class Document
                 DocumentField::fake(),
             ]),
             sections: $sections ?? null,
-            suggestions: $suggestions ?? null
+            suggestions: $suggestions ?? null,
+            annotations_preview: $annotations_preview ?? false,
+            checksum_info: $checksum_info ?? ChecksumInfo::fake(),
+            flags: $flags ?? DocumentFlags::fake(),
+            has_text_annotation: $has_text_annotation ?? false,
+            has_xml_digital_signatures: $has_xml_digital_signatures ?? false,
+            have_more_total_pages: $have_more_total_pages ?? false,
+            links: $links ?? collect([Link::fake()]),
+            organization_guid: $organization_guid ?? (string) Str::uuid(),
+            section_count: $section_count ?? 1,
+            version: $version ?? DocumentVersion::fake(),
+            version_status: $version_status ?? 'Initial',
         );
     }
 }

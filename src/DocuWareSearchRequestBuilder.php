@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use CodebarAg\DocuWare\Exceptions\UnableToSearch;
 use CodebarAg\DocuWare\Requests\Documents\DocumentsTrashBin\GetDocuments;
 use CodebarAg\DocuWare\Requests\Search\GetSearchRequest;
+use CodebarAg\DocuWare\Support\DateFilterValidator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Saloon\Exceptions\InvalidResponseClassException;
@@ -33,10 +34,14 @@ class DocuWareSearchRequestBuilder
     /** @var array<string, array<int, mixed>> */
     protected array $filters = [];
 
-    /** @var array<string, list<string>> */
-    protected array $usedDateOperators = [];
+    protected DateFilterValidator $dateFilters;
 
     protected bool $trashBin = false;
+
+    public function __construct()
+    {
+        $this->dateFilters = new DateFilterValidator;
+    }
 
     public function trashBin(): self
     {
@@ -94,19 +99,7 @@ class DocuWareSearchRequestBuilder
 
     public function filterDate(string $name, string $operator, Carbon $date): self
     {
-        $date = $this->exactDateTime($date, $operator);
-
-        $insertAt = $this->makeSureFilterDateRangeIsCorrect($name, $operator);
-
-        if ($insertAt === null) {
-            $this->filters[$name][] = $date;
-        } else {
-            $this->filters[$name] ??= [];
-            array_splice($this->filters[$name], $insertAt, 0, [$date]);
-            array_splice($this->usedDateOperators[$name], $insertAt, 0, [$operator]);
-        }
-
-        $this->filters[$name] = array_values($this->filters[$name]);
+        $this->dateFilters->add($name, $operator, $date);
 
         return $this;
     }
@@ -188,11 +181,10 @@ class DocuWareSearchRequestBuilder
      */
     public function get(): GetSearchRequest|GetDocuments
     {
-        $this->checkDateFilterRangeDivergence();
-        $this->restructureMonoDateFilterRange();
+        $dateConditions = $this->dateFilters->conditions();
         $this->guard();
 
-        $condition = $this->buildSearchCondition();
+        $condition = $this->buildSearchCondition($dateConditions);
 
         if ($this->trashBin) {
             return new GetDocuments(
@@ -219,9 +211,10 @@ class DocuWareSearchRequestBuilder
     }
 
     /**
+     * @param  array<string, array<int, Carbon>>  $dateConditions
      * @return list<array{DBName: string, Value: list<mixed>}>
      */
-    private function buildSearchCondition(): array
+    private function buildSearchCondition(array $dateConditions): array
     {
         $condition = [];
 
@@ -232,7 +225,7 @@ class DocuWareSearchRequestBuilder
             ];
         }
 
-        foreach ($this->filters as $name => $value) {
+        foreach ([...$this->filters, ...$dateConditions] as $name => $value) {
             if ($value === []) {
                 continue;
             }
@@ -262,126 +255,5 @@ class DocuWareSearchRequestBuilder
             $this->perPage <= 0,
             UnableToSearch::invalidPerPageNumber($this->perPage),
         );
-    }
-
-    private function checkDateFilterRangeDivergence(): void
-    {
-        foreach ($this->usedDateOperators as $name => $operators) {
-            if (count($operators) !== 2) {
-                continue;
-            }
-
-            $left = $this->filters[$name][0];
-            $right = $this->filters[$name][1];
-            if (! $left instanceof Carbon || ! $right instanceof Carbon) {
-                continue;
-            }
-
-            throw_if(
-                $this->dateBoundsViolateRange($left, $right, $operators[0]),
-                UnableToSearch::DivergedDateFilterRange(),
-            );
-        }
-    }
-
-    /**
-     * First operator between the two stored bounds (same semantics as the previous eval-based check).
-     */
-    private function dateBoundsViolateRange(Carbon $left, Carbon $right, string $operator): bool
-    {
-        $a = $left->getTimestamp();
-        $b = $right->getTimestamp();
-
-        return match ($operator) {
-            '>=' => $a >= $b,
-            '>' => $a > $b,
-            '<=' => $a <= $b,
-            '<' => $a < $b,
-            default => false,
-        };
-    }
-
-    private function restructureMonoDateFilterRange(): void
-    {
-        foreach ($this->usedDateOperators as $name => $operators) {
-            if (count($operators) !== 1) {
-                continue;
-            }
-
-            $this->filters[$name][] = $this->syntheticOppositeDateBound($operators[0]);
-            $this->filters[$name] = array_values($this->filters[$name]);
-        }
-    }
-
-    private function syntheticOppositeDateBound(string $operator): Carbon
-    {
-        return match ($operator) {
-            '<=', '<' => Carbon::createFromTimestamp(0),
-            '>=', '>' => Carbon::now(),
-            default => Carbon::now(),
-        };
-    }
-
-    /**
-     * @return int|null insert index when replacing an existing operator-bound date; null to append (operator already registered for this call)
-     */
-    private function makeSureFilterDateRangeIsCorrect(string $name, string $operator): ?int
-    {
-        if (! isset($this->usedDateOperators[$name])) {
-            $this->usedDateOperators[$name][] = $operator;
-            $this->throwIfInvalidDateFiltersCount($name);
-
-            return null;
-        }
-
-        $operatorIndex = array_search($operator, $this->usedDateOperators[$name], true);
-        if ($operatorIndex !== false) {
-            unset($this->filters[$name][$operatorIndex]);
-            $this->filters[$name] = isset($this->filters[$name])
-                ? array_values($this->filters[$name])
-                : [];
-            array_splice($this->usedDateOperators[$name], $operatorIndex, 1);
-            $this->throwIfInvalidDateFiltersCount($name);
-
-            return $operatorIndex;
-        }
-
-        if ($operator === '=') {
-            unset($this->filters[$name]);
-            $this->usedDateOperators[$name] = [$operator];
-            $this->throwIfInvalidDateFiltersCount($name);
-
-            return null;
-        }
-
-        $this->usedDateOperators[$name][] = $operator;
-        $this->throwIfInvalidDateFiltersCount($name);
-
-        return null;
-    }
-
-    /**
-     * DocuWare allows at most one open range per field before {@see restructureMonoDateFilterRange()} fills the pair.
-     */
-    private function throwIfInvalidDateFiltersCount(string $name): void
-    {
-        if (! isset($this->filters[$name])) {
-            return;
-        }
-
-        if (count($this->filters[$name]) !== 2) {
-            return;
-        }
-
-        throw UnableToSearch::InvalidDateFiltersCount(2);
-    }
-
-    private function exactDateTime(Carbon $date, string $operator): Carbon
-    {
-        return match ($operator) {
-            '<', '>=' => $date->startOfDay(),
-            '>', '<=' => $date->endOfDay(),
-            default => $date,
-        };
     }
 }

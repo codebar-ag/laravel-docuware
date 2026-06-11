@@ -27,10 +27,17 @@ it('records get-organization Saloon fixture', function () {
 
     $fixturePath = dirname(__DIR__).'/Fixtures/saloon/get-organization.json';
 
-    file_put_contents(
-        $fixturePath,
-        RecordedResponse::fromResponse($response)->toFile()
-    );
+    // Redact secret headers before writing, so committed fixtures never contain
+    // session cookies or bearer tokens.
+    $recorded = RecordedResponse::fromResponse($response);
+    $secret = ['set-cookie', 'cookie', 'authorization'];
+    $recorded->headers = collect($recorded->headers)
+        ->mapWithKeys(fn ($value, $key) => [
+            $key => in_array(strtolower((string) $key), $secret, true) ? 'REDACTED' : $value,
+        ])
+        ->all();
+
+    file_put_contents($fixturePath, $recorded->toFile());
 
     expect(file_exists($fixturePath))->toBeTrue();
 })->group('manual')->skip(

@@ -2,19 +2,19 @@
 
 namespace CodebarAg\DocuWare\Responses\Authentication\OAuth;
 
+use CodebarAg\DocuWare\Concerns\HandlesDocuWareResponse;
 use CodebarAg\DocuWare\DTO\Authentication\OAuth\ResponsibleIdentityService;
-use CodebarAg\DocuWare\Events\DocuWareResponseLog;
-use CodebarAg\DocuWare\Support\EnsureValidResponse;
+use CodebarAg\DocuWare\Support\ResponseBody;
 use Saloon\Http\Response;
 
 final class GetResponsibleIdentityServiceResponse
 {
+    use HandlesDocuWareResponse;
+
     public static function fromResponse(Response $response): ResponsibleIdentityService
     {
-        event(new DocuWareResponseLog($response));
+        $response = self::validated($response);
 
-        EnsureValidResponse::from($response);
-
-        return ResponsibleIdentityService::make($response->json());
+        return ResponsibleIdentityService::make(ResponseBody::toArray($response));
     }
 }

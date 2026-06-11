@@ -4,16 +4,25 @@ use CodebarAg\DocuWare\Connectors\DocuWareConnector;
 use CodebarAg\DocuWare\DocuWare;
 use CodebarAg\DocuWare\DTO\Config\ConfigWithCredentials;
 use CodebarAg\DocuWare\DTO\Documents\Document;
+use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexTextDTO;
+use CodebarAg\DocuWare\DTO\Documents\Field;
 use CodebarAg\DocuWare\Requests\Documents\DocumentsTrashBin\DeleteDocuments;
 use CodebarAg\DocuWare\Requests\Documents\ModifyDocuments\DeleteDocument;
+use CodebarAg\DocuWare\Requests\Fields\GetFieldsRequest;
+use CodebarAg\DocuWare\Requests\FileCabinets\Dialogs\GetAllDialogs;
 use CodebarAg\DocuWare\Requests\FileCabinets\Search\GetASpecificDocumentFromAFileCabinet;
 use CodebarAg\DocuWare\Requests\FileCabinets\Search\GetDocumentsFromAFileCabinet;
 use CodebarAg\DocuWare\Requests\FileCabinets\Upload\CreateDataRecord;
 use CodebarAg\DocuWare\Requests\General\UserManagement\CreateUpdateUsers\UpdateUser;
 use CodebarAg\DocuWare\Requests\General\UserManagement\GetUsers\GetUsers;
+use CodebarAg\DocuWare\Tests\Support\DocuWareFixture;
 use CodebarAg\DocuWare\Tests\TestCase;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Sleep;
 use Illuminate\Support\Str;
+use Saloon\Http\Faking\MockClient;
+use Saloon\Http\Request;
+use Saloon\Http\Response;
 
 uses(TestCase::class)
     ->in(__DIR__);
@@ -43,10 +52,16 @@ function clearFiles(DocuWareConnector $connector): void
     }
 
     foreach ($paginator->documents as $document) {
-        $connector->send(new DeleteDocument(
-            $fileCabinetId,
-            $document->id,
-        ))->dto();
+        try {
+            $connector->send(new DeleteDocument(
+                $fileCabinetId,
+                $document->id,
+            ))->dto();
+        } catch (Throwable) {
+            // Skip documents that cannot be deleted (e.g. locked in an in-progress
+            // workflow under version management). Leaving them in place must not
+            // abort the per-test cleanup for every other integration test.
+        }
     }
 
     emptyTrashForConnector($connector);
@@ -179,6 +194,106 @@ function getConnector(): DocuWareConnector
         username: config('laravel-docuware.credentials.username'),
         password: config('laravel-docuware.credentials.password'),
     ));
+}
+
+/**
+ * Send a request through a Saloon fixture so the full real response is captured for replay.
+ *
+ * - Replays the recorded fixture if it exists (offline `composer test`).
+ * - Records the real response (redacted) when the fixture is missing, or always when
+ *   DOCUWARE_RECORD_FIXTURES=true (live run that refreshes the capture).
+ *
+ * Uses a throwaway connector so the mock client never leaks into the shared per-test
+ * connector; the OAuth token is shared via the cache, so no extra auth round-trip occurs.
+ *
+ * @throws Throwable
+ */
+function recordFixture(Request $request, string $name): Response
+{
+    $path = __DIR__.'/Fixtures/saloon/'.$name.'.json';
+
+    if (filter_var(env('DOCUWARE_RECORD_FIXTURES', false), FILTER_VALIDATE_BOOLEAN) && file_exists($path)) {
+        unlink($path);
+    }
+
+    $connector = getConnector();
+    $connector->withMockClient(new MockClient([
+        $request::class => new DocuWareFixture($name),
+    ]));
+
+    return $connector->send($request);
+}
+
+/**
+ * Discover the sandbox cabinet's writable (User-scope) index fields, keyed by DocuWare field type.
+ *
+ * Lets tests generate their own data against whatever fields the cabinet actually exposes
+ * (this sandbox names one field per type: TEXT/NUMBER/COMMENT/DATE/KEYWORD/DECIMAL/DATETIME/TABLE)
+ * instead of hardcoding field DB names that only exist in one specific cabinet.
+ *
+ * @return Collection<string, Field> DWFieldType => Field
+ */
+function sandboxUserFields(DocuWareConnector $connector): Collection
+{
+    $fileCabinetId = config('laravel-docuware.tests.file_cabinet_id');
+
+    return collect($connector->send(new GetFieldsRequest($fileCabinetId))->dto())
+        ->filter(fn (Field $field) => $field->isUser())
+        ->keyBy(fn (Field $field) => $field->type);
+}
+
+/**
+ * DB name of a writable field of the given DocuWare type (e.g. 'Text', 'Numeric', 'Date').
+ * Skips the test if the cabinet has no such field, so the suite stays portable across cabinets.
+ */
+function sandboxFieldName(DocuWareConnector $connector, string $type): string
+{
+    $field = sandboxUserFields($connector)->get($type);
+
+    if (! $field instanceof Field) {
+        test()->markTestSkipped("Sandbox cabinet has no writable field of type [{$type}].");
+    }
+
+    return $field->name;
+}
+
+/**
+ * Upload a fresh test document into the sandbox cabinet and return its DTO.
+ * Generates its own index values against the discovered Text field — no hardcoded field names.
+ *
+ * @throws Throwable
+ */
+function uploadTestDocument(DocuWareConnector $connector, ?string $value = null, ?string $fileName = 'example.txt'): Document
+{
+    $fileCabinetId = config('laravel-docuware.tests.file_cabinet_id');
+    $textField = sandboxFieldName($connector, 'Text');
+
+    return $connector->send(new CreateDataRecord(
+        $fileCabinetId,
+        $fileName !== null ? '::fake-file-content::' : null,
+        $fileName,
+        collect([IndexTextDTO::make($textField, $value ?? 'value-'.Str::random(8))]),
+    ))->dto();
+}
+
+/**
+ * Discover the cabinet's default Search dialog id (falling back to any Search dialog),
+ * so tests never hardcode a dialog id.
+ */
+function sandboxSearchDialogId(DocuWareConnector $connector): string
+{
+    $fileCabinetId = config('laravel-docuware.tests.file_cabinet_id');
+
+    $dialogs = collect($connector->send(new GetAllDialogs($fileCabinetId))->dto())
+        ->filter(fn ($dialog) => $dialog->type === 'Search');
+
+    $dialog = $dialogs->firstWhere(fn ($d) => $d->isDefault === true) ?? $dialogs->first();
+
+    if ($dialog === null) {
+        test()->markTestSkipped('Sandbox cabinet has no Search dialog.');
+    }
+
+    return $dialog->id;
 }
 
 function cleanup($connector, $fileCabinetId): void

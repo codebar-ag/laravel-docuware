@@ -25,7 +25,7 @@ final class Textshot
      * @param  Collection<int, TextshotPage>  $pages
      */
     public function __construct(
-        public int $page_count,
-        public Collection $pages,
+        public readonly int $page_count,
+        public readonly Collection $pages,
     ) {}
 }

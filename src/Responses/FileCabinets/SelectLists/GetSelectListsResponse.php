@@ -2,17 +2,16 @@
 
 namespace CodebarAg\DocuWare\Responses\FileCabinets\SelectLists;
 
-use CodebarAg\DocuWare\Events\DocuWareResponseLog;
-use CodebarAg\DocuWare\Support\EnsureValidResponse;
+use CodebarAg\DocuWare\Concerns\HandlesDocuWareResponse;
 use Saloon\Http\Response;
 
 final class GetSelectListsResponse
 {
+    use HandlesDocuWareResponse;
+
     public static function fromResponse(Response $response): mixed
     {
-        event(new DocuWareResponseLog($response));
-
-        EnsureValidResponse::from($response);
+        $response = self::validated($response);
 
         return $response->throw()->json('Value');
     }

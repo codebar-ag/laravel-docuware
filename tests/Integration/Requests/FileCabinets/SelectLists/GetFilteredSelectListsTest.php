@@ -1,58 +1,37 @@
 <?php
 
-use CodebarAg\DocuWare\Events\DocuWareResponseLog;
 use CodebarAg\DocuWare\Requests\FileCabinets\SelectLists\GetFilteredSelectLists;
 use CodebarAg\DocuWare\Requests\FileCabinets\SelectLists\GetSelectLists;
-use Illuminate\Support\Facades\Event;
 
-it('returns a select list for a dialog field', function () {
-    Event::fake();
-
+it('returns a select list for a discovered dialog field', function () {
     $fileCabinetId = config('laravel-docuware.tests.file_cabinet_id');
-    $dialogId = config('laravel-docuware.tests.dialog_id');
-    $fieldName = config('laravel-docuware.tests.filtered_select_list_field');
+    $dialogId = sandboxSearchDialogId($this->connector);
+    $keywordField = sandboxFieldName($this->connector, 'Keyword');
 
-    $response = $this->connector->send(new GetSelectLists(
-        $fileCabinetId,
-        $dialogId,
-        $fieldName,
-    ));
+    $response = $this->connector->send(new GetSelectLists($fileCabinetId, $dialogId, $keywordField));
 
     expect($response->successful())->toBeTrue('HTTP '.$response->status().': '.$response->body());
+    expect($response->dto())->toBeArray();
+})->group('live');
 
-    $values = $response->dto();
-    expect($values !== null)->toBeTrue();
-
-    Event::assertDispatched(DocuWareResponseLog::class);
-});
-
-it('returns a filtered select list using DialogExpression', function () {
+it('returns a filtered select list using a DialogExpression', function () {
     $fileCabinetId = config('laravel-docuware.tests.file_cabinet_id');
-    $dialogId = config('laravel-docuware.tests.dialog_id');
-    $fieldName = config('laravel-docuware.tests.filtered_select_list_field');
-    $conditionField = config('laravel-docuware.tests.filtered_select_list_condition_field');
-    $conditionValue = config('laravel-docuware.tests.filtered_select_list_condition_value');
+    $dialogId = sandboxSearchDialogId($this->connector);
+    $keywordField = sandboxFieldName($this->connector, 'Keyword');
+    $textField = sandboxFieldName($this->connector, 'Text');
 
     $dialogExpression = [
         'Operation' => 'And',
         'Condition' => [
-            [
-                'DBName' => $conditionField,
-                'Value' => [$conditionValue],
-            ],
+            ['DBName' => $textField, 'Value' => ['value']],
         ],
     ];
 
-    $response = $this->connector->send(new GetFilteredSelectLists(
-        $fileCabinetId,
-        $dialogId,
-        $fieldName,
-        $dialogExpression,
-    ));
+    $response = recordFixture(
+        new GetFilteredSelectLists($fileCabinetId, $dialogId, $keywordField, $dialogExpression),
+        'file-cabinets/select-lists/get-filtered-select-lists',
+    );
 
     expect($response->successful())->toBeTrue('HTTP '.$response->status().': '.$response->body());
-
-    /** @var mixed $payload */
-    $payload = $response->json();
-    expect(is_array($payload))->toBeTrue();
-});
+    expect($response->json())->toBeArray();
+})->group('live');

@@ -2,8 +2,7 @@
 
 namespace CodebarAg\DocuWare\Responses\Documents\UpdateIndexValues;
 
-use CodebarAg\DocuWare\Events\DocuWareResponseLog;
-use CodebarAg\DocuWare\Support\EnsureValidResponse;
+use CodebarAg\DocuWare\Concerns\HandlesDocuWareResponse;
 use CodebarAg\DocuWare\Support\JsonArrays;
 use CodebarAg\DocuWare\Support\ParseValue;
 use Illuminate\Support\Arr;
@@ -12,14 +11,14 @@ use Saloon\Http\Response;
 
 final class UpdateIndexValuesResponse
 {
+    use HandlesDocuWareResponse;
+
     /**
      * @return Collection<string, mixed>
      */
     public static function fromResponse(Response $response): Collection
     {
-        event(new DocuWareResponseLog($response));
-
-        EnsureValidResponse::from($response);
+        $response = self::validated($response);
 
         $fields = $response->throw()->json('Field');
 

@@ -2,18 +2,17 @@
 
 namespace CodebarAg\DocuWare\Responses\FileCabinets\General;
 
+use CodebarAg\DocuWare\Concerns\HandlesDocuWareResponse;
 use CodebarAg\DocuWare\DTO\FileCabinets\General\FileCabinetInformation;
-use CodebarAg\DocuWare\Events\DocuWareResponseLog;
-use CodebarAg\DocuWare\Support\EnsureValidResponse;
 use Saloon\Http\Response;
 
 final class GetFileCabinetInformationResponse
 {
+    use HandlesDocuWareResponse;
+
     public static function fromResponse(Response $response): FileCabinetInformation
     {
-        event(new DocuWareResponseLog($response));
-
-        EnsureValidResponse::from($response);
+        $response = self::validated($response);
 
         $cabinet = $response->throw()->json();
 

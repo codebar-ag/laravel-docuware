@@ -4,27 +4,27 @@ namespace CodebarAg\DocuWare\DTO\Config;
 
 final class ConfigWithCredentialsTrustedUser
 {
-    public string $identifier;
+    public readonly string $identifier;
 
-    public string $username;
+    public readonly string $username;
 
-    public string $password;
+    public readonly string $password;
 
-    public string $impersonatedUsername;
+    public readonly string $impersonatedUsername;
 
-    public string $url;
+    public readonly string $url;
 
-    public string $passphrase;
+    public readonly string $passphrase;
 
-    public string $cacheDriver;
+    public readonly string $cacheDriver;
 
-    public int $cacheLifetimeInSeconds;
+    public readonly int $cacheLifetimeInSeconds;
 
-    public int $requestTimeoutInSeconds;
+    public readonly int $requestTimeoutInSeconds;
 
-    public string $clientId;
+    public readonly string $clientId;
 
-    public string $scope;
+    public readonly string $scope;
 
     public function __construct(
         string $username,

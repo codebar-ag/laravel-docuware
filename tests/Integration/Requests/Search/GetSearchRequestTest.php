@@ -2,11 +2,9 @@
 
 use Carbon\Carbon;
 use CodebarAg\DocuWare\DocuWare;
-use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexTextDTO;
 use CodebarAg\DocuWare\DTO\Documents\DocumentPaginator;
 use CodebarAg\DocuWare\Events\DocuWareResponseLog;
 use CodebarAg\DocuWare\Exceptions\UnableToSearch;
-use CodebarAg\DocuWare\Requests\FileCabinets\Upload\CreateDataRecord;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Sleep;
 
@@ -210,52 +208,23 @@ it('can search documents with multiple values', function () {
     Event::fake();
 
     $fileCabinetId = config('laravel-docuware.tests.file_cabinet_id');
-    $fileContent = '::fake-file-content::';
-    $fileName = 'example.txt';
+    $textField = sandboxFieldName($this->connector, 'Text');
 
-    $documentOne = $this->connector->send(new CreateDataRecord(
-        $fileCabinetId,
-        $fileContent,
-        $fileName,
-        collect([
-            IndexTextDTO::make('DOCUMENT_LABEL', '::text::'),
-            IndexTextDTO::make('DOCUMENT_TYPE', 'Abrechnung'),
-        ]),
-    ))->dto();
+    // Three documents with distinct values in the discovered text field; the search
+    // below should match exactly the first two.
+    uploadTestDocument($this->connector, 'Abrechnung');
+    uploadTestDocument($this->connector, 'Rechnung');
+    uploadTestDocument($this->connector, 'EtwasAnderes');
 
-    $documentTwo = $this->connector->send(new CreateDataRecord(
-        $fileCabinetId,
-        $fileContent,
-        $fileName,
-        collect([
-            IndexTextDTO::make('DOCUMENT_LABEL', '::text::'),
-            IndexTextDTO::make('DOCUMENT_TYPE', 'Rechnung'),
-        ]),
-    ))->dto();
+    Sleep::for(3)->seconds(); // Wait for the documents to be indexed.
 
-    $documentThree = $this->connector->send(new CreateDataRecord(
-        $fileCabinetId,
-        $fileContent,
-        $fileName,
-        collect([
-            IndexTextDTO::make('DOCUMENT_LABEL', '::text::'),
-            IndexTextDTO::make('DOCUMENT_TYPE', 'EtwasAnderes'),
-        ]),
-    ))->dto();
-
-    Sleep::for(3)->seconds(); // Wait for the documents to be processed
-
-    // Should filter down to documentOne and documentTwo. documentThree should be filtered out.
-    $paginatorRequestBothDocuments = (new DocuWare)
+    $paginatorRequest = (new DocuWare)
         ->searchRequestBuilder()
         ->fileCabinets([$fileCabinetId])
-        ->page(null)
-        ->perPage(null)
-        ->fulltext(null)
-        ->filterIn('DOCUMENT_TYPE', ['Abrechnung', 'Rechnung'])
+        ->filterIn($textField, ['Abrechnung', 'Rechnung'])
         ->get();
 
-    $paginator = $this->connector->send($paginatorRequestBothDocuments)->dto();
+    $paginator = $this->connector->send($paginatorRequest)->dto();
 
     $this->assertInstanceOf(DocumentPaginator::class, $paginator);
     $this->assertCount(2, $paginator->documents);

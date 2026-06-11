@@ -26,7 +26,7 @@ final class RestoreDocuments
      * @param  list<array<string, mixed>>  $failedItems
      */
     public function __construct(
-        public array $failedItems = [],
-        public int $successCount = 0,
+        public readonly array $failedItems = [],
+        public readonly int $successCount = 0,
     ) {}
 }

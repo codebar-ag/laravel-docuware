@@ -19,16 +19,16 @@ class TrashDocumentPaginator
      * @param  Collection<int, Collection<string, mixed>>  $mappedDocuments
      */
     public function __construct(
-        public int $total,
-        public int $per_page,
-        public int $current_page,
-        public int $last_page,
-        public int $from,
-        public int $to,
-        public Collection $headers,
-        public Collection $documents,
-        public Collection $mappedDocuments,
-        public ?ErrorBag $error = null,
+        public readonly int $total,
+        public readonly int $per_page,
+        public readonly int $current_page,
+        public readonly int $last_page,
+        public readonly int $from,
+        public readonly int $to,
+        public readonly Collection $headers,
+        public readonly Collection $documents,
+        public readonly Collection $mappedDocuments,
+        public readonly ?ErrorBag $error = null,
     ) {}
 
     public function showPrev(): bool

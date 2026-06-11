@@ -3,57 +3,52 @@
 use CodebarAg\DocuWare\DTO\Documents\Document;
 use CodebarAg\DocuWare\DTO\Documents\DocumentField;
 use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexTextDTO;
-use CodebarAg\DocuWare\Events\DocuWareResponseLog;
 use CodebarAg\DocuWare\Requests\FileCabinets\Upload\CreateDataRecord;
-use Illuminate\Support\Facades\Event;
 
-it('can upload document without file name and file content and delete it', function () {
-    Event::fake();
-
+it('can upload a data record without a file using a discovered text field', function () {
     $fileCabinetId = config('laravel-docuware.tests.file_cabinet_id');
+    $textField = sandboxFieldName($this->connector, 'Text');
 
-    $document = $this->connector->send(new CreateDataRecord(
-        $fileCabinetId,
-        null,
-        null,
-        collect([
-            IndexTextDTO::make('DOCUMENT_LABEL', '::data-entry::'),
-        ]),
-    ))->dto();
+    $document = recordFixture(
+        new CreateDataRecord(
+            $fileCabinetId,
+            null,
+            null,
+            collect([IndexTextDTO::make($textField, '::data-entry::')]),
+        ),
+        'file-cabinets/upload/create-data-record-without-file',
+    )->dto();
 
-    $this->assertInstanceOf(Document::class, $document);
+    expect($document)->toBeInstanceOf(Document::class)
+        ->and($document->id)->toBeInt();
 
-    tap($document->fields['DOCUMENT_LABEL'], function (DocumentField $field) {
-        $this->assertSame($field->name, 'DOCUMENT_LABEL');
-        $this->assertSame($field->type, 'String');
-        $this->assertSame($field->value, '::data-entry::');
-    });
-    Event::assertDispatched(DocuWareResponseLog::class);
-});
+    $field = $document->fields[$textField];
 
-it('can upload document with index values and delete it', function () {
-    Event::fake();
+    expect($field)->toBeInstanceOf(DocumentField::class)
+        ->and($field->name)->toBe($textField)
+        ->and($field->type)->toBe('String')
+        ->and($field->value)->toBe('::data-entry::');
+})->group('live');
 
+it('can upload a data record with file content using a discovered text field', function () {
     $fileCabinetId = config('laravel-docuware.tests.file_cabinet_id');
-    $fileContent = '::fake-file-content::';
-    $fileName = 'example.txt';
+    $textField = sandboxFieldName($this->connector, 'Text');
 
-    $document = $this->connector->send(new CreateDataRecord(
-        $fileCabinetId,
-        $fileContent,
-        $fileName,
-        collect([
-            IndexTextDTO::make('DOCUMENT_LABEL', '::text::'),
-        ]),
-    ))->dto();
+    $document = recordFixture(
+        new CreateDataRecord(
+            $fileCabinetId,
+            '::fake-file-content::',
+            'example.txt',
+            collect([IndexTextDTO::make($textField, '::text::')]),
+        ),
+        'file-cabinets/upload/create-data-record-with-file',
+    )->dto();
 
-    $this->assertInstanceOf(Document::class, $document);
+    expect($document)->toBeInstanceOf(Document::class)
+        ->and($document->title)->toBe('example');
 
-    $this->assertSame('example', $document->title);
-    tap($document->fields['DOCUMENT_LABEL'], function (DocumentField $field) {
-        $this->assertSame($field->name, 'DOCUMENT_LABEL');
-        $this->assertSame($field->type, 'String');
-        $this->assertSame($field->value, '::text::');
-    });
-    Event::assertDispatched(DocuWareResponseLog::class);
-});
+    $field = $document->fields[$textField];
+
+    expect($field->name)->toBe($textField)
+        ->and($field->value)->toBe('::text::');
+})->group('live');

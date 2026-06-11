@@ -35,7 +35,7 @@ class TableRow
      * @param  Collection<string, DocumentField>  $fields
      */
     public function __construct(
-        public Collection $fields,
+        public readonly Collection $fields,
     ) {}
 
     /**

@@ -2,18 +2,17 @@
 
 namespace CodebarAg\DocuWare\Responses\FileCabinets\Dialogs;
 
+use CodebarAg\DocuWare\Concerns\HandlesDocuWareResponse;
 use CodebarAg\DocuWare\DTO\FileCabinets\Dialog;
-use CodebarAg\DocuWare\Events\DocuWareResponseLog;
-use CodebarAg\DocuWare\Support\EnsureValidResponse;
 use Saloon\Http\Response;
 
 final class GetASpecificDialogResponse
 {
+    use HandlesDocuWareResponse;
+
     public static function fromResponse(Response $response): Dialog
     {
-        event(new DocuWareResponseLog($response));
-
-        EnsureValidResponse::from($response);
+        $response = self::validated($response);
 
         $dialog = $response->throw()->json();
 

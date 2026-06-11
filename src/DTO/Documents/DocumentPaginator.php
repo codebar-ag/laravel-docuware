@@ -16,14 +16,14 @@ class DocumentPaginator
      * @param  Collection<int, Document>  $documents
      */
     public function __construct(
-        public int $total,
-        public int $per_page,
-        public int $current_page,
-        public int $last_page,
-        public int $from,
-        public int $to,
-        public Collection $documents,
-        public ?ErrorBag $error = null,
+        public readonly int $total,
+        public readonly int $per_page,
+        public readonly int $current_page,
+        public readonly int $last_page,
+        public readonly int $from,
+        public readonly int $to,
+        public readonly Collection $documents,
+        public readonly ?ErrorBag $error = null,
     ) {}
 
     public function showPrev(): bool

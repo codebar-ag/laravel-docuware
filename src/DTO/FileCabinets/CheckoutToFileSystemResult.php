@@ -4,16 +4,20 @@ namespace CodebarAg\DocuWare\DTO\FileCabinets;
 
 use CodebarAg\DocuWare\Events\DocuWareResponseLog;
 use CodebarAg\DocuWare\Support\EnsureValidResponse;
-use CodebarAg\DocuWare\Support\JsonArrays;
 use Saloon\Http\Response;
 
+/**
+ * Result of checking a document out to the file system.
+ *
+ * DocuWare returns the document's file content (so it can be edited locally while the
+ * document stays locked), not a JSON envelope — hence this captures the raw body and its
+ * content type rather than parsing JSON.
+ */
 final class CheckoutToFileSystemResult
 {
-    /**
-     * @param  list<array<string, mixed>>  $links
-     */
     public function __construct(
-        public array $links,
+        public readonly string $content,
+        public readonly ?string $contentType,
     ) {}
 
     public static function fromResponse(Response $response): self
@@ -22,8 +26,11 @@ final class CheckoutToFileSystemResult
 
         EnsureValidResponse::from($response);
 
-        $raw = $response->throw()->json('Links');
+        $response = $response->throw();
 
-        return new self(JsonArrays::listOfRecords($raw));
+        return new self(
+            content: $response->body(),
+            contentType: $response->header('Content-Type'),
+        );
     }
 }

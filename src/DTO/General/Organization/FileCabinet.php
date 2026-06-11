@@ -29,18 +29,18 @@ final class FileCabinet
     }
 
     public function __construct(
-        public string $color,
-        public string $name,
-        public string $id,
-        public bool $isBasket,
-        public bool $usable,
-        public bool $default,
-        public ?string $assignedCabinetId,
-        public string $versionManagement,
-        public bool $windowsExplorerClientAccess,
-        public bool $addIndexEntriesInUpperCase,
-        public bool $documentAuditingEnabled,
-        public bool $hasFullTextSupport,
+        public readonly string $color,
+        public readonly string $name,
+        public readonly string $id,
+        public readonly bool $isBasket,
+        public readonly bool $usable,
+        public readonly bool $default,
+        public readonly ?string $assignedCabinetId,
+        public readonly string $versionManagement,
+        public readonly bool $windowsExplorerClientAccess,
+        public readonly bool $addIndexEntriesInUpperCase,
+        public readonly bool $documentAuditingEnabled,
+        public readonly bool $hasFullTextSupport,
     ) {}
 
     public static function fake(

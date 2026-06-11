@@ -23,10 +23,10 @@ final class SuggestionField
      * @param  array<int|string, mixed>  $value
      */
     public function __construct(
-        public array $value,
-        public ?string $name,
-        public ?string $db_name,
-        public ?string $confidence,
+        public readonly array $value,
+        public readonly ?string $name,
+        public readonly ?string $db_name,
+        public readonly ?string $confidence,
     ) {}
 
     /**

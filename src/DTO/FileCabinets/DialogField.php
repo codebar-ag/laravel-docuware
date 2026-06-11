@@ -2,7 +2,9 @@
 
 namespace CodebarAg\DocuWare\DTO\FileCabinets;
 
+use CodebarAg\DocuWare\DTO\Link;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 
 /**
  * A single field exposed by a dialog. Shape follows the DocuWare "Get a Specific Dialog"
@@ -28,21 +30,42 @@ final class DialogField
             allowExtendedSearch: (bool) Arr::get($data, 'AllowExtendedSearch', false),
             usedAsDocumentName: (bool) Arr::get($data, 'UsedAsDocumentName', false),
             isHierarchy: (bool) Arr::get($data, 'IsHierarchy', false),
+            allowFiltering: Arr::get($data, 'AllowFiltering'),
+            selectListOnly: Arr::get($data, 'SelectListOnly'),
+            selectListType: Arr::get($data, 'SelectListType'),
+            assignedInternalSelectList: Arr::get($data, 'AssignedInternalSelectList'),
+            selectListsAssigned: Arr::get($data, 'SelectListsAssigned'),
+            selectListInfos: Arr::get($data, 'SelectListInfos'),
+            calculateSum: Arr::get($data, 'CalculateSum'),
+            links: Link::collection(Arr::get($data, 'Links')),
         );
     }
 
+    /**
+     * @param  array<int|string, mixed>|null  $selectListsAssigned
+     * @param  array<int|string, mixed>|null  $selectListInfos
+     * @param  Collection<int, Link>|null  $links
+     */
     public function __construct(
-        public string $dbName,
-        public string $label,
-        public string $type,
-        public int $length,
-        public int $precision,
-        public bool $locked,
-        public bool $readOnly,
-        public bool $notEmpty,
-        public bool $visible,
-        public bool $allowExtendedSearch,
-        public bool $usedAsDocumentName,
-        public bool $isHierarchy,
+        public readonly string $dbName,
+        public readonly string $label,
+        public readonly string $type,
+        public readonly int $length,
+        public readonly int $precision,
+        public readonly bool $locked,
+        public readonly bool $readOnly,
+        public readonly bool $notEmpty,
+        public readonly bool $visible,
+        public readonly bool $allowExtendedSearch,
+        public readonly bool $usedAsDocumentName,
+        public readonly bool $isHierarchy,
+        public readonly ?bool $allowFiltering = null,
+        public readonly ?bool $selectListOnly = null,
+        public readonly ?string $selectListType = null,
+        public readonly ?string $assignedInternalSelectList = null,
+        public readonly ?array $selectListsAssigned = null,
+        public readonly ?array $selectListInfos = null,
+        public readonly ?bool $calculateSum = null,
+        public readonly ?Collection $links = null,
     ) {}
 }

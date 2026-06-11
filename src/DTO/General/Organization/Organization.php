@@ -2,7 +2,9 @@
 
 namespace CodebarAg\DocuWare\DTO\General\Organization;
 
+use CodebarAg\DocuWare\DTO\Link;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 
 final class Organization
@@ -18,24 +20,32 @@ final class Organization
             guid: Arr::get($data, 'Guid'),
             additionalInfo: Arr::get($data, 'AdditionalInfo', []),
             configurationRights: Arr::get($data, 'ConfigurationRights', []),
+            links: Link::collection(Arr::get($data, 'Links')),
+            isTwoStepVerificationEnabled: Arr::get($data, 'IsTwoStepVerificationEnabled'),
+            isTwoStepVerificationRequired: Arr::get($data, 'IsTwoStepVerificationRequired'),
         );
     }
 
     /**
      * @param  array<string, mixed>  $additionalInfo
      * @param  array<string, mixed>  $configurationRights
+     * @param  Collection<int, Link>|null  $links
      */
     public function __construct(
-        public string $id,
-        public string $name,
-        public ?string $guid = null,
-        public array $additionalInfo = [],
-        public array $configurationRights = [],
+        public readonly string $id,
+        public readonly string $name,
+        public readonly ?string $guid = null,
+        public readonly array $additionalInfo = [],
+        public readonly array $configurationRights = [],
+        public readonly ?Collection $links = null,
+        public readonly ?bool $isTwoStepVerificationEnabled = null,
+        public readonly ?bool $isTwoStepVerificationRequired = null,
     ) {}
 
     /**
      * @param  array<string, mixed>  $additionalInfo
      * @param  array<string, mixed>  $configurationRights
+     * @param  Collection<int, Link>|null  $links
      */
     public static function fake(
         ?string $id = null,
@@ -43,6 +53,9 @@ final class Organization
         ?string $guid = null,
         array $additionalInfo = [],
         array $configurationRights = [],
+        ?Collection $links = null,
+        ?bool $isTwoStepVerificationEnabled = null,
+        ?bool $isTwoStepVerificationRequired = null,
     ): self {
         return new self(
             id: $id ?? (string) Str::uuid(),
@@ -50,6 +63,9 @@ final class Organization
             guid: $guid ?? (string) Str::uuid(),
             additionalInfo: $additionalInfo,
             configurationRights: $configurationRights,
+            links: $links ?? collect([Link::fake()]),
+            isTwoStepVerificationEnabled: $isTwoStepVerificationEnabled ?? false,
+            isTwoStepVerificationRequired: $isTwoStepVerificationRequired ?? false,
         );
     }
 }

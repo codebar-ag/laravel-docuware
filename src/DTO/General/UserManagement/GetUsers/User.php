@@ -2,7 +2,9 @@
 
 namespace CodebarAg\DocuWare\DTO\General\UserManagement\GetUsers;
 
+use CodebarAg\DocuWare\DTO\Link;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 
 final class User
@@ -25,9 +27,15 @@ final class User
             defaultWebBasket: Arr::get($data, 'DefaultWebBasket'),
             outOfOffice: Arr::has($data, 'OutOfOffice') ? OutOfOffice::fromJson(Arr::get($data, 'OutOfOffice')) : null,
             regionalSettings: Arr::has($data, 'RegionalSettings') ? RegionalSettings::fromJson(Arr::get($data, 'RegionalSettings')) : null,
+            links: Link::collection(Arr::get($data, 'Links')),
+            shouldUpdateActive: Arr::get($data, 'ShouldUpdateActive'),
+            twoStepVerificationEnabled: Arr::get($data, 'TwoStepVerificationEnabled'),
         );
     }
 
+    /**
+     * @param  Collection<int, Link>|null  $links
+     */
     public function __construct(
         public string $id,
         public string $name,
@@ -41,8 +49,14 @@ final class User
         public string $defaultWebBasket,
         public ?OutOfOffice $outOfOffice,
         public ?RegionalSettings $regionalSettings,
+        public ?Collection $links = null,
+        public ?bool $shouldUpdateActive = null,
+        public ?bool $twoStepVerificationEnabled = null,
     ) {}
 
+    /**
+     * @param  Collection<int, Link>|null  $links
+     */
     public static function fake(
         ?string $id = null,
         ?string $name = null,
@@ -56,6 +70,9 @@ final class User
         ?string $defaultWebBasket = null,
         ?OutOfOffice $outOfOffice = null,
         ?RegionalSettings $regionalSettings = null,
+        ?Collection $links = null,
+        ?bool $shouldUpdateActive = null,
+        ?bool $twoStepVerificationEnabled = null,
     ): self {
         return new self(
             id: $id ?? (string) Str::uuid(),
@@ -70,6 +87,9 @@ final class User
             defaultWebBasket: $defaultWebBasket ?? Str::uuid(),
             outOfOffice: $outOfOffice ?? null,
             regionalSettings: $regionalSettings ?? null,
+            links: $links ?? collect([Link::fake()]),
+            shouldUpdateActive: $shouldUpdateActive ?? false,
+            twoStepVerificationEnabled: $twoStepVerificationEnabled ?? false,
         );
     }
 }

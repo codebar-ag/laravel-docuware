@@ -43,11 +43,11 @@ final class HistoryStep
      * @param  Collection<int, array<string, mixed>>  $infoItem
      */
     public function __construct(
-        public Collection $infoItem,
-        public int $stepNumber,
-        public Carbon $stepDate,
-        public string $activityName,
-        public string $activityType,
-        public string $stepType,
+        public readonly Collection $infoItem,
+        public readonly int $stepNumber,
+        public readonly Carbon $stepDate,
+        public readonly string $activityName,
+        public readonly string $activityType,
+        public readonly string $stepType,
     ) {}
 }

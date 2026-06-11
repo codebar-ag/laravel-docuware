@@ -2,23 +2,22 @@
 
 namespace CodebarAg\DocuWare\Responses\General\UserManagement\GetUsers;
 
+use CodebarAg\DocuWare\Concerns\HandlesDocuWareResponse;
 use CodebarAg\DocuWare\DTO\General\UserManagement\GetUsers\User;
-use CodebarAg\DocuWare\Events\DocuWareResponseLog;
-use CodebarAg\DocuWare\Support\EnsureValidResponse;
 use CodebarAg\DocuWare\Support\JsonArrays;
 use Illuminate\Support\Collection;
 use Saloon\Http\Response;
 
 final class GetUsersResponse
 {
+    use HandlesDocuWareResponse;
+
     /**
      * @return Collection<int, User>
      */
     public static function fromResponse(Response $response): Collection
     {
-        event(new DocuWareResponseLog($response));
-
-        EnsureValidResponse::from($response);
+        $response = self::validated($response);
 
         $users = $response->throw()->json('User');
 

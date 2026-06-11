@@ -43,13 +43,13 @@ final class InstanceHistory
      * @param  Collection<int, HistoryStep>|null  $historySteps
      */
     public function __construct(
-        public string $id,
-        public string $workflowId,
-        public string $name,
-        public int $version,
-        public bool $workflowRequest,
-        public Carbon $startedAt,
-        public string $docId,
-        public ?Collection $historySteps = null,
+        public readonly string $id,
+        public readonly string $workflowId,
+        public readonly string $name,
+        public readonly int $version,
+        public readonly bool $workflowRequest,
+        public readonly Carbon $startedAt,
+        public readonly string $docId,
+        public readonly ?Collection $historySteps = null,
     ) {}
 }

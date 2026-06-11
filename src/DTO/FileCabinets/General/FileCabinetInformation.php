@@ -2,7 +2,9 @@
 
 namespace CodebarAg\DocuWare\DTO\FileCabinets\General;
 
+use CodebarAg\DocuWare\DTO\Link;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 
 final class FileCabinetInformation
@@ -25,22 +27,38 @@ final class FileCabinetInformation
             addIndexEntriesInUpperCase: Arr::get($data, 'AddIndexEntriesInUpperCase'),
             documentAuditingEnabled: Arr::get($data, 'DocumentAuditingEnabled'),
             hasFullTextSupport: Arr::get($data, 'HasFullTextSupport'),
+            links: Link::collection(Arr::get($data, 'Links')),
+            fields: Arr::get($data, 'Fields'),
+            rights: Arr::get($data, 'Rights'),
+            extendedUserRights: Arr::get($data, 'ExtendedUserRights'),
+            versionHistoryResultListId: Arr::get($data, 'VersionHistoryResultListId'),
         );
     }
 
+    /**
+     * @param  Collection<int, Link>|null  $links
+     * @param  array<int|string, mixed>|null  $fields
+     * @param  array<int|string, mixed>|null  $rights
+     * @param  array<int|string, mixed>|null  $extendedUserRights
+     */
     public function __construct(
-        public string $color,
-        public string $name,
-        public string $id,
-        public bool $isBasket,
-        public bool $usable,
-        public bool $default,
-        public ?string $assignedCabinetId,
-        public string $versionManagement,
-        public bool $windowsExplorerClientAccess,
-        public bool $addIndexEntriesInUpperCase,
-        public bool $documentAuditingEnabled,
-        public bool $hasFullTextSupport,
+        public readonly string $color,
+        public readonly string $name,
+        public readonly string $id,
+        public readonly bool $isBasket,
+        public readonly bool $usable,
+        public readonly bool $default,
+        public readonly ?string $assignedCabinetId,
+        public readonly string $versionManagement,
+        public readonly bool $windowsExplorerClientAccess,
+        public readonly bool $addIndexEntriesInUpperCase,
+        public readonly bool $documentAuditingEnabled,
+        public readonly bool $hasFullTextSupport,
+        public readonly ?Collection $links = null,
+        public readonly ?array $fields = null,
+        public readonly ?array $rights = null,
+        public readonly ?array $extendedUserRights = null,
+        public readonly ?string $versionHistoryResultListId = null,
     ) {}
 
     public static function fake(

@@ -19,7 +19,7 @@ it('removes a user from a group', function () {
         name: $timestamp.' - Test User',
         dbName: $timestamp,
         email: $timestamp.'-test@example.test',
-        password: 'TESTPASSWORD',
+        password: 'TestPass123!',
     )))->dto();
 
     Sleep::for(5)->seconds();

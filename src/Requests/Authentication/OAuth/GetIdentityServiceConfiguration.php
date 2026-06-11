@@ -2,20 +2,19 @@
 
 namespace CodebarAg\DocuWare\Requests\Authentication\OAuth;
 
+use CodebarAg\DocuWare\Concerns\HasDocuWareCaching;
 use CodebarAg\DocuWare\DTO\Authentication\OAuth\IdentityServiceConfiguration;
 use CodebarAg\DocuWare\Events\DocuWareResponseLog;
 use CodebarAg\DocuWare\Support\EnsureValidResponse;
-use Illuminate\Support\Facades\Cache;
+use CodebarAg\DocuWare\Support\ResponseBody;
 use Saloon\CachePlugin\Contracts\Cacheable;
-use Saloon\CachePlugin\Drivers\LaravelCacheDriver;
-use Saloon\CachePlugin\Traits\HasCaching;
 use Saloon\Enums\Method;
 use Saloon\Http\Response;
 use Saloon\Http\SoloRequest;
 
 class GetIdentityServiceConfiguration extends SoloRequest implements Cacheable
 {
-    use HasCaching;
+    use HasDocuWareCaching;
 
     protected Method $method = Method::GET;
 
@@ -35,22 +34,12 @@ class GetIdentityServiceConfiguration extends SoloRequest implements Cacheable
         ];
     }
 
-    public function resolveCacheDriver(): LaravelCacheDriver
-    {
-        return new LaravelCacheDriver(Cache::store(config('laravel-docuware.configurations.cache.driver')));
-    }
-
-    public function cacheExpiryInSeconds(): int
-    {
-        return config('laravel-docuware.configurations.cache.lifetime_in_seconds', 3600);
-    }
-
     public function createDtoFromResponse(Response $response): IdentityServiceConfiguration
     {
         event(new DocuWareResponseLog($response));
 
         EnsureValidResponse::from($response);
 
-        return IdentityServiceConfiguration::make($response->json());
+        return IdentityServiceConfiguration::make(ResponseBody::toArray($response));
     }
 }

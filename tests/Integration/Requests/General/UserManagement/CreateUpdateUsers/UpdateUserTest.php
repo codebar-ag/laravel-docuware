@@ -19,7 +19,7 @@ it('updates a user', function () {
         name: $timestamp.' - Test User',
         dbName: $timestamp,
         email: $timestamp.'-test@example.test',
-        password: 'TESTPASSWORD',
+        password: 'TestPass123!',
     )))->dto();
 
     expect($user)->toBeInstanceOf(GetUser::class);

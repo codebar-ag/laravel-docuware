@@ -7,8 +7,8 @@ use Exception;
 class ErrorBag
 {
     public function __construct(
-        public int $code,
-        public string $message,
+        public readonly int $code,
+        public readonly string $message,
     ) {}
 
     public static function make(Exception $e): self

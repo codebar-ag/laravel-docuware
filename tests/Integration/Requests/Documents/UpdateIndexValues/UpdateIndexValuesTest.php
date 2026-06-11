@@ -1,63 +1,40 @@
 <?php
 
-use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexTextDTO;
-use CodebarAg\DocuWare\Events\DocuWareResponseLog;
-use CodebarAg\DocuWare\Requests\Documents\UpdateIndexValues\UpdateIndexValues;
-use CodebarAg\DocuWare\Requests\FileCabinets\Upload\CreateDataRecord;
+use CodebarAg\DocuWare\Data\Documents\DocumentFieldData;
+use CodebarAg\DocuWare\Data\Write\IndexFields;
+use CodebarAg\DocuWare\Facades\DocuWare;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Event;
 
-it('can update a document value', function () {
-    Event::fake();
+it('can update a single document index value', function () {
+    $textField = sandboxFieldName($this->cabinet, 'Text');
 
-    $fileCabinetId = config('laravel-docuware.tests.file_cabinet_id');
-    $newValue = 'laravel-docuware';
+    $document = uploadTestDocument($this->cabinet);
 
-    $document = $this->connector->send(new CreateDataRecord(
-        $fileCabinetId,
-        '::fake-file-content::',
-        'example.txt'
-    ))->dto();
-
-    $response = $this->connector->send(new UpdateIndexValues(
-        $fileCabinetId,
+    $fields = DocuWare::documents($this->cabinet)->update(
         $document->id,
-        collect([
-            IndexTextDTO::make('UUID', $newValue),
-        ])
-    ))->dto();
+        IndexFields::make()->text($textField, 'laravel-docuware'),
+    );
 
-    $this->assertSame('laravel-docuware', $response['UUID']);
-    Event::assertDispatched(DocuWareResponseLog::class);
-
+    expect($fields)->toBeInstanceOf(Collection::class)
+        ->and($fields->get($textField))->toBeInstanceOf(DocumentFieldData::class)
+        ->and($fields->get($textField)->value)->toBe('laravel-docuware');
 });
 
-it('can update multiple document values', function () {
-    Event::fake();
+it('can update multiple document index values of different types', function () {
+    $textField = sandboxFieldName($this->cabinet, 'Text');
+    $numericField = sandboxFieldName($this->cabinet, 'Numeric');
 
-    $fileCabinetId = config('laravel-docuware.tests.file_cabinet_id');
+    $document = uploadTestDocument($this->cabinet);
 
-    $document = $this->connector->send(new CreateDataRecord(
-        $fileCabinetId,
-        '::fake-file-content::',
-        'example.txt'
-    ))->dto();
-
-    $response = $this->connector->send(new UpdateIndexValues(
-        $fileCabinetId,
+    $fields = DocuWare::documents($this->cabinet)->update(
         $document->id,
-        collect([
-            IndexTextDTO::make('UUID', 'laravel-docuware'),
-            IndexTextDTO::make('DOCUMENT_LABEL', 'laravel-docuware-2'),
-        ]),
-        true
-    ))->dto();
+        IndexFields::make()
+            ->text($textField, 'laravel-docuware')
+            ->number($numericField, 42),
+        forceUpdate: true,
+    );
 
-    $this->assertInstanceOf(Collection::class, $response);
-
-    $this->assertSame('laravel-docuware', $response['UUID']);
-    $this->assertSame('laravel-docuware-2', $response['DOCUMENT_LABEL']);
-
-    Event::assertDispatched(DocuWareResponseLog::class);
-
+    expect($fields)->toBeInstanceOf(Collection::class)
+        ->and($fields->get($textField)->value)->toBe('laravel-docuware')
+        ->and($fields)->toHaveKey($numericField);
 });

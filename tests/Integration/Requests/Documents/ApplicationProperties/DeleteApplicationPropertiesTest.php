@@ -1,49 +1,36 @@
 <?php
 
-use CodebarAg\DocuWare\Events\DocuWareResponseLog;
-use CodebarAg\DocuWare\Requests\Documents\ApplicationProperties\AddApplicationProperties;
-use CodebarAg\DocuWare\Requests\Documents\ApplicationProperties\DeleteApplicationProperties;
-use CodebarAg\DocuWare\Requests\Documents\ApplicationProperties\GetApplicationProperties;
-use CodebarAg\DocuWare\Requests\FileCabinets\Upload\CreateDataRecord;
-use Illuminate\Support\Collection;
+use CodebarAg\DocuWare\Events\ResponseReceived;
+use CodebarAg\DocuWare\Facades\DocuWare;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Event;
 
 it('deletes application properties from a document', function () {
     Event::fake();
 
-    $fileCabinetId = config('laravel-docuware.tests.file_cabinet_id');
+    $document = uploadTestDocument($this->cabinet);
 
-    $document = $this->connector->send(new CreateDataRecord(
-        $fileCabinetId,
-        '::fake-file-content::',
-        'example.txt'
-    ))->dto();
+    DocuWare::documents($this->cabinet)->addApplicationProperties((string) $document->id, [
+        ['Name' => 'Key1', 'Value' => 'v1'],
+        ['Name' => 'Key2', 'Value' => 'v2'],
+    ]);
 
-    $this->connector->send(new AddApplicationProperties(
-        $fileCabinetId,
-        $document->id,
-        [
-            ['Name' => 'Key1', 'Value' => 'v1'],
-            ['Name' => 'Key2', 'Value' => 'v2'],
-        ],
-    ))->dto();
+    $afterDelete = collect(Arr::get(
+        DocuWare::documents($this->cabinet)->deleteApplicationProperties((string) $document->id, ['Key1']),
+        'Property',
+        [],
+    ));
 
-    $afterDelete = $this->connector->send(new DeleteApplicationProperties(
-        $fileCabinetId,
-        $document->id,
-        ['Key1'],
-    ))->dto();
-
-    expect($afterDelete)->toBeInstanceOf(Collection::class)
-        ->and($afterDelete->count())->toBe(1)
+    expect($afterDelete->count())->toBe(1)
         ->and($afterDelete->first()['Name'])->toBe('Key2');
 
-    $final = $this->connector->send(new GetApplicationProperties(
-        $fileCabinetId,
-        $document->id,
-    ))->dto();
+    $final = collect(Arr::get(
+        DocuWare::documents($this->cabinet)->applicationProperties((string) $document->id),
+        'Property',
+        [],
+    ));
 
     expect($final->count())->toBe(1);
 
-    Event::assertDispatched(DocuWareResponseLog::class);
+    Event::assertDispatched(ResponseReceived::class);
 });

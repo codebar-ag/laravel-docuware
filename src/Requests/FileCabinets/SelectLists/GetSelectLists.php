@@ -2,20 +2,16 @@
 
 namespace CodebarAg\DocuWare\Requests\FileCabinets\SelectLists;
 
-use CodebarAg\DocuWare\Responses\FileCabinets\SelectLists\GetSelectListsResponse;
-use Illuminate\Support\Facades\Cache;
+use CodebarAg\DocuWare\Concerns\HasDocuWareCaching;
 use Saloon\CachePlugin\Contracts\Cacheable;
-use Saloon\CachePlugin\Drivers\LaravelCacheDriver;
-use Saloon\CachePlugin\Traits\HasCaching;
 use Saloon\Contracts\Body\HasBody;
 use Saloon\Enums\Method;
 use Saloon\Http\Request;
-use Saloon\Http\Response;
 use Saloon\Traits\Body\HasJsonBody;
 
 class GetSelectLists extends Request implements Cacheable, HasBody
 {
-    use HasCaching;
+    use HasDocuWareCaching;
     use HasJsonBody;
 
     protected Method $method = Method::POST;
@@ -50,20 +46,5 @@ class GetSelectLists extends Request implements Cacheable, HasBody
             'Typed' => false,
             'ExcludeExternal' => true,
         ];
-    }
-
-    public function resolveCacheDriver(): LaravelCacheDriver
-    {
-        return new LaravelCacheDriver(Cache::store(config('laravel-docuware.configurations.cache.driver')));
-    }
-
-    public function cacheExpiryInSeconds(): int
-    {
-        return config('laravel-docuware.configurations.cache.lifetime_in_seconds', 3600);
-    }
-
-    public function createDtoFromResponse(Response $response): mixed
-    {
-        return GetSelectListsResponse::fromResponse($response);
     }
 }

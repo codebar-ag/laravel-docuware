@@ -12,6 +12,9 @@ node_modules
 build
 .phpunit.cache
 
+## Live schema capture artifacts (tests/Manual/RecordLiveSchemaTest.php)
+tests/Fixtures/schema
+
 ## Annotations
 src/DTO/Documents/AnnotationsStamps/*
 src/Requests/Documents/AnnotationsStamps/*

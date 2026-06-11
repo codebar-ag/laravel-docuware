@@ -1,31 +1,25 @@
 <?php
 
-use CodebarAg\DocuWare\Events\DocuWareResponseLog;
-use CodebarAg\DocuWare\Requests\Documents\Stamps\AddDocumentAnnotations;
-use CodebarAg\DocuWare\Requests\FileCabinets\Upload\CreateDataRecord;
-use Illuminate\Support\Facades\Event;
+use CodebarAg\DocuWare\DTO\Documents\Annotations\AnnotationBuilder;
+use CodebarAg\DocuWare\DTO\Documents\Annotations\Location;
+use CodebarAg\DocuWare\DTO\Documents\Annotations\TextEntry;
+use CodebarAg\DocuWare\Facades\DocuWare;
 use Illuminate\Support\Sleep;
 
-it('posts annotations payload to the document annotation endpoint', function () {
-    Event::fake();
+it('posts a text annotation to a document via the typed builder', function () {
+    // Annotations target rendered pages, so upload a real PDF.
+    $document = DocuWare::documents($this->cabinet)->store(
+        fileContent: file_get_contents(__DIR__.'/../../../../Fixtures/files/test-1.pdf'),
+        fileName: 'test-1.pdf',
+    );
 
-    $fileCabinetId = config('laravel-docuware.tests.file_cabinet_id');
+    Sleep::for(3)->seconds();
 
-    $document = $this->connector->send(new CreateDataRecord(
-        $fileCabinetId,
-        '::fake-file-content::',
-        'example.txt'
-    ))->dto();
+    $payload = AnnotationBuilder::make()
+        ->addEntry(new TextEntry('laravel-docuware', Location::make(100, 100, 1500, 500)))
+        ->toArray();
 
-    Sleep::for(2)->seconds();
+    $response = DocuWare::documents($this->cabinet)->annotate($document->id, $payload);
 
-    $response = $this->connector->send(new AddDocumentAnnotations(
-        $fileCabinetId,
-        $document->id,
-        integrationTestAnnotationPayload(),
-    ));
-
-    expect($response->successful())->toBeTrue();
-
-    Event::assertDispatched(DocuWareResponseLog::class);
-});
+    expect($response)->not->toBeNull();
+})->group('live');

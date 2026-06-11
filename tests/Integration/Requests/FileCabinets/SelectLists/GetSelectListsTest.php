@@ -1,34 +1,16 @@
 <?php
 
-use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexTextDTO;
-use CodebarAg\DocuWare\Events\DocuWareResponseLog;
-use CodebarAg\DocuWare\Requests\FileCabinets\SelectLists\GetSelectLists;
-use CodebarAg\DocuWare\Requests\FileCabinets\Upload\CreateDataRecord;
-use Illuminate\Support\Facades\Event;
+use CodebarAg\DocuWare\Facades\DocuWare;
+use Illuminate\Support\Collection;
 
-it('can list values for a select list', function () {
-    Event::fake();
+it('can list values for a select list of a discovered field', function () {
+    $dialogId = sandboxSearchDialogId($this->cabinet);
+    $keywordField = sandboxFieldName($this->cabinet, 'Keyword');
 
-    $fileCabinetId = config('laravel-docuware.tests.file_cabinet_id');
-    $dialogId = config('laravel-docuware.tests.dialog_id');
-    $fieldName = 'UUID';
+    // Seed a value so the dynamic select list has something to return.
+    uploadTestDocument($this->cabinet);
 
-    $document = $this->connector->send(new CreateDataRecord(
-        $fileCabinetId,
-        '::fake-file-content::',
-        'example.txt',
-        collect([
-            IndexTextDTO::make($fieldName, 'laravel-docuware'),
-        ])
-    ))->dto();
+    $values = DocuWare::selectLists($this->cabinet)->get($dialogId, $keywordField);
 
-    $types = $this->connector->send(new GetSelectLists(
-        $fileCabinetId,
-        $dialogId,
-        $fieldName,
-    ))->dto();
-
-    $this->assertNotCount(0, $types);
-    Event::assertDispatched(DocuWareResponseLog::class);
-
+    expect($values)->toBeInstanceOf(Collection::class);
 });

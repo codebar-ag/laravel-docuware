@@ -1,34 +1,24 @@
 <?php
 
-use CodebarAg\DocuWare\Events\DocuWareResponseLog;
-use CodebarAg\DocuWare\Requests\Documents\ApplicationProperties\AddApplicationProperties;
-use CodebarAg\DocuWare\Requests\FileCabinets\Upload\CreateDataRecord;
-use Illuminate\Support\Collection;
+use CodebarAg\DocuWare\Events\ResponseReceived;
+use CodebarAg\DocuWare\Facades\DocuWare;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Event;
 
 it('adds application properties to a document', function () {
     Event::fake();
 
-    $fileCabinetId = config('laravel-docuware.tests.file_cabinet_id');
+    $document = uploadTestDocument($this->cabinet);
 
-    $document = $this->connector->send(new CreateDataRecord(
-        $fileCabinetId,
-        '::fake-file-content::',
-        'example.txt'
-    ))->dto();
+    $added = DocuWare::documents($this->cabinet)->addApplicationProperties((string) $document->id, [
+        ['Name' => 'Key1', 'Value' => 'Key1 Value'],
+        ['Name' => 'Key2', 'Value' => 'Key2 Value'],
+    ]);
 
-    $added = $this->connector->send(new AddApplicationProperties(
-        $fileCabinetId,
-        $document->id,
-        [
-            ['Name' => 'Key1', 'Value' => 'Key1 Value'],
-            ['Name' => 'Key2', 'Value' => 'Key2 Value'],
-        ],
-    ))->dto();
+    $properties = collect(Arr::get($added, 'Property', []));
 
-    expect($added)->toBeInstanceOf(Collection::class)
-        ->and($added->count())->toBe(2)
-        ->and($added->first()['Name'])->toBe('Key1');
+    expect($properties->count())->toBe(2)
+        ->and($properties->first()['Name'])->toBe('Key1');
 
-    Event::assertDispatched(DocuWareResponseLog::class);
+    Event::assertDispatched(ResponseReceived::class);
 });

@@ -1,25 +1,24 @@
 <?php
 
-use CodebarAg\DocuWare\DTO\General\UserManagement\GetModifyGroups\Group;
-use CodebarAg\DocuWare\Events\DocuWareResponseLog;
-use CodebarAg\DocuWare\Requests\General\UserManagement\GetModifyGroups\GetAllGroupsForASpecificUser;
-use CodebarAg\DocuWare\Requests\General\UserManagement\GetUsers\GetUsers;
+use CodebarAg\DocuWare\Data\Users\GroupData;
+use CodebarAg\DocuWare\Events\ResponseReceived;
+use CodebarAg\DocuWare\Facades\DocuWare;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Event;
 
 it('can list groups for a specific user', function () {
     Event::fake();
 
-    $users = $this->connector->send(new GetUsers)->dto();
+    $users = DocuWare::users()->all();
 
-    $groups = $this->connector->send(new GetAllGroupsForASpecificUser($users->get(2)->id))->dto();
+    $groups = DocuWare::users()->groupsOf($users->get(2)->id);
 
-    $this->assertInstanceOf(Collection::class, $groups);
+    expect($groups)->toBeInstanceOf(Collection::class)
+        ->and($groups)->not->toBeEmpty();
 
     foreach ($groups as $group) {
-        $this->assertInstanceOf(Group::class, $group);
+        expect($group)->toBeInstanceOf(GroupData::class);
     }
 
-    $this->assertNotCount(0, $groups);
-    Event::assertDispatched(DocuWareResponseLog::class);
-});
+    Event::assertDispatched(ResponseReceived::class);
+})->group('integration');

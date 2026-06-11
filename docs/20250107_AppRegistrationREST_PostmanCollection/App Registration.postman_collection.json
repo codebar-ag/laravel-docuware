@@ -1,0 +1,1029 @@
+{
+	"info": {
+		"_postman_id": "7b439145-10f1-4d28-9ad1-14d178523ee4",
+		"name": "App Registration",
+		"description": "**Last Updated: 12/06/2024**\n\n**Summary:**\n\nThis collection contains examples of requests to the DocuWare App Registration API.\n\n**Getting Started:**\n\nGetting started with the DocuWare App Registration API Postman collection is easy and requires a minimal amount of up-front configuration.\n\n1. Set the current environment to \"Application Registration\"\n    \n    1. If you do not have the \"Application Registration\" environment listed as one of your selections from the environments drop down, verify that you have imported the sample environment file that was included with the DocuWare App Registration API Postman collection.\n        \n2. Set up the initial environment variable values.\n    \n    1. The following environment values should be set based on the DocuWare system you will be executing the API requests against.\n        \n        1. ServerUrl - This is the URL of your DocuWare system.\n            \n        2. IdentityServiceUrl - This is the URL of the identity server associated with your DocuWare system. You can enter this manually, or obtain this by running the \"Get Responsible Identity Server\" request located in the \"Pre-Requisite\" folder.\n            \n3. Authentication with DocuWare\n    \n    1. Once the environment variables have been configured, you need to obtain an access token for making requests to DocuWare.\n        \n        1. Navigate to the Authorization tab for App Registration\n            \n        2. Scroll down to the bottom of that tab and click the orange button titled \"Get New Access Token\"\n            \n        3. A new window should be displayed that prompts you to log into DocuWare with a username and password. Note that the user in question should be one that has \"Organization Administrator\" rights.\n            \n        4. After successfully logging into DocuWare, a confirmation dialog should be displayed indicating that authentication was complete, and prompt you to proceed forward.\n            \n        5. After pressing \"Proceed\" (or waiting for the window to time out), you will see a new window that lists the new token (and also displays a history of previous tokens).\n            \n        6. In the top right corner of that window, press the button labeled \"Use Token\". The token will then be set as the active token (you will have the option of copy/pasting it, but that is not necessary). Any of the requests in the collection will now attempt to use this token when executed.\n            \n4. Executing operational requests\n    \n    1. Once you have obtained an access token, you can start making requests to the App Registration API. It should be noted that some requests are dependent on the response from other requests.\n        \n\nCommon Scenarios:\n\n- Creating a new App Registration.\n    \n    - Types:\n        \n        - Web Application - Server side application where authentication and tokens are handled on the server (for example, Go, Java, ASP.Net, Node.js, PHP)\n            \n        - Native Application - Single-page applications that run in the browser where the client receives tokens (for example, Javascript, Angular, React, Vue)\n            \n        - Single Page Application - Desktop or mobile applications that run natively on a device and redirect users to a non-HTTP callback (for example, iOS, Android, React Native)\n            \n\n|  | **Web application** | **Native application** | **Single page application** |\n| --- | --- | --- | --- |\n| Application’s secret | ✅ | ❌ | ❌ |\n| Authorization Code flow | ✅ | ✅ | ✅ |\n| PKCE enabled | ❌ | ✅ | ✅ |\n| Refresh tokens | ✅ | ✅ | ❌ |\n| Trusted flow | ❌ | ✅ | ❌ |\n| Redirect URI | ✅ | ✅ | ✅ |\n| CORS | ✅ | ❌ | ✅ |\n\n- Limitations:\n    \n    - Access Token Lifetime is limited to 30, 60, or 90 minutes.\n        \n    - Absolute Token Refresh Lifetime is limited to 0, 30, 60, or 90 days.\n        \n    - Sliding Refresh Token Lifetime is limited to 15, 30, or 45 days.\n        \n- Notes:\n    \n    - When creating a new web application, a default secret is created. Up to one additional secret can be created (a total of 2 can exist) and secrets have a lifetime of 1 year.\n        \n- Modifying App Registration\n    \n    - When modifying an application registration (Update, Change Status, Delete), you need to provide a validation token that is still valid. This can be obtained by executing a \"Get Application\" request to obtain the most recent validation token associated with that entry. If the entry is changed by someone or something else before you modify it, then a new validation token would have to be obtained.\n        \n- Modifying App Registration Secrets\n    \n    - When modifying an application registration secret (Update/Delete), you need to provide a validation token that is still valid. This can be obtained by executing a \"Get Application\" request to obtain the most recent validation token associated with the secret you want to modify. If that secret is changed by someone or something else before you modify it, then a new validation token would have to be obtained.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "31014211",
+		"_collection_link": "https://docuware-integrations.postman.co/workspace/Team-Workspace~9a4cd872-f740-45dc-8f40-b031ebcb1a76/collection/31014211-7b439145-10f1-4d28-9ad1-14d178523ee4?action=share&source=collection_link&creator=31014211"
+	},
+	"item": [
+		{
+			"name": "Pre-Requisite",
+			"item": [
+				{
+					"name": "Get Responsible Identity Service",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const identityServiceInfo = pm.response.json();\r",
+									"pm.environment.set(\"IdentityServiceUrl\", identityServiceInfo.IdentityServiceUrl);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"if (pm.environment.has(\"ServerUrl\") === false || pm.environment.get(\"ServerUrl\") === \"\") {        \r",
+									"        throw new Error(\"ServerUrl is empty or does not exist.\");\r",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{ServerUrl}}/{{Platform}}/Home/IdentityServiceInfo",
+							"host": [
+								"{{ServerUrl}}"
+							],
+							"path": [
+								"{{Platform}}",
+								"Home",
+								"IdentityServiceInfo"
+							]
+						},
+						"description": "This API endpoint retrieves information about the Identity Service in the DocuWare Platform. It sends an HTTP GET request to the URL `{{ServerUrl}}/DocuWare/Platform/Home/IdentityServiceInfo`.\n\n### Request\n\nThe request does not require any parameters.\n\n### Response\n\nThe response will be in JSON format and will have the following properties:\n\n- `IdentityServiceUrl`: The URL of the Identity Service in the DocuWare Platform.\n    \n- `RefreshTokenSupported`: A boolean value indicating whether the Identity Service supports refresh tokens.\n    \n\nExample response:\n\n``` antlr4\n{\n    \"IdentityServiceUrl\": \"\",\n    \"RefreshTokenSupported\": true\n}\n\n ```"
+					},
+					"response": []
+				}
+			],
+			"description": "This folder contains sample requests for pre-requisits necessary to authenticate with the application management API and to perform application managemen related requests.",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Get Applications",
+			"item": [
+				{
+					"name": "Get All Applications",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"console.info(response);\r",
+									"const selectedApplication = response.find(application => { return application.name === pm.environment.get(\"ApplicationName\") });\r",
+									"if (selectedApplication !== undefined) {\r",
+									"    pm.environment.set(\"ApplicationId\", selectedApplication.id);\r",
+									"    pm.environment.set(\"ApplicationIdForDelete\", selectedApplication.id);\r",
+									"    pm.environment.set(\"ValidationToken\", selectedApplication.validationToken);    \r",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{IdentityServiceUrl}}/api/applications/headers",
+							"host": [
+								"{{IdentityServiceUrl}}"
+							],
+							"path": [
+								"api",
+								"applications",
+								"headers"
+							]
+						},
+						"description": "### Get Applications\n\nThis endpoint makes an HTTP GET request to retrieve a list of applications.\n\n#### Request Body\n\nThis request does not require a request body.\n\n#### Response\n\n``` json\n{\n  \"type\": \"array\",\n  \"items\": {\n    \"type\": \"object\",\n    \"properties\": {\n      \"id\": {\n        \"type\": \"string\",\n        \"description\": \"The unique identifier of the application.\"\n      },\n      \"name\": {\n        \"type\": \"string\",\n        \"description\": \"The name of the application.\"\n      },\n      \"enabled\": {\n        \"type\": \"boolean\",\n        \"description\": \"Indicates whether the application is enabled.\"\n      },\n      \"type\": {\n        \"type\": \"integer\",\n        \"description\": \"The type of the application.\"\n      },\n      \"secretExpiration\": {\n        \"type\": \"integer\",\n        \"description\": \"The expiration of the application's secret.\"\n      },\n      \"validationToken\": {\n        \"type\": \"string\",\n        \"description\": \"The validation token for the application.\"\n      }\n    }\n  }\n}\n\n ```"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Web Application",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"\r",
+									"pm.environment.set(\"ApplicationId\", response.id);\r",
+									"pm.environment.set(\"ApplicationIdForDelete\", response.id);\r",
+									"pm.environment.set(\"ValidationToken\", response.validationToken);\r",
+									"    \r",
+									"const selectedSecret = response.secrets.find(secret => { return secret.description === pm.environment.get(\"SecretDescription\") || secret.description == pm.environment.get(\"SecretDescription\") + \" - Updated\" });\r",
+									"if (selectedSecret !== undefined) {\r",
+									"    pm.environment.set(\"SecretId\", selectedSecret.id);\r",
+									"    pm.environment.set(\"SecretIdForDelete\", selectedSecret.id);\r",
+									"    pm.environment.set(\"SecretValidationToken\", selectedSecret.validationToken);\r",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{IdentityServiceUrl}}/api/applications/web/{{ApplicationId}}",
+							"host": [
+								"{{IdentityServiceUrl}}"
+							],
+							"path": [
+								"api",
+								"applications",
+								"web",
+								"{{ApplicationId}}"
+							]
+						},
+						"description": "### Get Application Details\n\nThis endpoint makes an HTTP GET request to retrieve details of a specific application.\n\n#### Request Body\n\nThis request does not require a request body.\n\n#### Response Body\n\n- Status: 200\n    \n- Content-Type: application/json\n    \n\nThe response will include an object with the following properties:\n\n- `id` (string): The unique identifier of the application.\n    \n- `name` (string): The name of the application.\n    \n- `description` (string): The description of the application.\n    \n- `enabled` (boolean): Indicates whether the application is enabled.\n    \n- `scopes` (array): An array of scopes associated with the application.\n    \n- `redirectUris` (array): An array of redirect URIs for the application.\n    \n- `allowAuthorizationCodeGrant` (boolean): Indicates whether authorization code grant is allowed for the application.\n    \n- `allowClientCredentialsGrant` (boolean): Indicates whether client credentials grant is allowed for the application.\n    \n- `allowRefreshTokenGrant` (boolean): Indicates whether refresh token grant is allowed for the application.\n    \n- `accessTokenLifetime` (integer): The lifetime of the access token.\n    \n- `absoluteRefreshTokenLifetime` (integer): The absolute lifetime of the refresh token.\n    \n- `slidingRefreshTokenLifetime` (integer): The sliding lifetime of the refresh token.\n    \n- `type` (integer): The type of the application.\n    \n- `validationToken` (string): The validation token for the application.\n    \n- `secrets` (array): An array of secret objects associated with the application, each containing the following properties:\n    \n    - `id` (string): The unique identifier of the secret.\n        \n    - `secret` (string): The secret value.\n        \n    - `description` (string): The description of the secret.\n        \n    - `expirationDate` (string): The expiration date of the secret.\n        \n    - `validationToken` (string): The validation token for the secret."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Native Application",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"pm.environment.set(\"ApplicationId\", response.id);\r",
+									"pm.environment.set(\"ApplicationIdForDelete\", response.id);\r",
+									"pm.environment.set(\"ValidationToken\", response.validationToken);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{IdentityServiceUrl}}/api/applications/native/{{ApplicationId}}",
+							"host": [
+								"{{IdentityServiceUrl}}"
+							],
+							"path": [
+								"api",
+								"applications",
+								"native",
+								"{{ApplicationId}}"
+							]
+						},
+						"description": "### Get Application Details\n\nThis endpoint makes an HTTP GET request to retrieve details of a specific application.\n\n#### Request Body\n\nThis request does not require a request body.\n\n#### Response Body\n\nThe response will include an object with the following properties:\n\n- `id` (string): The unique identifier of the application.\n    \n- `name` (string): The name of the application.\n    \n- `description` (string): The description of the application.\n    \n- `type` (integer): The type of the application.\n    \n- `enabled` (boolean): Indicates whether the application is enabled.\n    \n- `scopes` (array): An array of scopes associated with the application.\n    \n- `redirectUris` (array): An array of redirect URIs for the application.\n    \n- `allowTrustedGrant` (boolean): Indicates whether trusted grant is allowed for the application.\n    \n- `allowAuthorizationCodeGrant` (boolean): Indicates whether authorization code grant is allowed for the application.\n    \n- `allowRefreshTokenGrant` (boolean): Indicates whether refresh token grant is allowed for the application.\n    \n- `accessTokenLifetime` (integer): The lifetime of the access token.\n    \n- `absoluteRefreshTokenLifetime` (integer): The absolute lifetime of the refresh token.\n    \n- `slidingRefreshTokenLifetime` (integer): The sliding lifetime of the refresh token.\n    \n- `validationToken` (string): The validation token for the application.\n    \n- `secrets` (array): An array of secret objects associated with the application, each containing the following properties:\n    \n    - `id` (string): The unique identifier of the secret.\n        \n    - `organizationId` (string): The organization identifier associated with the secret.\n        \n    - `applicationId` (string): The application identifier associated with the secret.\n        \n    - `secret` (string): The secret value.\n        \n    - `description` (string): The description of the secret.\n        \n    - `expirationDate` (string): The expiration date of the secret.\n        \n    - `validationToken` (string): The validation token for the secret."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Single Page Application",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"pm.environment.set(\"ApplicationId\", response.id);\r",
+									"pm.environment.set(\"ApplicationIdForDelete\", response.id);\r",
+									"pm.environment.set(\"ValidationToken\", response.validationToken);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{IdentityServiceUrl}}/api/applications/single-page/{{ApplicationId}}",
+							"host": [
+								"{{IdentityServiceUrl}}"
+							],
+							"path": [
+								"api",
+								"applications",
+								"single-page",
+								"{{ApplicationId}}"
+							]
+						},
+						"description": "The endpoint makes an HTTP GET request to retrieve a single-page application by its ID.\n\n#### Response\n\n- Status: 200\n    \n- Content-Type: application/json\n    \n\nThe response returns a JSON object with the following properties:\n\n- `id` (string): The unique identifier of the application.\n    \n- `name` (string): The name of the application.\n    \n- `description` (string): The description of the application.\n    \n- `type` (integer): The type of the application.\n    \n- `enabled` (boolean): Indicates whether the application is enabled.\n    \n- `scopes` (array): An array of scopes associated with the application.\n    \n- `redirectUris` (array): An array of redirect URIs for the application.\n    \n- `allowAuthorizationCodeGrant` (boolean): Indicates whether authorization code grant is allowed for the application.\n    \n- `accessTokenLifetime` (integer): The lifetime of the access token.\n    \n- `corsOrigins` (array): An array of CORS origins for the application.\n    \n- `validationToken` (string): The validation token for the application.\n    \n\nPlease note that the response does not include the properties `allowTrustedGrant`, `allowRefreshTokenGrant`, `absoluteRefreshTokenLifetime`, `slidingRefreshTokenLifetime`, and `secrets` as mentioned in the existing description."
+					},
+					"response": []
+				}
+			],
+			"description": "This folder contains sample requests for retrieving application registrations.",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							"if (pm.environment.has(\"IdentityServiceUrl\") === false || pm.environment.get(\"IdentityServiceUrl\") === \"\") {        \r",
+							"        throw new Error(\"IdentityServiceUrl is empty or does not exist.\");\r",
+							"}"
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Scopes",
+			"item": [
+				{
+					"name": "Get Scope",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{IdentityServiceUrl}}/api/applications/scopes/{{ScopeId}}",
+							"host": [
+								"{{IdentityServiceUrl}}"
+							],
+							"path": [
+								"api",
+								"applications",
+								"scopes",
+								"{{ScopeId}}"
+							]
+						},
+						"description": "The endpoint retrieves the scopes associated with a specific application by making an HTTP GET request to `{{IdentityServiceUrl}}/api/applications/scopes/{{ScopeId}}`.\n\n### Request Body\n\nThis request does not require a request body.\n\n### Response Body\n\nThe response to this request will be in JSON format with a 200 status code. It will contain an object with the following fields:\n\n- `id`: Represents the application ID.\n    \n- `scopes`: An array containing the list of scopes associated with the application.\n    \n\nExample:\n\n``` json\n{\n    \"id\": \"exampleId\",\n    \"scopes\": [\"scope1\", \"scope2\"]\n}\n\n ```"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Scopes",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{IdentityServiceUrl}}/api/applications/scopes",
+							"host": [
+								"{{IdentityServiceUrl}}"
+							],
+							"path": [
+								"api",
+								"applications",
+								"scopes"
+							]
+						},
+						"description": "### Retrieve Application Scopes\n\nThe endpoint makes an HTTP GET request to retrieve the scopes of applications from the identity service API.\n\n#### Response\n\nThe response of this request is an array of objects, where each object has the following properties:\n\n- `id` (string)\n    \n- `scopes` (array of strings)\n    \n\nHere is the JSON schema representing the response:\n\n``` json\n{\n  \"type\": \"array\",\n  \"items\": {\n    \"type\": \"object\",\n    \"properties\": {\n      \"id\": {\n        \"type\": \"string\"\n      },\n      \"scopes\": {\n        \"type\": \"array\",\n        \"items\": {\n          \"type\": \"string\"\n        }\n      }\n    }\n  }\n}\n\n ```"
+					},
+					"response": []
+				}
+			],
+			"description": "This folder contains sample requests for retrieving application scopes.",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							"if (pm.environment.has(\"IdentityServiceUrl\") === false || pm.environment.get(\"IdentityServiceUrl\") === \"\") {        \r",
+							"        throw new Error(\"IdentityServiceUrl is empty or does not exist.\");\r",
+							"}"
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Create Applications",
+			"item": [
+				{
+					"name": "Create Web Application",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"id\": \"{{$guid}}\",\r\n  \"name\": \"{{ApplicationName}} - Web\",\r\n  \"description\": \"This is a web application\",\r\n  \"enabled\": true,\r\n  \"scopes\": [\r\n    \"openid\",\r\n    \"dwprofile\",\r\n    \"docuware.platform\"\r\n  ],\r\n  \"redirectUris\": [\r\n    \"https://oauth.pstmn.io/v1/callback\"\r\n  ],\r\n  \"allowRefreshTokenGrant\": true,\r\n  \"accessTokenLifetime\": 60,\r\n  \"absoluteRefreshTokenLifetime\": 90,\r\n  \"slidingRefreshTokenLifetime\": 45\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{IdentityServiceUrl}}/api/applications/web",
+							"host": [
+								"{{IdentityServiceUrl}}"
+							],
+							"path": [
+								"api",
+								"applications",
+								"web"
+							]
+						},
+						"description": "### Create Application\n\nThis endpoint allows the creation of a new application.\n\n#### Request Body\n\n- `id` (string, optional): The unique identifier of the application.\n    \n- `name` (string, optional): The name of the application.\n    \n- `description` (string, optional): A description of the application.\n    \n- `enabled` (boolean, optional): Indicates if the application is enabled.\n    \n- `scopes` (array of strings, optional): The scopes associated with the application.\n    \n- `redirectUris` (array of strings, optional): The redirect URIs for the application.\n    \n- `allowRefreshTokenGrant` (boolean, optional): Indicates if refresh token grant is allowed.\n    \n- `accessTokenLifetime` (number, optional): The lifetime of the access token.\n    \n- `absoluteRefreshTokenLifetime` (number, optional): The absolute lifetime of the refresh token.\n    \n- `slidingRefreshTokenLifetime` (number, optional): The sliding lifetime of the refresh token.\n    \n\n#### Response Body\n\n- `id` (string): The unique identifier of the application.\n    \n- `name` (string): The name of the application.\n    \n- `description` (string): A description of the application.\n    \n- `enabled` (boolean): Indicates if the application is enabled.\n    \n- `scopes` (array of strings): The scopes associated with the application.\n    \n- `redirectUris` (array of strings): The redirect URIs for the application.\n    \n- `allowAuthorizationCodeGrant` (boolean): Indicates if authorization code grant is allowed.\n    \n- `allowClientCredentialsGrant` (boolean): Indicates if client credentials grant is allowed.\n    \n- `allowRefreshTokenGrant` (boolean): Indicates if refresh token grant is allowed.\n    \n- `accessTokenLifetime` (number): The lifetime of the access token.\n    \n- `absoluteRefreshTokenLifetime` (number): The absolute lifetime of the refresh token.\n    \n- `slidingRefreshTokenLifetime` (number): The sliding lifetime of the refresh token.\n    \n- `type` (number): The type of the application.\n    \n- `validationToken` (string): The validation token for the application.\n    \n- `secrets` (array of objects): An array containing the secrets associated with the application, including id, secret, description, expiration date, and validation token."
+					},
+					"response": []
+				},
+				{
+					"name": "Create Native Application",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"id\": \"{{$guid}}\",\r\n  \"name\": \"{{ApplicationName}} - Native\",\r\n  \"description\": \"This is a native application\",\r\n  \"enabled\": true,\r\n  \"scopes\": [\r\n    \"openid\",\r\n    \"dwprofile\",\r\n    \"docuware.platform\"\r\n  ],\r\n  \"redirectUris\": [\r\n    \"http://random/\"\r\n  ],\r\n  \"allowTrustedGrant\": true,\r\n  \"allowAuthorizationCodeGrant\": true,\r\n  \"allowRefreshTokenGrant\": true,\r\n  \"accessTokenLifetime\": 60,\r\n  \"absoluteRefreshTokenLifetime\": 60,\r\n  \"slidingRefreshTokenLifetime\": 30\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{IdentityServiceUrl}}/api/applications/native",
+							"host": [
+								"{{IdentityServiceUrl}}"
+							],
+							"path": [
+								"api",
+								"applications",
+								"native"
+							]
+						},
+						"description": "### Create Native Application\n\nThe `POST` request is used to create a new native application in the identity service.\n\n#### Request Body\n\n- `id` (string) - Unique identifier for the application.\n    \n- `name` (string) - Name of the native application.\n    \n- `description` (string) - Description of the native application.\n    \n- `enabled` (boolean) - Indicates whether the application is enabled.\n    \n- `scopes` (array of strings) - List of scopes for the application.\n    \n- `redirectUris` (array of strings) - List of redirect URIs for the application.\n    \n- `allowTrustedGrant` (boolean) - Indicates whether trusted grant is allowed for the application.\n    \n- `allowAuthorizationCodeGrant` (boolean) - Indicates whether authorization code grant is allowed for the application.\n    \n- `allowRefreshTokenGrant` (boolean) - Indicates whether refresh token grant is allowed for the application.\n    \n- `accessTokenLifetime` (number) - Lifetime of the access token in seconds.\n    \n- `absoluteRefreshTokenLifetime` (number) - Absolute lifetime of the refresh token in seconds.\n    \n- `slidingRefreshTokenLifetime` (number) - Sliding lifetime of the refresh token in seconds.\n    \n\n#### Response (201 - Created)\n\nThe response will be in JSON format with the following schema:\n\n``` json\n{\n  \"id\": \"\",\n  \"name\": \"\",\n  \"description\": \"\",\n  \"type\": 0,\n  \"enabled\": true,\n  \"scopes\": [\"\"],\n  \"redirectUris\": [\"\"],\n  \"allowTrustedGrant\": true,\n  \"allowAuthorizationCodeGrant\": true,\n  \"allowRefreshTokenGrant\": true,\n  \"accessTokenLifetime\": 0,\n  \"absoluteRefreshTokenLifetime\": 0,\n  \"slidingRefreshTokenLifetime\": 0,\n  \"corsOrigins\": [],\n  \"validationToken\": \"\",\n  \"secrets\": []\n}\n\n ```"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Single Page Application",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"id\": \"{{$guid}}\",\r\n  \"name\": \"{{ApplicationName}} - Single Page\",\r\n  \"description\": \"This is a single page application\",\r\n  \"enabled\": true,\r\n  \"scopes\": [\r\n    \"openid\",\r\n    \"dwprofile\",\r\n    \"docuware.platform\"\r\n  ],\r\n  \"redirectUris\": [\r\n    \"http://random/\"\r\n  ],\r\n  \"accessTokenLifetime\": 60,\r\n  \"corsOrigins\": [\r\n    \"http://random\"\r\n  ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{IdentityServiceUrl}}/api/applications/single-page",
+							"host": [
+								"{{IdentityServiceUrl}}"
+							],
+							"path": [
+								"api",
+								"applications",
+								"single-page"
+							]
+						},
+						"description": "### Create Single Page Application\n\nThis endpoint is used to create a new single page application by sending a POST request to the specified URL.\n\n#### Request Body\n\n- `id` (string, optional): The unique identifier for the application.\n    \n- `name` (string, required): The name of the application.\n    \n- `description` (string, optional): A brief description of the application.\n    \n- `enabled` (boolean, required): Indicates whether the application is enabled.\n    \n- `scopes` (array of strings, required): The scopes associated with the application.\n    \n- `redirectUris` (array of strings, required): The redirect URIs for the application.\n    \n- `accessTokenLifetime` (integer, required): The lifetime of the access token.\n    \n- `corsOrigins` (array of strings, required): The allowed CORS origins for the application.\n    \n\n#### Response\n\nUpon successful creation, the endpoint returns a status code of 201 and a JSON object with the same properties as the request body, along with additional fields:\n\n- `allowAuthorizationCodeGrant` (boolean): Indicates whether authorization code grant is allowed for the application.\n    \n- `validationToken` (string): A validation token for the application."
+					},
+					"response": []
+				}
+			],
+			"description": "This folder contains sample requests for creating application registrations.",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							"if (pm.environment.has(\"IdentityServiceUrl\") === false || pm.environment.get(\"IdentityServiceUrl\") === \"\") {        \r",
+							"        throw new Error(\"IdentityServiceUrl is empty or does not exist.\");\r",
+							"}"
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Modify Applications",
+			"item": [
+				{
+					"name": "Update Web Application",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"{{ApplicationName}} - Updated\",\r\n  \"description\": \"This is a web application - Updated\",\r\n  \"enabled\": true,\r\n  \"redirectUris\": [\r\n    \"http://localhost:5000/\"\r\n  ],\r\n  \"scopes\": [\r\n    \"openid\",\r\n    \"dwprofile\",\r\n    \"docuware.platform\"\r\n  ],\r\n  \"allowRefreshTokenGrant\": false,\r\n  \"accessTokenLifetime\": 60,\r\n  \"absoluteRefreshTokenLifetime\": 90,\r\n  \"slidingRefreshTokenLifetime\": 45,\r\n  \"validationToken\": \"{{ValidationToken}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{IdentityServiceUrl}}/api/applications/web/{{ApplicationId}}",
+							"host": [
+								"{{IdentityServiceUrl}}"
+							],
+							"path": [
+								"api",
+								"applications",
+								"web",
+								"{{ApplicationId}}"
+							]
+						},
+						"description": "The HTTP PATCH request is used to update the details of a specific application at the `{{IdentityServiceUrl}}/api/applications/web/{{ApplicationId}}` endpoint.\n\n#### Request Body\n\n- `name` (string): The updated name of the client.\n    \n- `description` (string): The updated description of the application.\n    \n- `enabled` (boolean): Indicates whether the application is enabled.\n    \n- `redirectUris` (array of strings): An array of updated redirect URIs.\n    \n- `scopes` (array of strings): An array of updated scopes.\n    \n- `allowRefreshTokenGrant` (boolean): Indicates whether refresh token grant is allowed.\n    \n- `accessTokenLifetime` (integer): The updated lifetime of the access token.\n    \n- `absoluteRefreshTokenLifetime` (integer): The updated absolute lifetime of the refresh token.\n    \n- `slidingRefreshTokenLifetime` (integer): The updated sliding lifetime of the refresh token.\n    \n- `validationToken` (string): The validation token obtained from the GetApplication request.\n    \n\n#### Response\n\nThe response of this request is an empty JSON object with a status code of 200.\n\n#### Response JSON Schema\n\n``` json\n{}\n\n ```"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Native Application",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"{{ApplicationName}} - Updated\",\r\n  \"description\": \"This is a native application - Updated\",\r\n  \"enabled\": true,\r\n  \"scopes\": [\r\n    \"openid\",\r\n    \"dwprofile\",\r\n    \"docuware.platform\"\r\n  ],\r\n  \"redirectUris\": [\r\n    \"http://localhost:5000/\"\r\n  ],\r\n  \"allowAuthorizationCodeGrant\": true,\r\n  \"allowRefreshTokenGrant\": true,\r\n  \"allowTrustedGrant\": false,\r\n  \"accessTokenLifetime\": 60,\r\n  \"absoluteRefreshTokenLifetime\": 90,\r\n  \"slidingRefreshTokenLifetime\": 45,\r\n  \"validationToken\": \"{{ValidationToken}}\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{IdentityServiceUrl}}/api/applications/native/{{ApplicationId}}",
+							"host": [
+								"{{IdentityServiceUrl}}"
+							],
+							"path": [
+								"api",
+								"applications",
+								"native",
+								"{{ApplicationId}}"
+							]
+						},
+						"description": "### Update Application Details\n\nThis endpoint is used to update the details of a specific application.\n\n#### Request Body\n\n- `name` (string): The updated name of the client.\n    \n- `description` (string): The updated description of the application.\n    \n- `redirectUris` (array of strings): An array of updated redirect URIs.\n    \n- `allowTrustedGrant` (boolean): Indicates whether trusted grant is allowed.\n    \n- `allowAuthorizationCodeGrant` (boolean): Indicates whether authorization code grant is allowed.\n    \n- `allowRefreshTokenGrant` (boolean): Indicates whether refresh token grant is allowed.\n    \n- `accessTokenLifetime` (integer): The updated lifetime of the access token.\n    \n- `absoluteRefreshTokenLifetime` (integer): The updated absolute lifetime of the refresh token.\n    \n- `slidingRefreshTokenLifetime` (integer): The updated sliding lifetime of the refresh token.\n    \n- `validationToken` (string): The validation token obtained from the GetApplication request.\n    \n\n#### Response\n\nThe response of this request is an empty JSON object with a status code of 200.\n\n#### Response JSON Schema\n\n``` json\n{}\n\n ```"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Single Page Application",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"{{ApplicationName}} - Updated\",\r\n  \"description\": \"This is a single page application - Updated\",\r\n  \"enabled\": true,\r\n  \"redirectUris\": [\r\n    \"http://localhost:5000/\"\r\n  ],\r\n  \"scopes\": [\r\n    \"openid\",\r\n    \"dwprofile\",\r\n    \"docuware.platform\"\r\n  ],\r\n  \"accessTokenLifetime\": 60,\r\n   \"corsOrigins\": [\r\n    \"http://localhost:5000\"\r\n  ],\r\n  \"validationToken\": \"{{ValidationToken}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{IdentityServiceUrl}}/api/applications/single-page/{{ApplicationId}}",
+							"host": [
+								"{{IdentityServiceUrl}}"
+							],
+							"path": [
+								"api",
+								"applications",
+								"single-page",
+								"{{ApplicationId}}"
+							]
+						},
+						"description": "### Update Application Details\n\nThis endpoint is used to update the details of a specific single-page application.\n\n#### Request Body\n\n- `name` (string): The updated name of the client.\n    \n- `description` (string): The updated description of the application.\n    \n- `enabled` (boolean): Indicates whether the application is enabled.\n    \n- `redirectUris` (array of strings): An array of updated redirect URIs.\n    \n- `scopes` (array of strings): An array of updated scopes.\n    \n- `accessTokenLifetime` (integer): The updated lifetime of the access token.\n    \n- `corsOrigins` (array of strings): An array of updated CORS origins.\n    \n- `validationToken` (string): The validation token obtained from the GetApplication request.\n    \n\n#### Response\n\nThe response of this request is an empty JSON object with a status code of 200.\n\n#### Response JSON Schema\n\n``` json\n{}\n\n ```"
+					},
+					"response": []
+				},
+				{
+					"name": "Change Application Status (All)",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"isEnabled\": false,\r\n  \"validationToken\": \"{{ValidationToken}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{IdentityServiceUrl}}/api/applications/{{ApplicationId}}/status",
+							"host": [
+								"{{IdentityServiceUrl}}"
+							],
+							"path": [
+								"api",
+								"applications",
+								"{{ApplicationId}}",
+								"status"
+							]
+						},
+						"description": "### Update Application Status\n\nThis endpoint allows the client to update the status of a specific application.\n\n#### Request\n\n- Method: PATCH\n    \n- URL: `{{IdentityServiceUrl}}/api/applications/{{ApplicationId}}/status`\n    \n\n##### Request Body\n\n- `isEnabled` (boolean, required): Specifies whether the application is enabled or disabled.\n    \n- `validationToken` (string, required): A token obtained from the `GetApplication` endpoint to validate the current application.\n    \n\n#### Response\n\nThe response for this request is a JSON object with the following schema:\n\n``` json\n{\n  \"type\": \"object\",\n  \"properties\": {\n    // Add properties based on the actual response\n  }\n}\n\n ```"
+					},
+					"response": []
+				}
+			],
+			"description": "This folder contains sample requests for modifying application registrations.",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							"if (pm.environment.has(\"IdentityServiceUrl\") === false || pm.environment.get(\"IdentityServiceUrl\") === \"\") {        \r",
+							"        throw new Error(\"IdentityServiceUrl is empty or does not exist.\");\r",
+							"}"
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Web Applications Secrets",
+			"item": [
+				{
+					"name": "Create Application Secret",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"var secretId = response.id;\r",
+									"pm.environment.set(\"SecretId\", secretId);\r",
+									"pm.environment.set(\"SecretIdForDelete\", secretId);\r",
+									"pm.environment.set(\"SecretDescription\", response.description);\r",
+									"pm.environment.set(\"SecretValidationToken\", response.validationToken);\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Description\": \"{{SecretDescription}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{IdentityServiceUrl}}/api/applications/web/{{ApplicationId}}/secrets",
+							"host": [
+								"{{IdentityServiceUrl}}"
+							],
+							"path": [
+								"api",
+								"applications",
+								"web",
+								"{{ApplicationId}}",
+								"secrets"
+							]
+						},
+						"description": "### Create New Secret for Application\n\nThis endpoint is used to create a new secret for a specific application in the identity service API.\n\n#### Request Body\n\n- Description (string, optional): A description for the secret.\n    \n\nExample:\n\n``` json\n{\n  \"Description\": \"{{SecretDescription}}\"\n}\n#### Response\nUpon successful execution, the API returns a JSON object with the following properties:\n- id (string): The ID of the created secret.\n- secret (string): The secret value.\n- description (string): The description of the secret.\n- expirationDate (string): The expiration date of the secret.\n- validationToken (string): The validation token for the secret.\nExample Response:\n```json\n{\n  \"id\": \"\",\n  \"secret\": \"\",\n  \"description\": \"\",\n  \"expirationDate\": \"\",\n  \"validationToken\": \"\"\n}\n\n ```"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Secret",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"description\": \"{{SecretDescription}} - Updated\",\r\n  \"validationToken\": \"{{SecretValidationToken}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{IdentityServiceUrl}}/api/applications/web/{{ApplicationId}}/secrets/{{SecretId}}",
+							"host": [
+								"{{IdentityServiceUrl}}"
+							],
+							"path": [
+								"api",
+								"applications",
+								"web",
+								"{{ApplicationId}}",
+								"secrets",
+								"{{SecretId}}"
+							]
+						},
+						"description": "### Update Application Secret\n\nThis endpoint is used to update the secret for a specific application.\n\n#### Request\n\n- Method: PATCH\n    \n- URL: `{{IdentityServiceUrl}}/api/applications/{{ApplicationId}}/secrets/{{SecretId}}`\n    \n- Headers:\n    \n    - Content-Type: application/json\n        \n- Body:\n    \n    - `description` (string, optional): A description for the secret. Use the payload to provide the description for the secret.\n        \n    - `validationToken` (string, optional): A validation token for the secret. Use the payload to provide the validation token for the secret.\n        \n\n#### Response\n\n- Status: 200\n    \n- Content-Type: application/json\n    \n- {}\n    \n\nThe response schema for this endpoint is not available."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Application Secret",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"SecretId\",\"\");\r",
+									"pm.environment.set(\"SecretIdForDelete\", \"\");\r",
+									"pm.environment.set(\"SecretValidationToken\", \"\");"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "\"{{SecretValidationToken}}\"",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{IdentityServiceUrl}}/api/applications/web/{{ApplicationId}}/secrets/{{SecretIdForDelete}}",
+							"host": [
+								"{{IdentityServiceUrl}}"
+							],
+							"path": [
+								"api",
+								"applications",
+								"web",
+								"{{ApplicationId}}",
+								"secrets",
+								"{{SecretIdForDelete}}"
+							]
+						},
+						"description": "### DELETE /api/applications/web/{{ApplicationId}}/secrets/{{SecretIdForDelete}}\n\nDeletes the specified secret associated with the web application.\n\n#### Request\n\nThe request body for this DELETE request should include the following payload in the raw request body type:\n\n- `SecretValidationToken` (raw) - The validation token for the secret to be deleted.\n    \n- `applicationId` (path parameter) - The unique identifier of the application.\n    \n- `secretIdForDelete` (path parameter) - The identifier of the secret to be deleted.\n    \n\n#### Response\n\nThe response for this request returns a status code of 204 with no content in the response body.\n\n``` json\n{\n  \"type\": \"object\",\n  \"properties\": {},\n  \"description\": \"Response for the DELETE request to delete the specified secret.\"\n}\n\n ```"
+					},
+					"response": []
+				}
+			],
+			"description": "This folder contains sample requests for managing application registration secrets.",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							"if (pm.environment.has(\"IdentityServiceUrl\") === false || pm.environment.get(\"IdentityServiceUrl\") === \"\") {        \r",
+							"        throw new Error(\"IdentityServiceUrl is empty or does not exist.\");\r",
+							"}"
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Delete Application",
+			"item": [
+				{
+					"name": "Delete Web Application",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "\"{{ValidationToken}}\"",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{IdentityServiceUrl}}/api/applications/web/{{ApplicationIdForDelete}}",
+							"host": [
+								"{{IdentityServiceUrl}}"
+							],
+							"path": [
+								"api",
+								"applications",
+								"web",
+								"{{ApplicationIdForDelete}}"
+							]
+						},
+						"description": "### Delete Application\n\nThis endpoint is used to delete a specific application.\n\n#### Request\n\n- Method: DELETE\n    \n- URL: `{{IdentityServiceUrl}}/api/applications/web/{{ApplicationIdForDelete}}`\n    \n- Headers:\n    \n    - Content-Type: text/plain\n        \n- Body:\n    \n    - `validationToken` (text): This value is populated by making a \"Get Application\" request and retrieving the validation token from the request response.\n        \n\n#### Response\n\n- Status: 204\n    \n- Content-Type: text/xml\n    \n\n#### JSON Schema for Response\n\n``` json\n{\n  \"type\": \"object\",\n  \"properties\": {}\n}\n\n ```"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Native Application",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "\"{{ValidationToken}}\"",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{IdentityServiceUrl}}/api/applications/native/{{ApplicationIdForDelete}}",
+							"host": [
+								"{{IdentityServiceUrl}}"
+							],
+							"path": [
+								"api",
+								"applications",
+								"native",
+								"{{ApplicationIdForDelete}}"
+							]
+						},
+						"description": "### Delete Application\n\nThis endpoint is used to delete a specific application.\n\n#### Request\n\n- Method: DELETE\n    \n- URL: `{{IdentityServiceUrl}}/api/applications/native/{{ApplicationIdForDelete}}`\n    \n- Headers:\n    \n    - Content-Type: text/plain\n        \n- Body:\n    \n    - `validationToken` (text): This value is populated by making a \"Get Application\" request and retrieving the validation token from the request response.\n        \n\n#### Response\n\n- Status: 204\n    \n- Content-Type: text/xml\n    \n\n#### JSON Schema for Response\n\n``` json\n{\n  \"type\": \"object\",\n  \"properties\": {}\n}\n\n ```"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Single Page Application",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "\"{{ValidationToken}}\"",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{IdentityServiceUrl}}/api/applications/single-page/{{ApplicationIdForDelete}}",
+							"host": [
+								"{{IdentityServiceUrl}}"
+							],
+							"path": [
+								"api",
+								"applications",
+								"single-page",
+								"{{ApplicationIdForDelete}}"
+							]
+						},
+						"description": "### Delete Application\n\nThis endpoint is used to delete a specific application.\n\n#### Request\n\n- Method: DELETE\n    \n- URL: `{{IdentityServiceUrl}}/api/applications/{{ApplicationIdForDelete}}`\n    \n- Headers:\n    \n    - Content-Type: text/plain\n        \n- Body:\n    \n    - `validationToken` (text): This value is populated by making a \"Get Application\" request and retrieving the validation token from the request response.\n        \n\n#### Response\n\n- Status: 204\n    \n- Content-Type: text/xml\n    \n\n#### JSON Schema for Response\n\n``` json\n{\n  \"type\": \"object\",\n  \"properties\": {}\n}\n\n ```"
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "oauth2",
+		"oauth2": [
+			{
+				"key": "scope",
+				"value": "{{ApiScopes}}",
+				"type": "string"
+			},
+			{
+				"key": "clientId",
+				"value": "{{ApiClientId}}",
+				"type": "string"
+			},
+			{
+				"key": "accessTokenUrl",
+				"value": "{{IdentityServiceUrl}}/{{AccessTokenURL}}",
+				"type": "string"
+			},
+			{
+				"key": "authUrl",
+				"value": "{{IdentityServiceUrl}}/{{AuthURL}}",
+				"type": "string"
+			},
+			{
+				"key": "redirect_uri",
+				"value": "{{IdentityServiceUrl}}",
+				"type": "string"
+			},
+			{
+				"key": "code_verifier",
+				"value": "",
+				"type": "string"
+			},
+			{
+				"key": "refreshRequestParams",
+				"value": [],
+				"type": "any"
+			},
+			{
+				"key": "tokenRequestParams",
+				"value": [],
+				"type": "any"
+			},
+			{
+				"key": "authRequestParams",
+				"value": [],
+				"type": "any"
+			},
+			{
+				"key": "tokenName",
+				"value": "Token",
+				"type": "string"
+			},
+			{
+				"key": "challengeAlgorithm",
+				"value": "S256",
+				"type": "string"
+			},
+			{
+				"key": "username",
+				"value": "admin",
+				"type": "string"
+			},
+			{
+				"key": "password",
+				"value": "admin",
+				"type": "string"
+			},
+			{
+				"key": "grant_type",
+				"value": "authorization_code_with_pkce",
+				"type": "string"
+			},
+			{
+				"key": "addTokenTo",
+				"value": "header",
+				"type": "string"
+			},
+			{
+				"key": "client_authentication",
+				"value": "header",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}

@@ -2,12 +2,9 @@
 
 namespace CodebarAg\DocuWare\Requests\General\UserManagement\GetModifyRoles;
 
-use CodebarAg\DocuWare\Events\DocuWareResponseLog;
-use CodebarAg\DocuWare\Support\EnsureValidResponse;
 use Saloon\Contracts\Body\HasBody;
 use Saloon\Enums\Method;
 use Saloon\Http\Request;
-use Saloon\Http\Response;
 use Saloon\Traits\Body\HasJsonBody;
 
 class AddUserToARole extends Request implements HasBody
@@ -45,14 +42,5 @@ class AddUserToARole extends Request implements HasBody
             'Ids' => $this->ids,
             'OperationType' => 'Add',
         ];
-    }
-
-    public function createDtoFromResponse(Response $response): Response
-    {
-        event(new DocuWareResponseLog($response));
-
-        EnsureValidResponse::from($response);
-
-        return $response;
     }
 }

@@ -1,27 +1,18 @@
 <?php
 
-use CodebarAg\DocuWare\Events\DocuWareResponseLog;
-use CodebarAg\DocuWare\Requests\Documents\Download\DownloadDocument;
-use CodebarAg\DocuWare\Requests\FileCabinets\Upload\CreateDataRecord;
+use CodebarAg\DocuWare\Enums\TargetFileType;
+use CodebarAg\DocuWare\Events\ResponseReceived;
+use CodebarAg\DocuWare\Facades\DocuWare;
 use Illuminate\Support\Facades\Event;
 
 it('can download a document', function () {
     Event::fake();
 
-    $fileCabinetId = config('laravel-docuware.tests.file_cabinet_id');
+    $document = uploadTestDocument($this->cabinet);
 
-    $document = $this->connector->send(new CreateDataRecord(
-        $fileCabinetId,
-        '::fake-file-content::',
-        'example.txt'
-    ))->dto();
+    $contents = DocuWare::documents($this->cabinet)->download($document->id, TargetFileType::AUTO);
 
-    $contents = $this->connector->send(new DownloadDocument(
-        $fileCabinetId,
-        $document->id
-    ))->dto();
+    expect(strlen($contents))->toBe(strlen('::fake-file-content::'));
 
-    $this->assertSame(strlen('::fake-file-content::'), strlen($contents));
-    Event::assertDispatched(DocuWareResponseLog::class);
-
+    Event::assertDispatched(ResponseReceived::class);
 })->group('download');

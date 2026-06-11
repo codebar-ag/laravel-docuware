@@ -1,33 +1,28 @@
 <?php
 
-use CodebarAg\DocuWare\DocuWare;
-use CodebarAg\DocuWare\Requests\Documents\DocumentsTrashBin\RestoreDocuments;
-use CodebarAg\DocuWare\Requests\Documents\ModifyDocuments\DeleteDocument;
-use CodebarAg\DocuWare\Requests\FileCabinets\Upload\CreateDataRecord;
+use CodebarAg\DocuWare\Facades\DocuWare;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Event;
 
 it('can restore documents in trash', function () {
     Event::fake();
 
-    $document = $this->connector->send(new CreateDataRecord(
-        config('laravel-docuware.tests.file_cabinet_id'),
-        file_get_contents(__DIR__.'/../../../../Fixtures/files/test-1.pdf'),
-        'test-1.pdf',
-    ))->dto();
+    $document = DocuWare::documents($this->cabinet)->store(
+        fileContent: file_get_contents(__DIR__.'/../../../../Fixtures/files/test-1.pdf'),
+        fileName: 'test-1.pdf',
+    );
 
-    $this->connector->send(new DeleteDocument(
-        config('laravel-docuware.tests.file_cabinet_id'),
-        $document->id,
-    ))->dto();
+    DocuWare::documents($this->cabinet)->delete($document->id);
 
-    $paginatorRequest = (new DocuWare)
-        ->searchRequestBuilder()
-        ->trashBin()
-        ->get();
+    $page = DocuWare::trash()->search(perPage: 1000);
 
-    $paginator = $this->connector->send($paginatorRequest)->dto();
+    $ids = $page->documents
+        ->map(fn (Collection $row) => $row->get('ID') ?? $row->get('Id'))
+        ->filter()
+        ->values()
+        ->all();
 
-    $delete = $this->connector->send(new RestoreDocuments($paginator->mappedDocuments->pluck('ID')->all()))->dto();
+    $restore = DocuWare::trash()->restore($ids);
 
-    expect($delete->successCount)->toBe($paginator->total);
+    expect($restore->successCount)->toBe($page->total);
 })->group('restore', 'trash');

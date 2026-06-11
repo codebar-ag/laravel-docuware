@@ -1,35 +1,19 @@
 <?php
 
-use CodebarAg\DocuWare\Events\DocuWareResponseLog;
-use CodebarAg\DocuWare\Requests\Documents\Sections\GetAllSectionsFromADocument;
-use CodebarAg\DocuWare\Requests\Documents\Sections\GetASpecificSection;
-use CodebarAg\DocuWare\Requests\FileCabinets\Upload\CreateDataRecord;
+use CodebarAg\DocuWare\Events\ResponseReceived;
+use CodebarAg\DocuWare\Facades\DocuWare;
 use Illuminate\Support\Facades\Event;
 
 it('can get a specific section', function () {
     Event::fake();
 
-    $fileCabinetId = config('laravel-docuware.tests.file_cabinet_id');
-    $dialogId = config('laravel-docuware.tests.dialog_id');
+    $document = uploadTestDocument($this->cabinet);
 
-    $document = $this->connector->send(new CreateDataRecord(
-        $fileCabinetId,
-        '::fake-file-content::',
-        'example.txt'
-    ))->dto();
+    $sections = DocuWare::documents($this->cabinet)->sections((string) $document->id);
 
-    $sections = $this->connector->send(new GetAllSectionsFromADocument(
-        $fileCabinetId,
-        $document->id
-    ))->dto();
-
-    $section = $this->connector->send(new GetASpecificSection(
-        $fileCabinetId,
-        $sections->first()->id
-    ))->dto();
+    $section = DocuWare::documents($this->cabinet)->section($sections->first()->id);
 
     expect($section->id)->toBe($sections->first()->id);
 
-    Event::assertDispatched(DocuWareResponseLog::class);
-
-})->group('requests', 'sections');
+    Event::assertDispatched(ResponseReceived::class);
+})->group('sections');

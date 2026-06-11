@@ -1,58 +1,30 @@
 <?php
 
-use CodebarAg\DocuWare\Events\DocuWareResponseLog;
-use CodebarAg\DocuWare\Requests\FileCabinets\SelectLists\GetFilteredSelectLists;
-use CodebarAg\DocuWare\Requests\FileCabinets\SelectLists\GetSelectLists;
-use Illuminate\Support\Facades\Event;
+use CodebarAg\DocuWare\Facades\DocuWare;
+use Illuminate\Support\Collection;
 
-it('returns a select list for a dialog field', function () {
-    Event::fake();
+it('returns a select list for a discovered dialog field', function () {
+    $dialogId = sandboxSearchDialogId($this->cabinet);
+    $keywordField = sandboxFieldName($this->cabinet, 'Keyword');
 
-    $fileCabinetId = config('laravel-docuware.tests.file_cabinet_id');
-    $dialogId = config('laravel-docuware.tests.dialog_id');
-    $fieldName = config('laravel-docuware.tests.filtered_select_list_field');
+    $values = DocuWare::selectLists($this->cabinet)->get($dialogId, $keywordField);
 
-    $response = $this->connector->send(new GetSelectLists(
-        $fileCabinetId,
-        $dialogId,
-        $fieldName,
-    ));
-
-    expect($response->successful())->toBeTrue('HTTP '.$response->status().': '.$response->body());
-
-    $values = $response->dto();
-    expect($values !== null)->toBeTrue();
-
-    Event::assertDispatched(DocuWareResponseLog::class);
+    expect($values)->toBeInstanceOf(Collection::class);
 });
 
-it('returns a filtered select list using DialogExpression', function () {
-    $fileCabinetId = config('laravel-docuware.tests.file_cabinet_id');
-    $dialogId = config('laravel-docuware.tests.dialog_id');
-    $fieldName = config('laravel-docuware.tests.filtered_select_list_field');
-    $conditionField = config('laravel-docuware.tests.filtered_select_list_condition_field');
-    $conditionValue = config('laravel-docuware.tests.filtered_select_list_condition_value');
+it('returns a filtered select list using a DialogExpression', function () {
+    $dialogId = sandboxSearchDialogId($this->cabinet);
+    $keywordField = sandboxFieldName($this->cabinet, 'Keyword');
+    $textField = sandboxFieldName($this->cabinet, 'Text');
 
     $dialogExpression = [
         'Operation' => 'And',
         'Condition' => [
-            [
-                'DBName' => $conditionField,
-                'Value' => [$conditionValue],
-            ],
+            ['DBName' => $textField, 'Value' => ['value']],
         ],
     ];
 
-    $response = $this->connector->send(new GetFilteredSelectLists(
-        $fileCabinetId,
-        $dialogId,
-        $fieldName,
-        $dialogExpression,
-    ));
+    $values = DocuWare::selectLists($this->cabinet)->filtered($dialogId, $keywordField, $dialogExpression);
 
-    expect($response->successful())->toBeTrue('HTTP '.$response->status().': '.$response->body());
-
-    /** @var mixed $payload */
-    $payload = $response->json();
-    expect(is_array($payload))->toBeTrue();
+    expect($values)->toBeInstanceOf(Collection::class);
 });

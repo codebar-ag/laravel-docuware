@@ -2,47 +2,14 @@
 
 namespace CodebarAg\DocuWare\Support;
 
-use Carbon\Carbon;
-use CodebarAg\DocuWare\DTO\Documents\TableRow;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Collection;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 
 class ParseValue
 {
     /**
-     * @param  array<string, mixed>|null  $field
-     * @param  int|float|Carbon|string|Collection<int, mixed>|null  $default
-     * @return int|float|Carbon|string|Collection<int, mixed>|null
+     * Parse a DocuWare `/Date(ms)/` timestamp (milliseconds) to a Carbon instance.
      */
-    public static function field(
-        ?array $field,
-        int|float|Carbon|string|Collection|null $default = null,
-    ): null|int|float|Carbon|string|Collection {
-        if (! $field || Arr::get($field, 'IsNull')) {
-            return $default;
-        }
-
-        $item = Arr::get($field, 'Item');
-        $itemElementName = Arr::get($field, 'ItemElementName');
-
-        return match ($itemElementName) {
-            'Int' => (int) $item,
-            'String' => (string) $item,
-            'Decimal' => (float) $item,
-            'Date', 'DateTime' => is_string($item) ? self::date($item) : $default,
-            'Keywords' => Arr::join(
-                match (true) {
-                    is_array($item) && is_array($k = Arr::get($item, 'Keyword', [])) => $k,
-                    default => [],
-                },
-                ', '
-            ),
-            'Table' => is_array($item) ? self::table($item) : $default,
-            default => $default,
-        };
-    }
-
     public static function date(string $date): Carbon
     {
         $timestamp = Str::of($date)
@@ -54,41 +21,34 @@ class ParseValue
     }
 
     /**
-     * @param  array<string, mixed>  $Item
-     * @return Collection<int, TableRow>|null
+     * Null-safe variant of {@see self::date()} — a missing/empty value yields null instead of a
+     * `TypeError`, matching DocuWare's contract where date fields are optional.
      */
-    public static function table(array $Item): ?Collection
+    public static function dateOrNull(?string $date): ?Carbon
     {
-        $type = Arr::get($Item, '$type');
-
-        return match ($type) {
-            'DocumentIndexFieldTable' => is_array($row = Arr::get($Item, 'Row'))
-                ? self::documentIndexFieldTable($row)
-                : null,
-            default => null,
-        };
+        return $date === null || $date === '' ? null : self::date($date);
     }
 
     /**
-     * @param  array<int|string, mixed>  $Row
-     * @return Collection<int, TableRow>|null
+     * Parse a DocuWare `/Date(seconds)/` timestamp to a Carbon instance. A handful of endpoints
+     * (sections, workflow history) emit seconds rather than milliseconds — this preserves that
+     * validated v1 behaviour while centralising the parsing.
      */
-    public static function documentIndexFieldTable(array $Row): ?Collection
+    public static function dateInSeconds(string $date): Carbon
     {
-        /** @var list<array<string, mixed>> $list */
-        $list = [];
-        foreach (array_values($Row) as $row) {
-            if (is_array($row)) {
-                $list[] = $row;
-            }
-        }
+        $timestamp = Str::of($date)
+            ->ltrim('/Date(')
+            ->rtrim(')/')
+            ->__toString();
 
-        $rows = collect($list);
+        return Carbon::createFromTimestamp($timestamp);
+    }
 
-        return $rows->map(function (array $row) {
-            $columnValue = Arr::get($row, 'ColumnValue', []);
-
-            return TableRow::fromJson(is_array($columnValue) ? $columnValue : []);
-        });
+    /**
+     * Null-safe variant of {@see self::dateInSeconds()}.
+     */
+    public static function dateInSecondsOrNull(?string $date): ?Carbon
+    {
+        return $date === null || $date === '' ? null : self::dateInSeconds($date);
     }
 }

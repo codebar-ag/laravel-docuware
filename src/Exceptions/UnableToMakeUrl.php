@@ -21,4 +21,12 @@ final class UnableToMakeUrl extends RuntimeException
                 'Try to chain: "->fileCabinet($id)" or "->basket($id)".',
         );
     }
+
+    public static function passphraseNotSet(): self
+    {
+        return new self(
+            'You need to provide a passphrase, either as the 4th argument to '.
+                'DocuWare::url(...) or via the DOCUWARE_PASSPHRASE config value.',
+        );
+    }
 }

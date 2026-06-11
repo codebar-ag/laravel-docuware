@@ -82,7 +82,7 @@ function classify(array $row): array
     ];
 
     if (str_contains($folder, '3.b Request Token')) {
-        return $p('—', 'OutOfScope', 'DocuWare token grant; intentionally not implemented.');
+        return $p('CodebarAg\\DocuWare\\Requests\\Authentication\\OAuth\\RequestTokenWithDocuWareToken', 'Partial', 'DocuWare token (dwtoken) grant; pair with ConfigWithDocuWareToken.');
     }
     if (str_contains($folder, '3.d.1 Obtain Windows')) {
         return $p('—', 'OutOfScope', 'On-premises Windows authorization; intentionally not implemented.');

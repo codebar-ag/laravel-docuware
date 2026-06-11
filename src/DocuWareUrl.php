@@ -16,12 +16,23 @@ class DocuWareUrl
 
     protected ?Carbon $validUntil = null;
 
+    public string $passphrase;
+
     public function __construct(
         public string $url,
         public string $username,
         public string $password,
-        public string $passphrase,
-    ) {}
+        ?string $passphrase = null,
+    ) {
+        $resolved = filled($passphrase) ? $passphrase : config('laravel-docuware.passphrase');
+
+        throw_if(
+            blank($resolved),
+            UnableToMakeUrl::passphraseNotSet(),
+        );
+
+        $this->passphrase = $resolved;
+    }
 
     public function fileCabinet(string $fileCabinetId): self
     {

@@ -1,9 +1,8 @@
 <?php
 
-use CodebarAg\DocuWare\DTO\General\UserManagement\CreateUpdateUser\User;
-use CodebarAg\DocuWare\Events\DocuWareResponseLog;
-use CodebarAg\DocuWare\Requests\General\UserManagement\CreateUpdateUsers\CreateUser;
-use CodebarAg\DocuWare\Requests\General\UserManagement\GetModifyGroups\AddUserToAGroup;
+use CodebarAg\DocuWare\Data\Write\UserInput;
+use CodebarAg\DocuWare\Events\ResponseReceived;
+use CodebarAg\DocuWare\Facades\DocuWare;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Sleep;
@@ -14,23 +13,23 @@ it('adds a user to a group', function () {
 
     $timestamp = Str::substr((string) Carbon::now()->timestamp, -8);
 
-    $user = $this->connector->send(new CreateUser(new User(
+    $user = DocuWare::users()->create(UserInput::make(
         name: $timestamp.' - Test User',
         dbName: $timestamp,
         email: $timestamp.'-test@example.test',
-        password: 'TESTPASSWORD',
-    )))->dto();
+        password: 'TestPass123!',
+        networkId: null,
+    ));
 
     Sleep::for(5)->seconds();
 
-    $response = $this->connector->send(new AddUserToAGroup(
-        userId: $user->id,
-        ids: [
-            (string) config('laravel-docuware.tests.group_id'),
-        ]
-    ))->dto();
+    $groupId = (string) config('laravel-docuware.tests.group_id');
 
-    expect($response->status())->toBe(200);
+    DocuWare::users()->addToGroup($user->id, [$groupId]);
 
-    Event::assertDispatched(DocuWareResponseLog::class);
-});
+    $groupIds = DocuWare::users()->groupsOf($user->id)->pluck('id');
+
+    expect($groupIds)->toContain($groupId);
+
+    Event::assertDispatched(ResponseReceived::class);
+})->group('integration');

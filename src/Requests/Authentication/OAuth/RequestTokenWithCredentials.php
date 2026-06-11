@@ -2,11 +2,8 @@
 
 namespace CodebarAg\DocuWare\Requests\Authentication\OAuth;
 
-use CodebarAg\DocuWare\DTO\Authentication\OAuth\RequestToken as RequestTokenDto;
-use CodebarAg\DocuWare\Responses\Authentication\OAuth\RequestTokenResponse;
 use Saloon\Contracts\Body\HasBody;
 use Saloon\Enums\Method;
-use Saloon\Http\Response;
 use Saloon\Http\SoloRequest;
 use Saloon\Traits\Body\HasFormBody;
 
@@ -48,10 +45,5 @@ class RequestTokenWithCredentials extends SoloRequest implements HasBody
             'username' => filled($this->username) ? $this->username : config('laravel-docuware.credentials.username'),
             'password' => filled($this->password) ? $this->password : config('laravel-docuware.credentials.password'),
         ];
-    }
-
-    public function createDtoFromResponse(Response $response): RequestTokenDto
-    {
-        return RequestTokenResponse::fromResponse($response);
     }
 }

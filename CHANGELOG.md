@@ -2,6 +2,61 @@
 
 All notable changes to `laravel-docuware` will be documented in this file.
 
+## Unreleased
+
+### Added
+- `dwtoken` OAuth grant: `ConfigWithDocuWareToken` + `RequestTokenWithDocuWareToken` exchange a
+  DocuWare login token for an access token (Postman "3.b Request Token w/ a DocuWare Token").
+- `TargetFileType` enum (`AUTO`, `PDF`, `ORIGINAL`) and `DownloadDocument` now accepts
+  `targetFileType` and `keepAnnotations` constructor arguments (previously hard-coded).
+- Typed annotation builder: `AnnotationBuilder` with `StampPlacement`, `StampField`, `TextEntry`,
+  `RectEntry`, `LineEntry`, `PolyLineEntry`, `DeleteEntry`, `Location`, `Point`, `Font`, plus
+  `AddDocumentAnnotations::fromBuilder()`. Covers add/update/delete annotation recipes without
+  hand-built JSON.
+- `BatchDocumentsUpdateFields::byId()`, `::bySearch()` and `::appendKeywords()` named constructors
+  that set the correct `vnd.docuware.platform.*` content type per variant.
+- Typed `DialogField` DTO and `Dialog::fieldObjects()` accessor.
+- Typed HTTP exceptions: `BadRequest` (400), `Forbidden` (403), `NotFound` (404), `Conflict` (409).
+
+### Fixed
+- `UpdateIndexValues` now honors the `forceUpdate` flag (it was silently dropped, so `ForceUpdate`
+  was always `false`).
+- `EnsureValidResponse` now throws a typed exception for **every** non-2xx response (previously
+  400/403/409 and message-less bodies passed silently) and no longer throws a `JsonException` when
+  the error body is not JSON (e.g. an HTML error page).
+- The `DocuWare` facade no longer advertises 18 `@method` helpers that were never implemented and
+  would throw when called.
+
+### Changed (breaking)
+- Removed the unused `ConnectionEnum` (vestige of the pre-OAuth cookie auth).
+- `DocuWare::url()` / `DocuWareUrl` now accept a nullable `passphrase` and fall back to the
+  `DOCUWARE_PASSPHRASE` config value.
+- Output value DTOs are now immutable: their public properties are declared `readonly`. This
+  covers the response/value objects (e.g. `Document`, `DocumentField`, `Section`, `Dialog`,
+  `Organization`, `RequestToken`, `IdentityServiceConfiguration`, the paginators, …) and the
+  `ConfigWith*` configuration DTOs. Property names, types and constructor signatures are
+  unchanged — only post-construction mutation is now disallowed. The read-modify-write DTOs
+  (`UserManagement` `User`/`Group`/`Role`) and the input builders (`AnnotationBuilder` and the
+  `Annotations` / `DocumentIndex` payload DTOs) remain mutable. If you previously mutated a
+  response DTO in place, construct a new instance instead.
+
+### Internal (no public API change)
+- Extracted the duplicated cache configuration from 42 requests into a single
+  `Concerns\HasDocuWareCaching` trait, and the duplicated response prelude (event + validation)
+  from 37 responses into a `Concerns\HandlesDocuWareResponse` trait.
+- Extracted the search builder's date-range logic into a tested, internal
+  `Support\DateFilterValidator`; `DocuWareSearchRequestBuilder` shrank from ~387 to ~170 lines
+  with no change to its fluent API or the emitted query condition.
+
+### Dependencies
+- Refreshed `composer.lock` to the latest in-range releases and raised stale constraint floors:
+  `guzzlehttp/guzzle ^7.11.1`, `nesbot/carbon ^3.11.4`, `saloonphp/laravel-plugin ^4.3.0`,
+  `spatie/laravel-package-tools ^1.93.1`, `laravel/pint ^1.29.1`, `larastan/larastan ^3.10.0`,
+  `nunomaduro/collision ^8.9.4`, `orchestra/testbench ^11.1.0`, `pestphp/pest ^4.7.2`,
+  `phpstan/phpstan-deprecation-rules ^2.0.4`, `phpstan/phpstan-phpunit ^2.0.16`,
+  `spatie/laravel-ray ^1.43.9`.
+- Bumped the dev-only `phpdocumentor/reflection-docblock` to `^6.0`.
+
 ## [v12.1.0]
 
 ### Laravel 12 Compatibility

@@ -19,6 +19,14 @@ All notable changes to `laravel-docuware` will be documented in this file.
 - Typed HTTP exceptions: `BadRequest` (400), `Forbidden` (403), `NotFound` (404), `Conflict` (409).
 
 ### Fixed
+- `IndexKeywordDTO` now serializes keyword field writes with the plural `Keywords` array DocuWare's
+  `ItemChoiceType` actually accepts, instead of a singular `Keyword`/`Item` shape that made every
+  keyword-field update fail (#222). **Breaking:** `IndexKeywordDTO::__construct()` /
+  `IndexKeywordDTO::make()` now take a `list<string> $values` instead of `?string $value`;
+  `IndexFields::keyword()` keeps its existing `string` call sites working and now also accepts an
+  `array` of values.
+- `IndexDecimalDTO` no longer coerces a `null` decimal value to `0.0` on the wire; `null` now stays
+  `null`, matching every other `Index*DTO` (#224).
 - `UpdateIndexValues` now honors the `forceUpdate` flag (it was silently dropped, so `ForceUpdate`
   was always `false`).
 - `EnsureValidResponse` now throws a typed exception for **every** non-2xx response (previously

@@ -48,9 +48,18 @@ final class IndexFields
         return $this->push(IndexMemoDTO::make($name, $value));
     }
 
-    public function keyword(string $name, ?string $value): self
+    /**
+     * @param  string|list<string>|null  $value
+     */
+    public function keyword(string $name, string|array|null $value): self
     {
-        return $this->push(IndexKeywordDTO::make($name, $value));
+        $values = match (true) {
+            $value === null => [],
+            is_array($value) => $value,
+            default => [$value],
+        };
+
+        return $this->push(IndexKeywordDTO::make($name, $values));
     }
 
     public function number(string $name, ?int $value): self

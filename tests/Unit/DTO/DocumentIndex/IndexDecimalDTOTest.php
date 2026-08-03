@@ -22,3 +22,15 @@ it('create index numeric dto', function () {
         ]);
 
 })->group('dto');
+
+it('keeps a null decimal value as null instead of coercing it to 0.0', function () {
+
+    $instance = IndexDecimalDTO::make('SKONTOBETRAG', null);
+
+    expect($instance->values())->toBe([
+        'FieldName' => 'SKONTOBETRAG',
+        'Item' => null,
+        'ItemElementName' => 'Decimal',
+    ]);
+
+})->group('dto');

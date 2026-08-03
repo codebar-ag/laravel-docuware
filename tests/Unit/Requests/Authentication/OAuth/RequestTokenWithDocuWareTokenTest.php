@@ -1,6 +1,5 @@
 <?php
 
-use CodebarAg\DocuWare\DTO\Authentication\OAuth\RequestToken as RequestTokenDto;
 use CodebarAg\DocuWare\DTO\Config\ConfigWithDocuWareToken;
 use CodebarAg\DocuWare\Requests\Authentication\OAuth\RequestTokenWithDocuWareToken;
 use Saloon\Http\Faking\MockClient;
@@ -30,13 +29,11 @@ it('exchanges a DocuWare login token for an access token', function () {
         ], 200),
     ]);
 
-    $token = (new RequestTokenWithDocuWareToken('https://oauth.fixture.test/token', 'login-token-123'))
+    $response = (new RequestTokenWithDocuWareToken('https://oauth.fixture.test/token', 'login-token-123'))
         ->withMockClient($mockClient)
-        ->send()
-        ->dto();
+        ->send();
 
-    expect($token)->toBeInstanceOf(RequestTokenDto::class)
-        ->and($token->accessToken)->toBe('dwtoken-access-token');
+    expect($response->json('access_token'))->toBe('dwtoken-access-token');
 })->group('unit');
 
 it('derives a stable cache identifier from url and token', function () {

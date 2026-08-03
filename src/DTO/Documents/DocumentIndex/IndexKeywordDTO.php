@@ -4,14 +4,20 @@ namespace CodebarAg\DocuWare\DTO\Documents\DocumentIndex;
 
 class IndexKeywordDTO
 {
+    /**
+     * @param  list<string>  $values
+     */
     public function __construct(
         public string $name,
-        public ?string $value,
+        public array $values,
     ) {}
 
-    public static function make(string $name, ?string $value): self
+    /**
+     * @param  list<string>  $values
+     */
+    public static function make(string $name, array $values): self
     {
-        return new self($name, $value);
+        return new self($name, $values);
     }
 
     /**
@@ -21,8 +27,8 @@ class IndexKeywordDTO
     {
         return [
             'FieldName' => $this->name,
-            'Item' => $this->value,
-            'ItemElementName' => 'Keyword',
+            'Keywords' => $this->values,
+            'ItemElementName' => 'Keywords',
         ];
     }
 }

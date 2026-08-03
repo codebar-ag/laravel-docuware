@@ -21,7 +21,7 @@ class IndexDecimalDTO
     {
         return [
             'FieldName' => $this->name,
-            'Item' => (float) $this->value,
+            'Item' => $this->value === null ? null : (float) $this->value,
             'ItemElementName' => 'Decimal',
         ];
     }

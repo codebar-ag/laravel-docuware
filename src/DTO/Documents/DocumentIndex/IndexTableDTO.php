@@ -49,16 +49,42 @@ class IndexTableDTO
             : collect($rows);
 
         return $collection
-            ->map(function (mixed $row): array {
-                $rowCollection = $row instanceof Collection
-                    ? $row
-                    : collect(is_array($row) ? $row : []);
-
-                return self::makeRowContent($rowCollection);
-            })
-            ->filter()
+            ->map(fn (mixed $row): array => self::makeRowContent(self::normalizeRow($row)))
+            ->filter(fn (array $content): bool => $content['ColumnValue'] !== [])
             ->values()
             ->toArray();
+    }
+
+    /**
+     * Normalize a single row into a collection of typed index DTOs. Accepts either:
+     *  - a list/collection of {@see IndexTextDTO} (and siblings) for explicit typing, or
+     *  - an associative `[columnName => scalar|Carbon]` map whose cell types are auto-detected
+     *    ({@see IndexDetectDTO}: string→String, int→Int, float→Decimal, Carbon→DateTime).
+     *
+     * @return Collection<int, IndexTextDTO|IndexNumericDTO|IndexDecimalDTO|IndexDateDTO|IndexDateTimeDTO|IndexKeywordDTO|IndexMemoDTO>
+     */
+    protected static function normalizeRow(mixed $row): Collection
+    {
+        $entries = $row instanceof Collection
+            ? $row
+            : collect(is_array($row) ? $row : []);
+
+        return $entries
+            ->map(function (mixed $value, int|string $key) {
+                if ($value instanceof IndexTextDTO
+                    || $value instanceof IndexNumericDTO
+                    || $value instanceof IndexDecimalDTO
+                    || $value instanceof IndexDateDTO
+                    || $value instanceof IndexDateTimeDTO
+                    || $value instanceof IndexKeywordDTO
+                    || $value instanceof IndexMemoDTO) {
+                    return $value;
+                }
+
+                return is_string($key) ? IndexDetectDTO::make($key, $value) : null;
+            })
+            ->filter()
+            ->values();
     }
 
     /**

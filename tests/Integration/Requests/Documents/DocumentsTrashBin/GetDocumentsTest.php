@@ -1,172 +1,34 @@
 <?php
 
-use Carbon\Carbon;
-use CodebarAg\DocuWare\DocuWare;
-use CodebarAg\DocuWare\DTO\Documents\TrashDocumentPaginator;
-use CodebarAg\DocuWare\Events\DocuWareResponseLog;
-use CodebarAg\DocuWare\Exceptions\UnableToSearch;
+use CodebarAg\DocuWare\Data\Documents\TrashPageData;
+use CodebarAg\DocuWare\Events\ResponseReceived;
+use CodebarAg\DocuWare\Facades\DocuWare;
 use Illuminate\Support\Facades\Event;
 
 it('can search documents in trash', function () {
     Event::fake();
 
-    $paginatorRequest = (new DocuWare)
-        ->searchRequestBuilder()
-        ->trashBin()
-        ->page(1)
-        ->perPage(5)
-        ->fulltext('test')
-        ->filterDate('DELETEDATETIME', '>=', Carbon::create(2021))
-        ->filterDate('DELETEDATETIME', '<', now())
-        ->filter('DOCUMENT_TYPE', 'Abrechnung')
-        ->orderBy('DELETEDATETIME', 'desc')
-        ->get();
+    $page = DocuWare::trash()->search(page: 1, perPage: 5, searchTerm: 'test');
 
-    $paginator = $this->connector->send($paginatorRequest)->dto();
+    expect($page)->toBeInstanceOf(TrashPageData::class);
 
-    $this->assertInstanceOf(TrashDocumentPaginator::class, $paginator);
-    Event::assertDispatched(DocuWareResponseLog::class);
+    Event::assertDispatched(ResponseReceived::class);
 })->group('search', 'trash');
 
-it('can\'t search documents by more than two dates in trash', function () {
+it('can search documents in trash with null/default values', function () {
     Event::fake();
 
-    $this->expectException(UnableToSearch::class);
+    $page = DocuWare::trash()->search();
 
-    $request = (new DocuWare)
-        ->searchRequestBuilder()
-        ->trashBin()
-        ->page(1)
-        ->perPage(5)
-        ->fulltext('test')
-        ->filterDate('DELETEDATETIME', '>=', Carbon::create(2020))
-        ->filterDate('DELETEDATETIME', '<=', Carbon::create(2022))
-        ->filterDate('DELETEDATETIME', '<', now())
-        ->filter('DOCUMENT_TYPE', 'Abrechnung')
-        ->orderBy('DELETEDATETIME', 'desc')
-        ->get();
+    expect($page)->toBeInstanceOf(TrashPageData::class);
 
-    $this->connector->send($request)->dto();
+    Event::assertDispatched(ResponseReceived::class);
 })->group('search', 'trash');
 
-it('can override search documents dates filter by using same operator in trash', function () {
-    Event::fake();
-
-    $paginatorRequest = (new DocuWare)
-        ->searchRequestBuilder()
-        ->trashBin()
-        ->page(1)
-        ->perPage(5)
-        ->fulltext('test')
-        ->filterDate('DELETEDATETIME', '<=', Carbon::create(2022))
-        ->filterDate('DELETEDATETIME', '>=', Carbon::create(2020))
-        ->filterDate('DELETEDATETIME', '>=', Carbon::create(2021))
-        ->filter('DOCUMENT_TYPE', 'Abrechnung')
-        ->orderBy('DELETEDATETIME', 'desc')
-        ->get();
-
-    $paginator = $this->connector->send($paginatorRequest)->dto();
-
-    $this->assertInstanceOf(TrashDocumentPaginator::class, $paginator);
-    Event::assertDispatched(DocuWareResponseLog::class);
-})->group('search', 'trash');
-
-it('can override search documents dates filter by using equal operator in trash', function () {
-    Event::fake();
-
-    $paginatorRequest = (new DocuWare)
-        ->searchRequestBuilder()
-        ->trashBin()
-        ->page(1)
-        ->perPage(5)
-        ->fulltext('test')
-        ->filterDate('DELETEDATETIME', '>=', Carbon::create(2020))
-        ->filterDate('DELETEDATETIME', '=', Carbon::create(2021))
-        ->filter('DOCUMENT_TYPE', 'Abrechnung')
-        ->orderBy('DELETEDATETIME', 'desc')
-        ->get();
-
-    $paginator = $this->connector->send($paginatorRequest)->dto();
-
-    $this->assertInstanceOf(TrashDocumentPaginator::class, $paginator);
-    Event::assertDispatched(DocuWareResponseLog::class);
-})->group('search', 'trash');
-
-it('can\'t search documents by diverged date range', function () {
-    Event::fake();
-
-    $this->expectException(UnableToSearch::class);
-
-    $request = (new DocuWare)
-        ->searchRequestBuilder()
-        ->trashBin()
-        ->page(1)
-        ->perPage(5)
-        ->fulltext('test')
-        ->filterDate('DELETEDATETIME', '<=', Carbon::create(2020))
-        ->filterDate('DELETEDATETIME', '>=', Carbon::create(2021))
-        ->filter('DOCUMENT_TYPE', 'Abrechnung')
-        ->orderBy('DELETEDATETIME', 'desc')
-        ->get();
-
-    $this->connector->send($request)->dto();
-})->group('search', 'trash');
-
-it('can search documents dates filter in future in trash', function () {
-    Event::fake();
-
-    $paginatorRequest = (new DocuWare)
-        ->searchRequestBuilder()
-        ->trashBin()
-        ->page(1)
-        ->perPage(5)
-        ->fulltext('test')
-        ->filterDate('DELETEDATETIME', '>', Carbon::create(2018))
-        ->filter('DOCUMENT_TYPE', 'Abrechnung')
-        ->orderBy('DELETEDATETIME', 'desc')
-        ->get();
-
-    $paginator = $this->connector->send($paginatorRequest)->dto();
-
-    $this->assertInstanceOf(TrashDocumentPaginator::class, $paginator);
-    Event::assertDispatched(DocuWareResponseLog::class);
-})->group('search', 'trash');
-
-it('can search documents dates filter in past in trash', function () {
-    Event::fake();
-
-    $paginatorRequest = (new DocuWare)
-        ->searchRequestBuilder()
-        ->trashBin()
-        ->page(1)
-        ->perPage(5)
-        ->fulltext('test')
-        ->filterDate('DELETEDATETIME', '<=', Carbon::create(2020))
-        ->filter('DOCUMENT_TYPE', 'Abrechnung')
-        ->orderBy('DELETEDATETIME', 'desc')
-        ->get();
-
-    $paginator = $this->connector->send($paginatorRequest)->dto();
-
-    $this->assertInstanceOf(TrashDocumentPaginator::class, $paginator);
-    Event::assertDispatched(DocuWareResponseLog::class);
-})->group('search', 'trash');
-
-it('can search documents with null values in trash', function () {
-    Event::fake();
-
-    $paginatorRequest = (new DocuWare)
-        ->searchRequestBuilder()
-        ->trashBin()
-        ->page(null)
-        ->perPage(null)
-        ->fulltext(null)
-        ->filter('DOCUMENT_TYPE', null)
-        ->orderBy('DELETEDATETIME', null)
-        ->get();
-
-    $paginator = $this->connector->send($paginatorRequest)->dto();
-
-    $this->assertInstanceOf(TrashDocumentPaginator::class, $paginator);
-    Event::assertDispatched(DocuWareResponseLog::class);
-})->group('search', 'trash');
+// The old trash search exercised the date-filter validation of the legacy search-request builder
+// (rejecting >2 dates / diverged ranges via UnableToSearch). The 2.0 trash API
+// (DocuWare::trash()->search()) only accepts page/perPage/searchTerm and has no date filtering,
+// so these validation cases no longer have an equivalent endpoint.
+it('validates trash date-range filters', function () {
+    //
+})->skip('Trash search no longer supports date-range filters in the 2.0 API.')->group('search', 'trash');

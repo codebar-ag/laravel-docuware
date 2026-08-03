@@ -5,12 +5,14 @@ namespace CodebarAg\DocuWare\Tests;
 use CodebarAg\DocuWare\DocuWareServiceProvider;
 use Orchestra\Testbench\TestCase as Orchestra;
 use Saloon\MockConfig;
+use Spatie\LaravelData\LaravelDataServiceProvider;
 
 class TestCase extends Orchestra
 {
     protected function getPackageProviders($app): array
     {
         return [
+            LaravelDataServiceProvider::class,
             DocuWareServiceProvider::class,
         ];
     }

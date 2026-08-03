@@ -3,12 +3,9 @@
 namespace CodebarAg\DocuWare\Requests\Documents\Stamps;
 
 use CodebarAg\DocuWare\DTO\Documents\Annotations\AnnotationBuilder;
-use CodebarAg\DocuWare\Events\DocuWareResponseLog;
-use CodebarAg\DocuWare\Support\EnsureValidResponse;
 use Saloon\Contracts\Body\HasBody;
 use Saloon\Enums\Method;
 use Saloon\Http\Request;
-use Saloon\Http\Response;
 use Saloon\Traits\Body\HasJsonBody;
 
 /**
@@ -49,20 +46,5 @@ final class AddDocumentAnnotations extends Request implements HasBody
     protected function defaultBody(): array
     {
         return $this->payload;
-    }
-
-    /**
-     * @return array<string, mixed>
-     */
-    public function createDtoFromResponse(Response $response): array
-    {
-        event(new DocuWareResponseLog($response));
-
-        EnsureValidResponse::from($response);
-
-        /** @var array<string, mixed> $json */
-        $json = $response->throw()->json();
-
-        return $json;
     }
 }

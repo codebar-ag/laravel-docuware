@@ -5,2086 +5,939 @@
 [![GitHub-Tests](https://github.com/codebar-ag/laravel-docuware/actions/workflows/run-tests.yml/badge.svg?branch=main)](https://github.com/codebar-ag/laravel-docuware/actions/workflows/run-tests.yml)
 [![GitHub Code Style](https://github.com/codebar-ag/laravel-docuware/actions/workflows/fix-php-code-style-issues.yml/badge.svg?branch=main)](https://github.com/codebar-ag/laravel-docuware/actions/workflows/fix-php-code-style-issues.yml)
 [![PHPStan](https://github.com/codebar-ag/laravel-docuware/actions/workflows/phpstan.yml/badge.svg)](https://github.com/codebar-ag/laravel-docuware/actions/workflows/phpstan.yml)
-[![Dependency Review](https://github.com/codebar-ag/laravel-docuware/actions/workflows/dependency-review.yml/badge.svg)](https://github.com/codebar-ag/laravel-docuware/actions/workflows/dependency-review.yml)
 
-This package was developed to give you a quick start to communicate with the
-DocuWare REST API. It is used to query the most common endpoints.
+An opinionated, modern integration for the [DocuWare Platform REST API](https://developer.docuware.com/rest/index.html).
+You work with **resources** and **immutable data objects** — never raw HTTP.
 
-⚠️ This package is not designed as a replacement of the official
-[DocuWare REST API](https://developer.docuware.com/rest/index.html).
-See the documentation if you need further functionality. ⚠️
+> This package is **not** designed as a replacement for the official DocuWare REST API. It is an
+> opinionated convenience layer on top of it.
 
-## Navigation
-<!-- TOC -->
-  * [Navigation](#navigation)
-  * [💡 What is DocuWare?](#-what-is-docuware)
-  * [🛠 Requirements](#-requirements)
-  * [⚙️ Installation](#-installation)
-  * [🏗 Usage](#-usage)
-    * [Getting Started with OAuth](#getting-started-with-oauth)
-    * [Getting a new token via Username & Password:](#getting-a-new-token-via-username--password)
-    * [Getting a new token via Username & Password (Trusted User):](#getting-a-new-token-via-username--password-trusted-user)
-    * [Available Requests](#available-requests)
-      * [Organization](#organization)
-        * [Get Organization](#get-organization)
-        * [Get All File Cabinets And Document Trays](#get-all-file-cabinets-and-document-trays)
-      * [User Management](#user-management)
-        * [Get Users](#get-users)
-          * [Get Users](#get-users-1)
-          * [Get User By Id](#get-user-by-id)
-          * [Get Users Of A Role](#get-users-of-a-role)
-          * [Get Users Of A Group](#get-users-of-a-group)
-        * [Create/Update Users](#createupdate-users)
-          * [Create User](#create-user)
-          * [Update User](#update-user)
-        * [Get/Modify Groups](#getmodify-groups)
-          * [Get Groups](#get-groups)
-          * [Get All Groups For A Specific User](#get-all-groups-for-a-specific-user)
-          * [Add User To A Group](#add-user-to-a-group)
-          * [Remove User From A Group](#remove-user-from-a-group)
-        * [Get/Modify Roles](#getmodify-roles)
-          * [Get Roles](#get-roles)
-          * [Get All Roles For A Specific User](#get-all-roles-for-a-specific-user)
-          * [Add User To A Role](#add-user-to-a-role)
-          * [Remove User From A Role](#remove-user-from-a-role)
-      * [File Cabinets](#file-cabinets)
-        * [General](#general)
-          * [Get File Cabinet Information](#get-file-cabinet-information)
-          * [Get Total Number Of Documents](#get-total-number-of-documents)
-        * [Dialogs](#dialogs)
-          * [Get All Dialogs](#get-all-dialogs)
-          * [Get Dialogs of a Specific Type](#get-dialogs-of-a-specific-type)
-          * [Get Dialogs Of A Specific Type](#get-dialogs-of-a-specific-type-1)
-        * [Search](#search)
-          * [Get A Specific Document From A File Cabinet](#get-a-specific-document-from-a-file-cabinet)
-          * [Get Documents From A File Cabinet](#get-documents-from-a-file-cabinet)
-          * [Most basic example to search for documents.](#most-basic-example-to-search-for-documents)
-          * [Search in multiple file cabinets](#search-in-multiple-file-cabinets)
-          * [Find results on the next page](#find-results-on-the-next-page)
-          * [Define the number of results which should be shown per page](#define-the-number-of-results-which-should-be-shown-per-page)
-          * [Use the full-text search](#use-the-full-text-search)
-          * [Search documents which are created from the first of march.](#search-documents-which-are-created-from-the-first-of-march)
-          * [Search documents which are created until the first of april.](#search-documents-which-are-created-until-the-first-of-april)
-          * [Order the results by field name.](#order-the-results-by-field-name)
-          * [Search documents filtered to the value.](#search-documents-filtered-to-the-value)
-          * [Search documents filtered to multiple values.](#search-documents-filtered-to-multiple-values)
-          * [Search documents with empty or non-empty index fields.](#search-documents-with-empty-or-non-empty-index-fields)
-          * [You can specify the dialog which should be used.](#you-can-specify-the-dialog-which-should-be-used)
-          * [You can also combine everything.](#you-can-also-combine-everything)
-        * [Check In Check Out](#check-in-check-out)
-        * [Select Lists](#select-lists)
-          * [Get Select Lists](#get-select-lists)
-        * [Upload](#upload)
-          * [Create Data Record](#create-data-record)
-          * [Create Table Data Record](#create-table-data-record)
-          * [Append File(s) To A Data Record](#append-files-to-a-data-record)
-          * [Append A Single PDF To A Document](#append-a-single-pdf-to-a-document)
-          * [Replace A PDF Document Section](#replace-a-pdf-document-section)
-          * [Batch Index Fields Update](#batch-index-fields-update)
-          * [Get Fields](#get-fields)
-      * [Documents](#documents)
-        * [Update Index Values](#update-index-values)
-          * [Update Table Data Record](#update-table-data-record)
-        * [Modify Documents](#modify-documents)
-          * [Transfer Document](#transfer-document)
-          * [Delete Documents](#delete-documents)
-        * [Clip/Unclip & Staple/Unstaple](#clipunclip--stapleunstaple)
-          * [Clip](#clip)
-          * [Unclip](#unclip)
-          * [Staple](#staple)
-          * [Unstaple](#unstaple)
-        * [Annotations/Stamps](#annotationsstamps)
-          * [Documents Trash Bin](#documents-trash-bin)
-          * [Get Documents](#get-documents)
-          * [Delete Documents](#delete-documents-1)
-          * [Restore Documents](#restore-documents)
-        * [Application Properties](#application-properties)
-          * [Add Application Properties](#add-application-properties)
-          * [Update Application Properties](#update-application-properties)
-          * [Delete Application Properties](#delete-application-properties)
-          * [Get Application Properties](#get-application-properties)
-        * [Sections](#sections)
-          * [Get All Sections](#get-all-sections)
-          * [Get Specific Section](#get-specific-section)
-          * [Delete Section](#delete-section)
-          * [Get Textshot](#get-textshot)
-        * [Download](#download)
-          * [Download Document](#download-document)
-          * [Download Section](#download-section)
-          * [Download Thumbnail](#download-thumbnail)
-      * [Workflow](#workflow)
-        * [Workflow History](#workflow-history)
-          * [Get Document Workflow History](#get-document-workflow-history)
-          * [Get Document Workflow History Steps](#get-document-workflow-history-steps)
-  * [Extending the connector (EXAMPLE)](#extending-the-connector-example)
-      * [Create a new connector](#create-a-new-connector)
-      * [Use the new connector](#use-the-new-connector)
-  * [🖼 Make encrypted URLs](#-make-encrypted-urls)
-    * [Make encrypted URL for a document in a file cabinet.](#make-encrypted-url-for-a-document-in-a-file-cabinet)
-    * [Make encrypted URL for a document in a basket.](#make-encrypted-url-for-a-document-in-a-basket)
-    * [Make encrypted URL valid for a specific amount of time.](#make-encrypted-url-valid-for-a-specific-amount-of-time)
-  * [🏋️ Document Index Fields DTO showcase](#-document-index-fields-dto-showcase)
-  * [📦 Caching requests](#-caching-requests)
-    * [Is Cached](#is-cached)
-    * [Invalidate Cache](#invalidate-cache)
-    * [Disable Caching](#disable-caching)
-  * [💥 Exceptions explained](#-exceptions-explained)
-  * [✨ Events](#-events)
-  * [🔧 Configuration file](#-configuration-file)
-  * [Postman collection parity & Saloon fixtures](#postman-collection-parity--saloon-fixtures)
-  * [🚧 Testing](#-testing)
-  * [📝 Changelog](#-changelog)
-  * [✏️ Contributing](#-contributing)
-  * [🧑‍💻 Security Vulnerabilities](#-security-vulnerabilities)
-  * [🙏 Credits](#-credits)
-  * [🎭 License](#-license)
-<!-- TOC -->
+---
 
-## 💡 What is DocuWare?
+## Table of contents
 
-DocuWare provides cloud document management and workflow automation software
-that enables you to digitize, secure and work with business documents,
-then optimize the processes that power the core of your business.
+- [Highlights](#highlights)
+- [Requirements](#requirements)
+- [Installation](#installation)
+- [Configuration](#configuration)
+- [Authentication & grants](#authentication--grants)
+- [Connecting (config file or runtime DTO)](#connecting-config-file-or-runtime-dto)
+- [Quickstart](#quickstart)
+- [Resources](#resources)
+- [Search builder](#search-builder)
+- [Index field values](#index-field-values)
+- [Immutable data & withers](#immutable-data--withers)
+- [Enums](#enums)
+- [Encrypted document URLs](#encrypted-document-urls)
+- [Endpoint catalog](#endpoint-catalog)
+- [Data object (DTO) reference](#data-object-dto-reference)
+- [Caching](#caching)
+- [Error handling](#error-handling)
+- [Events](#events)
+- [Security](#security)
+- [Testing](#testing)
+- [Credits](#credits)
+- [License](#license)
 
-## 🛠 Requirements
+## Highlights
 
-<details>
- <summary>Version Support</summary>
+- 🎯 **Small, domain-shaped API** — `DocuWare::documents($cabinet)->search()->cursor()`.
+- 🧊 **Immutable data** via [`spatie/laravel-data`](https://spatie.be/docs/laravel-data) with `->copyWith(...)` withers.
+- 🏢 **Multi-tenant first-class** — by config name **or** a runtime connection DTO.
+- 🔢 **Typed index fields** — `IndexFields::make()->text(...)->number(...)->date(...)->table(...)` converts
+  PHP values into the exact DocuWare wire format for you.
+- 🔒 **Secure by default** — secrets are never logged, evented, or thrown.
+- ♻️ **Resilient** — encrypted + lock-guarded token store, retry with backoff honoring `Retry-After`.
+- 🧯 **One error model** — every failure descends from `DocuWareException`.
+- 🧪 **Fully fakeable & typed** — PHPStan max, offline fixture replay.
 
-| Version       | PHP Version | Laravel Version | DocuWare Cloud Access |
-|---------------|-------------|-----------------|-----------------------|
-| v12.0         | ^8.2 - ^8.4 | 12.*            | ✅                     |
-| v11.0 (alpha) | ^8.2        | 11.*            | ✅                     |
-| > v4.0        | ^8.2        | 11.*            | ✅                     |
-| > v3.0        | ^8.2        | 10.*            | ✅                     |
-| > v2.0        | ^8.1        | 9.*             | ✅                     |
-| > v1.2        | ^8.1        | 9.*             | ✅                     |
-| < v1.2        | ^8.0        | 8.*             | ✅                     |
+## Requirements
 
-</details>
+| Version       | PHP         | Laravel       | DocuWare Cloud |
+|---------------|-------------|---------------|----------------|
+| **v14**       | ^8.4 – ^8.5 | 13.*          | ✅             |
+| v13           | ^8.3 – ^8.4 | 13.*          | ✅             |
+| v12           | ^8.2 – ^8.4 | 12.*          | ✅             |
+| v11 (alpha)   | ^8.2        | 11.*          | ✅             |
+| > v4.0        | ^8.2        | 11.*          | ✅             |
+| > v3.0        | ^8.2        | 10.*          | ✅             |
+| > v2.0        | ^8.1        | 9.*           | ✅             |
+| > v1.2        | ^8.1        | 9.*           | ✅             |
+| < v1.2        | ^8.0        | 8.*           | ✅             |
 
-<details>
- <summary>Current Support</summary>
+> **v14 raises the minimum PHP to 8.4.** Laravel 13 stays the target framework.
 
-| Group                               | Request                                                     | Supported | TODO |
-|-------------------------------------|-------------------------------------------------------------|-----------|------|
-| Authentication/OAuth                | 1. Get Responsible Identity Service                         | ✅         |      |
-| Authentication/OAuth                | 2. Get Identity Service Configuration                       | ✅         |      |
-| Authentication/OAuth                | 3.a Request Token w/ Username & Password                    | ✅         |      |
-| Authentication/OAuth                | 3.b Request Token w/ a DocuWare Token                       | ✅         | `ConfigWithDocuWareToken` |
-| Authentication/OAuth                | 3.c Request Token w/ Username & Password (Trusted User)     | ✅         | `ConfigWithCredentialsTrustedUser` |
-| Authentication/OAuth                | 3.d.1 Obtain Windows Authorization (On Premises Only)       | 🕣        |      |
-| Authentication/OAuth                | 3.d.2 Request Token /w a Windows Account (On Premises Only) | 🕣        |      |
-| General/Organisation                | Get Login Token                                             | ✅         |      |
-| General/Organisation                | Get Organization                                            | ✅         |      |
-| General/Organisation                | Get All File Cabinets and Document Trays                    | ✅         |      |
-| General/UserManagement              | Get Users by ID                                             | ✅         |      |
-| General/UserManagement              | Get Users of a Role                                         | ✅         |      |
-| General/UserManagement              | Get Users of a Group                                        | ✅         |      |
-| General/UserManagement              | Create User                                                 | ✅         |      |
-| General/UserManagement              | Update User                                                 | ✅         |      |
-| General/UserManagement              | Get Groups                                                  | ✅         |      |
-| General/UserManagement              | Get All Groups for a Specific User                          | ✅         |      |
-| General/UserManagement              | Add User to a Group                                         | ✅         |      |
-| General/UserManagement              | Remove User from a Group                                    | ✅         |      |
-| General/UserManagement              | Get Roles                                                   | ✅         |      |
-| General/UserManagement              | Get All Roles for a Specific User                           | ✅         |      |
-| General/UserManagement              | Add User to a Role                                          | ✅         |      |
-| General/UserManagement              | Remove User from a Role                                     | ✅         |      |
-| FileCabinets/General                | Get File Cabinet Information                                | ✅         |      |
-| FileCabinets/General                | Get Total Number of Documents                               | ✅         |      |
-| FileCabinets/Dialogs                | Get All Dialogs                                             | ✅         |      |
-| FileCabinets/Dialogs                | Get a Specific Dialog                                       | ✅         |      |
-| FileCabinets/Dialogs                | Get Dialogs of a Specific Type                              | ✅         |      |
-| FileCabinets/Search                 | Get Documents from a File Cabinet                           | ✅         |      |
-| FileCabinets/Search                 | Get a Specific Document From a File Cabinet                 | ✅         |      |
-| FileCabinets/Search                 | Search for Documents in a Single File Cabinet               | ✅         |      |
-| FileCabinets/Search                 | Search for Documents in Multiple File Cabinets              | ✅         |      |
-| FileCabinets/CheckInCheckOut        | Check-out & Download a Document                             | ✅         | `CheckoutDocumentToFileSystem` |
-| FileCabinets/CheckInCheckOut        | Check-in a Document from the File System                    | ✅         | `CheckInDocumentFromFileSystem` |
-| FileCabinets/CheckInCheckOut        | Undo Check-out                                              | ✅         | `UndoDocumentCheckout` |
-| FileCabinets/SelectLists            | Get Select Lists & Get Filtered Select Lists                | ✅         |      |
-| FileCabinets/Upload                 | Create Data Record                                          | ✅         |      |
-| FileCabinets/Upload                 | Append File(s) to a Data Record                             | ✅         |      |
-| FileCabinets/Upload                 | Upload a Single File for a Data Record                      | ✅         | `CreateDataRecord` (multipart `POST …/Documents`) |
-| FileCabinets/Upload                 | Create a Data Record & Upload File                          | ✅         | `CreateDataRecord` |
-| FileCabinets/Upload                 | Create Data Record & Upload File Using Store Dialog         | ✅         | `CreateDataRecord` + `storeDialogId` |
-| FileCabinets/Upload                 | Append a Single PDF to a Document                           | ✅         | -    |
-| FileCabinets/Upload                 | Replace a PDF Document Section                              | ✅         |      |
-| FileCabinets/BatchIndexFieldsUpdate | Batch Update Index Fields By Id                             | ✅         | `BatchDocumentsUpdateFields` |
-| FileCabinets/BatchIndexFieldsUpdate | Batch Update Index Fields By Search                         | ✅         | `BatchDocumentsUpdateFields` |
-| FileCabinets/BatchIndexFieldsUpdate | Batch Append/Update Keyword Fields By Id                    | ✅         | `BatchDocumentsUpdateFields` |
-| Documents/UpdateIndexValues         | Update Index Values                                         | ✅         |      |
-| Documents/UpdateIndexValues         | Update Table Field Values                                   | ✅         | `UpdateIndexValues` + `IndexTableDTO` |
-| Documents/ModifyDocuments           | Transfer Document                                           | ✅         |      |
-| Documents/ModifyDocuments           | Delete Document                                             | ✅         |      |
-| Documents/ClipUnclip&StapleUnstaple | Clip                                                        | ✅         |      |
-| Documents/ClipUnclip&StapleUnstaple | Unclip                                                      | ✅         |      |
-| Documents/ClipUnclip&StapleUnstaple | Staple                                                      | ✅         |      |
-| Documents/ClipUnclip&StapleUnstaple | Unstaple                                                    | ✅         |      |
-| Documents/AnnotationsStamps         | AddStampWithPosition                                        | ✅         | `AddDocumentAnnotations` |
-| Documents/AnnotationsStamps         | AddStampWithBestPosition                                    | ✅         | `AddDocumentAnnotations` |
-| Documents/AnnotationsStamps         | AddTextAnnotation                                           | ✅         | `AddDocumentAnnotations` |
-| Documents/AnnotationsStamps         | AddRectEntryAnnotation                                      | ✅         | `AddDocumentAnnotations` |
-| Documents/AnnotationsStamps         | AddLineEntryAnnotation                                      | ✅         | `AddDocumentAnnotations` |
-| Documents/AnnotationsStamps         | AddPolyLineEntryAnnotation                                  | ✅         | `AddDocumentAnnotations` |
-| Documents/AnnotationsStamps         | DeleteAnnotation                                            | ❌         | —    |
-| Documents/AnnotationsStamps         | UpdateTextAnnotation                                        | ❌         | —    |
-| Documents/AnnotationsStamps         | Get Stamps                                                  | ✅         | `GetStamps` |
-| Documents/DocumentsTrashBin         | Get Documents                                               | ✅         |      |
-| Documents/DocumentsTrashBin         | Delete Documents                                            | ✅         |      |
-| Documents/DocumentsTrashBin         | Restore Documents                                           | ✅         |      |
-| Documents/ApplicationProperties     | Get Application Properties                                  | ✅         |      |
-| Documents/ApplicationProperties     | Add Application Properties                                  | ✅         |      |
-| Documents/ApplicationProperties     | Delete Application Properties                               | ✅         |      |
-| Documents/ApplicationProperties     | Update Application Properties                               | ✅         |      |
-| Documents/Sections                  | Get All Sections from a Document                            | ✅         |      |
-| Documents/Sections                  | Get a Specific Section                                      | ✅         |      |
-| Documents/Sections                  | Delete Section                                              | ✅         |      |
-| Documents/Sections/Textshot         | Get Textshot for a Specific Section                         | ✅         |      |
-| Documents/Download                  | Download Document                                           | ✅         |      |
-| Documents/Download                  | Download Section                                            | ✅         |      |
-| Documents/Download                  | Download Thumbnail                                          | ✅         |      |
-| Workflow                            | Get Document Workflow History                               | ✅         |      |
-| Workflow                            | Get Document Workflow History Steps                         | ✅         |      |
-
-</details>
-
-
-## ⚙️ Installation
-
-You can install the package via composer:
+## Installation
 
 ```bash
 composer require codebar-ag/laravel-docuware
+php artisan vendor:publish --tag=laravel-docuware-config
 ```
 
-Add the following environment variables to your `.env` file:
+Configure the default instance in `.env`:
 
-```bash
-DOCUWARE_URL=https://domain.docuware.cloud
-DOCUWARE_USERNAME=user@domain.test
-DOCUWARE_PASSWORD=password
-DOCUWARE_PASSPHRASE="passphrase"
-DOCUWARE_TIMEOUT=30
-DOCUWARE_CACHE_DRIVER=file
-DOCUWARE_CACHE_LIFETIME_IN_SECONDS=60
-DOCUWARE_CLIENT_ID=docuware.platform.net.client
-DOCUWARE_SCOPE=docuware.platform
+```dotenv
+DOCUWARE_URL=https://your-instance.docuware.cloud
+DOCUWARE_USERNAME=your-user
+DOCUWARE_PASSWORD=your-password
+DOCUWARE_PASSPHRASE=your-url-passphrase
 ```
 
-With the passphrase we are able to encrypt the URLs.
+## Configuration
 
-⚠️ You need to escape backslashes in your passphrase with another backslash:
+The default instance reads the flat `DOCUWARE_*` env keys above. Everything else has sane defaults;
+publish the config to tune caching, retries, rate limiting, and multi-tenant instances.
 
-```bash 
-# ❌ Passphrase contains a backslash and is not escaped:
-DOCUWARE_PASSPHRASE="a#bcd>2~C1'abc\#"
+<details>
+<summary><strong>Full config reference (<code>config/laravel-docuware.php</code>)</strong></summary>
 
-# ✅ We need to escape the backslash with another backslash:
-DOCUWARE_PASSPHRASE="a#bcd>2~C1'abc\\#"
-```
-
-## 🏗 Usage
-
-### Getting Started with OAuth
-> This package automatically handles the generation of OAuth token for you and stores them in cache.
-
-### Getting a new token via Username & Password:
-
-```php
-use CodebarAg\DocuWare\Connectors\DocuWareConnector;
-use CodebarAg\DocuWare\DTO\Config\ConfigWithCredentials;
-
-$connector = new DocuWareConnector(
-    configuration: new ConfigWithCredentials(
-        username: 'username',
-        password: 'password',
-    )
-);
-```
-
-### Getting a new token via Username & Password (Trusted User):
-
-```php
-use CodebarAg\DocuWare\Connectors\DocuWareConnector;
-use CodebarAg\DocuWare\DTO\Config\ConfigWithCredentialsTrustedUser;
-
-$connector = new DocuWareConnector(
-    configuration: new ConfigWithCredentialsTrustedUser(
-        username: 'username',
-        password: 'password',
-        impersonatedUsername: 'impersonatedUsername',
-    )
-);
-```
-
-### Getting a new token via a DocuWare Token (`dwtoken` grant):
-
-If you already hold a DocuWare login token (e.g. minted via the `GetLoginToken` request, or
-handed to you by DocuWare), you can exchange it for an OAuth access token:
-
-```php
-use CodebarAg\DocuWare\Connectors\DocuWareConnector;
-use CodebarAg\DocuWare\DTO\Config\ConfigWithDocuWareToken;
-
-$connector = new DocuWareConnector(
-    configuration: new ConfigWithDocuWareToken(
-        token: 'your-docuware-login-token',
-    )
-);
-```
-
-> The access token is encrypted and cached for `expires_in - 60` seconds. On expiry a fresh
-> token is requested automatically — the DocuWare grants used here do not return a refresh
-> token, so re-authentication simply replays the configured grant.
-
-### Enums
-
-The package provides several enums to ensure type safety and consistency when working with DocuWare API values.
-
-#### DialogType
-
-Represents different types of dialogs in DocuWare:
-
-```php
-use CodebarAg\DocuWare\Enums\DialogType;
-
-DialogType::SEARCH; 
-DialogType::STORE;
-DialogType::RESULT;
-DialogType::INDEX; 
-DialogType::LIST; 
-DialogType::FOLDERS; 
-```
-
-#### DocuWareFieldTypeEnum
-
-Represents different field types used in DocuWare document indexing:
-
-```php
-use CodebarAg\DocuWare\Enums\DocuWareFieldTypeEnum;
-
-DocuWareFieldTypeEnum::STRING;
-DocuWareFieldTypeEnum::INT; 
-DocuWareFieldTypeEnum::DECIMAL;
-DocuWareFieldTypeEnum::DATE;
-DocuWareFieldTypeEnum::DATETIME;
-DocuWareFieldTypeEnum::TABLE;
-```
-
-#### TargetFileType
-
-The format used when downloading a document (see `DownloadDocument`):
-
-```php
-use CodebarAg\DocuWare\Enums\TargetFileType;
-
-TargetFileType::AUTO;     // DocuWare decides (default)
-TargetFileType::PDF;      // always render to PDF
-TargetFileType::ORIGINAL; // the originally stored file(s)
-```
-
-### Error handling
-
-Every request runs its response through `EnsureValidResponse`, which throws a typed exception
-for any non-2xx response (it never returns silently and never chokes on non-JSON error bodies):
-
-| Status | Exception |
-|--------|-----------|
-| 400 | `CodebarAg\DocuWare\Exceptions\BadRequest` |
-| 401 | `CodebarAg\DocuWare\Exceptions\UnableToMakeRequest` |
-| 403 | `CodebarAg\DocuWare\Exceptions\Forbidden` |
-| 404 | `CodebarAg\DocuWare\Exceptions\NotFound` |
-| 409 | `CodebarAg\DocuWare\Exceptions\Conflict` |
-| 422 / 5xx / other | `CodebarAg\DocuWare\Exceptions\UnableToProcessRequest` |
-
-The DocuWare `Message` field (or an OAuth `error_description`) is used as the exception message
-when present.
-
-### Available Requests
-
-The following sections provide examples for each available request type. All functionality is documented inline below with code examples.
-
-#### Organization
-
-| Request                                                     | Supported |
-|-------------------------------------------------------------|-----------|
-| Get Login Token                                             | ✅         |
-| Get Organization                                            | ✅         |
-| Get All File Cabinets and Document Trays                    | ✅         |
-
-
-##### Get Organization
-```php
-use CodebarAg\DocuWare\Requests\General\Organization\GetOrganization;
-
-$organizations = $this->connector->send(new GetOrganization())->dto();
-```
-
-##### Get All File Cabinets And Document Trays
-```php
-use CodebarAg\DocuWare\Requests\General\Organization\GetAllFileCabinetsAndDocumentTrays;
-
-$cabinetsAndTrays = $this->connector->send(new GetAllFileCabinetsAndDocumentTrays())->dto();
-```
-
-#### User Management
-
-##### Get Users
-
-| Request              | Supported |
-|----------------------|-----------|
-| Get Users            | ✅         |
-| Get Users by ID      | ✅         |
-| Get Users of a Role  | ✅         |
-| Get Users of a Group | ✅         |
-
-###### Get Users
-```php
-use CodebarAg\DocuWare\Requests\General\UserManagement\GetUsers\GetUsers;
-
-$users = $this->connector->send(new GetUsers())->dto();
-```
-
-###### Get User By Id
-```php
-use CodebarAg\DocuWare\Requests\General\UserManagement\GetUsers\GetUserById;
-
-$user = $this->connector->send(new GetUserById($userId))->dto();
-```
-
-###### Get Users Of A Role
-```php
-use CodebarAg\DocuWare\Requests\General\UserManagement\GetUsers\GetUsersOfARole;
-
-$users = $this->connector->send(new GetUsersOfARole($roleId))->dto();
-```
-
-###### Get Users Of A Group
-```php
-use CodebarAg\DocuWare\Requests\General\UserManagement\GetUsers\GetUsersOfAGroup;
-
-$users = $this->connector->send(new GetUsersOfAGroup($groupId))->dto();
-```
-
-##### Create/Update Users
-
-| Request     | Supported |
-|-------------|-----------|
-| Create User | ✅         |
-| Update User | ✅         |
-
-###### Create User
-```php
-use CodebarAg\DocuWare\Requests\General\UserManagement\CreateUpdateUsers\CreateUser;
-
-$user = $connector->send(new CreateUser(new User(
-    name: $timestamp.' - Test User',
-    dbName: $timestamp,
-    email: $timestamp.'-test@example.test',
-    password: 'TESTPASSWORD',
-)))->dto();
-```
-
-###### Update User
-```php
-use CodebarAg\DocuWare\Requests\General\UserManagement\CreateUpdateUsers\UpdateUser;
-
-$user->name .= ' - Updated';
-$user->active = false;
-
-$user = $connector->send(new UpdateUser($user))->dto();
-```
-
-##### Get/Modify Groups
-
-| Request                            | Supported |
-|------------------------------------|-----------|
-| Get Groups                         | ✅         |
-| Get All Groups for a Specific User | ✅         |
-| Add User to a Group                | ✅         |
-| Remove User from a Group           | ✅         |
-
-###### Get Groups
-```php
-use CodebarAg\DocuWare\Requests\General\UserManagement\GetModifyGroups\GetGroups;
-
-$groups = $connector->send(new GetGroups())->dto();
-```
-
-###### Get All Groups For A Specific User
-```php
-use CodebarAg\DocuWare\Requests\General\UserManagement\GetModifyGroups\GetAllGroupsForASpecificUser;
-
-$groups = $connector->send(new GetAllGroupsForASpecificUser($userId))->dto();
-```
-
-###### Add User To A Group
-```php
-use CodebarAg\DocuWare\Requests\General\UserManagement\GetModifyGroups\AddUserToAGroup;
-
-$response = $connector->send(new AddUserToAGroup(
-    userId: $userId,
-    ids: [$groupId],
-))->dto();
-```
-
-###### Remove User From A Group
-```php
-use CodebarAg\DocuWare\Requests\General\UserManagement\GetModifyGroups\RemoveUserFromAGroup;
-
-$response = $connector->send(new RemoveUserFromAGroup(
-    userId: $userId,
-    ids: [$groupId],
-))->dto();
-```
-
-##### Get/Modify Roles
-
-| Request                           | Supported |
-|-----------------------------------|-----------|
-| Get Roles                         | ✅         |
-| Get All Roles for a Specific User | ✅         |
-| Add User to a Role                | ✅         |
-| Remove User from a Role           | ✅         |
-
-###### Get Roles
-```php
-use CodebarAg\DocuWare\Requests\General\UserManagement\GetModifyRoles\GetRoles;
-
-$roles = $this->connector->send(new GetRoles())->dto();
-```
-
-###### Get All Roles For A Specific User
-```php
-use CodebarAg\DocuWare\Requests\General\UserManagement\GetModifyRoles\GetAllRolesForASpecificUser;
-
-$roles = $connector->send(new GetAllRolesForASpecificUser($userId))->dto();
-```
-
-###### Add User To A Role
-```php
-use CodebarAg\DocuWare\Requests\General\UserManagement\GetModifyRoles\AddUserToARole;
-
-$response = $connector->send(new AddUserToARole(
-    userId: $userId,
-    ids: [$roleId],
-))->dto();
-```
-
-###### Remove User From A Role
-```php
-use CodebarAg\DocuWare\Requests\General\UserManagement\GetModifyRoles\RemoveUserFromARole;
-
-$response = $connector->send(new RemoveUserFromARole(
-    userId: $userId,
-    ids: [$roleId],
-))->dto();
-```
-
-#### File Cabinets
-
-##### General
-
-| Request                       | Supported |
-|-------------------------------|-----------|
-| Get File Cabinet Information  | ✅         |
-| Get Total Number of Documents | ✅         |
-
-###### Get File Cabinet Information
-```php
-use CodebarAg\DocuWare\Requests\FileCabinets\General\GetFileCabinetInformation;
-
-$fileCabinet = $connector->send(new GetFileCabinetInformation($fileCabinetId))->dto();
-```
-
-###### Get Total Number Of Documents
-```php
-use CodebarAg\DocuWare\Requests\FileCabinets\General\GetTotalNumberOfDocuments;
-
-$count = $connector->send(new GetTotalNumberOfDocuments(
-    $fileCabinetId,
-    $dialogId
-))->dto();
-```
-
-##### Dialogs
-
-| Request                        | Supported |
-|--------------------------------|-----------|
-| Get All Dialogs                | ✅         |
-| Get a Specific Dialog          | ✅         |
-| Get Dialogs of a Specific Type | ✅         |
-
-###### Get All Dialogs
-```php
-use CodebarAg\DocuWare\Requests\FileCabinets\Dialogs\GetAllDialogs;
-
-$dialogs = $connector->send(new GetAllDialogs($fileCabinetId))->dto();
-```
-
-###### Get Dialogs of a Specific Type
-```php
-use CodebarAg\DocuWare\Requests\FileCabinets\Dialogs\GetASpecificDialog;
-
-$dialog = $connector->send(new GetASpecificDialog($fileCabinetId, $dialogId))->dto();
-```
-
-###### Get Dialogs Of A Specific Type
-```php
-use CodebarAg\DocuWare\Enums\DialogType;
-use CodebarAg\DocuWare\Requests\FileCabinets\Dialogs\GetDialogsOfASpecificType;
-
-$dialogs = $connector->send(new GetDialogsOfASpecificType($fileCabinetId, DialogType::SEARCH))->dto();
-```
-
-##### Search
-
-| Description                                    | Implemented |
-|------------------------------------------------|-------------|
-| Get Documents from a File Cabinet              | ✅           |
-| Get a Specific Document From a File Cabinet    | ✅           |
-| Search for Documents in a Single File Cabinet  | ✅           |
-| Search for Documents in Multiple File Cabinets | ✅           |
-
-###### Get A Specific Document From A File Cabinet
-```php
-use CodebarAg\DocuWare\Requests\FileCabinets\Search\GetASpecificDocumentFromAFileCabinet;
-
-$document = $connector->send(new GetASpecificDocumentFromAFileCabinet(
-    $fileCabinetId,
-    $documentId
-))->dto();
-```
-
-######  Get Documents From A File Cabinet
-```php
-use CodebarAg\DocuWare\Requests\FileCabinets\Search\GetDocumentsFromAFileCabinet;
-
-$documents = $connector->send(new GetDocumentsFromAFileCabinet(
-    $fileCabinetId
-))->dto();
-```
-
-###### Most basic example to search for documents.
-> You only need to provide a valid file cabinet id.
-```php
-$fileCabinetId = '87356f8d-e50c-450b-909c-4eaccd318fbf';
-
-$paginatorRequest = DocuWare::searchRequestBuilder()
-    ->fileCabinet($fileCabinetId)
-    ->get();
-    
-$paginator = $connector->send($paginatorRequest)->dto();
-```
-
-###### Search in multiple file cabinets
-> Provide an array of file cabinet ids.
-```php
-$fileCabinetIds = [
-    '0ee72de3-4258-4353-8020-6a3ff6dd650f',
-    '3f9cb4ff-82f2-44dc-b439-dd648269064f',
-];
-
-$paginatorRequest = DocuWare::searchRequestBuilder()
-    ->fileCabinets($fileCabinetIds)
-    ->get();
-    
-$paginator = $connector->send($paginatorRequest)->dto();
-```
-
-###### Find results on the next page
-> Default: 1
-```php
-$paginatorRequest = DocuWare::searchRequestBuilder()
-    ->fileCabinet($id)
-    ->page(2)
-    ->get();
-    
-$paginator = $connector->send($paginatorRequest)->dto();
-```
-
-###### Define the number of results which should be shown per page
-> Default: 50
-```php
-$paginatorRequest = DocuWare::searchRequestBuilder()
-    ->fileCabinet($id)
-    ->perPage(30)
-    ->get();
-    
-$paginator = $connector->send($paginatorRequest)->dto();
-```
-
-###### Use the full-text search
-> You have to activate full-text search in your file cabinet before you can use this feature.
-```php 
-$paginatorRequest = DocuWare::searchRequestBuilder()
-    ->fileCabinet($id)
-    ->fulltext('My secret document')
-    ->get();
-    
-$paginator = $connector->send($paginatorRequest)->dto();
-```
-
-###### Search documents which are created from the first of march.
-```php 
-$paginatorRequest = DocuWare::searchRequestBuilder()
-    ->fileCabinet($id)
-    ->filterDate('DWSTOREDATETIME', '>=', Carbon::create(2021, 3, 1))
-    ->get();
-    
-$paginator = $connector->send($paginatorRequest)->dto();
-```
-
-###### Search documents which are created until the first of april.
-```php 
-$paginatorRequest = DocuWare::searchRequestBuilder()
-    ->fileCabinet($id)
-    ->filterDate('DWSTOREDATETIME', '<', Carbon::create(2021, 4, 1))
-    ->get();
-    
-$paginator = $connector->send($paginatorRequest)->dto();
-```
-
-###### Order the results by field name.
-> Supported values: 'asc', 'desc'
-```php
-$paginatorRequest = DocuWare::searchRequestBuilder()
-    ->fileCabinet($id)
-    ->orderBy('DWSTOREDATETIME', 'desc')
-    ->get();
-    
-$paginator = $connector->send($paginatorRequest)->dto();
-```
-
-###### Search documents filtered to the value.
-> You can specify multiple filters.
-```php 
-$paginatorRequest = DocuWare::searchRequestBuilder()
-    ->fileCabinet($id)
-    ->filter('TYPE', 'Order')
-    ->filter('OTHER_FIELD', 'other')
-    ->get();
-    
-$paginator = $connector->send($paginatorRequest)->dto();
-```
-
-###### Search documents filtered to multiple values.
-```php 
-$paginatorRequest = DocuWare::searchRequestBuilder()
-    ->fileCabinet($id)
-    ->filterIn('TYPE', ['Order', 'Invoice'])
-    ->get();
-    
-$paginator = $connector->send($paginatorRequest)->dto();
-```
-
-###### Search documents with empty or non-empty index fields.
-> Use the **database field name** for `$name` (often uppercase in DocuWare), not the dialog display label. These map to DocuWare dialog expressions `EMPTY()` and `NOTEMPTY()`—they are not passed through `filter()` string quoting.
-
-```php
-// Documents where STATUS has no index value (DocuWare EMPTY())
-$paginatorRequest = DocuWare::searchRequestBuilder()
-    ->fileCabinet($id)
-    ->filterEmpty('STATUS')
-    ->get();
-
-$paginator = $connector->send($paginatorRequest)->dto();
-```
-
-```php
-// Documents where STATUS has any value (DocuWare NOTEMPTY())
-$paginatorRequest = DocuWare::searchRequestBuilder()
-    ->fileCabinet($id)
-    ->filterNotEmpty('STATUS')
-    ->get();
-
-$paginator = $connector->send($paginatorRequest)->dto();
-```
-
-###### You can specify the dialog which should be used.
-```php 
-$dialogId = 'bb42c30a-89fc-4b81-9091-d7e326caba62';
-
-$paginatorRequest = DocuWare::searchRequestBuilder()
-    ->fileCabinet($id)
-    ->dialog($dialogId)
-    ->get();
-    
-$paginator = $connector->send($paginatorRequest)->dto();
-```
-
-###### You can also combine everything.
-```php  
-$paginatorRequest = DocuWare::searchRequestBuilder()
-    ->fileCabinet($id)
-    ->page(2)
-    ->perPage(30)
-    ->fulltext('My secret document')
-    ->filterDate('DWSTOREDATETIME', '>=', Carbon::create(2021, 3, 1))
-    ->filterDate('DWSTOREDATETIME','<',Carbon::create(2021, 4, 1))
-    ->filter('TYPE', 'Order')
-    ->filter('OTHER_FIELD', 'other')
-    ->orderBy('DWSTOREDATETIME', 'desc')
-    ->dialog($dialogId)
-    ->get();
-
-$paginator = $connector->send($paginatorRequest)->dto();
-```
-
-
-##### Check In Check Out
-
-| Request                                                     | Supported |
-|-------------------------------------------------------------|-----------|
-| Check-out & Download a Document                             | ✅         |
-| Check-in a Document from the File System                    | ✅         |
-| Undo Check-out                                              | ✅         |
-
-> Implemented as `CheckoutDocumentToFileSystem`, `CheckInDocumentFromFileSystem`, and `UndoDocumentCheckout`. Your file cabinet must have **version management** enabled; otherwise DocuWare returns HTTP 405.
-
-##### Select Lists
-| Request                                      | Supported |
-|----------------------------------------------|-----------|
-| Get Select Lists & Get Filtered Select Lists | ✅         |
-
-###### Get Select Lists
-```php
-use CodebarAg\DocuWare\Requests\FileCabinets\SelectLists\GetSelectLists;
-
-$types = $this->connector->send(new GetSelectLists(
-    $fileCabinetId,
-    $dialogId,
-    $fieldName,
-))->dto();
-```
-
-##### Upload
-
-| Request                                             | Supported |
-|-----------------------------------------------------|-----------|
-| Create Data Record                                  | ✅         |
-| Append File(s) to a Data Record                     | ✅         |
-| Upload a Single File for a Data Record              | ✅         |
-| Create a Data Record & Upload File                  | ✅         |
-| Create Data Record & Upload File Using Store Dialog | ✅         |
-| Append a Single PDF to a Document                   | ✅         |
-| Replace a PDF Document Section                      | ✅         |
-
-> Postman splits some uploads into separate recipes; this package maps them to `CreateDataRecord` (multipart `POST …/Documents`, optional `storeDialogId`), `AppendFilesToADataRecord`, `AppendASinglePDFToADocument`, and `ReplaceAPDFDocumentSection`.
-
-###### Create Data Record
-```php
-use CodebarAg\DocuWare\Requests\FileCabinets\Upload\CreateDataRecord;
-use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexTextDTO;
-
-$document = $connector->send(new CreateDataRecord(
-    $fileCabinetId,
-    null,
-    null,
-    collect([
-        IndexTextDTO::make('DOCUMENT_LABEL', '::data-entry::'),
-    ]),
-))->dto();
-```
-
-###### Create Table Data Record
-```php
-use CodebarAg\DocuWare\Requests\FileCabinets\Upload\CreateDataRecord;
-use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexDateDTO;
-use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexDateTimeDTO;
-use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexDecimalDTO;
-use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexNumericDTO;
-use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexTableDTO;
-use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexTextDTO;
-
-$tableRows = collect([
-    collect([
-        IndexTextDTO::make('TEXT', 'project_1'),
-        IndexNumericDTO::make('INT', 1),
-        IndexDecimalDTO::make('DECIMAL', 1.1),
-        IndexDateDTO::make('DATE', $now),
-        IndexDateTimeDTO::make('DATETIME', $now),
-    ]),
-    collect([
-        IndexTextDTO::make('TEXT', 'project_2'),
-        IndexNumericDTO::make('INT', 2),
-        IndexDecimalDTO::make('DECIMAL', 2.2),
-        IndexDateDTO::make('DATE', $now),
-        IndexDateTimeDTO::make('DATETIME', $now),
-    ]),
-]);
-
-
-$document = $connector->send(new CreateDataRecord(
-    $fileCabinetId,
-    null,
-    null,
-    collect([
-        IndexTableDTO::make('TABLE_NAME', $tableRows)
-    ]),
-))->dto();
-```
-
-###### Append File(s) To A Data Record
-```php
-use CodebarAg\DocuWare\Requests\FileCabinets\Upload\AppendFilesToADataRecord;
-use Saloon\Data\MultipartValue;
-
-$response = $connector->send(
-    new AppendFilesToADataRecord(
-        fileCabinetId: $fileCabinetId,
-        dataRecordId: $document->id,
-        files: collect([
-            new MultipartValue(
-                name: 'File[]',
-                value: file_get_contents(__DIR__.'/../../../../Fixtures/files/test-2.pdf'),
-                filename: 'test-2.pdf',
-            ),
-            new MultipartValue(
-                name: 'File[]',
-                value: file_get_contents(__DIR__.'/../../../../Fixtures/files/test-3.pdf'),
-                filename: 'test-3.pdf',
-            ),
-        ])
-    )
-)->dto();
-```
-
-###### Append A Single PDF To A Document
-```php
-use CodebarAg\DocuWare\Requests\FileCabinets\Upload\AppendASinglePDFToADocument;
-
-$response = $this->connector->send(new AppendASinglePDFToADocument(
-    fileCabinetId: $fileCabinetId,
-    documentId: $document->id,
-    fileContent: file_get_contents(__DIR__.'/../../../../Fixtures/files/test-2.pdf'),
-    fileName: 'test-2.pdf',
-))->dto();
-```
-
-###### Replace A PDF Document Section
-```php
-use CodebarAg\DocuWare\Requests\FileCabinets\Upload\ReplaceAPDFDocumentSection;
-
-$response = $this->connector->send(new ReplaceAPDFDocumentSection(
-    fileCabinetId: $fileCabinetId,
-    sectionId: $documentWithSections->sections->first()->id,
-    fileContent: file_get_contents(__DIR__.'/../../../../Fixtures/files/test-3.pdf'),
-    fileName: 'test-3.pdf',
-))->dto();
-```
-
-###### Batch Index Fields Update
-| Request                                  | Supported |
-|------------------------------------------|-----------|
-| Batch Update Index Fields By Id          | ✅         |
-| Batch Update Index Fields By Search      | ✅         |
-| Batch Append/Update Keyword Fields By Id | ✅         |
-
-`BatchDocumentsUpdateFields` covers all three Postman variants via named constructors, each of
-which sets the correct DocuWare media type for you:
-
-```php
-use CodebarAg\DocuWare\Requests\FileCabinets\Batch\BatchDocumentsUpdateFields;
-
-// Update fields on documents selected by id:
-$connector->send(BatchDocumentsUpdateFields::byId(
-    fileCabinetId: $fileCabinetId,
-    ids: [309, 310],
-    fields: [['FieldName' => 'DOCUMENT_TYPE', 'Item' => 'Batch Update Test']],
-))->dto();
-
-// Update fields on documents selected by a dialog expression:
-$connector->send(BatchDocumentsUpdateFields::bySearch(
-    fileCabinetId: $fileCabinetId,
-    expression: ['Operation' => 'And', 'Condition' => [['DBName' => 'DOCUMENT_TYPE', 'Value' => ['Test']]]],
-    fields: [['FieldName' => 'DOCUMENT_TYPE', 'Item' => 'Batch Update Test']],
-))->dto();
-
-// Append keyword values to a keyword field:
-$connector->send(BatchDocumentsUpdateFields::appendKeywords(
-    fileCabinetId: $fileCabinetId,
-    docIds: [309, 310],
-    keywords: ['Value1', 'Value2'],
-    fieldName: 'ORDER_NUMBER',
-))->dto();
-```
-
-> You can still pass a raw payload (and optional content type) to the constructor if you need
-> full control: `new BatchDocumentsUpdateFields($fileCabinetId, $payload, $contentType)`.
-
-###### Get Fields
-```php
-use CodebarAg\DocuWare\Requests\Fields\GetFieldsRequest;
-
-$fields = $connector->send(new GetFieldsRequest($fileCabinetId))->dto();
-```
-
-#### Documents
-
-##### Update Index Values
-| Request                   | Supported |
-|---------------------------|-----------|
-| Update Index Values       | ✅         |
-| Update Table Index Values | ✅         |
-| Update Table Field Values | ✅         |
-
-> Table columns use `IndexTableDTO` in the same `UpdateIndexValues` request as scalar fields (see **Update Table Data Record** below).
-
-
-```php
-use CodebarAg\DocuWare\Requests\Documents\UpdateIndexValues\UpdateIndexValues;
-use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexDateDTO;
-
-$response = $connector->send(new UpdateIndexValues(
-    $fileCabinetId,
-    $documentId,
-    collect([
-        IndexTextDTO::make('DOCUMENT_LABEL', '::new-data-entry::'),
-    ])
-))->dto();
-```
-
-###### Update Table Data Record
-```php
-use CodebarAg\DocuWare\Requests\Documents\UpdateIndexValues\UpdateIndexValues;
-use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexDateDTO;
-use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexDateTimeDTO;
-use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexDecimalDTO;
-use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexNumericDTO;
-use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexTableDTO;
-use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexTextDTO;
-
-$tableRows = collect([
-    collect([
-        IndexTextDTO::make('TEXT', 'project_1'),
-        IndexNumericDTO::make('INT', 1),
-        IndexDecimalDTO::make('DECIMAL', 1.1),
-        IndexDateDTO::make('DATE', $now),
-        IndexDateTimeDTO::make('DATETIME', $now),
-    ]),
-    collect([
-        IndexTextDTO::make('TEXT', 'project_2'),
-        IndexNumericDTO::make('INT', 2),
-        IndexDecimalDTO::make('DECIMAL', 2.2),
-        IndexDateDTO::make('DATE', $now),
-        IndexDateTimeDTO::make('DATETIME', $now),
-    ]),
-]);
-
-
-$document = $connector->send(new UpdateIndexValues(
-    $fileCabinetId,
-    null,
-    null,
-    collect([
-        IndexTableDTO::make('TABLE_NAME', $tableRows)
-    ]),
-))->dto();
-```
-
-##### Modify Documents
-| Request           | Supported |
-|-------------------|-----------|
-| Transfer Document | ✅         |
-| Delete Document   | ✅         |
-
-
-###### Transfer Document
-```php
-use CodebarAg\DocuWare\Requests\Documents\ModifyDocuments\TransferDocument;
-
-$response = $connector->send(new TransferDocument(
-    $fileCabinetId,
-    $destinationFileCabinetId,
-    $storeDialogId,
-    $documentId,
-    $fields,
-))->dto();
-```
-
-###### Delete Documents
-```php
-use CodebarAg\DocuWare\Requests\Documents\ModifyDocuments\DeleteDocument;
-
-$connector->send(new DeleteDocument(
-    $fileCabinetId
-    $documentId,
-))->dto();
-```
-
-##### Clip/Unclip & Staple/Unstaple
-| Request  | Supported |
-|----------|-----------|
-| Clip     | ✅         |
-| Unclip   | ✅         |
-| Staple   | ✅         |
-| Unstaple | ✅         |
-
-###### Clip
-```php
-use CodebarAg\DocuWare\Requests\Documents\ClipUnclipStapleUnstaple\Clip;
-
-$clip = $connector->send(new Clip(
-    $fileCabinetId,
-    [
-        $documentId,
-        $document2Id,
-    ]
-))->dto();
-```
-
-###### Unclip
-```php
-use CodebarAg\DocuWare\Requests\Documents\ClipUnclipStapleUnstaple\Unclip;
-
-$unclip = $connector->send(new Unclip(
-    $fileCabinetId,
-    $clipId
-))->dto();
-```
-
-###### Staple
-```php
-use CodebarAg\DocuWare\Requests\Documents\ClipUnclipStapleUnstaple\Staple;
-
-$staple = $connector->send(new Staple(
-    $fileCabinetId,
-    [
-        $documentId,
-        $document2Id,
-    ]
-))->dto();
-```
-
-###### Unstaple
-```php
-use CodebarAg\DocuWare\Requests\Documents\ClipUnclipStapleUnstaple\Unstaple;
+| Key | Env | Default | Purpose |
+| --- | --- | --- | --- |
+| `default` | `DOCUWARE_INSTANCE` | `default` | Which instance bare facade calls use |
+| `platform_path` | `DOCUWARE_PLATFORM_PATH` | `DocuWare/Platform` | REST base path appended to the URL |
+| `timeout` | `DOCUWARE_TIMEOUT` | `15` | Default request timeout (seconds) |
+| `passphrase` | `DOCUWARE_PASSPHRASE` | — | Passphrase for encrypted document URLs |
+| `instances.*` | — | — | Named multi-tenant connections (see below) |
+| `credentials.url` | `DOCUWARE_URL` | — | Legacy flat URL for the `default` instance |
+| `credentials.username` | `DOCUWARE_USERNAME` | — | Legacy flat username |
+| `credentials.password` | `DOCUWARE_PASSWORD` | — | Legacy flat password |
+| `configurations.client_id` | `DOCUWARE_CLIENT_ID` | `docuware.platform.net.client` | OAuth client id |
+| `configurations.scope` | `DOCUWARE_SCOPE` | `docuware.platform` | OAuth scope |
+| `configurations.cache.driver` | `DOCUWARE_CACHE_DRIVER` | `file` | Cache store for responses & tokens |
+| `configurations.cache.lifetime_in_seconds` | `DOCUWARE_CACHE_LIFETIME_IN_SECONDS` | `60` | Cache TTL for `Cacheable` requests |
+| `configurations.request.timeout_in_seconds` | `DOCUWARE_TIMEOUT` | `60` | Per-request timeout |
+| `debug.capture_bodies` | `DOCUWARE_DEBUG_CAPTURE_BODIES` | `false` | Attach (redacted) bodies to `ResponseReceived` |
+| `retry.enabled` | `DOCUWARE_RETRY_ENABLED` | `true` | Exponential backoff on transient failures |
+| `retry.times` | `DOCUWARE_RETRY_TIMES` | `3` | Max retry attempts |
+| `retry.base_interval_ms` | `DOCUWARE_RETRY_BASE_INTERVAL_MS` | `250` | First backoff interval |
+| `retry.max_interval_ms` | `DOCUWARE_RETRY_MAX_INTERVAL_MS` | `10000` | Backoff ceiling |
+| `rate_limit.enabled` | `DOCUWARE_RATE_LIMIT_ENABLED` | `false` | Per-instance client-side rate limiting |
+| `rate_limit.allow` | `DOCUWARE_RATE_LIMIT_ALLOW` | `60` | Requests allowed per window |
+| `rate_limit.per_seconds` | `DOCUWARE_RATE_LIMIT_PER_SECONDS` | `60` | Window length (seconds) |
 
-$unclip = $connector->send(new Unstaple(
-    $fileCabinetId,
-    $stapleId
-))->dto();
-```
-
-##### Annotations/Stamps
-
-DocuWare's Postman collection lists several annotation operations (stamp with position / best
-position, text, rectangle, line, polyline, delete, update text). They all target the same
-Platform route — `POST /FileCabinets/{id}/Documents/{documentId}/Annotation` — differing only by
-the JSON body. The package sends them all through **`AddDocumentAnnotations`**, and ships an
-**`AnnotationBuilder`** plus typed entry objects so you don't have to hand-assemble the nested
-`Annotations → AnnotationsPlacement → Items → Layer → Items` structure.
-
-| Request                    | Supported | Package class / helper |
-|----------------------------|-----------|------------------------|
-| Get Stamps                 | ✅         | `GetStamps` |
-| Get Annotations            | ✅         | `GetDocumentAnnotations` |
-| AddStampWithPosition       | ✅         | `StampPlacement` (with `Point` location) |
-| AddStampWithBestPosition   | ✅         | `StampPlacement` (no location) |
-| AddTextAnnotation          | ✅         | `TextEntry` |
-| AddRectEntryAnnotation     | ✅         | `RectEntry` |
-| AddLineEntryAnnotation     | ✅         | `LineEntry` |
-| AddPolyLineEntryAnnotation | ✅         | `PolyLineEntry` |
-| DeleteAnnotation           | ✅         | `DeleteEntry` |
-| UpdateTextAnnotation       | ✅         | `TextEntry` with `id:` |
-
-###### Get Stamps
-```php
-use CodebarAg\DocuWare\Requests\Documents\Stamps\GetStamps;
-
-$stamps = $connector->send(new GetStamps(
-    $fileCabinetId,
-))->dto();
-```
-
-###### Get Annotations
-```php
-use CodebarAg\DocuWare\Requests\Documents\Stamps\GetDocumentAnnotations;
-
-$annotations = $connector->send(new GetDocumentAnnotations(
-    $fileCabinetId,
-    $documentId,
-))->dto(); // Collection<int, array<string, mixed>>
-```
-
-###### Add stamps / annotations (with the builder)
-```php
-use CodebarAg\DocuWare\Requests\Documents\Stamps\AddDocumentAnnotations;
-use CodebarAg\DocuWare\DTO\Documents\Annotations\AnnotationBuilder;
-use CodebarAg\DocuWare\DTO\Documents\Annotations\TextEntry;
-use CodebarAg\DocuWare\DTO\Documents\Annotations\RectEntry;
-use CodebarAg\DocuWare\DTO\Documents\Annotations\Location;
-use CodebarAg\DocuWare\DTO\Documents\Annotations\StampPlacement;
-use CodebarAg\DocuWare\DTO\Documents\Annotations\StampField;
-use CodebarAg\DocuWare\DTO\Documents\Annotations\Point;
-
-$builder = AnnotationBuilder::make()
-    ->addEntry(new TextEntry('Approved', Location::make(100, 100, 1500, 500)))
-    ->addEntry(new RectEntry(Location::make(100, 600, 1500, 500)))
-    // Stamp with a fixed position (omit the Point for "best position"):
-    ->addStamp(new StampPlacement($stampId, location: new Point(100, 100), fields: [
-        StampField::make('<#1>', 'september'),
-    ]));
-
-$result = $connector->send(
-    AddDocumentAnnotations::fromBuilder($fileCabinetId, $documentId, $builder)
-)->dto();
-
-// Update an existing text annotation (pass its id) or delete one:
-$update = AnnotationBuilder::make()
-    ->addEntry(new TextEntry('Updated', Location::make(100, 100, 1500, 500), id: $annotationId));
-```
-
-You can still pass a raw Postman-shaped payload array if you prefer:
-
-```php
-$result = $connector->send(new AddDocumentAnnotations($fileCabinetId, $documentId, [
-    'Annotations' => [ /* … */ ],
-]))->dto();
-```
-
-###### Documents Trash Bin
-| Request           | Supported |
-|-------------------|-----------|
-| Get Documents     | ✅         |
-| Delete Documents  | ✅         |
-| Restore Documents | ✅         |
-
-
-###### Get Documents
-> You can use the same methods as in the search usage. The only difference is that you have to use the `trashBin` method after the `searchRequestBuilder` method.
-```php
-
-
-```php
-use CodebarAg\DocuWare\DocuWare;
-
-$paginatorRequest = (new DocuWare())
-    ->searchRequestBuilder()
-    ->trashBin()
-```
-
-###### Delete Documents
-```php
-use CodebarAg\DocuWare\Requests\Documents\DocumentsTrashBin\DeleteDocuments;
-
-$delete = $connector->send(new DeleteDocuments([$documentID, $document2ID]))->dto();
-```
-
-###### Restore Documents
-```php
-use CodebarAg\DocuWare\Requests\Documents\DocumentsTrashBin\RestoreDocuments;
-
-$delete = $connector->send(new RestoreDocuments([$documentID, $document2ID]))->dto();
-```
-
-##### Application Properties
-| Request                       | Supported |
-|-------------------------------|-----------|
-| Get Application Properties    | ✅         |
-| Add Application Properties    | ✅         |
-| Delete Application Properties | ✅         |
-| Update Application Properties | ✅         |
-
-
-###### Add Application Properties
-```php
-use CodebarAg\DocuWare\Requests\Documents\ApplicationProperties\AddApplicationProperties;
-
-$addProperties = $connector->send(new AddApplicationProperties(
-    $fileCabinetId,
-    $documentId,
-    [
-        [
-            'Name' => 'Key1',
-            'Value' => 'Key1 Value',
-        ],
-        [
-            'Name' => 'Key2',
-            'Value' => 'Key2 Value',
-        ],
-    ],
-))->dto();
-```
-
-###### Update Application Properties
-```php
-use CodebarAg\DocuWare\Requests\Documents\ApplicationProperties\UpdateApplicationProperties;
-
-$updateProperties = $connector->send(new UpdateApplicationProperties(
-    $fileCabinetId,
-    $documentId,
-    [
-        [
-            'Name' => 'Key1',
-            'Value' => 'Key1 Value Updated',
-        ],
-    ],
-))->dto()->sortBy('Name');
-```
-
-###### Delete Application Properties
-```php
-use CodebarAg\DocuWare\Requests\Documents\ApplicationProperties\DeleteApplicationProperties;
-
-$deleteProperties = $connector->send(new DeleteApplicationProperties(
-    $fileCabinetId,
-    $document->id,
-    [
-        'Key1',
-    ],
-))->dto();
-```
-
-###### Get Application Properties
-```php
-use CodebarAg\DocuWare\Requests\Documents\ApplicationProperties\GetApplicationProperties;
-
-$properties = $connector->send(new GetApplicationProperties(
-    $fileCabinetId,
-    $document->id,
-))->dto();
-```
-
-##### Sections
-
-| Request                          | Supported |
-|----------------------------------|-----------|
-| Get All Sections from a Document | ✅         |
-| Get a Specific Section           | ✅         |
-| Delete Section                   | ✅         |
-| Get Textshot                     | ✅         |
-
-###### Get All Sections
-
-```php
-use CodebarAg\DocuWare\Requests\Documents\Sections\GetAllSectionsFromADocument;
-
-$sections = $connector->send(new GetAllSectionsFromADocument(
-    $fileCabinetId,
-    $documentId
-))->dto();
-```
-
-###### Get Specific Section
-
-```php
-use CodebarAg\DocuWare\Requests\Documents\Sections\GetASpecificSection;
-
-$section = $connector->send(new GetASpecificSection(
-    $fileCabinetId,
-    $sectionsId
-))->dto();
-```
-
-###### Delete Section
-
-```php
-use CodebarAg\DocuWare\Requests\Documents\Sections\DeleteSection;
-
-$deleted = $connector->send(new DeleteSection(
-    $fileCabinetId,
-    $sectionId
-))->dto();
-```
-
-###### Get Textshot
-
-```php
-use CodebarAg\DocuWare\Requests\Documents\Sections\GetTextshot;
-
-$deleted = $connector->send(new GetTextshot(
-    $fileCabinetId,
-    $sectionId
-))->dto();
-```
-
-##### Download
-| Request            | Supported |
-|--------------------|-----------|
-| Download Document  | ✅         |
-| Download Section   | ✅         |
-| Download Thumbnail | ✅         |
-
-
-###### Download Document
-```php
-use CodebarAg\DocuWare\Requests\Documents\Download\DownloadDocument;
-use CodebarAg\DocuWare\Enums\TargetFileType;
-
-// Default: TargetFileType::AUTO, annotations removed.
-$contents = $connector->send(new DownloadDocument(
-    $fileCabinetId,
-    $documentId
-))->dto();
-
-// Download as PDF and keep annotations:
-$contents = $connector->send(new DownloadDocument(
-    $fileCabinetId,
-    $documentId,
-    TargetFileType::PDF,
-    keepAnnotations: true,
-))->dto();
-```
-
-###### Download Section
-```php
-use CodebarAg\DocuWare\Requests\Documents\Download\DownloadSection;
-
-$contents = $connector->send(new DownloadSection(
-    $fileCabinetId,
-    $sectionId
-))->dto();
-```
-
-###### Download Thumbnail
-```php
-use CodebarAg\DocuWare\Requests\Documents\Download\DownloadThumbnail;
-
-$contents = $connector->send(new DownloadThumbnail(
-    $fileCabinetId,
-    $sectionId
-))->dto();
-```
-
-#### Workflow
-
-##### Workflow History
-| Request                             | Supported |
-|-------------------------------------|-----------|
-| Get Document Workflow History       | ✅         |
-| Get Document Workflow History Steps | ✅         |
-
-###### Get Document Workflow History
-```php
-use CodebarAg\DocuWare\Requests\Workflow\GetDocumentWorkflowHistory;
-
-$history = $this->connector->send(new GetDocumentWorkflowHistory(
-    $fileCabinetId,
-    $documentId
-))->dto();
-```
-
-###### Get Document Workflow History Steps
-```php
-use CodebarAg\DocuWare\Requests\Workflow\GetDocumentWorkflowHistorySteps;
-
-$historySteps = $this->connector->send(new GetDocumentWorkflowHistorySteps(
-    $workflowId,
-    $historyId,
-))->dto();
-```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+</details>
 
+## Authentication & grants
 
+OAuth is handled for you: the package discovers the identity service, exchanges credentials for an
+access token, encrypts it, caches it per instance, and refreshes it under a lock before it expires.
+You never call the token endpoint yourself.
 
+Three grants are supported:
 
+| Grant | `grant` value | Needs | Use case |
+| --- | --- | --- | --- |
+| Credentials | `credentials` | url, username, password | Standard username/password login |
+| Trusted user | `trusted_user` | url, username, password, impersonate | Authenticate as a trusted user, act as another |
+| DocuWare token | `token` | url, token | Exchange a DocuWare login token (`dwtoken`) |
 
+## Connecting (config file or runtime DTO)
 
+There are two ways to connect — pick whichever fits your tenancy model.
 
-## Extending the connector (EXAMPLE)
+### 1. Named instances in config
 
-> We understand it may be repetitive to pass the configuration every time you create a new connector.
->
-> You can extend the connector and set the configuration once.
+Best when tenants are known ahead of time. Add them to `config/laravel-docuware.php`:
 
-#### Create a new connector
-
-```php
-<?php
-
-namespace App\Connectors;
-
-use CodebarAg\DocuWare\Connectors\DocuWareConnector;
-use CodebarAg\DocuWare\DTO\Config\ConfigWithCredentials;
-
-class YourOwnDocuWareConnector extends DocuWareConnector
-{
-    public function __construct() {
-        $configuration = new ConfigWithCredentials(
-            username: 'username',
-            password: 'password',
-        );
-    
-        parent::__construct($configuration);
-    }
-}
-```
-
-#### Use the new connector
-
-```php
-use App\Connectors\YourOwnDocuWareConnector;
-use CodebarAg\DocuWare\DTO\Config\ConfigWithCredentials;
-
-$connector = new YourOwnDocuWareConnector();
-```
-
-## 🖼 Make encrypted URLs
-
-```php
-use CodebarAg\DocuWare\Facades\DocuWare;
-```
-
-### Make encrypted URL for a document in a file cabinet.
-```php 
-$fileCabinetId = '87356f8d-e50c-450b-909c-4eaccd318fbf';
-$documentId = 42;
-
-$url = DocuWare::url()
-    ->fileCabinet($fileCabinetId)
-    ->document($documentId)
-    ->make();
-```
-
-### Make encrypted URL for a document in a basket.
-```php 
-$basketId = 'b_87356f8d-e50c-450b-909c-4eaccd318fbf';
-
-$url = DocuWare::url()
-    ->basket($basketId)
-    ->document($documentId)
-    ->make();
-```
-
-### Make encrypted URL valid for a specific amount of time.
->  In the example below the URL is valid for one week, afterward the URL is no longer working.
-```php
-$url = DocuWare::url()
-    ->fileCabinet($fileCabinetId)
-    ->document($documentId)
-    ->validUntil(now()->addWeek())
-    ->make();
-```
-
-
-## 🏋️ Document Index Fields DTO showcase
-
-```php
-CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexTextDTO {
-  +name: "FIELD_TEXT"                               // string
-  +value: "Value"                                   // null|string
-}
-```
-
-```php
-CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexNumericDTO {
-  +name: "FIELD_NUMERIC"                            // string
-  +value: 1                                         // null|int
-}
-```
-
-```php
-CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexDecimalDTO {
-  +name: "FIELD_DECIMAL"                            // string
-  +value: 1.00                                      // null|int|float
-}
-```
-
-```php
-CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexDateDTO {
-  +name: "FIELD_DATE"                               // string
-  +value: now(),                                    // null|Carbon
-}
-```
-
-```php
-CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexDateTimeDTO {
-  +name: "FIELD_DATETIME"                           // string
-  +value: now(),                                    // null|Carbon
-}
-```
-
-```php
-CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexKeywordDTO {
-  +name: "FIELD_KEYWORD"                            // string
-  +value: "Value"                                   // null|string
-}
-```
-
-```php
-CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexMemoDTO {
-  +name: "FIELD_MEMO"                               // string
-  +value: "Value"                                   // null|string
-}
-```
-
-```php
-CodebarAg\DocuWare\DTO\OrganizationIndex {
-  +id: "2f071481-095d-4363-abd9-29ef845a8b05"              // string
-  +name: "Fake File Cabinet"                               // string
-  +guid: "1334c006-f095-4ae7-892b-fe59282c8bed"            // string|null
-}
-```
-
-```php
-CodebarAg\DocuWare\DTO\Organization {
-  +id: "2f071481-095d-4363-abd9-29ef845a8b05"              // string
-  +name: "Fake File Cabinet"                               // string
-  +guid: "1334c006-f095-4ae7-892b-fe59282c8bed"            // string|null
-  +additionalInfo: []                                      // array
-  +configurationRights: []                                 // array
-}
-```
-
-```php
-CodebarAg\DocuWare\DTO\FileCabinet {
-  +id: "2f071481-095d-4363-abd9-29ef845a8b05"              // string
-  +name: "Fake File Cabinet"                               // string
-  +color: "Yellow"                                         // string
-  +isBasket: true                                          // bool
-  +assignedCabinet: "889c13cc-c636-4759-a704-1e6500d2d70f" // string
-}
-```
-
-```php
-CodebarAg\DocuWare\DTO\Dialog {
-  +id: "fae3b667-53e9-48dd-9004-34647a26112e"            // string
-  +type: "ResultList"                                    // string
-  +label: "Fake Dialog"                                  // string
-  +isDefault: true                                       // boolean
-  +fileCabinetId: "1334c006-f095-4ae7-892b-fe59282c8bed" // string
-}
-```
-
-```php
-CodebarAg\DocuWare\DTO\Field {
-  +name: "FAKE_FIELD"  // string
-  +label: "Fake Field" // string
-  +type: "Memo"        // string
-  +scope: "User"       // string
-```
-
-```php
-CodebarAg\DocuWare\DTO\Field {
-  +name: "FAKE_FIELD"  // string
-  +label: "Fake Field" // string
-  +type: "Memo"        // string
-  +scope: "User"       // string
-```
-
-```php
-CodebarAg\DocuWare\DTO\Document {
-  +id: 659732                                              // integer
-  +file_size: 765336                                       // integer
-  +total_pages: 100                                        // integer
-  +title: "Fake Title"                                     // string
-  +extension: ".pdf"                                       // string
-  +content_type: "application/pdf"                         // string
-  +file_cabinet_id: "a233b03d-dc63-42dd-b774-25b3ff77548f" // string
-  +created_at: Illuminate\Support\Carbon                   // Carbon
-  +updated_at: Illuminate\Support\Carbon                   // Carbon
-  +fields: Illuminate\Support\Collection {                 // Collection|DocumentField[]
-    #items: array:2 [
-      0 => CodebarAg\DocuWare\DTO\DocumentField            // DocumentField
-      1 => CodebarAg\DocuWare\DTO\DocumentField            // DocumentField
-    ]
-  }
-}
-```
-
-```php
-CodebarAg\DocuWare\DTO\Section {#23784▶
-  +id: "5589-5525"
-  +contentType: "text/plain"
-  +haveMorePages: true
-  +pageCount: 1
-  +fileSize: 32
-  +originalFileName: "example.txt"
-  +contentModified: "/Date(1702395557000)/"
-  +annotationsPreview: false
-  +hasTextAnnotations: null
-}
-```
-
 ```php
-CodebarAg\DocuWare\DTO\DocumentThumbnail {
-  +mime: "image/png"                                        // string
-  +data: "somedata"                                         // string
-  +base64: "data:image/png;base64,WXpJNWRGcFhVbWhrUjBVOQ==" // string
-}
-```
-
-```php
-CodebarAg\DocuWare\DTO\TableRow {
-   +fields: Illuminate\Support\Collection {                 // Collection|DocumentField[]
-    #items: array:2 [
-      0 => CodebarAg\DocuWare\DTO\DocumentField            // DocumentField
-      1 => CodebarAg\DocuWare\DTO\DocumentField            // DocumentField
-    ]
-}
-```
-
-```php
-CodebarAg\DocuWare\DTO\DocumentPaginator
-  +total: 39                                  // integer
-  +per_page: 10                               // integer
-  +current_page: 9                            // integer
-  +last_page: 15                              // integer
-  +from: 1                                    // integer
-  +to: 10                                     // integer
-  +documents: Illuminate\Support\Collection { // Collection|Document[]
-    #items: array:2 [
-      0 => CodebarAg\DocuWare\DTO\Document    // Document
-      1 => CodebarAg\DocuWare\DTO\Document    // Document
-    ]
-  }
-  +error: CodebarAg\DocuWare\DTO\ErrorBag {   // ErrorBag|null
-    +code: 422                                // int
-    +message: "'000' is not valid cabinet id" // string
-  }
-}
-```
-
-
-## 📦 Caching requests
-
-> All Get Requests are cachable and will be cached by default. To determine if the response is cached you can use the following method:
-
-### Is Cached
-```php 
-$connector = new DocuWareConnector();
-
-$response = $connector->send(new GetDocumentRequest($fileCabinetId, $documentId));
-$response->isCached(); // false
-
-// Next time the request is sent
-
-$response = $connector->send(new GetDocumentRequest($fileCabinetId, $documentId));
-$response->isCached(); // true
-```
-
-
-### Invalidate Cache
-> To invalidate the cache for a specific request you can use the following method:
-```php 
-$connector = new DocuWareConnector();
-
-$request = new GetDocumentRequest($fileCabinetId, $documentId);
-$request->invalidateCache();
-
-$response = $connector->send($request);
-```
-
-### Disable Caching
-> To temporarily disable caching for a specific request you can use the following method:
-```php 
-$connector = new DocuWareConnector();
-
-$request = new GetDocumentRequest($fileCabinetId, $documentId);
-$request->disableCaching();
-
-$response = $connector->send($request);
-```
-
-
-## 💥 Exceptions explained
-
-- `CodebarAg\DocuWare\Exceptions\UnableToMakeRequest`
-
-This is thrown if you are not authorized to make the request.
-
----
-
-- `CodebarAg\DocuWare\Exceptions\UnableToProcessRequest`
-
-This is thrown if you passed wrong attributes. For example a file cabinet ID
-which does not exist.
-
----
-
-- `CodebarAg\DocuWare\Exceptions\UnableToLogin`
-
-This exception can only be thrown during the login if the credentials did not
-match.
-
----
-
-- `CodebarAg\DocuWare\Exceptions\UnableToLoginNoCookies`
-
-This exception can only be thrown during the login if there was no cookies in
-the response from the api.
-
----
-
-- `CodebarAg\DocuWare\Exceptions\UnableToFindPassphrase`
-
-This exception can only be thrown during the url making if the passphrase
-could not be found.
-
----
-
-- `CodebarAg\DocuWare\Exceptions\UnableToMakeUrl`
-
-Something is wrong during the URL making.
-
----
-
-- `CodebarAg\DocuWare\Exceptions\UnableToUpdateFields`
-
-No fields were supplied.
-
----
-
-- `CodebarAg\DocuWare\Exceptions\UnableToGetDocumentCount`
-
-Something is wrong with the response from getting the document count.
-
----
-
-- `Illuminate\Http\Client\RequestException`
-
-All other cases if the response is not successfully.
-
-
-## ✨ Events
-
-> The Following events will be fired:
-
-```php 
-use CodebarAg\DocuWare\Events\DocuWareResponseLog;
-
-// Log each response from the DocuWare REST API.
-DocuWareResponseLog::class => [
-    //
+'instances' => [
+    'acme'   => ['grant' => 'credentials', 'url' => '…', 'username' => '…', 'password' => '…'],
+    'globex' => ['grant' => 'token', 'url' => '…', 'token' => '…'],
 ],
 ```
 
-## 🔧 Configuration file
-
-You can publish the config file with:
-
-```bash
-php artisan vendor:publish --provider="CodebarAg\DocuWare\DocuWareServiceProvider" --tag="docuware-config"
+```php
+DocuWare::instance('acme')->documents($cabinetId)->search()->get();
 ```
 
-This is the contents of the published config file:
+### 2. A runtime connection DTO (database-driven multi-tenancy)
+
+Multi-tenancy is **not** limited to config files. When connections live in your database — the common
+case — build a typed config DTO at runtime and hand it to `DocuWare::connection()`:
 
 ```php
-<?php
+use CodebarAg\DocuWare\Facades\DocuWare;
+use CodebarAg\DocuWare\Config\CredentialsConfig;
 
-return [
+$client = DocuWare::connection(CredentialsConfig::for(
+    url:      $tenant->docuware_url,
+    username: $tenant->docuware_user,
+    password: $tenant->docuware_secret,
+    name:     $tenant->slug,            // namespaces this tenant's cache + token entry
+));
 
-    /*
-    |--------------------------------------------------------------------------
-    | Cache driver
-    |--------------------------------------------------------------------------
-    | You may like to define a different cache driver than the default Laravel cache driver.
-    | In Laravel 12+, CACHE_STORE is used instead of CACHE_DRIVER.
-    |
-    */
-
-    'cache_driver' => env('DOCUWARE_CACHE_DRIVER', env('CACHE_STORE', 'file')),
-
-    /*
-    |--------------------------------------------------------------------------
-    | Requests timeout
-    |--------------------------------------------------------------------------
-    | This variable is optional and only used if you want to set the request timeout manually.
-    |
-    */
-
-    'timeout' => env('DOCUWARE_TIMEOUT', 15),
-
-    /*
-    |--------------------------------------------------------------------------
-    | Platform path
-    |--------------------------------------------------------------------------
-    |
-    | Matches Postman {{Platform}} (default DocuWare/Platform).
-    |
-    */
-
-    'platform_path' => env('DOCUWARE_PLATFORM_PATH', 'DocuWare/Platform'),
-
-    /*
-    |--------------------------------------------------------------------------
-    | DocuWare Credentials
-    |--------------------------------------------------------------------------
-    |
-    | Before you can communicate with the DocuWare REST-API it is necessary
-    | to enter your credentials. You should specify a url containing the
-    | scheme and hostname. In addition add your username and password.
-    |
-    */
-
-    'credentials' => [
-        'url' => env('DOCUWARE_URL'),
-        'username' => env('DOCUWARE_USERNAME'),
-        'password' => env('DOCUWARE_PASSWORD'),
-    ],
-
-    /*
-    |--------------------------------------------------------------------------
-    | Passphrase
-    |--------------------------------------------------------------------------
-    |
-    | In order to create encrypted URLs we need a passphrase. This enables a
-    | secure exchange of DocuWare URLs without anyone being able to modify
-    | your query strings. You can find it in the organization settings.
-    |
-    */
-
-    'passphrase' => env('DOCUWARE_PASSPHRASE'),
-
-    /*
-    |--------------------------------------------------------------------------
-    | Configurations
-    |--------------------------------------------------------------------------
-    |
-    */
-    'configurations' => [
-        'search' => [
-            'operation' => 'And',
-
-            /*
-             * Force Refresh
-             * Determine if result list is retrieved from the cache when ForceRefresh is set
-             * to false (default) or always a new one is executed when ForceRefresh is set to true.
-             */
-
-            'force_refresh' => true,
-            'include_suggestions' => false,
-            'additional_result_fields' => [],
-        ],
-        'cache' => [
-            'driver' => env('DOCUWARE_CACHE_DRIVER', env('CACHE_STORE', 'file')),
-            'lifetime_in_seconds' => env('DOCUWARE_CACHE_LIFETIME_IN_SECONDS', 60),
-        ],
-        'request' => [
-            'timeout_in_seconds' => env('DOCUWARE_TIMEOUT', 60),
-        ],
-
-        'client_id' => env('DOCUWARE_CLIENT_ID', 'docuware.platform.net.client'),
-        'scope' => env('DOCUWARE_SCOPE', 'docuware.platform'),
-    ],
-
-    /*
-    |--------------------------------------------------------------------------
-    | Tests
-    |--------------------------------------------------------------------------
-    |
-    */
-    'tests' => [
-        'file_cabinet_id' => env('DOCUWARE_TESTS_FILE_CABINET_ID'),
-        'dialog_id' => env('DOCUWARE_TESTS_DIALOG_ID'),
-        'basket_id' => env('DOCUWARE_TESTS_BASKET_ID'),
-        'org_id' => env('DOCUWARE_TESTS_ORG_ID', env('DOCUWARE_TESTS_ORGANIZATION_ID')),
-        'search_dialog_id' => env('DOCUWARE_TESTS_SEARCH_DIALOG_ID'),
-        'store_dialog_id' => env('DOCUWARE_TESTS_STORE_DIALOG_ID'),
-        'document_id' => env('DOCUWARE_TESTS_DOCUMENT_ID'),
-    ],
-];
+$client->documents($cabinetId)->search()->fullText('invoice')->get();
 ```
 
-## Postman collection parity & Saloon fixtures
+Each grant has a typed `for()` factory that fills sensible defaults (cache driver, lifetime, timeout,
+client id, scope) — override any of them as named arguments:
 
-The official DocuWare Postman collection uses `{{ServerUrl}}` and `{{Platform}}` (default `DocuWare/Platform`). This package maps them to Laravel env vars — see [`.env.example`](.env.example) for a **Postman variable → `DOCUWARE_*`** table.
+```php
+use CodebarAg\DocuWare\Config\{CredentialsConfig, TokenConfig, TrustedUserConfig};
 
-- **Parity matrix** (endpoints vs request classes): [`docs/postman-parity.md`](docs/postman-parity.md).
-- **Platform path**: `DOCUWARE_PLATFORM_PATH` (used by `DocuWareConnector`, `GetResponsibleIdentityService`, and encrypted Web Client URLs in `DocuWareUrl`).
-- **CI-friendly tests**: Default `composer test` runs **unit**, **DTO**, and **Saloon fixture** tests (`tests/Feature/SaloonFixtures`). HTTP responses are replayed from JSON files under [`tests/Fixtures/saloon/`](tests/Fixtures/saloon) using [Saloon fixtures](https://docs.saloon.dev/digging-deeper/testing) (`MockClient` + `Fixture`). Bodies use Saloon’s recorded format: `statusCode`, `headers`, `data` (raw response body), `context`.
-- **Recording fixtures** (optional): Edit [`tests/Manual/RecordGetOrganizationFixtureTest.php`](tests/Manual/RecordGetOrganizationFixtureTest.php), remove the `->skip(...)`, set real `DOCUWARE_*` credentials, then run:
-  ```bash
-  composer test:manual
+CredentialsConfig::for(url: '…', username: '…', password: '…', name: 'acme');
+TokenConfig::for(url: '…', token: '…', name: 'globex');
+TrustedUserConfig::for(url: '…', username: '…', password: '…', impersonate: 'bob', name: 'acme');
+```
+
+`DocuWare::instance(...)` also accepts a DTO directly, so `DocuWare::instance($config)` and
+`DocuWare::connection($config)` are equivalent. Runtime connections are **not** name-cached, so two
+tenants may safely reuse a `name`; their tokens stay isolated by URL + credentials.
+
+Every connection is independent: its own connector, cache namespace, encrypted token entry, and
+rate limiter.
+
+## Quickstart
+
+```php
+use CodebarAg\DocuWare\Facades\DocuWare;
+use CodebarAg\DocuWare\Data\Documents\DocumentData;
+use CodebarAg\DocuWare\Data\Write\IndexFields;
+use CodebarAg\DocuWare\Enums\TargetFileType;
+
+// Lazily iterate EVERY matching document across all pages (memory-safe).
+DocuWare::documents($cabinetId)->search()
+    ->fullText('invoice')
+    ->where('STATUS', 'open')
+    ->whereDateBetween('DWSTOREDATETIME', $from, $to)
+    ->latest('DWSTOREDATETIME')
+    ->cursor()
+    ->each(fn (DocumentData $document) => /* … */);
+
+$document = DocuWare::documents($cabinetId)->find($documentId);
+
+$document = DocuWare::documents($cabinetId)->store(
+    fileContent: file_get_contents('invoice.pdf'),
+    fileName: 'invoice.pdf',
+    indexes: IndexFields::make()->text('STATUS', 'open')->number('AMOUNT', 42),
+);
+
+DocuWare::documents($cabinetId)->update($documentId, IndexFields::make()->text('STATUS', 'closed'));
+$pdf = DocuWare::documents($cabinetId)->download($documentId, TargetFileType::PDF);
+DocuWare::documents($cabinetId)->delete($documentId);
+```
+
+## Resources
+
+Every resource is reached from the `DocuWare` facade (default instance) or from a resolved client
+(`DocuWare::instance('acme')->…`, `DocuWare::connection($config)->…`). Each returns immutable `*Data`
+objects or collections of them.
+
+### Documents — `DocuWare::documents($cabinetId)`
+
+The documents resource is broad, so its methods are grouped by area below.
+
+**Core (search, read, write, lifecycle)**
+
+| Method | Returns | Description |
+| --- | --- | --- |
+| `search()` | `SearchQuery` | Fluent search builder (see below) |
+| `find($id)` | `DocumentData` | A single document |
+| `count()` | `int` | Total documents in the cabinet |
+| `store($fileContent, $fileName, $indexes, $storeDialogId)` | `DocumentData` | Create a data record |
+| `update($id, $indexes, $forceUpdate = false)` | `Collection<DocumentFieldData>` | Update index values |
+| `delete($id)` | — | Delete a document |
+| `download($id, TargetFileType = AUTO, $keepAnnotations = false)` | `string` | Binary content |
+| `preview($id)` | `string` | Preview image bytes |
+
+**Sections** (a document is composed of one or more file sections)
+
+| Method | Returns | Description |
+| --- | --- | --- |
+| `sections($id)` / `section($sectionId)` | `Collection<SectionData>` / `SectionData` | List / fetch sections |
+| `deleteSection($sectionId)` | `bool` | Delete a section |
+| `downloadSection($sectionId)` / `textshot($sectionId)` | `string` | Section data / text layer |
+| `thumbnail($sectionId, $page = 0)` | `string` | Thumbnail bytes |
+
+**Annotations & application properties**
+
+| Method | Returns | Description |
+| --- | --- | --- |
+| `annotations($id)` / `annotate($id, $payload)` / `stamps($id)` | `Collection` / `mixed` / `Collection` | Annotations & stamps |
+| `applicationProperties($id)` / `addApplicationProperties(...)` / `updateApplicationProperties(...)` / `deleteApplicationProperties(...)` | `mixed` | App-defined properties |
+
+**Structure operations (clip/staple, transfer, batch & upload)**
+
+| Method | Returns | Description |
+| --- | --- | --- |
+| `clip($ids, $force)` / `staple($ids, $force)` / `unclip($id)` / `unstaple($id)` | `DocumentData` / `DocumentPageData` | Content merge/divide |
+| `transfer($id, $destinationFileCabinetId, $storeDialogId, $keepSource = false)` | `bool` | Move/copy across cabinets |
+| `batchUpdate(...)` / `appendPdf(...)` / `appendFiles(...)` / `replaceSection(...)` | `array` / `Section` / `Document` | Batch & upload operations |
+| `workflowHistory($id)` | `Collection<HistoryStepData>` | Document workflow history |
+
+### File cabinets & structure — `fileCabinets`, `dialogs`, `selectLists`
+
+Cabinet metadata, the search/store dialogs defined on a cabinet, and the option lists behind
+select fields.
+
+```php
+DocuWare::fileCabinets()->all();                 // Collection<FileCabinetData>
+DocuWare::fileCabinets()->info($cabinetId);      // FileCabinetInformationData
+DocuWare::fileCabinets()->fields($cabinetId);    // Collection<FieldData> — the cabinet's index fields
+
+DocuWare::dialogs($cabinetId)->all();            // Collection<DialogData>
+DocuWare::dialogs($cabinetId)->ofType(DialogType::SEARCH);
+DocuWare::dialogs($cabinetId)->find($dialogId);
+
+DocuWare::selectLists($cabinetId)->get($dialogId, 'FIELD');
+DocuWare::selectLists($cabinetId)->filtered($dialogId, 'FIELD', $expression);
+```
+
+### Organization & users — `organizations`, `users`, `groups`, `roles`
+
+Tenant-level directory: the organization, its users, and the groups/roles they belong to.
+
+```php
+DocuWare::organizations()->all();                // Collection<OrganizationData>
+DocuWare::organizations()->loginToken($targetProducts, $usage, $lifetime);
+
+DocuWare::users()->all();                        // Collection<UserData>
+DocuWare::users()->find($userId);
+DocuWare::users()->ofGroup($groupId);
+DocuWare::users()->ofRole($roleId);
+DocuWare::users()->create($user);                // UserInput
+DocuWare::users()->update($user);
+DocuWare::users()->addToGroup($userId, $groupIds);
+DocuWare::users()->removeFromGroup($userId, $groupIds);
+DocuWare::users()->addToRole($userId, $roleIds);
+DocuWare::users()->removeFromRole($userId, $roleIds);
+DocuWare::users()->groupsOf($userId);
+DocuWare::users()->rolesOf($userId);
+
+DocuWare::groups()->all();                       // Collection<GroupData>
+DocuWare::roles()->all();                        // Collection<RoleData>
+```
+
+### Workflows — `workflows`
+
+```php
+DocuWare::workflows()->historySteps($workflowId, $instanceId);  // InstanceHistoryData
+```
+
+### Trash (recycle bin) — `trash`
+
+Documents deleted from a cabinet land here until purged or restored.
+
+```php
+DocuWare::trash()->search($page, $perPage, ...); // TrashPageData
+DocuWare::trash()->delete($ids);                 // DeleteDocumentsData — purge permanently
+DocuWare::trash()->restore($ids);                // RestoreDocumentsData — recover to the cabinet
+```
+
+## Search builder
+
+`DocuWare::documents($cabinetId)->search()` returns a fluent `SearchQuery`. Conditions and ordering
+are chainable; a terminal method runs the request.
+
+```php
+DocuWare::documents($cabinetId)->search()
+    ->fileCabinets([$cabinetId, $otherCabinetId])  // search across multiple cabinets
+    ->dialog($searchDialogId)                       // optional explicit search dialog
+    ->fullText('term')
+    ->where('FIELD', 'value')
+    ->whereIn('FIELD', ['a', 'b'])
+    ->whereEmpty('FIELD')
+    ->whereNotEmpty('FIELD')
+    ->whereDate('DATE_FIELD', '>=', $carbon)
+    ->whereDateBetween('DATE_FIELD', $from, $to)
+    ->orderBy('FIELD', 'desc')        // or ->latest('FIELD') / ->oldest('FIELD')
+    ->page(1)->perPage(50);
+```
+
+| Terminal | Returns | Description |
+| --- | --- | --- |
+| `get()` | `DocumentPageData` | One page of results |
+| `first()` | `?DocumentData` | First match, or `null` |
+| `count()` | `int` | Total matching documents |
+| `cursor()` | `LazyCollection<DocumentData>` | Memory-safe iteration over **all** pages |
+
+## Index field values
+
+DocuWare expects each index value in a specific wire shape (`FieldName` / `Item` / `ItemElementName`).
+You don't build that by hand — pass PHP values to the `IndexFields` builder and it converts each one to
+the correct typed field. This is the answer to *"how do I pass an int / string / table and get the right
+index field?"*
+
+```php
+use CodebarAg\DocuWare\Data\Write\IndexFields;
+use Illuminate\Support\Carbon;
+
+$indexes = IndexFields::make()
+    ->text('STATUS', 'open')            // String
+    ->memo('NOTES', 'long text…')       // Memo
+    ->keyword('TAGS', 'invoice')        // Keyword
+    ->number('AMOUNT', 42)              // Int
+    ->decimal('PRICE', 19.99)           // Decimal
+    ->date('DUE', Carbon::today())      // date  → YYYY-MM-DD
+    ->dateTime('SEEN', Carbon::now())   // datetime → YYYY-MM-DD HH:MM:SS
+    ->table('POSITIONS', [              // Table → rows of typed cells
+        ['ARTICLE' => 'Widget', 'QTY' => 5],
+        ['ARTICLE' => 'Gadget', 'QTY' => 3],
+    ]);
+
+DocuWare::documents($cabinetId)->store(
+    fileContent: file_get_contents('invoice.pdf'),
+    fileName: 'invoice.pdf',
+    indexes: $indexes,
+);
+
+DocuWare::documents($cabinetId)->update($documentId, IndexFields::make()->number('AMOUNT', 99));
+```
+
+| Builder method | Argument type | DocuWare `ItemElementName` |
+| --- | --- | --- |
+| `text($name, $value)` | `?string` | `String` |
+| `memo($name, $value)` | `?string` | `Memo` |
+| `keyword($name, $value)` | `?string` | `Keyword` |
+| `number($name, $value)` | `?int` | `Int` |
+| `decimal($name, $value)` | `int\|float\|null` | `Decimal` |
+| `date($name, $value)` | `?Carbon` | `String` (date) |
+| `dateTime($name, $value)` | `?Carbon` | `String` (datetime) |
+| `table($name, $rows)` | `array\|Collection` | `Table` |
+
+`IndexFields::make()` starts a builder; `isEmpty()` tells you whether anything was added; and
+`toCollection()` returns the underlying index objects. `store()` and `update()` also accept that
+raw `Collection` directly if you need to build the DTOs yourself, but `IndexFields` is the
+recommended path.
+
+### Updating index fields
+
+`update()` writes index values on an existing document — every field type uses the **same** call,
+including tables. It returns a `Collection<string, DocumentFieldData>` keyed by field name (the
+server's view of the fields after the write):
+
+```php
+use CodebarAg\DocuWare\Data\Write\IndexFields;
+use Illuminate\Support\Carbon;
+
+$fields = DocuWare::documents($cabinetId)->update(
+    $documentId,
+    IndexFields::make()
+        ->text('STATUS', 'closed')
+        ->number('AMOUNT', 99)
+        ->decimal('PRICE', 19.99)
+        ->date('DUE', Carbon::today())
+        ->dateTime('SEEN', Carbon::now())
+        // Table fields are replaced wholesale — pass the full set of rows you want stored:
+        ->table('POSITIONS', [
+            ['ARTICLE' => 'Widget', 'QTY' => 5],
+            ['ARTICLE' => 'Gadget', 'QTY' => 3],
+        ]),
+    forceUpdate: true, // overwrite read-only/system-managed fields where the cabinet allows it
+);
+
+$fields['STATUS']->value; // 'closed'
+```
+
+Pass `forceUpdate: false` (the default) to let DocuWare reject writes to protected fields; pass
+`true` to force them through where the cabinet permits.
+
+### Table fields
+
+A table field holds **rows of typed cells**. The same `table($name, $rows)` builder is used for
+both create (`store()`) and update (`update()`), and accepts rows in either form:
+
+- **Simple** — an associative `[column => value]` map per row; cell types are auto-detected
+  (`string → String`, `int → Int`, `float → Decimal`, `Carbon → DateTime`):
+
+  ```php
+  IndexFields::make()->table('POSITIONS', [
+      ['ARTICLE' => 'Widget', 'QTY' => 5, 'PRICE' => 19.99],
+      ['ARTICLE' => 'Gadget', 'QTY' => 3, 'PRICE' => 4.50],
+  ]);
   ```
-  (`composer test:manual` runs only `tests/Manual`.)
-  The recorder **only writes** `tests/Fixtures/saloon/get-organization.json` when the HTTP response is successful and looks like JSON, so a bad run (HTML error page, 401, etc.) **does not overwrite** a good committed fixture—the test fails instead.
-  Review the generated JSON for secrets, commit if safe, then restore the skip.
-- **Live tenant tests** (destructive cleanup, real API): `composer test:live` runs the `integration` PHPUnit testsuite (`tests/Integration`). Requires valid DocuWare credentials and test cabinet IDs in `phpunit.xml` or the environment. **Do not** run integration against DocuWare with `pest --parallel` or multiple concurrent `test:live` processes (rate limits and shared cabinet cleanup). Use a **single** sequential run.
 
-## 🚧 Testing
+- **Explicit** — build each cell with an index DTO when you need exact typing that auto-detection
+  can't infer (a date-only cell, a keyword, or a memo):
 
-Copy your own phpunit.xml-file.
+  ```php
+  use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexTextDTO;
+  use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexNumericDTO;
+  use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexDateDTO;
+
+  IndexFields::make()->table('POSITIONS', [
+      [
+          IndexTextDTO::make('ARTICLE', 'Widget'),
+          IndexNumericDTO::make('QTY', 5),
+          IndexDateDTO::make('DELIVERED', Carbon::today()),
+      ],
+  ]);
+  ```
+
+> **Tables are written wholesale.** A `store()`/`update()` call **replaces every row** of the field,
+> so always pass the complete set of rows you want stored. To append, read the current rows first
+> (see below) and re-send them along with the new ones.
+
+Reading a table back, the field's `->value` is a `Collection<TableRowData>`; each row exposes its
+cells as a `Collection<string, DocumentFieldData>` keyed by column name (cell values already parsed
+to native PHP types):
+
+```php
+$document = DocuWare::documents($cabinetId)->find($documentId);
+$rows = $document->fields['POSITIONS']->value;   // Collection<TableRowData>
+
+foreach ($rows as $row) {
+    $row->fields['ARTICLE']->value;  // 'Widget' (string)
+    $row->fields['QTY']->value;      // 5 (int)
+}
+```
+
+### Reading values back
+
+The reverse conversion is automatic. Index values read from DocuWare are exposed on
+`DocumentFieldData->value` already cast to the matching PHP type:
+
+| DocuWare type | PHP type on `->value` |
+| --- | --- |
+| `Int` | `int` |
+| `Decimal` | `float` |
+| `Date` / `DateTime` | `Carbon` |
+| `String` / `Memo` / `Keyword(s)` | `string` |
+| `Table` | `Collection<TableRowData>` (each row is a `Collection<string, DocumentFieldData>`) |
+
+```php
+$document = DocuWare::documents($cabinetId)->find($documentId);
+
+foreach ($document->fields as $field) {
+    $field->name;  // 'AMOUNT'
+    $field->value; // 99 (int) — already parsed, no manual conversion
+}
+```
+
+## Immutable data & withers
+
+Every response is an immutable `spatie/laravel-data` object:
+
+```php
+$user    = DocuWare::users()->find($id);
+$updated = $user->copyWith(active: false);   // a new instance; $user is untouched
+$array   = $user->toArray();                 // serialization for free
+```
+
+## Enums
+
+| Enum | Cases |
+| --- | --- |
+| `TargetFileType` | `AUTO`, `PDF`, `ORIGINAL` |
+| `DialogType` | `SEARCH`, `STORE`, `RESULT`, `INDEX`, `LIST`, `FOLDERS` |
+| `DocuWareFieldTypeEnum` | `STRING`, `INT`, `DECIMAL`, `DATE`, `DATETIME`, `TABLE` |
+| `Grant` | `Credentials`, `TrustedUser`, `Token` |
+
+## Encrypted document URLs
+
+```php
+$url = DocuWare::url($url, $username, $password, $passphrase)
+    ->fileCabinet($cabinetId)
+    ->document($documentId)
+    ->validUntil($carbon)   // optional expiry
+    ->make();
+```
+
+## Endpoint catalog
+
+The resources above are the public API. Under the hood they send Saloon **requests** that map 1:1 to
+DocuWare Platform REST endpoints. This catalog documents that internal mapping for transparency and
+advanced use. Paths are relative to `<DOCUWARE_URL>/{platform_path}/` (default `DocuWare/Platform`).
+**Cached** = the request implements Saloon's `Cacheable` (TTL from `configurations.cache.*`).
+
+<details>
+<summary><strong>All 68 endpoints across 25 groups</strong></summary>
+
+### Authentication › OAuth
+
+| Request | Method | Endpoint | Returns | Cached | Inputs |
+|---|---|---|---|---|---|
+| `GetIdentityServiceConfiguration` | GET | `{identityServiceUrl}/.well-known/openid-configuration` | `IdentityServiceConfiguration` | yes | identityServiceUrl |
+| `GetResponsibleIdentityService` | GET | `<url>/{platform_path}/Home/IdentityServiceInfo` | `ResponsibleIdentityService` | yes | url |
+| `RequestTokenWithCredentials` | POST | `{tokenEndpoint}` | `RequestTokenDto` |  | tokenEndpoint, clientId, scope, username, password |
+| `RequestTokenWithCredentialsTrustedUser` | POST | `{tokenEndpoint}` | `RequestTokenDto` |  | tokenEndpoint, clientId, scope, username, password, impersonateName |
+| `RequestTokenWithDocuWareToken` | POST | `{tokenEndpoint}` | `RequestTokenDto` |  | tokenEndpoint, token, clientId, scope |
+
+### Documents
+
+| Request | Method | Endpoint | Returns | Cached | Inputs |
+|---|---|---|---|---|---|
+| `GetDocumentPreviewRequest` | GET | `/FileCabinets/{fileCabinetId}/Documents/{documentId}/Image` | `string` | yes | fileCabinetId, documentId |
+
+### Documents › ApplicationProperties
+
+| Request | Method | Endpoint | Returns | Cached | Inputs |
+|---|---|---|---|---|---|
+| `AddApplicationProperties` | POST | `/FileCabinets/{fileCabinetId}/Documents/{documentId}/DocumentApplicationProperties` | `mixed` | yes | fileCabinetId, documentId, properties |
+| `DeleteApplicationProperties` | POST | `/FileCabinets/{fileCabinetId}/Documents/{documentId}/DocumentApplicationProperties` | `mixed` | yes | fileCabinetId, documentId, propertyNames |
+| `GetApplicationProperties` | GET | `/FileCabinets/{fileCabinetId}/Documents/{documentId}/DocumentApplicationProperties` | `mixed` | yes | fileCabinetId, documentId |
+| `UpdateApplicationProperties` | POST | `/FileCabinets/{fileCabinetId}/Documents/{documentId}/DocumentApplicationProperties` | `mixed` | yes | fileCabinetId, documentId, properties |
+
+### Documents › ClipUnclipStapleUnstaple
+
+| Request | Method | Endpoint | Returns | Cached | Inputs |
+|---|---|---|---|---|---|
+| `Clip` | POST | `/FileCabinets/{documentTrayId}/Operations/ContentMerge` | `Document` |  | documentTrayId, documents, force |
+| `Staple` | POST | `/FileCabinets/{documentTrayId}/Operations/ContentMerge` | `Document` |  | documentTrayId, documents, force |
+| `Unclip` | POST | `/FileCabinets/{documentTrayId}/Operations/ContentDivide` | `DocumentPaginator` |  | documentTrayId, documentId |
+| `Unstaple` | POST | `/FileCabinets/{documentTrayId}/Operations/ContentDivide` | `DocumentPaginator` |  | documentTrayId, documentId |
+
+### Documents › DocumentsTrashBin
+
+| Request | Method | Endpoint | Returns | Cached | Inputs |
+|---|---|---|---|---|---|
+| `DeleteDocuments` | POST | `/TrashBin/BatchDelete` | `DeleteDocumentsDto` |  | ids |
+| `GetDocuments` | POST | `/TrashBin/Query` | `TrashDocumentPaginator` | yes | page, perPage, searchTerm, orderField, orderDirection, condition, forceRefresh |
+| `RestoreDocuments` | POST | `/TrashBin/BatchRestore` | `RestoreDocumentsDto` |  | ids |
+
+### Documents › Download
+
+| Request | Method | Endpoint | Returns | Cached | Inputs |
+|---|---|---|---|---|---|
+| `DownloadDocument` | GET | `/FileCabinets/{fileCabinetId}/Documents/{documentId}/FileDownload` | `mixed` | yes | fileCabinetId, documentId, targetFileType, keepAnnotations |
+| `DownloadSection` | GET | `/FileCabinets/{fileCabinetId}/Sections/{sectionId}/Data` | `mixed` | yes | fileCabinetId, sectionId |
+| `DownloadThumbnail` | GET | `/FileCabinets/{fileCabinetId}/Rendering/{sectionId}/Thumbnail` | `mixed` | yes | fileCabinetId, sectionId, page |
+
+### Documents › ModifyDocuments
+
+| Request | Method | Endpoint | Returns | Cached | Inputs |
+|---|---|---|---|---|---|
+| `DeleteDocument` | DELETE | `/FileCabinets/{fileCabinetId}/Documents/{documentId}` | `Response` |  | fileCabinetId, documentId |
+| `TransferDocument` | POST | `?` | `bool` |  | fileCabinetId, destinationFileCabinetId, documentId, storeDialogId, fields, keepSource, fillIntellix, useDefaultDialog |
+
+### Documents › Sections
+
+| Request | Method | Endpoint | Returns | Cached | Inputs |
+|---|---|---|---|---|---|
+| `DeleteSection` | DELETE | `/FileCabinets/{fileCabinetId}/Sections/{sectionId}` | `bool` | yes | fileCabinetId, sectionId |
+| `GetASpecificSection` | GET | `/FileCabinets/{fileCabinetId}/Sections/{sectionId}` | `Section` | yes | fileCabinetId, sectionId |
+| `GetAllSectionsFromADocument` | GET | `/FileCabinets/{fileCabinetId}/Sections` | `Collection` | yes | fileCabinetId, documentId |
+| `GetTextshot` | GET | `/FileCabinets/{fileCabinetId}/Sections/{sectionId}/Textshot` | `mixed` | yes | fileCabinetId, sectionId |
+
+### Documents › Stamps
+
+| Request | Method | Endpoint | Returns | Cached | Inputs |
+|---|---|---|---|---|---|
+| `AddDocumentAnnotations` | POST | `/FileCabinets/{fileCabinetId}/Documents/{documentId}/Annotation` | `array` |  | fileCabinetId, documentId, payload |
+| `GetDocumentAnnotations` | GET | `/FileCabinets/{fileCabinetId}/Documents/{documentId}/Annotation` | `Collection` | yes | fileCabinetId, documentId |
+| `GetStamps` | GET | `/FileCabinets/{fileCabinetId}/Stamps` | `Collection` |  | fileCabinetId |
+
+### Documents › UpdateIndexValues
+
+| Request | Method | Endpoint | Returns | Cached | Inputs |
+|---|---|---|---|---|---|
+| `UpdateIndexValues` | PUT | `/FileCabinets/{fileCabinetId}/Documents/{documentId}/Fields` | `Collection` |  | fileCabinetId, documentId, indexes, forceUpdate |
+
+### Fields
+
+| Request | Method | Endpoint | Returns | Cached | Inputs |
+|---|---|---|---|---|---|
+| `GetFieldsRequest` | GET | `/FileCabinets/{fileCabinetId}` | `Collection` | yes | fileCabinetId |
+
+### FileCabinets › Batch
+
+| Request | Method | Endpoint | Returns | Cached | Inputs |
+|---|---|---|---|---|---|
+| `BatchDocumentsUpdateFields` | POST | `/FileCabinets/{fileCabinetId}/Operations/BatchDocumentsUpdateFields` | `array` |  | fileCabinetId, payload, contentType |
+
+### FileCabinets › CheckInCheckOut
+
+| Request | Method | Endpoint | Returns | Cached | Inputs |
+|---|---|---|---|---|---|
+| `CheckInDocumentFromFileSystem` | POST | `/FileCabinets/{fileCabinetId}/Documents/{documentId}/CheckInFromFileSystem` | `Document` |  | fileCabinetId, documentId, checkInJson, fileContent, fileName |
+| `CheckoutDocumentToFileSystem` | POST | `/FileCabinets/{fileCabinetId}/Documents/{documentId}/CheckoutToFileSystem` | `CheckoutToFileSystemResult` |  | fileCabinetId, documentId |
+| `UndoDocumentCheckout` | PUT | `/FileCabinets/{fileCabinetId}/Operations/ProcessDocumentAction?DocId={documentId}` | `Document` |  | fileCabinetId, documentId |
+
+### FileCabinets › Dialogs
+
+| Request | Method | Endpoint | Returns | Cached | Inputs |
+|---|---|---|---|---|---|
+| `GetASpecificDialog` | GET | `/FileCabinets/{fileCabinetId}/Dialogs/{dialogId}` | `mixed` | yes | fileCabinetId, dialogId |
+| `GetAllDialogs` | GET | `/FileCabinets/{fileCabinetId}/Dialogs` | `mixed` | yes | fileCabinetId |
+| `GetDialogsOfASpecificType` | GET | `/FileCabinets/{fileCabinetId}/Dialogs` | `mixed` | yes | fileCabinetId, dialogType |
+
+### FileCabinets › General
+
+| Request | Method | Endpoint | Returns | Cached | Inputs |
+|---|---|---|---|---|---|
+| `GetFileCabinetInformation` | GET | `/FileCabinets/{fileCabinetId}` | `FileCabinetInformation` | yes | fileCabinetId |
+| `GetTotalNumberOfDocuments` | GET | `/FileCabinets/{fileCabinetId}/Query/CountExpression` | `int` | yes | fileCabinetId, searchDialogId |
+
+### FileCabinets › Search
+
+| Request | Method | Endpoint | Returns | Cached | Inputs |
+|---|---|---|---|---|---|
+| `GetASpecificDocumentFromAFileCabinet` | GET | `/FileCabinets/{fileCabinetId}/Documents/{documentId}` | `Document` | yes | fileCabinetId, documentId |
+| `GetDocumentsFromAFileCabinet` | GET | `/FileCabinets/{fileCabinetId}/Documents` | `DocumentPaginator` | yes | fileCabinetId, fields, page, perPage |
+
+### FileCabinets › SelectLists
+
+| Request | Method | Endpoint | Returns | Cached | Inputs |
+|---|---|---|---|---|---|
+| `GetFilteredSelectLists` | POST | `/FileCabinets/{fileCabinetId}/Query/SelectListExpression` | `mixed` | yes | fileCabinetId, dialogId, fieldName, dialogExpression |
+| `GetSelectLists` | POST | `/FileCabinets/{fileCabinetId}/Query/SelectListExpression` | `mixed` | yes | fileCabinetId, dialogId, fieldName |
+
+### FileCabinets › Upload
+
+| Request | Method | Endpoint | Returns | Cached | Inputs |
+|---|---|---|---|---|---|
+| `AppendASinglePDFToADocument` | POST | `/FileCabinets/{fileCabinetId}/Sections` | `Section` |  | fileCabinetId, documentId, fileContent, fileName |
+| `AppendFilesToADataRecord` | POST | `/FileCabinets/{fileCabinetId}/Documents/{dataRecordId}` | `Document` |  | fileCabinetId, dataRecordId, files |
+| `CreateDataRecord` | POST | `/FileCabinets/{fileCabinetId}/Documents` | `Document` |  | fileCabinetId, fileContent, fileName, indexes, storeDialogId |
+| `ReplaceAPDFDocumentSection` | POST | `/FileCabinets/{fileCabinetId}/Sections/{sectionId}/Data` | `Section` |  | fileCabinetId, sectionId, fileContent, fileName |
+
+### General › Organization
+
+| Request | Method | Endpoint | Returns | Cached | Inputs |
+|---|---|---|---|---|---|
+| `GetAllFileCabinetsAndDocumentTrays` | GET | `/FileCabinets` | `Collection` | yes | organizationId |
+| `GetLoginToken` | POST | `/Organization/LoginToken` | `string` | yes | targetProducts, usage, lifetime |
+| `GetOrganization` | GET | `/Organizations` | `Collection` | yes |  |
+
+### General › UserManagement › CreateUpdateUsers
+
+| Request | Method | Endpoint | Returns | Cached | Inputs |
+|---|---|---|---|---|---|
+| `CreateUser` | POST | `/Organization/UserInfo` | `GetUser` | yes | user |
+| `UpdateUser` | POST | `/Organization/UserInfo` | `User` | yes | user |
+
+### General › UserManagement › GetModifyGroups
+
+| Request | Method | Endpoint | Returns | Cached | Inputs |
+|---|---|---|---|---|---|
+| `AddUserToAGroup` | PUT | `/Organization/UserGroups` | `Response` |  | userId, ids |
+| `GetAllGroupsForASpecificUser` | GET | `/Organization/UserGroups` | `Collection` | yes | userId, name, active |
+| `GetGroups` | GET | `/Organization/Groups` | `Collection` | yes | name, active |
+| `RemoveUserFromAGroup` | PUT | `/Organization/UserGroups` | `Response` |  | userId, ids |
+
+### General › UserManagement › GetModifyRoles
+
+| Request | Method | Endpoint | Returns | Cached | Inputs |
+|---|---|---|---|---|---|
+| `AddUserToARole` | PUT | `/Organization/UserRoles` | `Response` |  | userId, ids |
+| `GetAllRolesForASpecificUser` | GET | `/Organization/UserRoles` | `Collection` | yes | userId, name, active, type |
+| `GetRoles` | GET | `/Organization/Roles` | `Collection` | yes | name, active, type |
+| `RemoveUserFromARole` | PUT | `/Organization/UserRoles` | `Response` |  | userId, ids |
+
+### General › UserManagement › GetUsers
+
+| Request | Method | Endpoint | Returns | Cached | Inputs |
+|---|---|---|---|---|---|
+| `GetUserById` | GET | `/Organization/UserByID` | `User` | yes | userId |
+| `GetUsers` | GET | `/Organization/Users` | `Collection` | yes | name, active |
+| `GetUsersOfAGroup` | GET | `/Organization/GroupUsers` | `Collection` | yes | groupId |
+| `GetUsersOfARole` | GET | `/Organization/RoleUsers` | `Collection` | yes | roleId, includeGroupUsers |
+
+### Search
+
+| Request | Method | Endpoint | Returns | Cached | Inputs |
+|---|---|---|---|---|---|
+| `GetSearchRequest` | POST | `/FileCabinets/{fileCabinetId}/Query/DialogExpression` | `DocumentPaginator` | yes | fileCabinetId, dialogId, additionalFileCabinetIds, page, perPage, searchTerm, orderField, orderDirection, condition |
+
+### Workflow
+
+| Request | Method | Endpoint | Returns | Cached | Inputs |
+|---|---|---|---|---|---|
+| `GetDocumentWorkflowHistory` | GET | `/FileCabinets/{fileCabinetId}/Documents/{documentId}/WorkflowHistory` | `Collection` | yes | fileCabinetId, documentId |
+| `GetDocumentWorkflowHistorySteps` | GET | `/Workflows/{workflowId}/Instances/{workflowInstanceId}/History` | `InstanceHistory` | yes | workflowId, workflowInstanceId |
+
+</details>
+
+## Data object (DTO) reference
+
+Responses are mapped into immutable `*Data` objects under `CodebarAg\DocuWare\Data`. The most-used
+shapes and their properties:
+
+<details>
+<summary><strong>Document data objects</strong></summary>
+
+### `DocumentData` — `Data\Documents\DocumentData`
+
+| Property | Type | Notes |
+| --- | --- | --- |
+| `id` | `int` | Document identifier |
+| `title` | `string` | Document title |
+| `file_size` | `int` | Bytes |
+| `total_pages` | `int` | Page count |
+| `extension` | `?string` | File extension |
+| `content_type` | `string` | MIME type |
+| `file_cabinet_id` | `string` | Cabinet id |
+| `created_at` / `updated_at` | `Carbon` | Timestamps |
+| `fields` | `?Collection<DocumentFieldData>` | Index values keyed by field name |
+| `sections` | `?Collection<SectionData>` | Document sections |
+| `suggestions` | `?Collection<SuggestionFieldData>` | Index suggestions |
+| `flags` | `?DocumentFlagsData` | Document flags |
+| `checksum_info` | `?ChecksumInfoData` | Checksum metadata |
+| `version` | `?DocumentVersionData` | Version info |
+| `links` | `?Collection<LinkData>` | Hypermedia links |
+
+### `DocumentFieldData` — `Data\Documents\DocumentFieldData`
+
+| Property | Type | Notes |
+| --- | --- | --- |
+| `name` | `string` | Field name (e.g. `AMOUNT`) |
+| `label` | `string` | Display label |
+| `value` | `null\|int\|float\|Carbon\|string\|Collection` | Parsed to native type (table → `Collection<TableRowData>`) |
+| `type` | `string` | Wire type (`String`, `Int`, `Decimal`, `Date`, `Table`, …) |
+| `isNull` | `bool` | Value is null |
+| `systemField` | `bool` | System vs user field |
+| `readOnly` | `?bool` | Read-only flag |
+
+### `DocumentPageData` — `Data\Documents\DocumentPageData`
+
+| Property | Type |
+| --- | --- |
+| `total` / `perPage` / `currentPage` / `lastPage` / `from` / `to` | `int` |
+| `documents` | `Collection<DocumentData>` |
+
+### `FieldData` — `Data\Documents\FieldData`
+
+| Property | Type | Notes |
+| --- | --- | --- |
+| `name` / `label` / `type` / `scope` | `string` | DB name, display name, field type, System/User |
+| `length` / `precision` | `?int` | Size & decimal precision |
+| `notEmpty` / `usedAsDocumentName` | `?bool` | Constraints |
+| `tableFieldColumns` | `?array` | For table fields |
+
+### `TableRowData` — `Data\Documents\TableRowData`
+
+| Property | Type |
+| --- | --- |
+| `fields` | `Collection<string, DocumentFieldData>` (keyed by field name) |
+
+</details>
+
+<details>
+<summary><strong>File cabinets, dialogs & sections</strong></summary>
+
+### `FileCabinetInformationData` — `Data\FileCabinets\FileCabinetInformationData`
+
+| Property | Type | Notes |
+| --- | --- | --- |
+| `id` / `name` / `color` | `string` | Identity |
+| `isBasket` / `usable` / `default` | `bool` | Flags |
+| `versionManagement` | `string` | Version management mode |
+| `hasFullTextSupport` | `bool` | Full-text search enabled |
+| `addIndexEntriesInUpperCase` | `bool` | Upper-cases index entries |
+| `fields` | `?array` | Field metadata |
+
+### `FileCabinetData` — `Data\Organization\FileCabinetData`
+
+Lighter cabinet shape returned by `fileCabinets()->all()` (id, name, color, isBasket, usable, default…).
+
+### `DialogData` — `Data\FileCabinets\DialogData`
+
+| Property | Type | Notes |
+| --- | --- | --- |
+| `id` / `type` / `label` | `string` | Identity & dialog type |
+| `isDefault` | `bool` | Default dialog |
+| `fileCabinetId` | `string` | Owning cabinet |
+| `fields` | `?array` | Raw fields; `fieldObjects()` returns typed `DialogFieldData` |
+
+### `DialogFieldData` — `Data\FileCabinets\DialogFieldData`
+
+`dbName`, `label`, `type`, `length`, `precision`, `locked`, `readOnly`, `notEmpty`, `visible`,
+`usedAsDocumentName`, plus select-list metadata.
+
+### `SectionData` — `Data\SectionData`
+
+`id`, `contentType`, `pageCount`, `fileSize`, `originalFileName`, `haveMorePages`, `contentModified`,
+`links`, `pages`, `thumbnails`.
+
+</details>
+
+<details>
+<summary><strong>Organization & user management</strong></summary>
+
+### `OrganizationData` — `Data\Organization\OrganizationData`
+
+`id`, `name`, `guid`, `additionalInfo`, `configurationRights`, `isTwoStepVerificationEnabled`,
+`isTwoStepVerificationRequired`, `links`.
+
+### `UserData` — `Data\Users\UserData`
+
+`id`, `name`, `firstName`, `lastName`, `email`, `dbName`, `active`, `isHighSecurity`,
+`defaultWebBasket`, `outOfOffice`, `regionalSettings`, `twoStepVerificationEnabled`, `links`.
+
+### `GroupData` — `Data\Users\GroupData`
+
+`id`, `name`, `active`, `links`.
+
+### `RoleData` — `Data\Users\RoleData`
+
+`id`, `name`, `active`, `type`, `links`.
+
+</details>
+
+## Caching
+
+`GET` metadata and search requests implement Saloon's `Cacheable` (see the **Cached** column in the
+endpoint catalog). Cached responses use the `configurations.cache.driver` store with a TTL of
+`configurations.cache.lifetime_in_seconds`. Set the lifetime to `0` to disable caching. Search requests
+honor a per-call force-refresh; write operations are never cached.
+
+## Error handling
+
+Operations return data or throw — there is no error-carrying result object. Every package exception
+descends from `DocuWareException`, so you can catch the base type to handle any DocuWare failure, or a
+specific subclass for a specific status.
+
+| Exception | When |
+| --- | --- |
+| `AuthenticationException` | 401 |
+| `BadRequestException` | 400 |
+| `ForbiddenException` | 403 |
+| `NotFoundException` | 404 |
+| `MethodNotAllowedException` | 405 |
+| `ConflictException` | 409 |
+| `ValidationException` | 422 |
+| `RateLimitException` | 429 |
+| `ConnectionException` | network/transport failure |
+| `RequestException` / `DocuWareException` | any other 4xx / 5xx |
+
+Each exception exposes redacted, structured context for logging and reporting:
+
+| Member | Description |
+| --- | --- |
+| `statusCode` | HTTP status code |
+| `instance` | Which DocuWare instance produced it |
+| `docuwareMessage` | The DocuWare error message |
+| `requestId` | Correlation id for support |
+| `context()` | Full redacted context array |
+
+Secrets are never present in any exception message or context.
+
+## Events
+
+```php
+use CodebarAg\DocuWare\Events\{ResponseReceived, TokenRefreshed};
+```
+
+- `ResponseReceived` — a redacted snapshot (instance, method, path, status, request id). The body is
+  attached only when `docuware.debug.capture_bodies` is enabled, and is redacted even then.
+- `TokenRefreshed` — instance + url, no secret.
+
+## Security
+
+- **Structural redaction**: `Authorization`, passwords, tokens, cookies, and the passphrase are stripped
+  from every log, event, and exception. An architecture test asserts no sentinel secret can leak.
+- **Token store**: access tokens are `Crypt`-encrypted, namespaced per instance, and refreshed under a
+  cache lock to avoid stampedes.
+
+## Testing
 
 ```bash
-cp phpunit.xml.dist phpunit.xml
+composer test          # offline (fixtures replay), the CI gate
+composer test:live     # live integration suite against a real instance
+composer analyse       # PHPStan (max)
+composer format        # Pint
 ```
 
-Modify environment variables in the phpunit.xml-file:
+In your own app, fake DocuWare with Saloon's mock client, or assert against the recorded fixtures under
+`tests/Fixtures/saloon`.
 
-```xml
-<env name="DOCUWARE_URL" value="https://domain.docuware.cloud"/>
-<env name="DOCUWARE_PLATFORM_PATH" value="DocuWare/Platform"/>
-<env name="DOCUWARE_USERNAME" value="user@domain.test"/>
-<env name="DOCUWARE_PASSWORD" value="password"/>
-<env name="DOCUWARE_PASSPHRASE" value="passphrase"/>
-<env name="DOCUWARE_TIMEOUT" value="30"/>
-<env name="DOCUWARE_CACHE_DRIVER" value="file"/>
-<env name="DOCUWARE_CACHE_LIFETIME_IN_SECONDS" value="0"/>
-<env name="DOCUWARE_CLIENT_ID" value="docuware.platform.net.client"/>
-<env name="DOCUWARE_SCOPE" value="docuware.platform"/>
-
-<env name="DOCUWARE_TESTS_FILE_CABINET_ID" value=""/>
-<env name="DOCUWARE_TESTS_DIALOG_ID" value=""/>
-<env name="DOCUWARE_TESTS_BASKET_ID" value=""/>
-<env name="DOCUWARE_TESTS_ORG_ID" value=""/>
-<env name="DOCUWARE_TESTS_SEARCH_DIALOG_ID" value=""/>
-<env name="DOCUWARE_TESTS_STORE_DIALOG_ID" value=""/>
-<env name="DOCUWARE_TESTS_DOCUMENT_ID" value=""/>
-```
-
-Default test run (no live DocuWare required):
-
-```bash
-composer test
-```
-
-Against a real system (integration suite):
-
-```bash
-composer test:live
-```
-
-Run integration **one process at a time** (no `pest --parallel`). Keep real credentials in a **local** `phpunit.xml` (this file is gitignored in this repo); use GitHub Actions secrets in CI.
-
-In GitHub Actions ([`.github/workflows/run-tests.yml`](.github/workflows/run-tests.yml)), every matrix job runs `composer test` first; `composer test:live` runs **only** on PHP 8.3 with `prefer-stable`, and **only** when `DOCUWARE_URL`, `DOCUWARE_USERNAME`, and `DOCUWARE_PASSWORD` are set as repository secrets (optional `DOCUWARE_PASSPHRASE` and `DOCUWARE_TESTS_*` IDs as needed).
-
-## 📝 Changelog
-
-Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed recently.
-
-## ✏️ Contributing
-
-Please see [CONTRIBUTING](.github/CONTRIBUTING.md) for details.
-
-## 🧑‍💻 Security Vulnerabilities
-
-Please review [our security policy](.github/SECURITY.md) on how to report security vulnerabilities.
-
-## 🙏 Credits
+## Credits
 
 - [Sebastian Bürgin-Fix](https://github.com/StanBarrows)
+- [codebar Solutions AG](https://www.codebar.ch)
+- [Ricoh Schweiz AG](https://www.ricoh.ch)
 - [All Contributors](../../contributors)
-- [Skeleton Repository from Spatie](https://github.com/spatie/package-skeleton-laravel)
-- [Laravel Package Training from Spatie](https://spatie.be/videos/laravel-package-training)
 
-## 🎭 License
+## License
 
-The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
+The MIT License (MIT). See [License File](LICENSE.md) for more information.

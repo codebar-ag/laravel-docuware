@@ -2,12 +2,9 @@
 
 namespace CodebarAg\DocuWare\Requests\Documents\ClipUnclipStapleUnstaple;
 
-use CodebarAg\DocuWare\DTO\Documents\Document;
-use CodebarAg\DocuWare\Responses\FileCabinets\Search\GetASpecificDocumentFromAFileCabinetResponse;
 use Saloon\Contracts\Body\HasBody;
 use Saloon\Enums\Method;
 use Saloon\Http\Request;
-use Saloon\Http\Response;
 use Saloon\Traits\Body\HasJsonBody;
 
 class Staple extends Request implements HasBody
@@ -40,10 +37,5 @@ class Staple extends Request implements HasBody
             'Operation' => 'Staple',
             'Force' => $this->force,
         ];
-    }
-
-    public function createDtoFromResponse(Response $response): Document
-    {
-        return GetASpecificDocumentFromAFileCabinetResponse::fromResponse($response);
     }
 }

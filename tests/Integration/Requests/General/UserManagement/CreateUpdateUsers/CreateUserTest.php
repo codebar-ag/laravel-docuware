@@ -1,9 +1,9 @@
 <?php
 
-use CodebarAg\DocuWare\DTO\General\UserManagement\CreateUpdateUser\User;
-use CodebarAg\DocuWare\DTO\General\UserManagement\GetUsers\User as GetUser;
-use CodebarAg\DocuWare\Events\DocuWareResponseLog;
-use CodebarAg\DocuWare\Requests\General\UserManagement\CreateUpdateUsers\CreateUser;
+use CodebarAg\DocuWare\Data\Users\UserData;
+use CodebarAg\DocuWare\Data\Write\UserInput;
+use CodebarAg\DocuWare\Events\ResponseReceived;
+use CodebarAg\DocuWare\Facades\DocuWare;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Str;
@@ -13,14 +13,15 @@ it('creates a user', function () {
 
     $timestamp = Str::substr((string) Carbon::now()->timestamp, -8);
 
-    $user = $this->connector->send(new CreateUser(new User(
+    $user = DocuWare::users()->create(UserInput::make(
         name: $timestamp.' - Test User',
         dbName: $timestamp,
         email: $timestamp.'-test@example.test',
-        password: 'TESTPASSWORD',
-    )))->dto();
+        password: 'TestPass123!',
+        networkId: null,
+    ));
 
-    expect($user)->toBeInstanceOf(GetUser::class);
+    expect($user)->toBeInstanceOf(UserData::class);
 
-    Event::assertDispatched(DocuWareResponseLog::class);
-});
+    Event::assertDispatched(ResponseReceived::class);
+})->group('integration');

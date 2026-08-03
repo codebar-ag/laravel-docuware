@@ -1,25 +1,24 @@
 <?php
 
-use CodebarAg\DocuWare\DTO\General\UserManagement\GetUsers\User;
-use CodebarAg\DocuWare\Events\DocuWareResponseLog;
-use CodebarAg\DocuWare\Requests\General\UserManagement\GetModifyRoles\GetRoles;
-use CodebarAg\DocuWare\Requests\General\UserManagement\GetUsers\GetUsersOfARole;
+use CodebarAg\DocuWare\Data\Users\UserData;
+use CodebarAg\DocuWare\Events\ResponseReceived;
+use CodebarAg\DocuWare\Facades\DocuWare;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Event;
 
 it('can list users of a role', function () {
     Event::fake();
 
-    $roles = $this->connector->send(new GetRoles)->dto();
+    $roles = DocuWare::roles()->all();
 
-    $users = $this->connector->send(new GetUsersOfARole($roles->first()->id))->dto();
+    $users = DocuWare::users()->ofRole($roles->first()->id);
 
-    $this->assertInstanceOf(Collection::class, $users);
+    expect($users)->toBeInstanceOf(Collection::class)
+        ->and($users)->not->toBeEmpty();
 
     foreach ($users as $user) {
-        $this->assertInstanceOf(User::class, $user);
+        expect($user)->toBeInstanceOf(UserData::class);
     }
 
-    $this->assertNotCount(0, $users);
-    Event::assertDispatched(DocuWareResponseLog::class);
-});
+    Event::assertDispatched(ResponseReceived::class);
+})->group('integration');

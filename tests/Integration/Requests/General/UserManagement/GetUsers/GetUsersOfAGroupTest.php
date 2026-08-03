@@ -1,25 +1,24 @@
 <?php
 
-use CodebarAg\DocuWare\DTO\General\UserManagement\GetUsers\User;
-use CodebarAg\DocuWare\Events\DocuWareResponseLog;
-use CodebarAg\DocuWare\Requests\General\UserManagement\GetModifyGroups\GetGroups;
-use CodebarAg\DocuWare\Requests\General\UserManagement\GetUsers\GetUsersOfAGroup;
+use CodebarAg\DocuWare\Data\Users\UserData;
+use CodebarAg\DocuWare\Events\ResponseReceived;
+use CodebarAg\DocuWare\Facades\DocuWare;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Event;
 
 it('can list users of a group', function () {
     Event::fake();
 
-    $groups = $this->connector->send(new GetGroups)->dto();
+    $groups = DocuWare::groups()->all();
 
-    $users = $this->connector->send(new GetUsersOfAGroup($groups->first()->id))->dto();
+    $users = DocuWare::users()->ofGroup($groups->first()->id);
 
-    $this->assertInstanceOf(Collection::class, $users);
+    expect($users)->toBeInstanceOf(Collection::class)
+        ->and($users)->not->toBeEmpty();
 
     foreach ($users as $user) {
-        $this->assertInstanceOf(User::class, $user);
+        expect($user)->toBeInstanceOf(UserData::class);
     }
 
-    $this->assertNotCount(0, $users);
-    Event::assertDispatched(DocuWareResponseLog::class);
-});
+    Event::assertDispatched(ResponseReceived::class);
+})->group('integration');

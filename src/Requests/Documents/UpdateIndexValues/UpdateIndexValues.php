@@ -11,12 +11,10 @@ use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexNumericDTO;
 use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexTableDTO;
 use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexTextDTO;
 use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\PrepareDTO;
-use CodebarAg\DocuWare\Responses\Documents\UpdateIndexValues\UpdateIndexValuesResponse;
 use Illuminate\Support\Collection;
 use Saloon\Contracts\Body\HasBody;
 use Saloon\Enums\Method;
 use Saloon\Http\Request;
-use Saloon\Http\Response;
 use Saloon\Traits\Body\HasJsonBody;
 
 class UpdateIndexValues extends Request implements HasBody
@@ -55,13 +53,5 @@ class UpdateIndexValues extends Request implements HasBody
 
         return $body;
 
-    }
-
-    /**
-     * @return Collection<string, mixed>
-     */
-    public function createDtoFromResponse(Response $response): Collection
-    {
-        return UpdateIndexValuesResponse::fromResponse($response);
     }
 }

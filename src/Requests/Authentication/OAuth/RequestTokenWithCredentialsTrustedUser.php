@@ -2,11 +2,8 @@
 
 namespace CodebarAg\DocuWare\Requests\Authentication\OAuth;
 
-use CodebarAg\DocuWare\DTO\Authentication\OAuth\RequestToken as RequestTokenDto;
-use CodebarAg\DocuWare\Responses\Authentication\OAuth\RequestTokenResponse;
 use Saloon\Contracts\Body\HasBody;
 use Saloon\Enums\Method;
-use Saloon\Http\Response;
 use Saloon\Http\SoloRequest;
 use Saloon\Traits\Body\HasFormBody;
 
@@ -50,10 +47,5 @@ class RequestTokenWithCredentialsTrustedUser extends SoloRequest implements HasB
             'password' => $this->password,
             'impersonateName' => $this->impersonateName,
         ];
-    }
-
-    public function createDtoFromResponse(Response $response): RequestTokenDto
-    {
-        return RequestTokenResponse::fromResponse($response);
     }
 }

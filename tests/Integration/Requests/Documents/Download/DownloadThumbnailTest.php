@@ -1,34 +1,20 @@
 <?php
 
-use CodebarAg\DocuWare\DTO\Documents\DocumentThumbnail;
-use CodebarAg\DocuWare\Events\DocuWareResponseLog;
-use CodebarAg\DocuWare\Requests\Documents\Download\DownloadThumbnail;
-use CodebarAg\DocuWare\Requests\Documents\Sections\GetAllSectionsFromADocument;
-use CodebarAg\DocuWare\Requests\FileCabinets\Upload\CreateDataRecord;
+use CodebarAg\DocuWare\Events\ResponseReceived;
+use CodebarAg\DocuWare\Facades\DocuWare;
 use Illuminate\Support\Facades\Event;
 
 it('can download a thumbnail', function () {
     Event::fake();
 
-    $fileCabinetId = config('laravel-docuware.tests.file_cabinet_id');
+    $document = uploadTestDocument($this->cabinet);
 
-    $document = $this->connector->send(new CreateDataRecord(
-        $fileCabinetId,
-        '::fake-file-content::',
-        'example.txt'
-    ))->dto();
+    $sections = DocuWare::documents($this->cabinet)->sections((string) $document->id);
 
-    $sections = $this->connector->send(new GetAllSectionsFromADocument(
-        $fileCabinetId,
-        $document->id
-    ))->dto();
+    $contents = DocuWare::documents($this->cabinet)->thumbnail($sections->first()->id);
 
-    $contents = $this->connector->send(new DownloadThumbnail(
-        $fileCabinetId,
-        $sections->first()->id
-    ))->dto();
+    expect($contents)->toBeString()
+        ->and(strlen($contents))->toBeGreaterThan(0);
 
-    expect($contents)->toBeInstanceOf(DocumentThumbnail::class);
-    Event::assertDispatched(DocuWareResponseLog::class);
-
+    Event::assertDispatched(ResponseReceived::class);
 })->group('download');

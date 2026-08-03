@@ -1,22 +1,22 @@
 <?php
 
-use CodebarAg\DocuWare\DTO\General\UserManagement\GetModifyGroups\Group;
-use CodebarAg\DocuWare\Events\DocuWareResponseLog;
-use CodebarAg\DocuWare\Requests\General\UserManagement\GetModifyGroups\GetGroups;
+use CodebarAg\DocuWare\Data\Users\GroupData;
+use CodebarAg\DocuWare\Events\ResponseReceived;
+use CodebarAg\DocuWare\Facades\DocuWare;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Event;
 
 it('can list groups', function () {
     Event::fake();
 
-    $groups = $this->connector->send(new GetGroups)->dto();
+    $groups = DocuWare::groups()->all();
 
-    $this->assertInstanceOf(Collection::class, $groups);
+    expect($groups)->toBeInstanceOf(Collection::class)
+        ->and($groups)->not->toBeEmpty();
 
     foreach ($groups as $group) {
-        $this->assertInstanceOf(Group::class, $group);
+        expect($group)->toBeInstanceOf(GroupData::class);
     }
 
-    $this->assertNotCount(0, $groups);
-    Event::assertDispatched(DocuWareResponseLog::class);
-});
+    Event::assertDispatched(ResponseReceived::class);
+})->group('integration');

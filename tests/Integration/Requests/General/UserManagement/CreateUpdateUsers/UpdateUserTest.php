@@ -1,10 +1,9 @@
 <?php
 
-use CodebarAg\DocuWare\DTO\General\UserManagement\CreateUpdateUser\User;
-use CodebarAg\DocuWare\DTO\General\UserManagement\GetUsers\User as GetUser;
-use CodebarAg\DocuWare\Events\DocuWareResponseLog;
-use CodebarAg\DocuWare\Requests\General\UserManagement\CreateUpdateUsers\CreateUser;
-use CodebarAg\DocuWare\Requests\General\UserManagement\CreateUpdateUsers\UpdateUser;
+use CodebarAg\DocuWare\Data\Users\UserData;
+use CodebarAg\DocuWare\Data\Write\UserInput;
+use CodebarAg\DocuWare\Events\ResponseReceived;
+use CodebarAg\DocuWare\Facades\DocuWare;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Sleep;
@@ -15,28 +14,29 @@ it('updates a user', function () {
 
     $timestamp = Str::substr((string) Carbon::now()->timestamp, -8);
 
-    $user = $this->connector->send(new CreateUser(new User(
+    $user = DocuWare::users()->create(UserInput::make(
         name: $timestamp.' - Test User',
         dbName: $timestamp,
         email: $timestamp.'-test@example.test',
-        password: 'TESTPASSWORD',
-    )))->dto();
+        password: 'TestPass123!',
+        networkId: null,
+    ));
 
-    expect($user)->toBeInstanceOf(GetUser::class);
+    expect($user)->toBeInstanceOf(UserData::class);
 
-    Event::assertDispatched(DocuWareResponseLog::class);
+    Event::assertDispatched(ResponseReceived::class);
 
     Event::fake();
 
     Sleep::for(2)->seconds();
 
-    $user->name .= ' - Updated';
-    $user->active = false;
+    $updated = DocuWare::users()->update($user->copyWith(
+        name: $user->name.' - Updated',
+        active: false,
+    ));
 
-    $updated = $this->connector->send(new UpdateUser($user))->dto();
-
-    expect($updated)->toBeInstanceOf(GetUser::class)
+    expect($updated)->toBeInstanceOf(UserData::class)
         ->and($updated->name)->toContain('Updated');
 
-    Event::assertDispatched(DocuWareResponseLog::class);
-});
+    Event::assertDispatched(ResponseReceived::class);
+})->group('integration');

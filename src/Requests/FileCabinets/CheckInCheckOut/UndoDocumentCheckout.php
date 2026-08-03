@@ -2,12 +2,9 @@
 
 namespace CodebarAg\DocuWare\Requests\FileCabinets\CheckInCheckOut;
 
-use CodebarAg\DocuWare\DTO\Documents\Document;
-use CodebarAg\DocuWare\Responses\FileCabinets\Search\GetASpecificDocumentFromAFileCabinetResponse;
 use Saloon\Contracts\Body\HasBody;
 use Saloon\Enums\Method;
 use Saloon\Http\Request;
-use Saloon\Http\Response;
 use Saloon\Traits\Body\HasJsonBody;
 
 final class UndoDocumentCheckout extends Request implements HasBody
@@ -34,10 +31,5 @@ final class UndoDocumentCheckout extends Request implements HasBody
         return [
             'DocumentAction' => 'UndoCheckOut',
         ];
-    }
-
-    public function createDtoFromResponse(Response $response): Document
-    {
-        return GetASpecificDocumentFromAFileCabinetResponse::fromResponse($response);
     }
 }

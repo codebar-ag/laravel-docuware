@@ -2,10 +2,8 @@
 
 namespace CodebarAg\DocuWare\Requests\Documents\ModifyDocuments;
 
-use CodebarAg\DocuWare\Responses\Documents\ModifyDocuments\DeleteDocumentResponse;
 use Saloon\Enums\Method;
 use Saloon\Http\Request;
-use Saloon\Http\Response;
 
 class DeleteDocument extends Request
 {
@@ -19,10 +17,5 @@ class DeleteDocument extends Request
     public function resolveEndpoint(): string
     {
         return '/FileCabinets/'.$this->fileCabinetId.'/Documents/'.$this->documentId;
-    }
-
-    public function createDtoFromResponse(Response $response): Response
-    {
-        return DeleteDocumentResponse::fromResponse($response);
     }
 }

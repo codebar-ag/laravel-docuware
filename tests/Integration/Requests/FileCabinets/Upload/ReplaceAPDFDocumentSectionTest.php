@@ -1,58 +1,47 @@
 <?php
 
-use CodebarAg\DocuWare\DTO\Documents\Document;
-use CodebarAg\DocuWare\Events\DocuWareResponseLog;
-use CodebarAg\DocuWare\Requests\FileCabinets\Search\GetASpecificDocumentFromAFileCabinet;
-use CodebarAg\DocuWare\Requests\FileCabinets\Upload\AppendFilesToADataRecord;
-use CodebarAg\DocuWare\Requests\FileCabinets\Upload\CreateDataRecord;
-use CodebarAg\DocuWare\Requests\FileCabinets\Upload\ReplaceAPDFDocumentSection;
+use CodebarAg\DocuWare\Data\Documents\DocumentData;
+use CodebarAg\DocuWare\Events\ResponseReceived;
+use CodebarAg\DocuWare\Facades\DocuWare;
 use Illuminate\Support\Facades\Event;
 use Saloon\Data\MultipartValue;
 
 it('can replace a pdf document section', function () {
     Event::fake();
 
-    $fileCabinetId = env('DOCUWARE_TESTS_FILE_CABINET_ID');
-
-    $document = $this->connector->send(new CreateDataRecord(
-        fileCabinetId: $fileCabinetId,
+    $document = DocuWare::documents($this->cabinet)->store(
         fileContent: file_get_contents(__DIR__.'/../../../../Fixtures/files/test-1.pdf'),
         fileName: 'test-1.pdf',
-        indexes: null
-    ))->dto();
+    );
 
-    $documentWithSections = $this->connector->send(
-        new AppendFilesToADataRecord(
-            fileCabinetId: $fileCabinetId,
-            dataRecordId: $document->id,
-            files: collect([
-                new MultipartValue(
-                    name: 'File[]',
-                    value: file_get_contents(__DIR__.'/../../../../Fixtures/files/test-2.pdf'),
-                    filename: 'test-2.pdf',
-                ),
-            ])
-        )
-    )->dto();
+    $documentWithSections = DocuWare::documents($this->cabinet)->appendFiles(
+        $document->id,
+        collect([
+            new MultipartValue(
+                name: 'File[]',
+                value: file_get_contents(__DIR__.'/../../../../Fixtures/files/test-2.pdf'),
+                filename: 'test-2.pdf',
+            ),
+        ]),
+    );
 
-    expect($documentWithSections)->toBeInstanceOf(Document::class)
+    expect($documentWithSections)->toBeInstanceOf(DocumentData::class)
         ->and($documentWithSections->sections->count())->toBe(2)
         ->and($documentWithSections->sections->first()->originalFileName)->toBe('test-1.pdf')
         ->and($documentWithSections->sections->last()->originalFileName)->toBe('test-2.pdf');
 
-    $documentWithSectionReplaced = $this->connector->send(new ReplaceAPDFDocumentSection(
-        fileCabinetId: $fileCabinetId,
-        sectionId: $documentWithSections->sections->last()->id,
-        fileContent: file_get_contents(__DIR__.'/../../../../Fixtures/files/test-3.pdf'),
-        fileName: 'test-3.pdf',
-    ))->dto();
+    DocuWare::documents($this->cabinet)->replaceSection(
+        $documentWithSections->sections->last()->id,
+        file_get_contents(__DIR__.'/../../../../Fixtures/files/test-3.pdf'),
+        'test-3.pdf',
+    );
 
-    $response = $this->connector->send(new GetASpecificDocumentFromAFileCabinet($fileCabinetId, Str::before($documentWithSectionReplaced->id, '-')))->dto();
+    $response = DocuWare::documents($this->cabinet)->find($document->id);
 
-    expect($response)->toBeInstanceOf(Document::class)
+    expect($response)->toBeInstanceOf(DocumentData::class)
         ->and($response->sections->count())->toBe(2)
         ->and($response->sections->first()->originalFileName)->toBe('test-1.pdf')
         ->and($response->sections->last()->originalFileName)->toBe('test-3.pdf');
 
-    Event::assertDispatched(DocuWareResponseLog::class);
+    Event::assertDispatched(ResponseReceived::class);
 });

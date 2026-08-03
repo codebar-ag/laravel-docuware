@@ -2,13 +2,10 @@
 
 namespace CodebarAg\DocuWare\Requests\FileCabinets\CheckInCheckOut;
 
-use CodebarAg\DocuWare\DTO\Documents\Document;
-use CodebarAg\DocuWare\Responses\FileCabinets\Search\GetASpecificDocumentFromAFileCabinetResponse;
 use Saloon\Contracts\Body\HasBody;
 use Saloon\Data\MultipartValue;
 use Saloon\Enums\Method;
 use Saloon\Http\Request;
-use Saloon\Http\Response;
 use Saloon\Traits\Body\HasMultipartBody;
 
 /**
@@ -42,13 +39,13 @@ final class CheckInDocumentFromFileSystem extends Request implements HasBody
     protected function defaultBody(): array
     {
         return [
-            new MultipartValue(name: 'CheckIn', value: $this->checkInJson, filename: 'CheckIn.json'),
+            new MultipartValue(
+                name: 'CheckIn',
+                value: $this->checkInJson,
+                filename: 'CheckIn.json',
+                headers: ['Content-Type' => 'application/json'],
+            ),
             new MultipartValue(name: 'File[]', value: $this->fileContent, filename: $this->fileName),
         ];
-    }
-
-    public function createDtoFromResponse(Response $response): Document
-    {
-        return GetASpecificDocumentFromAFileCabinetResponse::fromResponse($response);
     }
 }

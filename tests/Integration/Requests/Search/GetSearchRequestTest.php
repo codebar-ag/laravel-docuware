@@ -1,263 +1,186 @@
 <?php
 
 use Carbon\Carbon;
-use CodebarAg\DocuWare\DocuWare;
-use CodebarAg\DocuWare\DTO\Documents\DocumentIndex\IndexTextDTO;
-use CodebarAg\DocuWare\DTO\Documents\DocumentPaginator;
-use CodebarAg\DocuWare\Events\DocuWareResponseLog;
+use CodebarAg\DocuWare\Data\Documents\DocumentPageData;
+use CodebarAg\DocuWare\Events\ResponseReceived;
 use CodebarAg\DocuWare\Exceptions\UnableToSearch;
-use CodebarAg\DocuWare\Requests\FileCabinets\Upload\CreateDataRecord;
+use CodebarAg\DocuWare\Facades\DocuWare;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Sleep;
 
 it('can search documents', function () {
     Event::fake();
 
-    $fileCabinetId = config('laravel-docuware.tests.file_cabinet_id');
-    $dialogId = config('laravel-docuware.tests.dialog_id');
+    $dialogId = sandboxSearchDialogId($this->cabinet);
 
-    $paginatorRequest = (new DocuWare)
-        ->searchRequestBuilder()
-        ->fileCabinet($fileCabinetId)
+    $page = DocuWare::documents($this->cabinet)
+        ->search()
         ->dialog($dialogId)
         ->page(1)
         ->perPage(5)
-        ->fulltext('test')
-        ->filterDate('DWSTOREDATETIME', '>=', Carbon::create(2021))
-        ->filterDate('DWSTOREDATETIME', '<', now())
-        ->filter('DOCUMENT_TYPE', 'Abrechnung')
+        ->fullText('test')
+        ->whereDate('DWSTOREDATETIME', '>=', Carbon::create(2021))
+        ->whereDate('DWSTOREDATETIME', '<', now())
+        ->where('DOCUMENT_TYPE', 'Abrechnung')
         ->orderBy('DWSTOREDATETIME', 'desc')
         ->get();
 
-    $paginator = $this->connector->send($paginatorRequest)->dto();
+    expect($page)->toBeInstanceOf(DocumentPageData::class);
 
-    $this->assertInstanceOf(DocumentPaginator::class, $paginator);
-    Event::assertDispatched(DocuWareResponseLog::class);
-})->group('search');
+    Event::assertDispatched(ResponseReceived::class);
+});
 
 it('can\'t search documents by more than two dates', function () {
-    Event::fake();
-
-    $fileCabinetId = config('laravel-docuware.tests.file_cabinet_id');
-    $dialogId = config('laravel-docuware.tests.dialog_id');
-
     $this->expectException(UnableToSearch::class);
 
-    $request = (new DocuWare)
-        ->searchRequestBuilder()
-        ->fileCabinet($fileCabinetId)
-        ->dialog($dialogId)
-        ->page(1)
-        ->perPage(5)
-        ->fulltext('test')
-        ->filterDate('DWSTOREDATETIME', '>=', Carbon::create(2020))
-        ->filterDate('DWSTOREDATETIME', '<=', Carbon::create(2022))
-        ->filterDate('DWSTOREDATETIME', '<', now())
-        ->filter('DOCUMENT_TYPE', 'Abrechnung')
-        ->orderBy('DWSTOREDATETIME', 'desc')
-        ->get();
-
-    $this->connector->send($request)->dto();
-})->group('search');
+    DocuWare::documents($this->cabinet)
+        ->search()
+        ->whereDate('DWSTOREDATETIME', '>=', Carbon::create(2020))
+        ->whereDate('DWSTOREDATETIME', '<=', Carbon::create(2022))
+        ->whereDate('DWSTOREDATETIME', '<', now());
+});
 
 it('can override search documents dates filter by using same operator', function () {
     Event::fake();
 
-    $fileCabinetId = config('laravel-docuware.tests.file_cabinet_id');
-    $dialogId = config('laravel-docuware.tests.dialog_id');
+    $dialogId = sandboxSearchDialogId($this->cabinet);
 
-    $paginatorRequest = (new DocuWare)
-        ->searchRequestBuilder()
-        ->fileCabinet($fileCabinetId)
+    $page = DocuWare::documents($this->cabinet)
+        ->search()
         ->dialog($dialogId)
         ->page(1)
         ->perPage(5)
-        ->fulltext('test')
-        ->filterDate('DWSTOREDATETIME', '<=', Carbon::create(2022))
-        ->filterDate('DWSTOREDATETIME', '>=', Carbon::create(2020))
-        ->filterDate('DWSTOREDATETIME', '>=', Carbon::create(2021))
-        ->filter('DOCUMENT_TYPE', 'Abrechnung')
+        ->fullText('test')
+        ->whereDate('DWSTOREDATETIME', '<=', Carbon::create(2022))
+        ->whereDate('DWSTOREDATETIME', '>=', Carbon::create(2020))
+        ->whereDate('DWSTOREDATETIME', '>=', Carbon::create(2021))
+        ->where('DOCUMENT_TYPE', 'Abrechnung')
         ->orderBy('DWSTOREDATETIME', 'desc')
         ->get();
 
-    $paginator = $this->connector->send($paginatorRequest)->dto();
+    expect($page)->toBeInstanceOf(DocumentPageData::class);
 
-    $this->assertInstanceOf(DocumentPaginator::class, $paginator);
-    Event::assertDispatched(DocuWareResponseLog::class);
-})->group('search');
+    Event::assertDispatched(ResponseReceived::class);
+});
 
 it('can override search documents dates filter by using equal operator', function () {
     Event::fake();
 
-    $fileCabinetId = config('laravel-docuware.tests.file_cabinet_id');
-    $dialogId = config('laravel-docuware.tests.dialog_id');
+    $dialogId = sandboxSearchDialogId($this->cabinet);
 
-    $paginatorRequest = (new DocuWare)
-        ->searchRequestBuilder()
-        ->fileCabinet($fileCabinetId)
+    $page = DocuWare::documents($this->cabinet)
+        ->search()
         ->dialog($dialogId)
         ->page(1)
         ->perPage(5)
-        ->fulltext('test')
-        ->filterDate('DWSTOREDATETIME', '>=', Carbon::create(2020))
-        ->filterDate('DWSTOREDATETIME', '=', Carbon::create(2021))
-        ->filter('DOCUMENT_TYPE', 'Abrechnung')
+        ->fullText('test')
+        ->whereDate('DWSTOREDATETIME', '>=', Carbon::create(2020))
+        ->whereDate('DWSTOREDATETIME', '=', Carbon::create(2021))
+        ->where('DOCUMENT_TYPE', 'Abrechnung')
         ->orderBy('DWSTOREDATETIME', 'desc')
         ->get();
 
-    $paginator = $this->connector->send($paginatorRequest)->dto();
+    expect($page)->toBeInstanceOf(DocumentPageData::class);
 
-    $this->assertInstanceOf(DocumentPaginator::class, $paginator);
-    Event::assertDispatched(DocuWareResponseLog::class);
-})->group('search');
+    Event::assertDispatched(ResponseReceived::class);
+});
 
 it('can\'t search documents by diverged date range', function () {
-    Event::fake();
-
-    $fileCabinetId = config('laravel-docuware.tests.file_cabinet_id');
-    $dialogId = config('laravel-docuware.tests.dialog_id');
+    $dialogId = sandboxSearchDialogId($this->cabinet);
 
     $this->expectException(UnableToSearch::class);
 
-    $request = (new DocuWare)
-        ->searchRequestBuilder()
-        ->fileCabinet($fileCabinetId)
+    DocuWare::documents($this->cabinet)
+        ->search()
         ->dialog($dialogId)
         ->page(1)
         ->perPage(5)
-        ->fulltext('test')
-        ->filterDate('DWSTOREDATETIME', '<=', Carbon::create(2020))
-        ->filterDate('DWSTOREDATETIME', '>=', Carbon::create(2021))
-        ->filter('DOCUMENT_TYPE', 'Abrechnung')
+        ->fullText('test')
+        ->whereDate('DWSTOREDATETIME', '<=', Carbon::create(2020))
+        ->whereDate('DWSTOREDATETIME', '>=', Carbon::create(2021))
+        ->where('DOCUMENT_TYPE', 'Abrechnung')
         ->orderBy('DWSTOREDATETIME', 'desc')
         ->get();
-
-    $this->connector->send($request)->dto();
-})->group('search');
+});
 
 it('can search documents dates filter in future', function () {
     Event::fake();
 
-    $fileCabinetId = config('laravel-docuware.tests.file_cabinet_id');
-    $dialogId = config('laravel-docuware.tests.dialog_id');
+    $dialogId = sandboxSearchDialogId($this->cabinet);
 
-    $paginatorRequest = (new DocuWare)
-        ->searchRequestBuilder()
-        ->fileCabinet($fileCabinetId)
+    $page = DocuWare::documents($this->cabinet)
+        ->search()
         ->dialog($dialogId)
         ->page(1)
         ->perPage(5)
-        ->fulltext('test')
-        ->filterDate('DWSTOREDATETIME', '>', Carbon::create(2018))
-        ->filter('DOCUMENT_TYPE', 'Abrechnung')
+        ->fullText('test')
+        ->whereDate('DWSTOREDATETIME', '>', Carbon::create(2018))
+        ->where('DOCUMENT_TYPE', 'Abrechnung')
         ->orderBy('DWSTOREDATETIME', 'desc')
         ->get();
 
-    $paginator = $this->connector->send($paginatorRequest)->dto();
+    expect($page)->toBeInstanceOf(DocumentPageData::class);
 
-    $this->assertInstanceOf(DocumentPaginator::class, $paginator);
-    Event::assertDispatched(DocuWareResponseLog::class);
-})->group('search');
+    Event::assertDispatched(ResponseReceived::class);
+});
 
 it('can search documents dates filter in past', function () {
     Event::fake();
 
-    $fileCabinetId = config('laravel-docuware.tests.file_cabinet_id');
-    $dialogId = config('laravel-docuware.tests.dialog_id');
+    $dialogId = sandboxSearchDialogId($this->cabinet);
 
-    $paginatorRequest = (new DocuWare)
-        ->searchRequestBuilder()
-        ->fileCabinet($fileCabinetId)
+    $page = DocuWare::documents($this->cabinet)
+        ->search()
         ->dialog($dialogId)
         ->page(1)
         ->perPage(5)
-        ->fulltext('test')
-        ->filterDate('DWSTOREDATETIME', '<=', Carbon::create(2020))
-        ->filter('DOCUMENT_TYPE', 'Abrechnung')
+        ->fullText('test')
+        ->whereDate('DWSTOREDATETIME', '<=', Carbon::create(2020))
+        ->where('DOCUMENT_TYPE', 'Abrechnung')
         ->orderBy('DWSTOREDATETIME', 'desc')
         ->get();
 
-    $paginator = $this->connector->send($paginatorRequest)->dto();
+    expect($page)->toBeInstanceOf(DocumentPageData::class);
 
-    $this->assertInstanceOf(DocumentPaginator::class, $paginator);
-    Event::assertDispatched(DocuWareResponseLog::class);
-})->group('search');
+    Event::assertDispatched(ResponseReceived::class);
+});
 
 it('can search documents with null values', function () {
     Event::fake();
 
-    $fileCabinetIds = [
-        config('laravel-docuware.tests.file_cabinet_id'),
-    ];
-
-    $paginatorRequest = (new DocuWare)
-        ->searchRequestBuilder()
-        ->fileCabinets($fileCabinetIds)
-        ->page(null)
-        ->perPage(null)
-        ->fulltext(null)
-        ->filter('DOCUMENT_TYPE', null)
-        ->orderBy('DWSTOREDATETIME', null)
+    $page = DocuWare::documents($this->cabinet)
+        ->search()
+        ->fileCabinets([$this->cabinet])
+        ->fullText(null)
+        ->orderBy('DWSTOREDATETIME')
         ->get();
 
-    $paginator = $this->connector->send($paginatorRequest)->dto();
+    expect($page)->toBeInstanceOf(DocumentPageData::class);
 
-    $this->assertInstanceOf(DocumentPaginator::class, $paginator);
-    Event::assertDispatched(DocuWareResponseLog::class);
-})->group('search');
+    Event::assertDispatched(ResponseReceived::class);
+});
 
 it('can search documents with multiple values', function () {
     Event::fake();
 
-    $fileCabinetId = config('laravel-docuware.tests.file_cabinet_id');
-    $fileContent = '::fake-file-content::';
-    $fileName = 'example.txt';
+    $textField = sandboxFieldName($this->cabinet, 'Text');
 
-    $documentOne = $this->connector->send(new CreateDataRecord(
-        $fileCabinetId,
-        $fileContent,
-        $fileName,
-        collect([
-            IndexTextDTO::make('DOCUMENT_LABEL', '::text::'),
-            IndexTextDTO::make('DOCUMENT_TYPE', 'Abrechnung'),
-        ]),
-    ))->dto();
+    // Three documents with distinct values in the discovered text field; the search
+    // below should match exactly the first two.
+    uploadTestDocument($this->cabinet, 'Abrechnung');
+    uploadTestDocument($this->cabinet, 'Rechnung');
+    uploadTestDocument($this->cabinet, 'EtwasAnderes');
 
-    $documentTwo = $this->connector->send(new CreateDataRecord(
-        $fileCabinetId,
-        $fileContent,
-        $fileName,
-        collect([
-            IndexTextDTO::make('DOCUMENT_LABEL', '::text::'),
-            IndexTextDTO::make('DOCUMENT_TYPE', 'Rechnung'),
-        ]),
-    ))->dto();
+    Sleep::for(3)->seconds(); // Wait for the documents to be indexed.
 
-    $documentThree = $this->connector->send(new CreateDataRecord(
-        $fileCabinetId,
-        $fileContent,
-        $fileName,
-        collect([
-            IndexTextDTO::make('DOCUMENT_LABEL', '::text::'),
-            IndexTextDTO::make('DOCUMENT_TYPE', 'EtwasAnderes'),
-        ]),
-    ))->dto();
-
-    Sleep::for(3)->seconds(); // Wait for the documents to be processed
-
-    // Should filter down to documentOne and documentTwo. documentThree should be filtered out.
-    $paginatorRequestBothDocuments = (new DocuWare)
-        ->searchRequestBuilder()
-        ->fileCabinets([$fileCabinetId])
-        ->page(null)
-        ->perPage(null)
-        ->fulltext(null)
-        ->filterIn('DOCUMENT_TYPE', ['Abrechnung', 'Rechnung'])
+    $page = DocuWare::documents($this->cabinet)
+        ->search()
+        ->fileCabinets([$this->cabinet])
+        ->whereIn($textField, ['Abrechnung', 'Rechnung'])
         ->get();
 
-    $paginator = $this->connector->send($paginatorRequestBothDocuments)->dto();
+    expect($page)->toBeInstanceOf(DocumentPageData::class)
+        ->and($page->documents)->toHaveCount(2);
 
-    $this->assertInstanceOf(DocumentPaginator::class, $paginator);
-    $this->assertCount(2, $paginator->documents);
-    Event::assertDispatched(DocuWareResponseLog::class);
-})->group('search');
+    Event::assertDispatched(ResponseReceived::class);
+});

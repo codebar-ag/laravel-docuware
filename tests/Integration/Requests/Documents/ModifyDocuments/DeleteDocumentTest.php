@@ -1,28 +1,18 @@
 <?php
 
-use CodebarAg\DocuWare\Events\DocuWareResponseLog;
-use CodebarAg\DocuWare\Requests\Documents\ModifyDocuments\DeleteDocument;
-use CodebarAg\DocuWare\Requests\FileCabinets\Upload\CreateDataRecord;
+use CodebarAg\DocuWare\Events\ResponseReceived;
+use CodebarAg\DocuWare\Facades\DocuWare;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Sleep;
 
 it('deletes a document', function () {
     Event::fake();
 
-    $fileCabinetId = config('laravel-docuware.tests.file_cabinet_id');
-
-    $document = $this->connector->send(new CreateDataRecord(
-        $fileCabinetId,
-        '::fake-file-content::',
-        'example.txt'
-    ))->dto();
+    $document = uploadTestDocument($this->cabinet);
 
     Sleep::for(2)->seconds();
 
-    $this->connector->send(new DeleteDocument(
-        $fileCabinetId,
-        $document->id,
-    ))->dto();
+    DocuWare::documents($this->cabinet)->delete($document->id);
 
-    Event::assertDispatched(DocuWareResponseLog::class);
+    Event::assertDispatched(ResponseReceived::class);
 });

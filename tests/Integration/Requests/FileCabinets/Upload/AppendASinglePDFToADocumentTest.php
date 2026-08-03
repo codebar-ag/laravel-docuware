@@ -1,37 +1,30 @@
 <?php
 
-use CodebarAg\DocuWare\DTO\Documents\Document;
-use CodebarAg\DocuWare\Events\DocuWareResponseLog;
-use CodebarAg\DocuWare\Requests\FileCabinets\Search\GetASpecificDocumentFromAFileCabinet;
-use CodebarAg\DocuWare\Requests\FileCabinets\Upload\AppendASinglePDFToADocument;
-use CodebarAg\DocuWare\Requests\FileCabinets\Upload\CreateDataRecord;
+use CodebarAg\DocuWare\Data\Documents\DocumentData;
+use CodebarAg\DocuWare\Events\ResponseReceived;
+use CodebarAg\DocuWare\Facades\DocuWare;
 use Illuminate\Support\Facades\Event;
 
-it('can replace a pdf document section', function () {
+it('can append a single pdf to a document', function () {
     Event::fake();
 
-    $fileCabinetId = env('DOCUWARE_TESTS_FILE_CABINET_ID');
-
-    $document = $this->connector->send(new CreateDataRecord(
-        fileCabinetId: $fileCabinetId,
+    $document = DocuWare::documents($this->cabinet)->store(
         fileContent: file_get_contents(__DIR__.'/../../../../Fixtures/files/test-1.pdf'),
         fileName: 'test-1.pdf',
-        indexes: null
-    ))->dto();
+    );
 
-    $documentWithSingleAddition = $this->connector->send(new AppendASinglePDFToADocument(
-        fileCabinetId: $fileCabinetId,
-        documentId: $document->id,
-        fileContent: file_get_contents(__DIR__.'/../../../../Fixtures/files/test-2.pdf'),
-        fileName: 'test-2.pdf',
-    ))->dto();
+    DocuWare::documents($this->cabinet)->appendPdf(
+        $document->id,
+        file_get_contents(__DIR__.'/../../../../Fixtures/files/test-2.pdf'),
+        'test-2.pdf',
+    );
 
-    $response = $this->connector->send(new GetASpecificDocumentFromAFileCabinet($fileCabinetId, $document->id))->dto();
+    $response = DocuWare::documents($this->cabinet)->find($document->id);
 
-    expect($response)->toBeInstanceOf(Document::class)
+    expect($response)->toBeInstanceOf(DocumentData::class)
         ->and($response->sections->count())->toBe(2)
         ->and($response->sections->first()->originalFileName)->toBe('test-1.pdf')
         ->and($response->sections->last()->originalFileName)->toBe('test-2.pdf');
 
-    Event::assertDispatched(DocuWareResponseLog::class);
+    Event::assertDispatched(ResponseReceived::class);
 });

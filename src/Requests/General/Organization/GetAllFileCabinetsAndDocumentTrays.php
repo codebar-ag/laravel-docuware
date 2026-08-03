@@ -2,20 +2,14 @@
 
 namespace CodebarAg\DocuWare\Requests\General\Organization;
 
-use CodebarAg\DocuWare\DTO\General\Organization\FileCabinet;
-use CodebarAg\DocuWare\Responses\General\Organization\GetAllFileCabinetsAndDocumentTraysResponse;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Cache;
+use CodebarAg\DocuWare\Concerns\HasDocuWareCaching;
 use Saloon\CachePlugin\Contracts\Cacheable;
-use Saloon\CachePlugin\Drivers\LaravelCacheDriver;
-use Saloon\CachePlugin\Traits\HasCaching;
 use Saloon\Enums\Method;
 use Saloon\Http\Request;
-use Saloon\Http\Response;
 
 class GetAllFileCabinetsAndDocumentTrays extends Request implements Cacheable
 {
-    use HasCaching;
+    use HasDocuWareCaching;
 
     protected Method $method = Method::GET;
 
@@ -36,23 +30,5 @@ class GetAllFileCabinetsAndDocumentTrays extends Request implements Cacheable
         return [
             'OrgId' => $this->organizationId,
         ];
-    }
-
-    public function resolveCacheDriver(): LaravelCacheDriver
-    {
-        return new LaravelCacheDriver(Cache::store(config('laravel-docuware.configurations.cache.driver')));
-    }
-
-    public function cacheExpiryInSeconds(): int
-    {
-        return config('laravel-docuware.configurations.cache.lifetime_in_seconds', 3600);
-    }
-
-    /**
-     * @return Collection<int, FileCabinet>
-     */
-    public function createDtoFromResponse(Response $response): Collection
-    {
-        return GetAllFileCabinetsAndDocumentTraysResponse::fromResponse($response);
     }
 }

@@ -3,6 +3,7 @@
 namespace CodebarAg\DocuWare\Transport;
 
 use CodebarAg\DocuWare\Config\InstanceConfig;
+use CodebarAg\DocuWare\Contracts\ReadOnlyRequest;
 use CodebarAg\DocuWare\Events\ResponseReceived;
 use CodebarAg\DocuWare\Security\Redactor;
 use CodebarAg\DocuWare\Transport\Auth\OAuthTokenFetcher;
@@ -81,12 +82,13 @@ class DocuWareConnector extends Connector
     }
 
     /**
-     * Retry transient failures only. Idempotent verbs (GET/HEAD/PUT/DELETE/OPTIONS) are retried
-     * on connection errors and 5xx; POST is retried only on 429 (rate-limited, not processed).
+     * Retry transient failures only. Idempotent verbs (GET/HEAD/PUT/DELETE/OPTIONS) and requests
+     * marked {@see ReadOnlyRequest} (DocuWare's POST-modelled queries) are retried on connection
+     * errors and 5xx; any other POST is retried only on 429 (rate-limited, not processed).
      */
     public function handleRetry(FatalRequestException|RequestException $exception, Request $request): bool
     {
-        $idempotent = in_array($request->getMethod(), [
+        $idempotent = $request instanceof ReadOnlyRequest || in_array($request->getMethod(), [
             Method::GET, Method::HEAD, Method::PUT, Method::DELETE, Method::OPTIONS,
         ], true);
 

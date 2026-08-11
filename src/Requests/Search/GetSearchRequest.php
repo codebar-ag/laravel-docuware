@@ -3,13 +3,14 @@
 namespace CodebarAg\DocuWare\Requests\Search;
 
 use CodebarAg\DocuWare\Concerns\HasDocuWareCaching;
+use CodebarAg\DocuWare\Contracts\ReadOnlyRequest;
 use Saloon\CachePlugin\Contracts\Cacheable;
 use Saloon\Contracts\Body\HasBody;
 use Saloon\Enums\Method;
 use Saloon\Http\Request;
 use Saloon\Traits\Body\HasJsonBody;
 
-class GetSearchRequest extends Request implements Cacheable, HasBody
+class GetSearchRequest extends Request implements Cacheable, HasBody, ReadOnlyRequest
 {
     use HasDocuWareCaching;
     use HasJsonBody;

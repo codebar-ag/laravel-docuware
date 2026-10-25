@@ -29,8 +29,8 @@
     <env name="DOCUWARE_URL" value="https://mcp.docuware.cloud"/>
     <env name="DOCUWARE_PLATFORM_PATH" value="DocuWare/Platform"/>
     <env name="DOCUWARE_USERNAME" value="laravel.docuware"/>
-    <env name="DOCUWARE_PASSWORD" value="dKo2f3v3jtT@fj9oN2jAkPBu"/>
-    <env name="DOCUWARE_PASSPHRASE" value="u_OBd5xFlK[g:1{8"/>
+    <env name="DOCUWARE_PASSWORD" value=""/>
+    <env name="DOCUWARE_PASSPHRASE" value=""/>
     <env name="DOCUWARE_TIMEOUT" value="45"/>
     <env name="DOCUWARE_CACHE_DRIVER" value="file"/>
     <env name="DOCUWARE_CACHE_LIFETIME_IN_SECONDS" value="0"/>

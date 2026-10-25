@@ -66,7 +66,8 @@ final class Redactor
 
         // key=value (query / form) and "key":"value" (JSON) for known secret keys.
         $keys = implode('|', array_map('preg_quote', self::SECRET_KEYS));
-        $value = (string) preg_replace('/("(?:'.$keys.')"\s*:\s*")[^"]*(")/i', '$1'.self::PLACEHOLDER.'$2', $value);
+        // The JSON value pattern skips escaped quotes so a value like "ab\"cd" is redacted whole.
+        $value = (string) preg_replace('/("(?:'.$keys.')"\s*:\s*")(?:[^"\\\\]|\\\\.)*(")/i', '$1'.self::PLACEHOLDER.'$2', $value);
         $value = (string) preg_replace('/\b('.$keys.')=([^&\s]+)/i', '$1='.self::PLACEHOLDER, $value);
 
         return $value;

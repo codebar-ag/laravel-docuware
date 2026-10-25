@@ -1,0 +1,7 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Consider using bind method instead or pass a closure\.$#'
+			identifier: larastan.octaneCompatibility
+			count: 1
+			path: src/DocuWareServiceProvider.php

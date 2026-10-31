@@ -39,3 +39,11 @@ it('leaves non-secret scalars untouched', function () {
     expect((new Redactor)->redact(42))->toBe(42)
         ->and((new Redactor)->redact('plain text'))->toBe('plain text');
 });
+
+it('redacts json secret values that contain escaped quotes', function () {
+    $redacted = (new Redactor)->string('{"password":"ab\"cd-s3cret","username":"alice"}');
+
+    expect($redacted)
+        ->toBe('{"password":"'.Redactor::PLACEHOLDER.'","username":"alice"}')
+        ->not->toContain('s3cret');
+});
